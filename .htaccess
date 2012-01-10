@@ -1,0 +1,4 @@
+DirectoryIndex index.php
+
+RewriteEngine on
+RewriteRule app/(.+)   index.php [L]

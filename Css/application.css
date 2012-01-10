@@ -1,0 +1,183 @@
+h2, h3 {
+color: #404040;
+font-size: 12px;
+font-weight: bold;
+}
+
+h3 {
+font-size: 11px;
+}
+
+.container {
+width: 964px;
+}
+
+.topbar .right {
+float:right;
+}
+
+.page-header {
+margin: 20px -20px 20px;
+padding: 20px 20px 10px;
+border-bottom: none;
+margin-bottom: 5px;
+}
+
+#divTodayNotification p {
+margin:0;
+padding:0;
+color:#999999;
+}
+
+#divTodayNotification p a {
+color:#3B5998;
+font-weight: bold;
+}
+
+#divTodayNotification ul{
+padding:0;
+margin-top:0;
+list-style: none;
+font-size: 12px;
+}
+
+#divTodayNotification ul li {
+margin:0;
+padding:0;
+} 
+
+#divFetes {
+text-align:center;
+
+}
+
+#left {
+
+}
+
+#left ul {
+padding:0;
+margin: 0 0 5px 0;
+list-style: none;
+font-size: 11px;
+}
+#mesfiltres {
+min-height: 150px;
+}
+
+#center {
+
+border-right: 1px solid #EEEEEE;
+border-left: 1px solid #EEEEEE;
+border-bottom:1px solid #EEEEEE;
+padding: 0 10px;
+}
+
+#center div {
+margin: 5px 0;
+}
+
+.points  {
+display: block;
+float: none;
+line-height: 19px;
+padding: 10px 10px 11px;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+.notification {
+background-color: #D21A0B;
+font-weight: bold;
+color:#f3f1f1;
+}
+
+.eventTimeline {
+padding: 5px 0;
+}
+
+.eventTimeline:hover {
+background-color:#F5F5F5;
+}
+
+.imgEvent { /*Padding 20%*/
+width:10%;
+padding: 0 5%;
+}
+
+.countDown {
+width: 36%;
+color: gray;
+font-size: 12px;
+padding: 0 2%;
+}
+
+.userEventName  {
+width: 30%;
+font-size: 12px;
+font-weight: bold;
+padding: 0 5%;
+}
+
+.userEventName a {
+color: #3B5998;
+}
+
+.addsuggestion  h2{
+display:inline;
+margin-right: 30px;
+}
+
+.suggestionEnCours a  {
+color:#3B5998;
+}
+
+.addsuggestionUserForm {
+margin:0;
+padding:0;
+}
+
+.addsuggestionUserForm  , .addsuggestionUserForm  label, .addsuggestionUserForm .input{
+display:inline;
+}
+
+.cadeauOfferts a {
+color: #3B5998;
+}
+
+#right {
+
+}
+
+#right ul {
+padding:0;
+margin: 0 0 5px 0;
+list-style: none;
+font-size: 11px;
+}
+
+#right ul li {
+border-bottom: 1px solid #EEEEEE;
+margin-bottom: 3px;
+}
+
+#photoProfile .media-grid a{
+margin:0;
+}
+
+#divTodayNotification span {
+color:#3B5998;
+font-weight:bold;
+}
+
+#mesFavoris {
+margin: 20px 0;
+}
+
+#footer{
+width:640px;
+margin-left:100px;
+padding-left:20px;
+margin-top: 10px;
+color:gray;
+}

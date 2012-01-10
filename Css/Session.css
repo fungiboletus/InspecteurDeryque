@@ -1,0 +1,119 @@
+body {
+background: url(../Img/fond.jpeg) repeat;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+margin:0;
+}
+
+.lapin {
+	height:128px;
+	width:111px;
+	position:absolute;
+	top:161px;
+	left:275px;
+}
+
+.lapin div
+{
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	background:url(../Img/spritelapins.png) no-repeat;
+}
+
+.lapin div.tete
+{
+	background-position:-222px 0px;
+}
+
+.lapin .vignette {
+background:url(../Img/vignette.png) no-repeat;
+}
+
+form[name=login]{
+	width:867px;
+	height:529px;
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-left:-531px;
+	margin-top:-258px;
+	background:url(../Img/fond_connexion.jpeg) no-repeat;
+}
+
+form[name=login].connection_error #input_mail, form[name=login].connection_error #input_pass{
+background:rgba(255,0,0,0.5);
+}
+
+label
+{
+position:absolute;
+left:411px;
+color:black;
+}
+
+label[for=input_mail]
+{
+top:167px;
+}
+
+label[for=input_pass]
+{
+top:233px;
+}
+
+#input_mail, #input_pass
+{
+border:none;
+position:absolute;
+left:412px;
+width:358px;
+height:25px;
+background:none;
+padding-left:10px;
+padding-right:10px;
+font-size:0.85em;
+}
+
+#input_mail
+{
+top:190px;
+}
+
+#input_pass
+{
+	top:256px;
+}
+
+input[type=submit]
+{
+position:absolute;
+border:none;
+width:517px;
+height:50px;
+left:274px;
+top:310px;
+font-size:1.2em;
+background:rgba(255,255,255,0.3);
+}
+
+input[type=submit]:hover, input[type=submit]:focus
+{
+background:none;
+}
+
+form[name=login] input[required] {
+background-color:lightgreen;
+}
+
+h1#titre_deryque {
+ext-align:center;
+position:absolute;
+z-index:50;
+width:100%;
+top:20px;
+text-indent:-5000px;
+background:url(../Img/titre.png) no-repeat center;
+min-height:76px;
+}
