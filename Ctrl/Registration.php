@@ -5,7 +5,7 @@ class Registration
 {
 	public function index() {
 		CNavigation::setTitle('Enregistrement');
-		CNavigation::setDescription('Créer un nouveau compte gratuitement !');
+		CNavigation::setDescription('Créez votre compte gratuitement !');
 
 		RegistrationView::showForm();
 	}

@@ -4,6 +4,7 @@ class SessionView {
 		$label_mail = _('Email');
 		$label_password = _('Password');
 		$text_submit = _('Login');
+		$text_registration = _('Inscription');
 
 		global $CONNECTION_FAIL;
 		if (isset($CONNECTION_FAIL)) {
@@ -14,12 +15,14 @@ class SessionView {
 			$class = '';
 		}
 
+		$url_submit = CNavigation::generateUrlToApp('Session', 'submit');
+		$url_registration = CNavigation::generateUrlToApp('Registration');
 
-		$url = CNavigation::generateUrlToApp('Session', 'submit');
 		echo <<<END
 <h1 id="titre_deryque">Inspecteur Deryque</h1>
+<a href="$url_registration">$text_registration</a>
 		
-<form action="$url" name="login" method="post" $class>
+<form action="$url_submit" name="login" method="post" $class>
 	<p>
 		<label for="input_mail">$label_mail</label>
 		<input name="email_deryque" id="input_mail" type="email"
