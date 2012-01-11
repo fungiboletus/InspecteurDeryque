@@ -20,7 +20,10 @@ class SessionView {
 
 		echo <<<END
 <h1 id="titre_deryque">Inspecteur Deryque</h1>
+
+<div id="lien_inscription">
 <a href="$url_registration">$text_registration</a>
+</div>
 		
 <form action="$url_submit" name="login" method="post" $class>
 	<p>
