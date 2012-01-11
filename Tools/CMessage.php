@@ -3,10 +3,12 @@
 class CMessage
 {
 	public $message;
+	public $type;
 
-	public function __construct($message)
+	public function __construct($message, $type = 'success')
 	{
 		$this->message = $message;
+		$this->type = $type;
 
 		if (!isset($_SESSION['CMessage_list']))
 		{
@@ -18,7 +20,7 @@ class CMessage
 
 	public function show()
 	{
-		echo "\t<div class=\"alert-message success\">$this->message</div>\n";
+		echo "\t<div class=\"alert-message $this->type\">$this->message</div>\n";
 	}
 
 	public static function showMessages()
