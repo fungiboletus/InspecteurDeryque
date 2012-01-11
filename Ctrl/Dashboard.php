@@ -3,30 +3,20 @@
 class Dashboard
 {
 
-	public function refresh() {
-		$c = new Gift();
-		$c->form();
-		//echo "bordel de merde";
-		//groaw(R::find('user_gift'));
-
-	}
-
 	public function index() {
 		CNavigation::setTitle('Tableau de bord');
+		DashboardView::showGraph();
 	}
 
-	public function submit() {
-		groaw($_POST);
+	public function xml() {
+		CNavigation::setTitle('Affichage du fichier xml');
+if (file_exists('test.tcx')) {
+    $xml = simplexml_load_file('test.tcx');
 
-		if (!CNavigation::isValidSubmit(array('url'), $_REQUEST)) {
-			new CMessage('An url is required');
-			CNavigation::redirectToApp('Dashboard');
-		}
-	
-		$capture = new Capture(time(), $_REQUEST['url']);
-		$capture->download();
-		$capture->save();
-		groaw($capture);
+    groaw($xml);
+} else {
+    new CMessage('Echec lors de l\'ouverture du fichier test.xml.', 'error');
+}
 	}
 }
 

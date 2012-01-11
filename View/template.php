@@ -40,7 +40,6 @@ if (!defined('NO_HEADER_BAR')) {
 	$url_offer = CNavigation::generateUrlToApp('Offer');
 	$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 
-	$user_name = 'Lorie nue';
 
 	$c_user = $CTRL_NAME === 'User' ? ' class="active"' : '';
 	$c_gift = $CTRL_NAME === 'Gift' ? 'active' : '';
@@ -52,6 +51,30 @@ if (!defined('NO_HEADER_BAR')) {
 		<nav class="container">
 
 			<h3 id="topbar_logo"><a href="$url_root">Inspecteur Deryque</a></h3>
+END;
+
+	if (isset($_SESSION['logged'])) {
+		$user_name = htmlspecialchars($_SESSION['name']);
+		$url_xml = CNavigation::generateUrlToApp('Dashboard', 'xml');
+		echo <<<END
+		<ul class="nav left">
+			<li><a href="$url_xml">Fichier xml</a></li>
+		</ul>
+		<ul class="nav right">	
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle">$user_name</a>
+					<ul class="dropdown-menu">
+						<li><a href="$url_pref">Préférences</a></li>
+						<li><a href="$url_help">Aide</a></li>
+						<li><a href="$url_not_found">Une erreur 404</a></li>
+						<li class="divider"></li>
+						<li><a href="$url_logout">Déconnexion</a></li>
+					</ul>
+				</li>
+			</ul>
+END;
+	}
+	echo <<<END
 		</nav>
 	</div>
 </div>

@@ -24,7 +24,7 @@ R::debug(true);
 
 			if ($user) {
 				$_SESSION['logged'] = true;
-				$_SESSION['nom'] = $user->nom;
+				$_SESSION['name'] = $user->name;
 				$_SESSION['mail'] = $user->mail;
 				CNavigation::redirectToApp('Dashboard');
 			}
