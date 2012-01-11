@@ -12,9 +12,6 @@ class Dashboard
 	}
 
 	public function index() {
-		CNavigation::redirectToApp('User');
-			$friends = CTools::fb($_SESSION['facebook']->id."/friends");
-			groaw($friends);
 	}
 
 	public function submit() {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?php echo htmlspecialchars(CNavigation::getTitle()); ?> - Le Lapin Malin</title>
+	<title><?php echo htmlspecialchars(CNavigation::getTitle()); ?> - Inspecteur Deryque</title>
 <?php foreach (CHead::$css as $css)
 {
 	echo "\t<link href=\"$ROOT_PATH/Css/$css.css\" media=\"screen\" rel=\"Stylesheet\" type=\"text/css\" />\n";
@@ -40,7 +40,7 @@ if (!defined('NO_HEADER_BAR')) {
 	$url_offer = CNavigation::generateUrlToApp('Offer');
 	$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 
-	$user_name = htmlspecialchars($_SESSION['facebook']->name);
+	$user_name = 'Lorie nue';
 
 	$c_user = $CTRL_NAME === 'User' ? ' class="active"' : '';
 	$c_gift = $CTRL_NAME === 'Gift' ? 'active' : '';
@@ -50,39 +50,8 @@ if (!defined('NO_HEADER_BAR')) {
 <div class="topbar">
 	<div class="topbar-inner">
 		<nav class="container">
-		  <ul class="nav left">
-				<li class="active points"><img src="stylesheet/img/lapinlogo.png" alt="logo" width="20px" height="20px" /></li>
-      </ul>
 
-			<h3><a href="$url_root">Le Lapin Malin</a></h3>
-				<ul class="nav left">
-					<li class="active points">Mes points : 4562</li>
-					<li class="notification"><a href="#">45</a></li>
-				</ul>
-					<ul class="nav right">
-					<li$c_user><a href="$url_user">Mon profil</a></li>
-					<li class="dropdown $c_gift">
-						<a href="#" class="dropdown-toggle">Mes cadeaux</a>
-						<ul class="dropdown-menu">
-							<li><a href="$url_gift">Déjà eus</a></li>
-							<li><a href="$url_wants">Envies</a></li>
-						</ul>
-					</li>
-					<li$c_offer><a href="$url_offer">Offrir</a></li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle">$user_name</a>
-						<ul class="dropdown-menu">
-							<li><a href="$url_pref">Préférences</a></li>
-							<li><a href="$url_help">Aide</a></li>
-							<li><a href="$url_not_found">Une erreur 404</a></li>
-							<li class="divider"></li>
-							<li><a href="$url_logout">Déconnexion</a></li>
-						</ul>
-					</li>
-				</ul>
-			<!--<form action="#">
-				<input type="text" placeholder="Search">
-			</form>-->
+			<h3 id="topbar_logo"><a href="$url_root">Inspecteur Deryque</a></h3>
 		</nav>
 	</div>
 </div>

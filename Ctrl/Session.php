@@ -11,24 +11,20 @@ class Session
 	}
 
 	public function login() {
-		//LoginView::showLoginButton();
-
-			CHead::addJs('sha1');
-			CHead::delCSS('bootstrap.min');
-			new SessionView();
+		CHead::addJs('sha1');
+		CHead::delCSS('bootstrap.min');
+		CHead::delCSS('application');
+		new SessionView();
 	}
 
 	public function submit() {
-	
+		$_SESSION['logged'] = true;	
 		new CMessage(_('owi je taime'));
+		CNavigation::redirectToApp('Dashboard');
 	}
 
 	public function logout() {
 		session_destroy();
-
-		unset($_SESSION['no_rewrite']);
-		new CMessage(_('Successful logout'));
-
 		CNavigation::redirectToApp('Session','login');
 	}
 

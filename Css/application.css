@@ -1,4 +1,18 @@
-h2, h3 {
+@font-face {
+font-family: Futura;
+src: url(../Img/futura.ttf);
+}
+
+body {
+padding-top:50px;
+}
+
+h1,h2,h3,h4,h5,h6, .btn {
+font-family:Futura, "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-weight:normal;
+}
+
+/*h2, h3 {
 color: #404040;
 font-size: 12px;
 font-weight: bold;
@@ -100,7 +114,7 @@ padding: 5px 0;
 background-color:#F5F5F5;
 }
 
-.imgEvent { /*Padding 20%*/
+.imgEvent { /*Padding 20%*//*
 width:10%;
 padding: 0 5%;
 }
@@ -180,4 +194,4 @@ margin-left:100px;
 padding-left:20px;
 margin-top: 10px;
 color:gray;
-}
+}*/
