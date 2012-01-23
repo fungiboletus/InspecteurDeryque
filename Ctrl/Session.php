@@ -14,6 +14,7 @@ class Session
 		CHead::addJs('sha1');
 		CHead::delCSS('bootstrap.min');
 		CHead::delCSS('application');
+		CNavigation::setTitle(_('Login'));
 		new SessionView();
 	}
 

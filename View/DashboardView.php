@@ -11,6 +11,8 @@ echo <<<END
 $(document).ready(init);
 </script>
 <h4>Magnifique graphique de performances</h4>
+
+<h6>Made with Word 2003</h6>
 END;
 
 	}
