@@ -29,21 +29,7 @@ if (!defined('NO_HEADER_BAR')) {
 	}
 
 	$url_root = CNavigation::generateUrlToApp(null);
-	$url_urls = CNavigation::generateUrlToApp('Archive', 'urls');
-	$url_show = CNavigation::generateUrlToApp('Dashboard', 'show');
-	$url_user = CNavigation::generateUrlToApp('User');
-	$url_gift = CNavigation::generateUrlToApp('Gift', 'my_gifts');
-	$url_wants = CNavigation::generateUrlToApp('Gift', 'gift_list');
-	$url_logout = CNavigation::generateUrlToApp('Session', 'logout');
-	$url_pref = CNavigation::generateUrlToApp('User', 'settings');
-	$url_help = 'http://perdu.com';
-	$url_offer = CNavigation::generateUrlToApp('Offer');
-	$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
-
-
 	$c_user = $CTRL_NAME === 'User' ? ' class="active"' : '';
-	$c_gift = $CTRL_NAME === 'Gift' ? 'active' : '';
-	$c_offer = $CTRL_NAME === 'Offer' ? ' class="active"' : '';
 
 	echo <<<END
 <div class="topbar">
@@ -55,9 +41,18 @@ END;
 
 	if (isset($_SESSION['logged'])) {
 		$user_name = htmlspecialchars($_SESSION['name']);
+		$url_user = CNavigation::generateUrlToApp('User');
+		$url_logout = CNavigation::generateUrlToApp('Session', 'logout');
+		$url_pref = CNavigation::generateUrlToApp('User', 'settings');
+		$url_help = 'http://perdu.com';
+		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 		$url_xml = CNavigation::generateUrlToApp('Dashboard', 'xml');
+		$url_data = CNavigation::generateUrlToApp('Data');
+		$c_data = $CTRL_NAME === 'Data' ? ' class="active"' : '';
+
 		echo <<<END
 		<ul class="nav left">
+			<li$c_data><a href="$url_data">Données</a></li>
 			<li><a href="$url_xml">Fichier xml</a></li>
 		</ul>
 		<ul class="nav right">	
