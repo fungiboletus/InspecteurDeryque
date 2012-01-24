@@ -9,6 +9,10 @@ class Dashboard extends AbstractView
 	}
 
 	public function affichageDeRiz($xml){
+//activities
+	foreach($xml->xpath("/TrainingCenterDatabase/Activities/Activity") as $activity){
+		$id = $activity->xpath("Id[1]");
+		echo "<h1>", htmlspecialchars($activity['Sport']), " - id : ", htmlspecialchars($id[0]), "</h1>";
 		echo <<<END
 		<table class="zebra-striped">
 			<tr>
@@ -23,39 +27,58 @@ class Dashboard extends AbstractView
 				<th>TriggerMethod</th>
 			</tr>
 END;
-		foreach($xml->xpath("/TrainingCenterDatabase/Activities/Activity/Lap") as $Lap){
-			echo "<tr>";
-			echo "<td>Lap - ",htmlspecialchars($this->formateDate($Lap['StartTime'])),"</td>";
-			foreach($Lap->children() as $data){
-				if($data->getName() === "AverageHeartRateBpm" || $data->getName() === "MaximumHeartRateBpm"){
-					echo "<td>", $data->children(),"</td>";
-				}
-				elseif ($data->getName() !== "Track" && $data->getName() !== "Extensions"){
-					echo "<td>$data</td>";
-				}
-			}
-		echo "</tr>";
-		}
-		echo "</table>";
-			
-		/*foreach($xml->children() as $child){
-			if($child->getName() == "Activities"){
-				foreach($child->children() as $activity){
-					if($activity->getName() == "Activity"){
-						foreach($activity->children() as $data){
-							if($data->getName() == "Lap"){
-								$hname = htmlspecialchars($data->getName());
-								echo <<<END
-								<tr>
-									<td>$hname - $data->attribute()</td>
-								</tr>
-END;
-							}
-						}
+			foreach($xml->xpath("/TrainingCenterDatabase/Activities/Activity/Lap") as $Lap){
+				echo "<tr>";
+				echo "<td>Lap - ",htmlspecialchars($Lap['StartTime']),"</td>";
+				foreach($Lap->children() as $data){
+					if($data->getName() === "AverageHeartRateBpm" || $data->getName() === "MaximumHeartRateBpm"){
+						echo "<td>", htmlspecialchars($data->children()),"</td>";
+					}
+					elseif ($data->getName() !== "Track" && $data->getName() !== "Extensions"){
+						echo "<td>$data</td>";
 					}
 				}
+			echo "</tr>";
 			}
-		}*/
+		echo "</table>";
+//tracks
+		foreach($xml->xpath("/TrainingCenterDatabase/Activities/Activity/Lap") as $Lap){
+			echo "<h1>Tracks for Lap - ", htmlspecialchars($Lap['StartTime']), "</h1>";
+			foreach($Lap->xpath("Track") as $track){
+				echo <<<END
+				<h2>Track</h2>
+				<table class="zebra-striped">
+					<tr>
+						<th>Time</th>
+						<th>LatitudeDegrees</th>
+						<th>LongitudeDegrees</th>
+						<th>AltitudeMeters</th>
+						<th>DistanceMeters</th>
+						<th>HeartRateBpm</th>
+						<th>SensorState</th>
+					</tr>
+END;
+				foreach($track->children() as $trackpoints){
+					echo "<tr>";
+					foreach($trackpoints->children() as $data){
+						if($data->getName() === "HeartRateBpm"){
+							echo "<td>", htmlspecialchars($data->children()), "</td>";
+						}
+						elseif($data->getName() === "Position"){
+							foreach($data->children() as $positions){
+								echo "<td>", htmlspecialchars($positions), "</td>";
+							}
+						}
+						else{
+							echo "<td>", htmlspecialchars($data), "</td>";
+						}
+					}
+					echo "</tr>";
+				}
+		echo "</table>";
+			}
+		}
+	}
 	}
 
 	public function xml() {
