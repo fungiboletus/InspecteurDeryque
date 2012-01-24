@@ -48,7 +48,7 @@ END;
 		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 		$url_xml = CNavigation::generateUrlToApp('Dashboard', 'xml');
 		$url_data = CNavigation::generateUrlToApp('Data');
-		$c_data = $CTRL_NAME === 'Data' ? ' class="active"' : '';
+		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 
 		echo <<<END
 		<ul class="nav left">
