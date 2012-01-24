@@ -202,3 +202,16 @@ color:gray;
 .media-grid li:hover a {
 	text-decoration:none;
 }
+
+.btn{
+position:relative;
+}
+.plus_text:before {
+content:url(../Img/icons/circle-plus.png);
+position:absolute;
+left:8px;
+top:5px;
+}
+.plus_text {
+padding-left:30px;
+}

@@ -1,6 +1,6 @@
 <?php
 
-class Dashboard
+class Dashboard extends AbstractView
 {
 
 	public function index() {
@@ -25,7 +25,7 @@ class Dashboard
 END;
 		foreach($xml->xpath("/TrainingCenterDatabase/Activities/Activity/Lap") as $Lap){
 			echo "<tr>";
-			echo "<td>Lap - ",htmlspecialchars($Lap['StartTime']),"</td>";
+			echo "<td>Lap - ",htmlspecialchars($this->formateDate($Lap['StartTime'])),"</td>";
 			foreach($Lap->children() as $data){
 				if($data->getName() === "AverageHeartRateBpm" || $data->getName() === "MaximumHeartRateBpm"){
 					echo "<td>", $data->children(),"</td>";
