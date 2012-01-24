@@ -36,6 +36,7 @@ class Registration
 			$_SESSION['logged'] = true;
 			$_SESSION['name'] = $user->name;
 			$_SESSION['mail'] = $user->mail;
+			$_SESSION['bd_id'] = $user->getID();
 			CNavigation::redirectToApp('Dashboard');
 		}
 	}

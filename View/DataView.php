@@ -33,13 +33,15 @@ END;
 		echo '</ul>';
 	}
 
-	public static function showAddForm($mode) {
+	public static function showAddForm($values) {
 
 		$label_name = _('Nom');
 		$label_desc = _('Description');
 		$url_submit = CNavigation::generateUrlToApp('Data', 'add');
 		$text_submit = _('Créer le relevé');
-		$hmode = htmlspecialchars($mode);
+		$hnom = htmlspecialchars($values['nom']);
+		$hdesc = htmlspecialchars($values['desc']);
+		$hmode = htmlspecialchars($values['mode']);
 
 		echo <<<END
 <form action="$url_submit" name="data_add_form" method="post" id="data_add_form">
@@ -48,13 +50,13 @@ END;
 	<div class="clearfix">
 		<label for="input_nom">$label_name</label>
 		<div class="input">
-			<input name="nom" id="input_nom" type="text" autofocus required />
+			<input name="nom" id="input_nom" type="text" value="$hnom" autofocus required />
 		</div>
 	</div>
 	<div class="clearfix">
 		<label for="input_desc">$label_desc</label>
 		<div class="input">
-			<textarea name="desc" id="input_desc"></textarea> 
+			<textarea name="desc" id="input_desc">$hdesc</textarea> 
 		</div>
 	</div>
 	<div class="actions">
@@ -63,6 +65,35 @@ END;
 </fieldset>
 </form>	
 END;
+	}
+
+	public static function showRelevesList($releves)
+	{
+		if ($releves) {
+			echo <<<END
+			<table class="zebra-striped">
+				<tr>
+					<th>Nom</th>
+					<th>Description</th>
+					<th>Type</th>
+				</tr>
+END;
+			foreach ($releves as $releve) {
+				echo "\t<tr><td>", htmlspecialchars($releve['name']),
+					 "</td><td>", htmlspecialchars($releve['description']),
+					 "</td><td>", htmlspecialchars($releve['modname']), "</td></tr>\n";
+			}
+
+			echo "</table>";
+		}
+		else
+		{
+			echo <<<END
+<div class="alert-message block-message warning">
+<p>Il n'y a aucun relevé pour l'instant.</p>
+</div>
+END;
+		}
 	}
 }
 ?>
