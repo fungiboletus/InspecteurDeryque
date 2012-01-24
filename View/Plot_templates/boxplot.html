@@ -9,7 +9,7 @@
 	<body>
 -->
 <div id="first"></div>
-<div id="datas" style="display:none;">
+<div id="data" style="display:none;">
 	<table>
 		<tr>
 			<th>Min</th>
@@ -42,26 +42,7 @@
 	</table>
 </div>
 <script>
-	var data = {
-			'bars' : [],
-			'labels' : [],
-			"x-axis" : "Courses",
-			"y-axis" : "Pouls"
-	};		
-	// Collecter les valeurs à la volée
-	var trs=document.getElementById("datas").getElementsByTagName("table")[0].getElementsByTagName("tr");
-	// On ne veut pas parser les <th>
-	for(var i=1;i<trs.length;i++){
-		var temparray=new Array();
-		var tds = trs[i].getElementsByTagName('td');
-		for(var j=0;j<tds.length;j++){
-			temparray.push(parseFloat(tds[j].innerHTML));
-		}
-		data['bars'].push(temparray);
-		data['labels'].push(trs[i].className);
-	}
-	// The Div id is the first param, the data object the second.
-	boxplot("first", data);
+	showBoxPlot();
 </script>
 <!--	</body>
 </html>-->
