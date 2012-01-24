@@ -2,14 +2,8 @@
 
 abstract class AbstractView
 {
-	protected $model;
 	protected $now;
 	
-	public function __construct($model)
-	{
-		$this->model = $model;
-	}
-
 	public function translateTimePeriod($period, $week = null)
 	{
 		switch($period)

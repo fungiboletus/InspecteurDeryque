@@ -1,6 +1,6 @@
 <?php
 
-class Dashboard
+class Dashboard extends AbstractView
 {
 
 	public function index() {
