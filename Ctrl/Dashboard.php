@@ -8,6 +8,28 @@ class Dashboard
 		DashboardView::showGraph();
 	}
 
+
+	public function DataDisplay($xml){
+		foreach($xml->children() as $balise){
+			if($balise->getName() === "Folders" || $balise->getName() === "Workouts" || $balise->getName() === "Courses" || $balise->getName() === "Author"){
+				//rien
+			}
+			elseif($balise->getName() === "Activities"){
+				foreach($balise->children() as $activity){
+					echo "<h1>Activity : ", htmlspecialchars($activity['Sport']), "</h1>";
+					foreach($activity->children() as $lapsandmore){
+						if($lapsandmore->getName() === "Id"){
+							echo "<h2>Id : ", htmlspecialchars($lapsandmore), "<h2>";
+						}
+						elseif($lapsandmore->getName() === "Lap"){
+							
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public function affichageDeRiz($xml){
 //activities
 	foreach($xml->xpath("/TrainingCenterDatabase/Activities/Activity") as $activity){
