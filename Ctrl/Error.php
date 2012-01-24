@@ -14,6 +14,12 @@ class Error
 		CNavigation::setTitle('Error 404');
 		ErrorView::showError(404, "La page est introuvable. Ceci est une situation regrettable.", "800px-Peugeot_404_Berlin.JPG");
 	}
+
+	public function teapot() {
+		header("Status: 418 I’m a teapot");
+		CNavigation::setTitle('Error 418');
+		ErrorView::showError(418, "Je suis une théière", "600px-Tetsubin.jpg");
+	}
 }
 
 ?>

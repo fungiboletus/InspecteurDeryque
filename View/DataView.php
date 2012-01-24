@@ -70,21 +70,24 @@ END;
 	public static function showRelevesList($releves)
 	{
 		if ($releves) {
+		CHead::addJS('jquery.tablesorter.min');
 			echo <<<END
-			<table class="zebra-striped">
-				<tr>
-					<th>Nom</th>
-					<th>Description</th>
-					<th>Type</th>
-				</tr>
+			<table class="zebra-striped bordered-table data_list">
+				<thead><tr>
+					<th class="header yellow">Nom</th>
+					<th class="header green">Description</th>
+					<th class="header blue">Type</th>
+				</tr></thead>
+				<tbody>
 END;
 			foreach ($releves as $releve) {
-				echo "\t<tr><td>", htmlspecialchars($releve['name']),
-					 "</td><td>", htmlspecialchars($releve['description']),
-					 "</td><td>", htmlspecialchars($releve['modname']), "</td></tr>\n";
+				$url = CNavigation::generateUrlToApp('Data', 'view', array('nom' => $releve['name']));
+				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($releve['name']),
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($releve['description']),
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($releve['modname']), "</a></td></tr>\n";
 			}
 
-			echo "</table>";
+			echo "</tbody></table>";
 		}
 		else
 		{

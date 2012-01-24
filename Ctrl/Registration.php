@@ -39,6 +39,9 @@ class Registration
 			$_SESSION['bd_id'] = $user->getID();
 			CNavigation::redirectToApp('Dashboard');
 		}
+		else {
+			CTools::hackError();
+		}
 	}
 }
 ?>
