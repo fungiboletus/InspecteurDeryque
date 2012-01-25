@@ -40,7 +40,7 @@
 					<td>101</td>
 				</tr>
 			</table>
-			<table class="course1">
+			<table class="course2">
 				<tr>
 					<th>10</th>
 					<th>20</th>
@@ -72,34 +72,7 @@
 			</table>
 		</div>
 		<script>
-		var r = Raphael("holder", 640, 480),
-			txtattr = { font: "12px sans-serif" };
-		r.text(150, 20, "Graphe linéaire avec des points").attr(txtattr);
-		
-		
-		var abscisses=[
-				[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120],
-				[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]];
-		var ordonnees=[
-				[60, 90, 130, 150, 172, 184, 193, 182, 173, 169, 142, 101],
-				[42, 55, 65, 72, 84, 95, 101, 121, 96, 102, 89, 69]];
-		
-		var lines = r.linechart(20, 40, 480, 220, abscisses,ordonnees,
-			{nostroke: false, axis: "0 0 1 1", symbol: "circle", smooth: true }
-			).hoverColumn(function () {
-		        this.tags = r.set();
-
-		        for (var i = 0, ii = this.y.length; i < ii; i++) {
-		            this.tags.push(r.tag(
-            			this.x, this.y[i], this.values[i], 160, 10
-	            		).insertBefore(this).attr([{ fill: "#fff" },
-	            		{ fill: this.symbols[i].attr("fill") }]));
-		        }
-		    }, function () {
-		        this.tags && this.tags.remove();
-        });
-
-        lines.symbols.attr({ r: 6 });		
+				showLineChart();
 		</script>
 	</body>
 </html>
