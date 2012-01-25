@@ -88,7 +88,46 @@ END;*/
 
 	public function view()
 	{
-		CTools::hackError();
+		$releve = DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']);
+		
+		if (!$releve) {
+			CTools::hackError();
+			return;
+		}
+
+		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
+		CNavigation::setDescription($releve['description']);
+		groaw($releve);
+		
+		DataView::showViewButtons(
+				CNavigation::generateMergedUrl('Data', 'remove'),
+				CNavigation::generateMergedUrl('Data'));
+	}
+
+	public function remove()
+	{
+		$releve = DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']);
+		if (!$releve) {
+			CTools::hackError();
+			return;
+		}
+
+		if (isset($_REQUEST['confirm'])) {
+			$nom = $releve['name'];
+			R::trash(R::load('releve', $releve['id']));
+			new CMessage("Le relevé «${nom}» a bien été supprimé.");
+			CNavigation::redirectToApp('Data');
+		}
+		else
+		{
+			CNavigation::setTitle('Suppression du relevé «'.$releve['name'].'»');
+			CNavigation::setDescription('Consequences will never be the same!');
+
+			DataView::showRemoveForm(
+					$releve['description'],
+					CNavigation::generateMergedUrl('Data', 'remove', array('confirm' => 'yes')),
+					CNavigation::generateMergedUrl('Data', 'view'));
+		}
 	}
 }
 ?>

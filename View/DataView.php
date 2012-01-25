@@ -3,13 +3,23 @@
 class DataView
 {
 	public static function showAddButton() {
-		$url_btn = CNavigation::generateUrlToApp('Data','choose');
-		global $ROOT_PATH;
+		$url = CNavigation::generateUrlToApp('Data','choose');
+		echo '<div class="well">';
+		self::showButton($url, 'primary', 'Nouveau relevé', 'plus');
+		echo '</div>';
+	}
+
+	public static function showViewButtons($url_del, $url_back) {
+		echo '<div class="well">';
+		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
+		self::showButton($url_del, 'danger', 'Supprimer le relevé', 'del');
+		echo '</div>';
+	}
+
+	private static function showButton($url, $class, $text, $icon) {
 		echo <<<END
-			<div class="well">
-				<a href="$url_btn" class="btn large primary">
-				<span class="plus_text">Nouveau relevé</span></a>
-			</div>
+			<a href="$url" class="btn large $class">
+			<span class="${icon}_text">$text</span></a>
 END;
 	}
 
@@ -97,6 +107,22 @@ END;
 </div>
 END;
 		}
+	}
+
+	public static function showRemoveForm($desc, $url_confirm, $url_back)
+	{
+		$hdesc = htmlspecialchars($desc);
+		echo <<<END
+<div class="alert-message block-message warning">
+<p>Veuillez confirmer la suppression du relevé. La suppression est définitive.</p>
+<h4>Description du relevé</h4>
+<p><em>$hdesc</em></p>
+</div>
+			<div class="well">
+END;
+		self::showButton($url_back, 'info', 'Annuler', 'back');
+		self::showButton($url_confirm, 'danger', 'Supprimer', 'del');
+		echo '</div>';
 	}
 }
 ?>

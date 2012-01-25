@@ -43,5 +43,9 @@ class DataMod
 		$dossier = self::secureDossier($dossier);
 		return is_dir("Data/$dossier/D$dossier.php");
 	}
+
+	public static function getReleve($nom, $user_id) {
+		return R::getRow('select r.id, name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $nom)); 
+	}
 }
 ?>
