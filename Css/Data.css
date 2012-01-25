@@ -1,0 +1,17 @@
+.data_list td {
+padding:0;
+}
+.data_list a {
+color:#404040;
+display:block;
+display:inline-block;
+vertical-align:middle;
+height:20px;
+line-height:20px;
+width:100%;
+padding:10px 10px 9px 10px;
+}
+
+.data_list a:hover {
+text-decoration:none;
+}

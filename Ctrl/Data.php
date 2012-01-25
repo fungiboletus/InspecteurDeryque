@@ -34,9 +34,16 @@ class Data
 				$mode = R::findOne('datamod', 'modname = ?', array($_REQUEST['mode']));
 
 				if (!$mode) {
-					$mode = R::dispense('datamod');
-					$mode->modname = $_REQUEST['mode'];
-					R::store($mode);
+					if (DataMod::modExist($_REQUEST['mode'])) {
+						$mode = R::dispense('datamod');
+						$mode->modname = $_REQUEST['mode'];
+						R::store($mode);
+					}
+					else
+					{
+						CTools::hackError();
+						return;
+					}
 				}
 
 				$user = R::load('user', $_SESSION['bd_id']);
@@ -58,7 +65,11 @@ class Data
 		}
 		
 		global $ROOT_PATH;
-		if (!isset($_REQUEST['type'])) CNavigation::redirectToApp();
+		if (!isset($_REQUEST['type']))
+		{
+			CTools::hackError();
+			return;
+		}
 
 		$data_type = DataMod::loadDataType($_REQUEST['type']);
 		
@@ -73,6 +84,11 @@ END;*/
 						'nom' => '',
 						'desc' => '',
 						'mode' => $data_type->dossier),$_REQUEST));
+	}
+
+	public function view()
+	{
+		CTools::hackError();
 	}
 }
 ?>
