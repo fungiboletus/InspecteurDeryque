@@ -1,19 +1,7 @@
 <?php
 
-class DataMod
+class DataMod extends AbstractMod
 {
-	public $nom;
-	public $dossier;
-
-	public function DataMod($nom, $dossier) {
-		$this->nom = $nom;
-		$this->dossier = $dossier;
-	}
-
-	public static function secureDossier($dossier) {
-		return str_replace('..', '', $dossier);
-	}
-
 	public static function getDataTypes() {
 		$data = array();
 

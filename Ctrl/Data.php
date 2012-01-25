@@ -98,7 +98,10 @@ END;*/
 		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
 		CNavigation::setDescription($releve['description']);
 		groaw($releve);
-		
+	
+		$data = DisplayMod::getDisplayTypes();
+		DisplayView::showGraphChoiceMenu($data);
+
 		DataView::showViewButtons(
 				CNavigation::generateMergedUrl('Data', 'remove'),
 				CNavigation::generateUrlToApp('Data'));
