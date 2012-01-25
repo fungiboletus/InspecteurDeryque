@@ -41,7 +41,7 @@ class DataMod
 
 	public static function modExist($dossier) {
 		$dossier = self::secureDossier($dossier);
-		return is_dir("Data/$dossier/D$dossier.php");
+		return file_exists("Data/$dossier/D$dossier.php");
 	}
 
 	public static function getReleve($nom, $user_id) {
