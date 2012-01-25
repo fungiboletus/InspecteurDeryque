@@ -24,10 +24,10 @@ class Data
 
 		if (CNavigation::isValidSubmit(array('nom','desc', 'mode'), $_REQUEST))
 		{
+			$_REQUEST['type'] = $_REQUEST['mode'];
 			if (R::findOne('releve', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id'])))
 			{
 				new CMessage('Un relevé existe déjà avec le même nom', 'error');
-				$_REQUEST['type'] = $_REQUEST['mode'];
 			}
 			else
 			{
