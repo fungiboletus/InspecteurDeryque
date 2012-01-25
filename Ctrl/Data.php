@@ -101,7 +101,7 @@ END;*/
 		
 		DataView::showViewButtons(
 				CNavigation::generateMergedUrl('Data', 'remove'),
-				CNavigation::generateMergedUrl('Data'));
+				CNavigation::generateUrlToApp('Data'));
 	}
 
 	public function remove()

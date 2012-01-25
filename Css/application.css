@@ -223,3 +223,7 @@ content:url(../Img/icons/circle-x.png);
 .back_text:before {
 content:url(../Img/icons/circle-west.png);
 }
+
+.float_right {
+float:right;
+}

@@ -121,7 +121,7 @@ END;
 			<div class="well">
 END;
 		self::showButton($url_back, 'info', 'Annuler', 'back');
-		self::showButton($url_confirm, 'danger', 'Supprimer', 'del');
+		self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
 		echo '</div>';
 	}
 }
