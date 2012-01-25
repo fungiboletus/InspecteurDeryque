@@ -20,6 +20,6 @@
 	white-space:nowrap;
 }
 #selection_graph li{
-	display: inline;
+	display: inline-block;
 }
 
