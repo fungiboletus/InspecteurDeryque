@@ -12,11 +12,12 @@ class ErrorView
 
 		echo <<<END
 <div class="alert-message error">
+<h4>Erreur $number</h4>
 <p>$hmessage</p>
 </div>
 <div class="alert-message block-message error">
 <p>
-	<img src="$ROOT_PATH/Img/$image" alt="" />
+	<img src="$ROOT_PATH/Img/photos/$image" alt="" />
 </p>
 </div>
 END;

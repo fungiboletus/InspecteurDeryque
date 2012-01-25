@@ -3,13 +3,23 @@
 class DataView
 {
 	public static function showAddButton() {
-		$url_btn = CNavigation::generateUrlToApp('Data','choose');
-		global $ROOT_PATH;
+		$url = CNavigation::generateUrlToApp('Data','choose');
+		echo '<div class="well">';
+		self::showButton($url, 'primary', 'Nouveau relevé', 'plus');
+		echo '</div>';
+	}
+
+	public static function showViewButtons($url_del, $url_back) {
+		echo '<div class="well">';
+		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
+		self::showButton($url_del, 'danger', 'Supprimer le relevé', 'del');
+		echo '</div>';
+	}
+
+	private static function showButton($url, $class, $text, $icon) {
 		echo <<<END
-			<div class="well">
-				<a href="$url_btn" class="btn large primary">
-				<span class="plus_text">Nouveau relevé</span></a>
-			</div>
+			<a href="$url" class="btn large $class">
+			<span class="${icon}_text">$text</span></a>
 END;
 	}
 
@@ -33,13 +43,15 @@ END;
 		echo '</ul>';
 	}
 
-	public static function showAddForm($mode) {
+	public static function showAddForm($values) {
 
 		$label_name = _('Nom');
 		$label_desc = _('Description');
 		$url_submit = CNavigation::generateUrlToApp('Data', 'add');
 		$text_submit = _('Créer le relevé');
-		$hmode = htmlspecialchars($mode);
+		$hnom = htmlspecialchars($values['nom']);
+		$hdesc = htmlspecialchars($values['desc']);
+		$hmode = htmlspecialchars($values['mode']);
 
 		echo <<<END
 <form action="$url_submit" name="data_add_form" method="post" id="data_add_form">
@@ -48,13 +60,13 @@ END;
 	<div class="clearfix">
 		<label for="input_nom">$label_name</label>
 		<div class="input">
-			<input name="nom" id="input_nom" type="text" autofocus required />
+			<input name="nom" id="input_nom" type="text" value="$hnom" autofocus required />
 		</div>
 	</div>
 	<div class="clearfix">
 		<label for="input_desc">$label_desc</label>
 		<div class="input">
-			<textarea name="desc" id="input_desc"></textarea> 
+			<textarea name="desc" id="input_desc">$hdesc</textarea> 
 		</div>
 	</div>
 	<div class="actions">
@@ -63,6 +75,54 @@ END;
 </fieldset>
 </form>	
 END;
+	}
+
+	public static function showRelevesList($releves)
+	{
+		if ($releves) {
+		CHead::addJS('jquery.tablesorter.min');
+			echo <<<END
+			<table class="zebra-striped bordered-table data_list">
+				<thead><tr>
+					<th class="header yellow">Nom</th>
+					<th class="header green">Description</th>
+					<th class="header blue">Type</th>
+				</tr></thead>
+				<tbody>
+END;
+			foreach ($releves as $releve) {
+				$url = CNavigation::generateUrlToApp('Data', 'view', array('nom' => $releve['name']));
+				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($releve['name']),
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($releve['description']),
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($releve['modname']), "</a></td></tr>\n";
+			}
+
+			echo "</tbody></table>";
+		}
+		else
+		{
+			echo <<<END
+<div class="alert-message block-message warning">
+<p>Il n'y a aucun relevé pour l'instant.</p>
+</div>
+END;
+		}
+	}
+
+	public static function showRemoveForm($desc, $url_confirm, $url_back)
+	{
+		$hdesc = htmlspecialchars($desc);
+		echo <<<END
+<div class="alert-message block-message warning">
+<p>Veuillez confirmer la suppression du relevé. La suppression est définitive.</p>
+<h4>Description du relevé</h4>
+<p><em>$hdesc</em></p>
+</div>
+			<div class="well">
+END;
+		self::showButton($url_back, 'info', 'Annuler', 'back');
+		self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
+		echo '</div>';
 	}
 }
 ?>
