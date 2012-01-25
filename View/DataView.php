@@ -124,5 +124,25 @@ END;
 		self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
 		echo '</div>';
 	}
+
+	public static function showDisplayViewChoiceTitle() {
+		echo <<<END
+<h3>Visualiser ce relevé directement
+<small>Choisissez le type de visualisation désiré</small></h3>
+END;
+	}
+
+	public static function showInformations() {
+		echo <<<END
+<h3>API Web
+<small>Informations nécessaires à la domination du monde</small></h3>
+<div class="well">
+<p>L'API web permet de rajouter dynamiquement et simplement des données.</p>
+<p>L'url à utiliser est <code>http://localhost/Canard/app/api/add/key/54af457eb/value/<strong>VALUE</strong></code></p>
+<p>Le code de retour est «200 OK» si tout fonctionne.</p>
+<em>Cette url est personnelle, et elle ne doit en aucun cas être communiquée.</em>
+</div>
+END;
+	}
 }
 ?>

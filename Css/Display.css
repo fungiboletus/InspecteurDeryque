@@ -12,7 +12,6 @@
 	overflow-x:auto;
 	overflow-y:hidden;
 	width:100%;
-	margin-bottom:10px;
 }
 #selection_graph ul{
 	list-style:none;
@@ -27,7 +26,8 @@
 }
 
 #selection_graph .media-grid a{
-	margin:0px 0px 6px 12px
+	margin:0px 0px 0px 12px;
+background:white;
 }
 
 .hero-unit{

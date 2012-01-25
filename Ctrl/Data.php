@@ -100,7 +100,10 @@ END;*/
 		groaw($releve);
 	
 		$data = DisplayMod::getDisplayTypes();
+		DataView::showDisplayViewChoiceTitle();
 		DisplayView::showGraphChoiceMenu($data);
+
+		DataView::showInformations();
 
 		DataView::showViewButtons(
 				CNavigation::generateMergedUrl('Data', 'remove'),
