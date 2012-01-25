@@ -6,13 +6,13 @@
 }
 #releves{
 	overflow:auto;
-	height:600px;
+	height:500px;
 }
-
 #selection_graph{
-	overflow-x:scroll;
+	overflow-x:auto;
 	overflow-y:hidden;
-	width:600px;
+	width:100%;
+	margin-bottom:10px;
 }
 #selection_graph ul{
 	list-style:none;
@@ -22,4 +22,14 @@
 #selection_graph li{
 	display: inline-block;
 }
+#selection_graph .media-grid {
+	margin-left:-12px;
+}
 
+#selection_graph .media-grid a{
+	margin:0px 0px 6px 12px
+}
+
+.hero-unit{
+	padding:20px;
+}
