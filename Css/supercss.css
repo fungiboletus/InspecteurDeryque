@@ -1,0 +1,21 @@
+.liengraph{
+	text-align: center;
+}
+.thumbnail{
+	width:90px;
+}
+#releves{
+	overflow:auto;
+	height:600px;
+}
+
+#selection_graph{
+	overflow-x:auto;
+	overflow-y:hidden;
+	width:600px;
+	white-space:nowrap;
+}
+#selection_graph li a{
+	float:left;
+	display:inline;
+}
