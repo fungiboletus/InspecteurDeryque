@@ -1,5 +1,5 @@
 function showLineChart(){
-	var r = Raphael("holder", 940, 480),
+	var r = Raphael("holder", 940, 400),
 	txtattr = { font: "12px sans-serif" };
 	r.text(150, 20, "").attr(txtattr);
 

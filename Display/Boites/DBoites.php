@@ -1,5 +1,5 @@
 <?php
-class DBoites
+class DBoites extends DAbstract
 {
 	const nom = 'Boites';
 }

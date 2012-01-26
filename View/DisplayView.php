@@ -1,5 +1,6 @@
 <?php
-class DisplayView{
+class DisplayView extends AbstractView
+{
 	public static function showGraphChoiceMenu($data){
 		CHead::addCSS('Display');
 		echo <<<END
@@ -11,9 +12,10 @@ END;
 		foreach ($data as $display)
 		{
 			$dossier = $display->dossier;
+			$url = CNavigation::generateMergedUrl('Display','view', array('type' => $dossier));
 			echo <<<END
 				<li>
-					<a href="#" class="liengraph">
+					<a href="$url" class="liengraph">
 						<img alt="" src="/InspecteurDeryque/Display/$dossier/thumbnail.png" class="thumbnail"/>
 						<h4>{$display->nom}</h4>
 					</a>
@@ -28,7 +30,11 @@ END;
 END;
 	}
 
-	//public static function show
+	public static function showBackButtons($url_back) {
+		echo '<div class="well">';
+		self::showButton($url_back, 'info', 'Retour au relevé', 'back');
+		echo '</div>';
+	}
 }
 
 ?>

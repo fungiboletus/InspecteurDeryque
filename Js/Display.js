@@ -1,5 +1,5 @@
 $(function() {
-	$('table.data_list').tablesorter({	
+	$('table.display_list').tablesorter({	
 		sortList: [[0,0]]
 		});
 });

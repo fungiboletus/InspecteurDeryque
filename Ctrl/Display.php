@@ -14,14 +14,33 @@ class Display
 	}
 
 	public function index() {
-		CNavigation::setTitle('Affichage d\'un graphe');
+		CNavigation::setTitle('Super page');
+		CNavigation::setDescription('Tout reste à faire');
+	}
 
-		require_once('Display/Graphe/DGraphe.php');
+	public function view() {
 
-		$g = new DGraphe();
+		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'default';
+		if (!DisplayMod::loadDisplayType($type)||!isset($_REQUEST['nom']))
+		{
+			CTools::hackError();
+			return;
+		}
+
+		$classe = "D$type";
+		//$g = "D$type"::nom;
+		$g = new $classe();
+
+		/*$salut = 42;
+		$coucou = 'salut';
+		echo $$coucou;*/
+		CNavigation::setTitle($g::nom);
+
 		$g->data = self::TriPoint(self::tableauRandom(15));
-
 		$g->show();
+
+		DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data','view',
+			array('nom'=>$_REQUEST['nom'])));
 	}
 }
 ?>
