@@ -24,10 +24,10 @@ class Data
 
 		if (CNavigation::isValidSubmit(array('nom','desc', 'mode'), $_REQUEST))
 		{
+			$_REQUEST['type'] = $_REQUEST['mode'];
 			if (R::findOne('releve', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id'])))
 			{
 				new CMessage('Un relevé existe déjà avec le même nom', 'error');
-				$_REQUEST['type'] = $_REQUEST['mode'];
 			}
 			else
 			{
@@ -88,7 +88,52 @@ END;*/
 
 	public function view()
 	{
-		CTools::hackError();
+		$releve = DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']);
+		
+		if (!$releve) {
+			CTools::hackError();
+			return;
+		}
+
+		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
+		CNavigation::setDescription($releve['description']);
+		groaw($releve);
+	
+		$data = DisplayMod::getDisplayTypes();
+		DataView::showDisplayViewChoiceTitle();
+		DisplayView::showGraphChoiceMenu($data);
+
+		DataView::showInformations();
+
+		DataView::showViewButtons(
+				CNavigation::generateMergedUrl('Data', 'remove'),
+				CNavigation::generateUrlToApp('Data'));
+	}
+
+	public function remove()
+	{
+		$releve = DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']);
+		if (!$releve) {
+			CTools::hackError();
+			return;
+		}
+
+		if (isset($_REQUEST['confirm'])) {
+			$nom = $releve['name'];
+			R::trash(R::load('releve', $releve['id']));
+			new CMessage("Le relevé «${nom}» a bien été supprimé.");
+			CNavigation::redirectToApp('Data');
+		}
+		else
+		{
+			CNavigation::setTitle('Suppression du relevé «'.$releve['name'].'»');
+			CNavigation::setDescription('Consequences will never be the same!');
+
+			DataView::showRemoveForm(
+					$releve['description'],
+					CNavigation::generateMergedUrl('Data', 'remove', array('confirm' => 'yes')),
+					CNavigation::generateMergedUrl('Data', 'view'));
+		}
 	}
 }
 ?>

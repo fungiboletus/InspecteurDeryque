@@ -1,19 +1,7 @@
 <?php
 
-class DataMod
+class DataMod extends AbstractMod
 {
-	public $nom;
-	public $dossier;
-
-	public function DataMod($nom, $dossier) {
-		$this->nom = $nom;
-		$this->dossier = $dossier;
-	}
-
-	public static function secureDossier($dossier) {
-		return str_replace('..', '', $dossier);
-	}
-
 	public static function getDataTypes() {
 		$data = array();
 
@@ -41,7 +29,11 @@ class DataMod
 
 	public static function modExist($dossier) {
 		$dossier = self::secureDossier($dossier);
-		return is_dir("Data/$dossier/D$dossier.php");
+		return file_exists("Data/$dossier/D$dossier.php");
+	}
+
+	public static function getReleve($nom, $user_id) {
+		return R::getRow('select r.id, name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $nom)); 
 	}
 }
 ?>

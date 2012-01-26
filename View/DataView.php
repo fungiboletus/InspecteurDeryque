@@ -3,13 +3,23 @@
 class DataView
 {
 	public static function showAddButton() {
-		$url_btn = CNavigation::generateUrlToApp('Data','choose');
-		global $ROOT_PATH;
+		$url = CNavigation::generateUrlToApp('Data','choose');
+		echo '<div class="well">';
+		self::showButton($url, 'primary', 'Nouveau relevé', 'plus');
+		echo '</div>';
+	}
+
+	public static function showViewButtons($url_del, $url_back) {
+		echo '<div class="well">';
+		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
+		self::showButton($url_del, 'danger', 'Supprimer le relevé', 'del');
+		echo '</div>';
+	}
+
+	private static function showButton($url, $class, $text, $icon) {
 		echo <<<END
-			<div class="well">
-				<a href="$url_btn" class="btn large primary">
-				<span class="plus_text">Nouveau relevé</span></a>
-			</div>
+			<a href="$url" class="btn large $class">
+			<span class="${icon}_text">$text</span></a>
 END;
 	}
 
@@ -97,6 +107,42 @@ END;
 </div>
 END;
 		}
+	}
+
+	public static function showRemoveForm($desc, $url_confirm, $url_back)
+	{
+		$hdesc = htmlspecialchars($desc);
+		echo <<<END
+<div class="alert-message block-message warning">
+<p>Veuillez confirmer la suppression du relevé. La suppression est définitive.</p>
+<h4>Description du relevé</h4>
+<p><em>$hdesc</em></p>
+</div>
+			<div class="well">
+END;
+		self::showButton($url_back, 'info', 'Annuler', 'back');
+		self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
+		echo '</div>';
+	}
+
+	public static function showDisplayViewChoiceTitle() {
+		echo <<<END
+<h3>Visualiser ce relevé directement
+<small>Choisissez le type de visualisation désiré</small></h3>
+END;
+	}
+
+	public static function showInformations() {
+		echo <<<END
+<h3>API Web
+<small>Informations nécessaires à la domination du monde</small></h3>
+<div class="well">
+<p>L'API web permet de rajouter dynamiquement et simplement des données.</p>
+<p>L'url à utiliser est <code>http://localhost/Canard/app/api/add/key/54af457eb/value/<strong>VALUE</strong></code></p>
+<p>Le code de retour est «200 OK» si tout fonctionne.</p>
+<em>Cette url est personnelle, et elle ne doit en aucun cas être communiquée.</em>
+</div>
+END;
 	}
 }
 ?>
