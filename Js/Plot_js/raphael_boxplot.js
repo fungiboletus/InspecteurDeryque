@@ -1,5 +1,40 @@
-//can't remember where I got this function ...
+/** - Raphael Boxplot -
+ * Displays boxplots using Raphael.
+ * ©Guy Champollion 2011, licensed under LPRAB : http://sam.zoy.org/lprab/
+ * based on Hamilton's work under "Hamilton Ulmer I-Don't-Give-A-Damn" license.
+ * see the Github repository : https://github.com/hamilton/RaphaelViz
+ */
 
+/**
+ * Extract datas from the html structure and
+ * use the raphael.js library to display boxplots.
+ */
+function showBoxPlot(){
+	var data = {
+			'bars' : [],
+			'labels' : [],
+			"x-axis" : "Courses",
+			"y-axis" : "Pouls"
+	};		
+	// Collecter les valeurs à la volée
+	var trs=document.getElementById("data").getElementsByTagName("table")[0].getElementsByTagName("tr");
+	// On ne veut pas parser les <th>
+	for(var i=1;i<trs.length;i++){
+		var temparray=new Array();
+		var tds = trs[i].getElementsByTagName('td');
+		for(var j=0;j<tds.length;j++){
+			temparray.push(parseFloat(tds[j].innerHTML));
+		}
+		data['bars'].push(temparray);
+		data['labels'].push(trs[i].className);
+	}
+	// The Div id is the first param, the data object the second.
+	boxplot("first", data);
+}
+
+/**
+ * « can't remember where I got this function ... »
+ */
 function rnd_bmt() {
     var x = 0, y = 0, rds, c;
 

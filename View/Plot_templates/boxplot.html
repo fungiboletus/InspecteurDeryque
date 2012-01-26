@@ -1,15 +1,17 @@
-<!--
 <html>
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<!--
+-->
 		<title>Test de la boite à moustache</title>
 		<script type="text/javascript" language="javascript" charset="utf-8" src="../../Js/raphael-min.js"></script>
-		<script type="text/javascript" language="javascript" charset="utf-8" src="../../Js/raphael_plotbox.js"></script>
+		<script type="text/javascript" language="javascript" charset="utf-8" src="../../Js/Plot_js/raphael_boxplot.js"></script>
+<!--
+		-->
 	</head>
 	<body>
--->
-<div id="first"></div>
-<div id="datas" style="display:none;">
+<div id="first" style="width:640px;height:480px;"></div>
+<div id="data" style="display:none;">
 	<table>
 		<tr>
 			<th>Min</th>
@@ -42,26 +44,10 @@
 	</table>
 </div>
 <script>
-	var data = {
-			'bars' : [],
-			'labels' : [],
-			"x-axis" : "Courses",
-			"y-axis" : "Pouls"
-	};		
-	// Collecter les valeurs à la volée
-	var trs=document.getElementById("datas").getElementsByTagName("table")[0].getElementsByTagName("tr");
-	// On ne veut pas parser les <th>
-	for(var i=1;i<trs.length;i++){
-		var temparray=new Array();
-		var tds = trs[i].getElementsByTagName('td');
-		for(var j=0;j<tds.length;j++){
-			temparray.push(parseFloat(tds[j].innerHTML));
-		}
-		data['bars'].push(temparray);
-		data['labels'].push(trs[i].className);
-	}
-	// The Div id is the first param, the data object the second.
-	boxplot("first", data);
+	/*
+	//*/
+	showBoxPlot();
 </script>
-<!--	</body>
-</html>-->
+<!---->	</body>
+</html><!---->
+
