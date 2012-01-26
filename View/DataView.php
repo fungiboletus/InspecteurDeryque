@@ -1,6 +1,6 @@
 <?php
 
-class DataView
+class DataView extends AbstractView
 {
 	public static function showAddButton() {
 		$url = CNavigation::generateUrlToApp('Data','choose');
@@ -14,13 +14,6 @@ class DataView
 		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
 		self::showButton($url_del, 'danger', 'Supprimer le relevé', 'del');
 		echo '</div>';
-	}
-
-	private static function showButton($url, $class, $text, $icon) {
-		echo <<<END
-			<a href="$url" class="btn large $class">
-			<span class="${icon}_text">$text</span></a>
-END;
 	}
 
 	public static function showDataTypeList($data) {
@@ -79,8 +72,9 @@ END;
 
 	public static function showRelevesList($releves)
 	{
-		if ($releves) {
-		CHead::addJS('jquery.tablesorter.min');
+		if ($releves)
+		{
+			CHead::addJS('jquery.tablesorter.min');
 			echo <<<END
 			<table class="zebra-striped bordered-table data_list">
 				<thead><tr>

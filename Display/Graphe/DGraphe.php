@@ -1,8 +1,7 @@
 <?php
-class DGraphe
+class DGraphe extends DAbstract
 {
 	const nom = 'Graphe';
-	public $data = null;
 
 	public function show()
 	{
@@ -15,7 +14,8 @@ class DGraphe
 
 		$ths="<tr>";
 		$tds="<tr>";
-		for($i=0; $i<count($tab["abscisse"]); $i++){
+		$i_max = count($tab['abscisse']);
+		for($i=0; $i<$i_max; $i++){
 			$ths.="<th>".$tab["abscisse"][$i]."</th>";
 			$tds.="<td>".$tab["ordonnee"][$i]."</td>";
 		}

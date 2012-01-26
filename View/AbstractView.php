@@ -4,6 +4,13 @@ abstract class AbstractView
 {
 	protected $now;
 	
+	protected static function showButton($url, $class, $text, $icon) {
+		echo <<<END
+			<a href="$url" class="btn large $class">
+			<span class="${icon}_text">$text</span></a>
+END;
+	}
+	
 	public function translateTimePeriod($period, $week = null)
 	{
 		switch($period)
