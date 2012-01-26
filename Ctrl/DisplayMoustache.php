@@ -1,12 +1,13 @@
 <?php
-class Display
+class DisplayMoustache
 {
 	private static function tableauRandom($nb = 10, $max = 100){
 		for($i = 0 ; $i < $nb ; $i++){
-			$tab[$i] = rand(1, $max);
+			$entry[$i] = rand(1, $max);
 		}
-		return $tab;
+		return $entry;
 	}
+	
 	private static function quartiles($entry){
 		sort($entry,SORT_NUMERIC);
 		$tab=array($entry[0],0,0,0,end($entry));
@@ -26,10 +27,12 @@ class Display
 			$tab[2]=$entry[ ($i_max+1)/2 ];
 		} else {
 			$tab[2]=($entry[round( ($i_max+1)/2,0, PHP_ROUND_HALF_DOWN)]
-					+$entry[round( ($i_max+1)/2,0, PHP_ROUND_HALF_UP)  ])/ 2
+					+$entry[round( ($i_max+1)/2,0, PHP_ROUND_HALF_UP)  ])/ 2 ;
 		}
 		return $tab;
 	}
+	
+	
 
 	public function index() {
 		CNavigation::setTitle('Affichage d\'un graphe');

@@ -11,9 +11,10 @@ class DBoites extends DAbstract
 		CHead::addJs('Plot_js/raphael_boxplot');
 
 		$tab = $this->data;
-
-		$tds="<tr class='données 1'>";
-		for($i=0; $i<count($tab); $i++){
+		
+		$tds="<tr class=''>";
+		$i_max=count($tab);
+		for($i=0; $i<$i_max; $i++){
 			$tds.="<td>".$tab[$i]."</td>";
 		}
 		$tds.="</tr>";
