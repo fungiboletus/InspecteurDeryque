@@ -17,6 +17,15 @@ class DisplayMod extends AbstractMod
 
 		return $data;
 	}
+	
+	public static function loadDisplayType($dossier) {
+		$dossier = self::secureDossier($dossier);
+		if (!file_exists("Display/$dossier/D$dossier.php")) return null;
+		require_once("Display/$dossier/D$dossier.php");
+		$classe = "D$dossier";
+		$nom = $classe::nom;
+		return new DisplayMod($nom, $dossier);
+	}
 }
 
 ?>
