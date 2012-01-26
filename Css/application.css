@@ -227,3 +227,9 @@ content:url(../Img/icons/circle-west.png);
 .float_right {
 float:right;
 }
+
+#mainContent {
+width:960px;
+padding-left:10px;
+padding-right:10px;
+}

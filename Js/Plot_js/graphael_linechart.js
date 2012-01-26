@@ -1,7 +1,7 @@
 function showLineChart(){
-	var r = Raphael("holder", 640, 480),
+	var r = Raphael("holder", 940, 480),
 	txtattr = { font: "12px sans-serif" };
-	r.text(150, 20, "Graphe linéaire avec des points").attr(txtattr);
+	r.text(150, 20, "").attr(txtattr);
 
 	var abscisses=Array(),ordonnees=Array();
 
@@ -23,7 +23,7 @@ function showLineChart(){
 		ordonnees.push(tempord);
 	}
 
-	var lines = r.linechart(20, 40, 480, 220, abscisses,ordonnees,
+	var lines = r.linechart(20, 40, 920, 300, abscisses,ordonnees,
 		{nostroke: false, axis: "0 0 1 1", symbol: "circle", smooth: true }
 		).hoverColumn(function () {
 			this.tags = r.set();
