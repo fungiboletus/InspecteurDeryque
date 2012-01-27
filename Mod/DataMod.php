@@ -35,5 +35,9 @@ class DataMod extends AbstractMod
 	public static function getReleve($nom, $user_id) {
 		return R::getRow('select r.id, name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $nom)); 
 	}
+
+	public static function getReleves($user_id) {
+		return R::getAll('select name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id', array($user_id)); 
+	}
 }
 ?>

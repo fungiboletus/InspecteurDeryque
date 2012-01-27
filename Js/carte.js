@@ -1,15 +1,3 @@
-<html>
-<head>
-	<title>Test Genialissime</title>
-	<link href="/InspecteurDeryque/Css/bootstrap.min.css" media="screen" rel="Stylesheet" type="text/css" />
-	<link href="/InspecteurDeryque/Css/application.css" media="screen" rel="Stylesheet" type="text/css" />
-	<link href="/InspecteurDeryque/Css/Dashboard.css" media="screen" rel="Stylesheet" type="text/css" />
-	<link href="/InspecteurDeryque/View/supercss.css" media="screen" rel="Stylesheet" type="text/css" />
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-	<script type="text/javascript">
 	function initialiser() {
 		var latlng = new google.maps.LatLng((46.781367900048+46.778605381016)/2, (6.6401992834884+6.6588674582321)/2);
 		//objet contenant des propriétés avec des identificateurs prédéfinis dans Google Maps permettant
@@ -56,13 +44,5 @@
 			map: carte
 		});
 	}
-	$(function() {
-		initialiser();
-	});
-	</script>
-</head>
-<body>
-	<div id="carte"></div>
-</body>
-</html>
 
+	window.onload = initialiser;

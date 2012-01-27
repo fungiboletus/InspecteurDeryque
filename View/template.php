@@ -8,7 +8,8 @@
 }
 foreach (CHead::$js as $js)
 {
-	echo "\t<script type=\"text/javascript\" src=\"$ROOT_PATH/Js/$js.js\"></script>\n";
+	if (strpos($js, 'http://')===false) $js = "$ROOT_PATH/Js/$js.js";
+	echo "\t<script type=\"text/javascript\" src=\"$js\"></script>\n";
 }
 ?>
 </head>
