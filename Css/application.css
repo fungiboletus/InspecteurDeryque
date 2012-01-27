@@ -218,6 +218,10 @@ left:auto;
 	 margin-left:-32px;
 }
 
+.icon_button {
+padding-left:30px;
+}
+
 .nav a.icon_button {
 padding-left:40px;
 }
