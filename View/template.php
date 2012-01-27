@@ -52,7 +52,7 @@ END;
 
 		echo <<<END
 		<ul class="nav left">
-			<li$c_data><a href="$url_data">Données</a></li>
+			<li$c_data><a href="$url_data">Relevés</a></li>
 			<li><a href="$url_xml">Fichier xml</a></li>
 		</ul>
 		<ul class="nav right">	
