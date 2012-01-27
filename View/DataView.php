@@ -9,9 +9,10 @@ class DataView extends AbstractView
 		echo '</div>';
 	}
 
-	public static function showViewButtons($url_del, $url_back) {
+	public static function showViewButtons($url_del, $url_back, $url_rand) {
 		echo '<div class="well">';
 		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
+		self::showButton($url_rand, '', 'Remplir avec des données aléatoires', 'rand');
 		self::showButton($url_del, 'danger', 'Supprimer le relevé', 'del');
 		echo '</div>';
 	}
@@ -139,18 +140,27 @@ END;
 END;
 	}
 
-	public static function showInformations($nb_tuples) {
+	public static function showInformations($nb_tuples, $data_type) {
+		$hdata_type = htmlspecialchars($data_type->nom);
 		echo <<<END
 <h3>Informations</h3>
 <div class="well">
 <dl>
-	<dt>Nombre d'enregistrements</dt>
+	<dt>Statistiques</dt>
 	<dd>Ce relevé contient $nb_tuples enregistrements</dd>
 	
-	<dt>Outils de développement</dt>
-	<dd>Dominer le monde</dd>
+	<dt>Type de données</dt>
+	<dd>$hdata_type</dd>
+
+	<dt>Structure de données</dt>
+	<dd><ul>
+END;
+		foreach ($data_type->getVariables() as $k => $var) {
+			echo "<li>", htmlspecialchars($var), " <em>(", htmlspecialchars($k), ")</em></li>\n";
+		}
+		echo <<<END
+		</ul></dd>
 </dl>
-<p>L'API web permet de rajouter dynamiquement et simplement des données.</p>
 </div>
 END;
 	}
