@@ -50,15 +50,17 @@ END;
 		$url_xml = CNavigation::generateUrlToApp('Dashboard', 'xml');
 		$url_data = CNavigation::generateUrlToApp('Data');
 		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
+		$c_dashboard = $CTRL_NAME === 'Dashboard' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 
 		echo <<<END
 		<ul class="nav left">
-			<li$c_data><a href="$url_data">Relevés</a></li>
+			<li$c_data><a href="$url_data" class="icon_button shoebox_text">Relevés</a></li>
+			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
 			<li><a href="$url_xml">Fichier xml</a></li>
 		</ul>
 		<ul class="nav right">	
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle">$user_name</a>
+				<a href="#" class="dropdown-toggle icon_button user_text">$user_name</a>
 					<ul class="dropdown-menu">
 						<li><a href="$url_pref">Préférences</a></li>
 						<li><a href="$url_help">Aide</a></li>

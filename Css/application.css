@@ -206,13 +206,20 @@ color:gray;
 .btn{
 position:relative;
 }
-.plus_text:before, .del_text:before, .back_text:before {
+.icon_button:before {
 position:absolute;
 left:8px;
 top:5px;
 }
-.plus_text, .del_text, .back_text {
-padding-left:30px;
+
+.nav .icon_button:before {
+top:7px;
+left:auto;
+	 margin-left:-32px;
+}
+
+.nav a.icon_button {
+padding-left:40px;
 }
 .plus_text:before {
 content:url(../Img/icons/circle-plus.png);
@@ -223,6 +230,18 @@ content:url(../Img/icons/circle-x.png);
 .back_text:before {
 content:url(../Img/icons/circle-west.png);
 }
+.rand_text:before {
+content:url(../Img/icons/circle-rand.png);
+}
+.user_text:before {
+content:url(../Img/icons/user.png);
+}
+.shoebox_text:before {
+content:url(../Img/icons/shoebox.png);
+}
+.line_text:before {
+content:url(../Img/icons/line-chart.png);
+}
 
 .float_right {
 float:right;
@@ -232,4 +251,9 @@ float:right;
 width:960px;
 padding-left:10px;
 padding-right:10px;
+}
+
+.nav a:hover {
+  background: #444;
+  background: rgba(255, 255, 255, 0.05);
 }

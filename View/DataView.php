@@ -12,7 +12,7 @@ class DataView extends AbstractView
 	public static function showViewButtons($url_del, $url_back, $url_rand) {
 		echo '<div class="well">';
 		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
-		self::showButton($url_rand, '', 'Remplir avec des données aléatoires', 'rand');
+		self::showButton($url_rand, 'info', 'Données aléatoires', 'rand');
 		self::showButton($url_del, 'danger', 'Supprimer le relevé', 'del');
 		echo '</div>';
 	}
