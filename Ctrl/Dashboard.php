@@ -5,7 +5,7 @@ class Dashboard extends AbstractView
 
 	public function index() {
 		CNavigation::setTitle('Tableau de bord');
-		DashboardView::showGraph();
+		DisplayView::showPageWithLayout();
 	}
 
 	public function DataDisplay($xml){
