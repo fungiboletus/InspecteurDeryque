@@ -10,14 +10,24 @@ class DDiagramme extends DAbstract
 		CHead::addJs('g.pie-min');
 		CHead::addJs('Plot_js/graphael_piechart');
 
-		$tab = $this->data;
-
+		$first = null;
 		$ths="<tr>";
 		$tds="<tr>";
-		$i_max = count($tab['abscisse']);
-		for($i=0; $i<$i_max; $i++){
-			$ths.="<th>".$tab["abscisse"][$i]."</th>";
-			$tds.="<td>".$tab["ordonnee"][$i]."</td>";
+		foreach ($this->data as $data)
+		{
+			if ($first === null) {
+				$first = $data['timestamp'];
+			}
+
+			$diff = ($data['timestamp'] - $first)*1000000;
+
+			$ths.="<th>".$diff."</th>\n";
+
+			// TODO Une seule ligne normalement…
+			foreach ($this->structure as $k => $v) {
+				if ($k !== 'timestamp')
+					$tds.="<td>".$data[$k]."</td>\n";
+			}
 		}
 		$ths.="</tr>";
 		$tds.="</tr>";

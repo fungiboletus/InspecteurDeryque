@@ -99,7 +99,8 @@ END;*/
 		CNavigation::setDescription($releve['description']);
 		
 		$n_datamod = DataMod::loadDataType($releve['modname']);
-		DataView::showInformations(R::getCell('select count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id'])), $n_datamod);
+		$nb = R::getCell('select count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
+		DataView::showInformations(is_array($nb) ? 0 : $nb, $n_datamod);
 	
 		$data = DisplayMod::getDisplayTypes();
 		DataView::showDisplayViewChoiceTitle();
