@@ -97,7 +97,7 @@ END;*/
 
 		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
 		CNavigation::setDescription($releve['description']);
-
+		
 		$n_datamod = DataMod::loadDataType($releve['modname']);
 		DataView::showInformations(R::getCell('select count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id'])), $n_datamod);
 	
@@ -142,7 +142,7 @@ END;*/
 	public function random()
 	{
 		$releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
-		$b_releve = R::load('releves', $releve['id']);
+		$b_releve = R::load('releve', $releve['id']);
 
 		if (!$releve) {
 			CTools::hackError();
