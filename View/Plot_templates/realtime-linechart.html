@@ -42,9 +42,12 @@ $(function () {
             res.push([i, data[i]])
         return res;
     }
+    /**
+     * Récupère une valeur JSon pour l'ajouter au graphe.
+     */
     function getJSONData(){
     	var oRequest = new XMLHttpRequest();
-		oRequest.open( "GET", 'http://localhost/InspecteurDeryque/View/Plot_templates/realtime-json.php', false );
+		oRequest.open( "GET", 'http://157.169.101.179/InspecteurDeryque/View/Plot_templates/realtime-json.php', false );
 		oRequest.setRequestHeader("User-Agent",navigator.userAgent);
 		oRequest.send(null)
 
@@ -65,7 +68,7 @@ $(function () {
     //*/
     }
     // setup control widget
-    var updateInterval = 30;
+    var updateInterval = 100;
     $("#updateInterval").val(updateInterval).change(function () {
         var v = $(this).val();
         if (v && !isNaN(+v)) {
@@ -80,12 +83,18 @@ $(function () {
 
     // setup plot
     var options = {
-        series: { shadowSize: 5 }, // drawing is faster without shadows
+        series: { shadowSize: 0 }, // drawing is faster without shadows
         yaxis: { min: 0, max: 50 },
-        xaxis: { show: true }
+        xaxis: { show: false }
     };
     var plot = $.plot($("#holder"), [ getRandomData() ], options);
-	//print_r(used_array);
+    
+    /**
+     * Met à jour le tableau.
+     * Pour avoir un effet de décalage, il faut que le nouveau tableau 
+     * soit obtenu via un shift de l'ancien tableau + quelques
+     * nouvelles valeurs.
+     */
     function update() {
     	//print_r(used_array);
         plot.setData([ getJSONData() ]);
