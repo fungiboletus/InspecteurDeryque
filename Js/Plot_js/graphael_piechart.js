@@ -21,7 +21,7 @@ function showPieChart(){
 	var txtattr = { font: "12px sans-serif" };
 	r.text(200, 200, "").attr(txtattr);
 	//Create pie
-	var pie = r.piechart(150, 150, 100, values, {legend: labels, legendpos: "west"});
+	var pie = r.piechart(250, 150, 130, values, {legend: labels, legendpos: "east"});
 	//We will adjust UI when mouse over the chart sector
 	pie.hover(function () {
                     this.sector.stop();
