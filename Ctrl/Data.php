@@ -46,7 +46,7 @@ class Data
 					}
 				}
 
-				$user = R::load('user', $_SESSION['bd_id']);
+				$user = $_SESSION['user'];
 
 				$releve = R::dispense('releve');
 				$releve->mod = $mode;
@@ -97,13 +97,24 @@ END;*/
 
 		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
 		CNavigation::setDescription($releve['description']);
+	
+		DataView::showInformations(42);
+
+		$n_datamod = DataMod::loadDataType($releve['modname']);
+		$datamod = $n_datamod->instancier();
+		//$datamod = DataMod::loadDataType($releve['modname'])->getVariables();
 		groaw($releve);
+		groaw($datamod);
+		$datamod->timestamp = microtime();
+		$datamod->lat = 42.56;
+		$datamod->lon = 120.65;
+		$n_datamod->save($_SESSION['user'],R::load('releves', $releve), $datamod);
 	
 		$data = DisplayMod::getDisplayTypes();
 		DataView::showDisplayViewChoiceTitle();
 		DisplayView::showGraphChoiceMenu($data);
 
-		DataView::showInformations();
+		DataView::showAPIInformations();
 
 		DataView::showViewButtons(
 				CNavigation::generateMergedUrl('Data', 'remove'),

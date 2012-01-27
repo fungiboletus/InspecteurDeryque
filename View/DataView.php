@@ -126,7 +126,7 @@ END;
 END;
 	}
 
-	public static function showInformations() {
+	public static function showAPIInformations() {
 		echo <<<END
 <h3>API Web
 <small>Informations nécessaires à la domination du monde</small></h3>
@@ -135,6 +135,22 @@ END;
 <p>L'url à utiliser est <code>http://localhost/Canard/app/api/add/key/54af457eb/value/<strong>VALUE</strong></code></p>
 <p>Le code de retour est «200 OK» si tout fonctionne.</p>
 <em>Cette url est personnelle, et elle ne doit en aucun cas être communiquée.</em>
+</div>
+END;
+	}
+
+	public static function showInformations($nb_tuples) {
+		echo <<<END
+<h3>Informations</h3>
+<div class="well">
+<dl>
+	<dt>Nombre d'enregistrements</dt>
+	<dd>Ce relevé contient $nb_tuples enregistrements</dd>
+	
+	<dt>Outils de développement</dt>
+	<dd>Dominer le monde</dd>
+</dl>
+<p>L'API web permet de rajouter dynamiquement et simplement des données.</p>
 </div>
 END;
 	}

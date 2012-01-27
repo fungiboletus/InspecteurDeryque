@@ -8,10 +8,10 @@ echo <<<END
 </head>
 <body>
 END;
-echo "<pre>";
-print_r(TestRandom::TriPoint(TestRandom::tableauRandom()));
-echo "</pre>";
 
+/*echo "<pre>";
+print_r(TestRandom::TriPoint(TestRandom::tableauRandom()));
+echo "</pre>";*/
 
 echo <<<END
 </body>

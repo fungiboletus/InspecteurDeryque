@@ -32,7 +32,7 @@ class Import{
 				</div>
 				<div class="input" id="boutons">
 					<input type="submit" value="Importer" class="btn primary"/> <button class="btn" type="reset">Annuler</button>
-				</div>
+				</div> 
 			</div>
 		</form>
 END;
