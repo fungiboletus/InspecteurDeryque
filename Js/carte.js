@@ -1,19 +1,14 @@
 	function initialiser() {
 		var latlng = new google.maps.LatLng((46.781367900048+46.778605381016)/2, (6.6401992834884+6.6588674582321)/2);
-		//objet contenant des propriétés avec des identificateurs prédéfinis dans Google Maps permettant
-		//de définir des options d'affichage de notre carte
 		var options = {
 			center: latlng,
 			zoom: 16,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			scaleControl: true
 		};
-		
-		//constructeur de la carte qui prend en paramêtre le conteneur HTML
-		//dans lequel la carte doit s'afficher et les options
 		var carte = new google.maps.Map(document.getElementById("carte"), options);
 
-		//test plyligne
+		//polyligne
 		var parcoursBus = [
 			new google.maps.LatLng(46.781367900048, 6.6401992834884),
 			new google.maps.LatLng(46.780821285011, 6.6416348016222),
@@ -27,10 +22,10 @@
 		];
 	
 		var traceParcoursBus = new google.maps.Polyline({
-			path: parcoursBus,//chemin du tracé
-			strokeColor: "#FF0000",//couleur du tracé
-			strokeOpacity: 1.0,//opacité du tracé
-			strokeWeight: 2//grosseur du tracé
+			path: parcoursBus,
+			strokeColor: "#FF0000",
+			strokeOpacity: 1.0,
+			strokeWeight: 2
 		});
 		
 		traceParcoursBus.setMap(carte);
