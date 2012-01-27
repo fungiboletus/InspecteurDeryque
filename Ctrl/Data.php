@@ -156,7 +156,7 @@ END;*/
 			$datamod = $n_datamod->instancier();
 
 			foreach ($variables as $k => $var) {
-				if ($k === 'timestamp') $datamod->timestamp = microtime();
+				if ($k === 'timestamp') $datamod->timestamp = microtime(true);
 				else
 					$datamod->$k = rand(0,6000)*0.02345;
 			}

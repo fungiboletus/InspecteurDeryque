@@ -3,6 +3,7 @@
 abstract class DAbstract
 {
 	public $data = null;
+	public $structure = null;
 
 	public function show() {
 		echo <<<END
