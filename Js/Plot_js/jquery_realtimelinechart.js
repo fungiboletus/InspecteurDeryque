@@ -32,7 +32,7 @@ function showLineChart () {
      */
     function getJSONData(){
     	var oRequest = new XMLHttpRequest();
-		oRequest.open( "GET", 'http://157.169.101.179/InspecteurDeryque/View/Plot_templates/realtime-json.php', false );
+		oRequest.open( "GET", 'realtime-json.php', false );
 		oRequest.setRequestHeader("User-Agent",navigator.userAgent);
 		oRequest.send(null)
 
