@@ -5,7 +5,7 @@ class Data
 		CNavigation::setTitle('Gestion des données');
 		CNavigation::setDescription('All your data are belong to us');
 
-		$releves = R::getAll('select name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id', array($_SESSION['bd_id'])); 
+		$releves = DataMod::getReleves($_SESSION['bd_id']);
 
 		DataView::showRelevesList($releves);
 
@@ -88,7 +88,7 @@ END;*/
 
 	public function view()
 	{
-		$releve = DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']);
+		$releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
 		
 		if (!$releve) {
 			CTools::hackError();
@@ -97,18 +97,9 @@ END;*/
 
 		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
 		CNavigation::setDescription($releve['description']);
-	
-		DataView::showInformations(42);
 
 		$n_datamod = DataMod::loadDataType($releve['modname']);
-		$datamod = $n_datamod->instancier();
-		//$datamod = DataMod::loadDataType($releve['modname'])->getVariables();
-		groaw($releve);
-		groaw($datamod);
-		$datamod->timestamp = microtime();
-		$datamod->lat = 42.56;
-		$datamod->lon = 120.65;
-		$n_datamod->save($_SESSION['user'],R::load('releves', $releve), $datamod);
+		DataView::showInformations(R::getCell('select count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id'])), $n_datamod);
 	
 		$data = DisplayMod::getDisplayTypes();
 		DataView::showDisplayViewChoiceTitle();
@@ -118,7 +109,8 @@ END;*/
 
 		DataView::showViewButtons(
 				CNavigation::generateMergedUrl('Data', 'remove'),
-				CNavigation::generateUrlToApp('Data'));
+				CNavigation::generateUrlToApp('Data'),
+				CNavigation::generateMergedUrl('Data', 'random'));
 	}
 
 	public function remove()
@@ -145,6 +137,35 @@ END;*/
 					CNavigation::generateMergedUrl('Data', 'remove', array('confirm' => 'yes')),
 					CNavigation::generateMergedUrl('Data', 'view'));
 		}
+	}
+
+	public function random()
+	{
+		$releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+		$b_releve = R::load('releves', $releve['id']);
+
+		if (!$releve) {
+			CTools::hackError();
+			return;
+		}
+		
+		$n_datamod = DataMod::loadDataType($releve['modname']);
+		$variables = $n_datamod->getVariables();
+
+		for ($i = 0; $i < 10; ++$i) {
+			$datamod = $n_datamod->instancier();
+
+			foreach ($variables as $k => $var) {
+				if ($k === 'timestamp') $datamod->timestamp = microtime(true);
+				else
+					$datamod->$k = rand(0,6000)*0.02345;
+			}
+
+			$n_datamod->save($_SESSION['user'], $b_releve, $datamod);
+		}
+
+		new CMessage('10 valeurs aléatoires ont étés générées');
+		CNavigation::redirectToApp('Data', 'view', array('nom' => $_REQUEST['nom']));
 	}
 }
 ?>

@@ -13,7 +13,7 @@ abstract class AbstractMod
 	}
 
 	public static function secureDossier($dossier) {
-		return str_replace('..', '', $dossier);
+		return preg_replace('/(\.\.)|\\\'/', '', $dossier);
 	}
 
 	public function instancier() {
