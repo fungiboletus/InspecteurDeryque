@@ -28,6 +28,7 @@ R::debug(true);
 				$_SESSION['name'] = $user->name;
 				$_SESSION['mail'] = $user->mail;
 				$_SESSION['bd_id'] = $user->getID();
+				$_SESSION['user'] = $user;
 				CNavigation::redirectToApp('Dashboard');
 			}
 		}

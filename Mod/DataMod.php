@@ -35,5 +35,20 @@ class DataMod extends AbstractMod
 	public static function getReleve($nom, $user_id) {
 		return R::getRow('select r.id, name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $nom)); 
 	}
+
+	public function save($user, $releve, $data)
+	{
+		$vars = $this->getVariables();
+
+		$tuple = R::dispense('d_'.$this->dossier);
+		$tuple->user = $user;
+		$tuple->releve = $releve;
+
+		foreach($vars as $key => $var) {
+			$tuple->$key = $data->$key;
+		}
+
+		return R::store($tuple);
+	}
 }
 ?>

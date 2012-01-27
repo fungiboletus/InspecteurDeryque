@@ -21,15 +21,15 @@ class Display
 	public function view() {
 
 		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'default';
-		if (!DisplayMod::loadDisplayType($type)||!isset($_REQUEST['nom']))
+
+		$d = DisplayMod::loadDisplayType($type);
+		if (!$d||!isset($_REQUEST['nom']))
 		{
 			CTools::hackError();
 			return;
 		}
 
-		$classe = "D$type";
-		//$g = "D$type"::nom;
-		$g = new $classe();
+		$g = $d->instancier();
 
 		/*$salut = 42;
 		$coucou = 'salut';
