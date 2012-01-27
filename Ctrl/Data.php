@@ -5,7 +5,7 @@ class Data
 		CNavigation::setTitle('Gestion des données');
 		CNavigation::setDescription('All your data are belong to us');
 
-		$releves = R::getAll('select name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id', array($_SESSION['bd_id'])); 
+		$releves = DataMod::getReleves($_SESSION['bd_id']);
 
 		DataView::showRelevesList($releves);
 

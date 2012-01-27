@@ -1,10 +1,10 @@
 <?php
 class DisplayView extends AbstractView
 {
-	public static function showGraphChoiceMenu($data){
+	public static function showGraphChoiceMenu($data, $well = true){
 		CHead::addCSS('Display');
+		if ($well) echo '<div class="well">';
 		echo <<<END
-		<div class="well">
 		<div id="selection_graph">
 			<ul class="media-grid">	
 END;
@@ -26,14 +26,56 @@ END;
 		echo <<<END
 			</ul>
 		</div>
-		</div>
 END;
+		if ($well) echo '</div>';
 	}
 
 	public static function showBackButtons($url_back) {
 		echo '<div class="well">';
 		self::showButton($url_back, 'info', 'Retour au relevé', 'back');
 		echo '</div>';
+	}
+
+	public static function showPageWithLayout(){
+		echo <<<END
+		<div class="container-fluid">
+			<div class="sidebar">
+				<div class="well">
+END;
+		DisplayView::showRelevesChoiceMenu();
+		echo <<<END
+				</div>
+			</div>
+			<div class="content">
+				<div class="hero-unit">
+END;
+		$data = DisplayMod::getDisplayTypes();
+		DisplayView::showGraphChoiceMenu($data, false);
+		DashboardView::showGraph();
+		echo <<<END
+				</div>
+			</div>
+		</div>
+END;
+	}
+
+	public static function showRelevesChoiceMenu(){
+		echo <<<END
+		<h4>Liste des relevés</h4>
+		<div  id="releves">
+			<table class="zebra-striped">
+END;
+		$releves = DataMod::getReleves($_SESSION['bd_id']);
+		foreach($releves as $releve){
+			echo <<<END
+			<tr>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+				<td>
+END;
+			echo htmlspecialchars($releve["name"]), "</td>";
+			echo "</tr>";
+		}
+		echo "</table></div>";
 	}
 }
 
