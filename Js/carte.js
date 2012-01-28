@@ -33,7 +33,7 @@
 		var latlng = new google.maps.LatLng((firstlat+lastlat)/2, (lastlon+firstlon)/2);
 		var options = {
 			center: latlng,
-			zoom: 16,
+			zoom:2,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			scaleControl: true
 		};
@@ -74,17 +74,22 @@
 		
 			traceparcours.setMap(carte);
 		}
-
-		var marqueur = new google.maps.Marker({
-			position: new google.maps.LatLng(firstlat, firstlon),
+		var dep = new google.maps.LatLng(firstlat, firstlon);
+		var arr = new google.maps.LatLng(lastlat, lastlon);
+		var marqueur1 = new google.maps.Marker({
+			position: dep,
 			map: carte,
 			title: "Départ"
 		});
-		var marqueur = new google.maps.Marker({
-			position: new google.maps.LatLng(lastlat, lastlon),
+		var marqueur2 = new google.maps.Marker({
+			position: arr,
 			map: carte,
 			title: "Arrivée"
 		});
+		var markerBounds = new google.maps.LatLngBounds();
+		markerBounds.extend(dep);
+		markerBounds.extend(arr);
+		carte.fitBounds(markerBounds);
 	}
 
 	window.onload = initialiser;
