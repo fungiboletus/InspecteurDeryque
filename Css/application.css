@@ -203,6 +203,10 @@ color:gray;
 	text-decoration:none;
 }
 
+.nav.boutons_inspecteur {
+	margin-left:25px;
+}
+
 .btn{
 position:relative;
 }
@@ -225,27 +229,14 @@ padding-left:30px;
 .nav a.icon_button {
 padding-left:40px;
 }
-.plus_text:before {
-content:url(../Img/icons/circle-plus.png);
-}
-.del_text:before {
-content:url(../Img/icons/circle-x.png);
-}
-.back_text:before {
-content:url(../Img/icons/circle-west.png);
-}
-.rand_text:before {
-content:url(../Img/icons/circle-rand.png);
-}
-.user_text:before {
-content:url(../Img/icons/user.png);
-}
-.shoebox_text:before {
-content:url(../Img/icons/shoebox.png);
-}
-.line_text:before {
-content:url(../Img/icons/line-chart.png);
-}
+.plus_text:before { content:url(../Img/icons/circle-plus.png); }
+.del_text:before { content:url(../Img/icons/circle-x.png);}
+.back_text:before { content:url(../Img/icons/circle-west.png);}
+.rand_text:before { content:url(../Img/icons/circle-rand.png);}
+.user_text:before { content:url(../Img/icons/user.png);}
+.shoebox_text:before { content:url(../Img/icons/shoebox.png);}
+.line_text:before { content:url(../Img/icons/line-chart.png);}
+.upload_text:before { content:url(../Img/icons/upload.png);}
 
 .float_right {
 float:right;

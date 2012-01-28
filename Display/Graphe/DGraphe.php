@@ -5,15 +5,7 @@ class DGraphe extends DAbstract
 
 	public function show()
 	{
-		if (count($this->data) === 0)
-		{
-			echo <<<END
-<div class="alert-message block-message warning">
-<p>Il n'y a aucune donnée pour l'instant.</p>
-</div>
-END;
-			return;
-		}
+		if ($this->gererVide()) return;
 
 		CHead::addJs('raphael-min');
 		CHead::addJs('g.raphael-min');

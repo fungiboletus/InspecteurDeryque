@@ -5,6 +5,8 @@ class DDiagramme extends DAbstract
 
 	public function show()
 	{
+		if ($this->gererVide()) return;
+
 		CHead::addJs('raphael-min');
 		CHead::addJs('g.raphael-min');
 		CHead::addJs('g.pie-min');

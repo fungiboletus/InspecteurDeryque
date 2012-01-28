@@ -5,6 +5,8 @@ class DTableau extends DAbstract
 
 	public function show() 
 	{
+		if ($this->gererVide()) return;
+
 		CHead::addJS('jquery.tablesorter.min');
 		echo <<<END
 		<table class="zebra-striped bordered-table display_list">

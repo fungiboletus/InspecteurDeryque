@@ -142,12 +142,19 @@ END;
 
 	public static function showInformations($nb_tuples, $data_type) {
 		$hdata_type = htmlspecialchars($data_type->nom);
+
 		echo <<<END
 <h3>Informations</h3>
 <div class="well">
 <dl>
 	<dt>Statistiques</dt>
-	<dd>Ce relevé contient $nb_tuples enregistrements</dd>
+END;
+		if ($nb_tuples) {
+			echo "<dd>Ce relevé contient $nb_tuples enregistrements.</dd>\n";
+		} else {
+			echo "<dd>Ce relevé est vide.</dd>\n";
+		}
+		echo <<<END
 	
 	<dt>Type de données</dt>
 	<dd>$hdata_type</dd>

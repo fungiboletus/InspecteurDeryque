@@ -12,4 +12,18 @@ abstract class DAbstract
 </div>
 END;
 	}
+
+	public function gererVide() {
+		if (count($this->data) === 0)
+		{
+			echo <<<END
+<div class="alert-message block-message warning">
+<p>Il n'y a aucune donnée pour l'instant.</p>
+</div>
+END;
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
