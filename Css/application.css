@@ -252,3 +252,22 @@ padding-right:10px;
   background: #444;
   background: rgba(255, 255, 255, 0.05);
 }
+
+#selection_graph li.display_prefs a {
+border-color:#00A1FF;
+} 
+#selection_graph li.display_prefs a:hover {
+border-color: #0069D6;
+} 
+/*#selection_graph li.display_prefs a {
+background:pink;
+border:3px solid yellow;
+-webkit-transition: all 1s ease-in-out;
+box-shadow:0px 0px 8px purple;
+}
+
+#selection_graph li.display_prefs a:hover{
+background:blue;
+border:3px solid green;
+-webkit-transform:rotate(72deg);
+}*/

@@ -26,8 +26,9 @@ END;
 		{
 			$dossier = $display->dossier;
 			$url = CNavigation::generateMergedUrl('Display','view', array('type' => $dossier));
+			$class = in_array($dossier, $prefs, true) ? ' class="display_prefs"' : '';
 			echo <<<END
-				<li>
+				<li$class>
 					<a href="$url" class="liengraph">
 						<img alt="" src="/InspecteurDeryque/Display/$dossier/thumbnail.png" class="thumbnail"/>
 						<h4>{$display->nom}</h4>
