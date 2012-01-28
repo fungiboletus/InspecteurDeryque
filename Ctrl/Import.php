@@ -90,9 +90,34 @@ class Import extends AbstractView{
 	}
 
 	public function xmlImport() {
-		CNavigation::setTitle('Affichage du fichier xml');
+		CNavigation::setTitle('Importer des données XML');
 		DataImportView::showFormImport();
-		$this->displayXML();
+		//$this->displayXML();
+	}
+
+	public function submit() {
+		$dossier = 'Uploaded/';
+		$fichier = $_FILES['fichierXML']['name'];
+		$taille_max = 3000000;
+		$taille = filesize($_FILES['fichierXML']['tmp_name']);
+		if($taille>$taille_max){
+			$erreur = 'Ce fichier est trop volumineux';
+		}
+		if(!isset($erreur)){
+			$fichier = sha1(file_get_contents($fichier));
+			if(move_uploaded_file($_FILES['fichierXML']['tmp_name'], $dossier.$fichier)){
+				new CMessage('Upload effectué avec succès !');
+				CNavigation::redirectToApp('Dashboard');
+			}
+			else{
+				new CMessage('Echec de l\'upload', 'error');
+				CNavigation::redirectToApp('Import', 'xmlImport');
+			}
+		}
+		else{
+			new CMessage($erreur, 'error');
+			CNavigation::redirectToApp('Import', 'xmlImport');
+		}
 	}
 
 	public function displayXML(){
@@ -101,7 +126,6 @@ class Import extends AbstractView{
 			$text_xml = preg_replace('/<TrainingCenterDatabase.*?>/','<TrainingCenterDatabase>',$text_xml, 1);
 			$text_xml = preg_replace('/<(.+)xsi.*?".*?"(.*?)>/','<$1$2>',$text_xml);
    			$xml = simplexml_load_string($text_xml);
-			//$this->affichageDeRiz($xml);
 			$this->DataDisplay($xml);
 		} else {
     		new CMessage('Echec lors de l\'ouverture du fichier test.tcx.', 'error');
