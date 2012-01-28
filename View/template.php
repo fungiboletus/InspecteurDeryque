@@ -47,7 +47,7 @@ END;
 		$url_pref = CNavigation::generateUrlToApp('User', 'settings');
 		$url_help = 'http://perdu.com';
 		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
-		$url_xml = CNavigation::generateUrlToApp('Dashboard', 'xml');
+		$url_xml = CNavigation::generateUrlToApp('Import', 'xmlImport');
 		$url_data = CNavigation::generateUrlToApp('Data');
 		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_dashboard = $CTRL_NAME === 'Dashboard' && $ACTION_NAME === 'index' ? ' class="active"' : '';
