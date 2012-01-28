@@ -61,8 +61,8 @@ END;
 
 	public static function showRelevesChoiceMenu(){
 		echo <<<END
-		<h4>Liste des relevés</h4>
-		<div  id="releves">
+		<h4 id="titre_releves">Liste des relevés</h4>
+		<div id="releves">
 			<table class="zebra-striped">
 END;
 		$releves = DataMod::getReleves($_SESSION['bd_id']);

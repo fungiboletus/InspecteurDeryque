@@ -1,3 +1,13 @@
 #mainContent {
 	width:auto;
 }
+
+#search_releves {
+width:auto;
+	  margin-bottom:13px;
+}
+
+#releves td {
+-moz-user-select: none;
+-webkit-user-select: none;
+}
