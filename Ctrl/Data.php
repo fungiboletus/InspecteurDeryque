@@ -108,7 +108,7 @@ END;*/
 	
 		$data = DisplayMod::getDisplayTypes();
 		DataView::showDisplayViewChoiceTitle();
-		DisplayView::showGraphChoiceMenu($data);
+		DisplayView::showGraphChoiceMenu($data, true, $n_datamod->display_prefs);
 
 		DataView::showAPIInformations();
 

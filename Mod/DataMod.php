@@ -2,6 +2,8 @@
 
 class DataMod extends AbstractMod
 {
+	public $display_prefs = null;
+
 	public static function getDataTypes() {
 		$data = array();
 
@@ -24,7 +26,9 @@ class DataMod extends AbstractMod
 		require_once("Data/$dossier/D$dossier.php");
 		$classe = "D$dossier";
 		$nom = $classe::nom;
-		return new DataMod($nom, $dossier);
+		$mod = new DataMod($nom, $dossier);
+		$mod->display_prefs = explode(' ', $classe::display_prefs);	
+		return $mod;
 	}
 
 	public static function modExist($dossier) {

@@ -1,7 +1,20 @@
 <?php
 class DisplayView extends AbstractView
 {
-	public static function showGraphChoiceMenu($data, $well = true){
+	public static function showGraphChoiceMenu($data, $well = true, $prefs = array()){
+		$cdata = count($data);
+		$ii = 0;
+		foreach ($prefs as $pref) {
+			for ($i = 0; $i < $cdata; ++$i) {
+				if ($data[$i]->dossier === $pref) {
+					$tmp = $data[$i];
+					$data[$i] = $data[$ii];
+					$data[$ii] = $tmp;
+					++$ii;
+				}
+			}
+		}
+
 		CHead::addCSS('Display');
 		if ($well) echo '<div class="well">';
 		echo <<<END

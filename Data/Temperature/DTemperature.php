@@ -8,5 +8,7 @@ class DTemperature
 
 	const n_temperature = 'Température';
 	public $temperature;
+	
+	const display_prefs = 'Graphe Tableau';
 }
 ?>

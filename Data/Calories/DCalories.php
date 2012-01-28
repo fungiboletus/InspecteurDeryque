@@ -9,5 +9,7 @@ class DCalories
 
 	const n_calories = 'Nombre de calories';
 	public $calories;
+	
+	const display_prefs = 'Graphe Tableau';
 }
 ?>
