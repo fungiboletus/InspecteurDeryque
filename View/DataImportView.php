@@ -22,5 +22,33 @@ END;
 END;
 	}
 
+	public static function showDataSelection($fichier){
+		$extensions = array('.tcx', '.gpx');
+		$extension = strrchr($fichier, '.');
+		if(in_array($extension, $extensions)){
+			echo "<p>Nous avons reconnu un fichier de type <Strong>$extension</Strong>.</p>";
+			echo "<p>Sélectionnez parmi les données proposées ci-dessous celles que vous désirez importer :</p>";
+			if (file_exists($fichier)){
+				$data = file_get_contents($fichier);
+				$data = preg_replace('/<gpx.*?>/','<gpx>',$data, 1);
+				$data = preg_replace('/<\\/tp1:(.+)>/','</$1>',$data);
+				$data = preg_replace('/<tp1:(.+)>/','<$1>',$data);
+				
+				$xml = simplexml_load_string($data);
+				if($extension === ".gpx"){
+					Import::recupDonneesImportablesGPX($xml);
+				}
+				elseif($extension === ".tcx"){
+					//rien pour l'instant
+				}
+			}
+			else{}
+		}
+		else{
+			echo "<p>Ce format de fichier n'est pas reconnu. Nous allons voir ce que nous pouvons faire...</p>";
+		}
+	}
+
 }
+
 ?>

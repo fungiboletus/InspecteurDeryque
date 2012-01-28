@@ -1,6 +1,88 @@
 <?php
 class Import extends AbstractView{
 
+	public function xmlImport() {
+		CNavigation::setTitle('Importer des données XML');
+		DataImportView::showFormImport();
+		//$this->displayXML();
+	}
+
+	public function submit() {
+		$dossier = 'Uploaded/';
+		$fichier = $_FILES['fichierXML']['name'];
+		$taille_max = 3000000;
+		$taille = filesize($_FILES['fichierXML']['tmp_name']);
+		if($taille>$taille_max){
+			$erreur = 'Ce fichier est trop volumineux';
+		}
+		if(!isset($erreur)){
+			if(move_uploaded_file($_FILES['fichierXML']['tmp_name'], $dossier.$fichier)){
+				$_SESSION['fichierXML'] = $fichier;
+				new CMessage('Upload effectué avec succès !');
+				CNavigation::redirectToApp('Import', 'dataSelection');
+			}
+			else{
+				new CMessage('Echec de l\'upload', 'error');
+				CNavigation::redirectToApp('Import', 'xmlImport');
+			}
+		}
+		else{
+			new CMessage($erreur, 'error');
+			CNavigation::redirectToApp('Import', 'xmlImport');
+		}
+	}
+
+	public function dataSelection(){
+		if(isset($_SESSION['fichierXML'])){
+			$fichier = $_SESSION['fichierXML'];
+			if (file_exists($fichier)){
+				CNavigation::setTitle('Selectionner vos données à importer');
+				DataImportView::showDataSelection($fichier);
+			}
+		}
+	}
+
+	public function recupDonneesImportablesGPX($gpx){
+		echo <<<END
+		<table class="bordered-table">
+			<tr>
+				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
+				<th>Trks</th>
+				<th>Trksegs</th>
+			</tr>
+END;
+		foreach($gpx->children() as $gpx_data){
+			echo "<tr>";
+			if($gpx_data->getName() === "trk"){
+				echo'<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>';
+				
+				$nameTrk = $gpx_data->xpath("name");
+				echo "<td>Trk : ",htmlspecialchars($nameTrk[0]),"</td>";
+
+				echo <<<END
+				<td>
+					<table class="zebra-striped bordered-table">
+END;
+				foreach($gpx_data->children() as $trksegs){
+					if($trksegs->getName() === "trkseg"){
+						//recup le temps du premier trackpoint du trackseg en question
+						$trkpt1 = $trksegs->xpath("trkpt[1]/time");
+						$nameTrkseg = htmlspecialchars($trkpt1[0]);
+						echo <<<END
+						<tr>
+							<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+							<td>Trkseg : $nameTrkseg</td>
+						<tr>
+END;
+					}
+				}
+				echo "</table>";
+			}
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
+
 	public function DataDisplay($xml){
 		foreach($xml->children() as $balise){
 			if($balise->getName() === "Folders" || $balise->getName() === "Workouts" || 
@@ -86,37 +168,6 @@ class Import extends AbstractView{
 					}
 				}
 			}
-		}
-	}
-
-	public function xmlImport() {
-		CNavigation::setTitle('Importer des données XML');
-		DataImportView::showFormImport();
-		//$this->displayXML();
-	}
-
-	public function submit() {
-		$dossier = 'Uploaded/';
-		$fichier = $_FILES['fichierXML']['name'];
-		$taille_max = 3000000;
-		$taille = filesize($_FILES['fichierXML']['tmp_name']);
-		if($taille>$taille_max){
-			$erreur = 'Ce fichier est trop volumineux';
-		}
-		if(!isset($erreur)){
-			$fichier = sha1(file_get_contents($fichier));
-			if(move_uploaded_file($_FILES['fichierXML']['tmp_name'], $dossier.$fichier)){
-				new CMessage('Upload effectué avec succès !');
-				CNavigation::redirectToApp('Dashboard');
-			}
-			else{
-				new CMessage('Echec de l\'upload', 'error');
-				CNavigation::redirectToApp('Import', 'xmlImport');
-			}
-		}
-		else{
-			new CMessage($erreur, 'error');
-			CNavigation::redirectToApp('Import', 'xmlImport');
 		}
 	}
 
