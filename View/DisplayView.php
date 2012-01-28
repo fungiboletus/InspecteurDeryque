@@ -1,7 +1,20 @@
 <?php
 class DisplayView extends AbstractView
 {
-	public static function showGraphChoiceMenu($data, $well = true){
+	public static function showGraphChoiceMenu($data, $well = true, $prefs = array()){
+		$cdata = count($data);
+		$ii = 0;
+		foreach ($prefs as $pref) {
+			for ($i = 0; $i < $cdata; ++$i) {
+				if ($data[$i]->dossier === $pref) {
+					$tmp = $data[$i];
+					$data[$i] = $data[$ii];
+					$data[$ii] = $tmp;
+					++$ii;
+				}
+			}
+		}
+
 		CHead::addCSS('Display');
 		if ($well) echo '<div class="well">';
 		echo <<<END
@@ -13,8 +26,9 @@ END;
 		{
 			$dossier = $display->dossier;
 			$url = CNavigation::generateMergedUrl('Display','view', array('type' => $dossier));
+			$class = in_array($dossier, $prefs, true) ? ' class="display_prefs"' : '';
 			echo <<<END
-				<li>
+				<li$class>
 					<a href="$url" class="liengraph">
 						<img alt="" src="/InspecteurDeryque/Display/$dossier/thumbnail.png" class="thumbnail"/>
 						<h4>{$display->nom}</h4>
@@ -61,8 +75,8 @@ END;
 
 	public static function showRelevesChoiceMenu(){
 		echo <<<END
-		<h4>Liste des relevés</h4>
-		<div  id="releves">
+		<h4 id="titre_releves">Liste des relevés</h4>
+		<div id="releves">
 			<table class="zebra-striped">
 END;
 		$releves = DataMod::getReleves($_SESSION['bd_id']);

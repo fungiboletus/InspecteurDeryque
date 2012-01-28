@@ -99,12 +99,16 @@ END;*/
 		CNavigation::setDescription($releve['description']);
 		
 		$n_datamod = DataMod::loadDataType($releve['modname']);
-		$nb = R::getCell('select count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
-		DataView::showInformations(is_array($nb) ? 0 : $nb, $n_datamod);
+		$sql = '';
+		foreach ($n_datamod->getVariables() as $k => $v) {
+			$sql .= "min($k), max($k), avg($k), ";	
+		}
+		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
+		DataView::showInformations($stats, $n_datamod);
 	
 		$data = DisplayMod::getDisplayTypes();
 		DataView::showDisplayViewChoiceTitle();
-		DisplayView::showGraphChoiceMenu($data);
+		DisplayView::showGraphChoiceMenu($data, true, $n_datamod->display_prefs);
 
 		DataView::showAPIInformations();
 

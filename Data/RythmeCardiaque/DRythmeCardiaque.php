@@ -8,5 +8,7 @@ class DRythmeCardiaque
 
 	const n_rythme = 'Bâtements par minute';
 	public $rythme;
+	
+	const display_prefs = 'Graphe Tableau';
 }
 ?>
