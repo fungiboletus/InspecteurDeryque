@@ -140,36 +140,63 @@ END;
 END;
 	}
 
-	public static function showInformations($nb_tuples, $data_type) {
+	public static function showInformations($stats, $data_type) {
 		$hdata_type = htmlspecialchars($data_type->nom);
 
 		echo <<<END
 <h3>Informations</h3>
 <div class="well">
 <dl>
-	<dt>Statistiques</dt>
-END;
-		if ($nb_tuples) {
-			echo "<dd>Ce relevé contient $nb_tuples enregistrements.</dd>\n";
-		} else {
-			echo "<dd>Ce relevé est vide.</dd>\n";
-		}
-		echo <<<END
-	
 	<dt>Type de données</dt>
 	<dd>$hdata_type</dd>
 
-	<dt>Structure de données</dt>
-	<dd><ul>
+	<dt>Statistiques</dt>
 END;
-		foreach ($data_type->getVariables() as $k => $var) {
-			echo "<li>", htmlspecialchars($var), " <em>(", htmlspecialchars($k), ")</em></li>\n";
+		if (empty($stats) || $stats['count(*)'] == 0)
+		{
+			echo "<dd>Ce relevé est vide.</dd></dl>\n";
 		}
-		echo <<<END
-		</ul></dd>
-</dl>
-</div>
+		else
+		{
+			echo "<dd>Ce relevé contient ${stats['count(*)']} enregistrements.</dd>\n</dl>\n";
+		}
+
+			echo <<<END
+<table class="condensed-table">
+<thead>
+	<tr>
+		<th>Nom</th>
+		<th>Nom du champ</th>
+		<th>Valeur minimale</th>
+		<th>Valeur maximale</th>
+		<th>Moyenne</th>
+	</tr>
+</thead>
+<tbody>
 END;
+		foreach ($data_type->getVariables() as $k => $var)
+		{
+			$hvar = htmlspecialchars($var);
+			$hk = htmlspecialchars($k);
+
+			$min = null; $max = null; $avg = null;
+			if (!empty($stats))
+			{
+				$min = $stats["min($k)"];
+				$max = $stats["max($k)"];
+				$avg = $stats["avg($k)"];
+			}
+			echo <<<END
+	<tr>
+		<td>$hvar</td>
+		<td>$hk</td>
+		<td>$min</td>
+		<td>$max</td>
+		<td>$avg</td>
+	</tr>
+END;
+		}
+		echo "</tbody>\n</table>\n</div>\n";
 	}
 }
 ?>

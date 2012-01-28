@@ -16,10 +16,8 @@ foreach (CHead::$js as $js)
 <body>
 <?php
 
-if (!defined('NO_HEADER_BAR')) {
-
-	/*$url_redaction = CNavigation::generateUrlToApp('Redaction',null,null);
-	$url_logout = CNavigation::generateUrlToApp('Session','logout',null);*/
+if (!defined('NO_HEADER_BAR'))
+{
 
 	$title = htmlspecialchars(CNavigation::getBodyTitle());
 
