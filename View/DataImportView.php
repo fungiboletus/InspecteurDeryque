@@ -31,17 +31,19 @@ END;
 			echo "<p>Sélectionnez parmi les données proposées ci-dessous celles que vous désirez importer :</p>";
 			if (file_exists($fichier)){
 				$data = file_get_contents($fichier);
-				$data = preg_replace('/<gpx.*?>/','<gpx>',$data, 1);
-				$data = preg_replace('/<\\/tp1:(.+)>/','</$1>',$data);
-				$data = preg_replace('/<tp1:(.+)>/','<$1>',$data);
-				$xml = simplexml_load_string($data);
-
-			echo '<form id="choiximport" action="" method="post">';
+				echo '<form id="choiximport" action="" method="post">';
 				if($extension === ".gpx"){
-					Import::recupDonneesImportablesGPX($xml);
+					$data = preg_replace('/<gpx.*?>/','<gpx>',$data, 1);
+					$data = preg_replace('/<\\/tp1:(.+)>/','</$1>',$data);
+					$data = preg_replace('/<tp1:(.+)>/','<$1>',$data);
+					$gpx = simplexml_load_string($data);
+					Import::recupDonneesImportablesGPX($gpx);
 				}
 				elseif($extension === ".tcx"){
-					Import::recupDonneesImportablesTCX($xml);
+					$data = preg_replace('/<TrainingCenterDatabase.*?>/','<TrainingCenterDatabase>',$data, 1);
+					$data = preg_replace('/<(.+)xsi.*?".*?"(.*?)>/','<$1$2>',$data);
+		   			$tcx = simplexml_load_string($data);
+					Import::recupDonneesImportablesTCX($tcx);
 				}
 			echo <<<END
 				<div class="input" id="boutons">

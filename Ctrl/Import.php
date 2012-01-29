@@ -74,13 +74,13 @@ class Import extends AbstractView{
 			<tr>
 				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
 				<th>Tracks</th>
-				<th>Tracks Segments</th>
+				<th>Track Segments</th>
 			</tr>
 END;
 		foreach($gpx->children() as $gpx_data){
 			echo "<tr>";
 			if($gpx_data->getName() === "trk"){
-				echo'<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>';
+				echo '<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>';
 				
 				$nameTrk = $gpx_data->xpath("name");
 				echo "<td>Trk : ",htmlspecialchars($nameTrk[0]),"</td>";
@@ -109,7 +109,7 @@ END;
 		echo "</table>";
 
 //partie selection des types de donnée :
-		$types_possibles = array("GPS", "Calories", "RythmeCardiaque", "Temperature", "Vitesse");
+		$types_possibles = array("Calories", "GPS", "RythmeCardiaque", "Temperature", "Vitesse");
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
@@ -121,6 +121,17 @@ END;
 			<tr>
 				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
 				<td>Position GPS</td>
+				<td>
+END;
+		DataImportView::showSelectTypePossibles($types_possibles);
+		echo <<<END
+				</td>
+			</tr>
+END;
+		echo<<<END
+			<tr>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td>Vitesse</td>
 				<td>
 END;
 		DataImportView::showSelectTypePossibles($types_possibles);
@@ -151,21 +162,53 @@ END;
 /**
 * Permet d'afficher un formulaire de sélection des données à importer pour le fichier uploadé de type TCX
 */
-	public function recupDonneesImportablesTCX($gpx){
-		echo <<<END
-		<table class="bordered-table">
-			<tr>
-				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
-				<th>Lap</th>
-				<th></th>
-			</tr>
+	public function recupDonneesImportablesTCX($tcx){
+		$activities = $tcx->xpath("/TrainingCenterDatabase/Activities");
+		$activities = $activities[0];
+		foreach($activities->children() as $activity){
+			$activity_name = htmlspecialchars($activity['Sport']);
+			echo <<<END
+			<h3>Activité : $activity_name</h3>
+			<table class="bordered-table">
+				<tr>
+					<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
+					<th>Laps</th>
+					<th>Tracks</th>
+				</tr>
 END;
-	//code a METTRE ICI
-		echo "</table>";
-		echo "<p><h2>Nous somme désolés, mais le schéma XSD des fichiers TCX étant immonde et mal fait, nous avons préféré nous concentrer sur le format GPX, celui-ci étant plus abordable...</h2></p>";
+			foreach($activity->children() as $lapsandmore){
+				if(htmlspecialchars($lapsandmore->getName()) === "Lap"){
+					echo "<tr>";
+					echo '<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>';
+					echo "<td>Lap - StartTime : ", htmlspecialchars($lapsandmore['StartTime']),"</td>";
+					echo <<<END
+					<td>
+						<table class="zebra-striped bordered-table">
+END;
+					foreach($lapsandmore->children() as $datalap){
+						if(htmlspecialchars($datalap->getName()) === "Track"){
+							$track_first_date = $datalap->xpath("Trackpoint[1]/Time");
+							$nameTrack = htmlspecialchars($track_first_date[0]);
+							echo <<<END
+							<tr>
+								<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+								<td>Track : $nameTrack</td>
+							<tr>
+END;
+						}
+					}
+					echo <<<END
+						</table>
+					</td>
+				</tr>
+END;
+				}
+			}
+			echo "</table>";
+		}
 
 //partie selection des types de donnée :
-		$types_possibles = array("GPS", "Calories", "RythmeCardiaque", "Temperature", "Vitesse");
+		$types_possibles = array("Calories", "GPS", "RythmeCardiaque", "Temperature", "Vitesse");
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
@@ -184,6 +227,39 @@ END;
 				</td>
 			</tr>
 END;
+		echo<<<END
+			<tr>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td>Vitesse</td>
+				<td>
+END;
+		DataImportView::showSelectTypePossibles($types_possibles);
+		echo <<<END
+				</td>
+			</tr>
+END;
+//autres types de donnee :
+		$types = $tcx->xpath("/TrainingCenterDatabase/Activities/Activity[1]/Lap[1]");
+		$types = $types[0];
+		foreach($types->children() as $type){
+			$type_name = htmlspecialchars($type->getName());
+			if($type_name === "Calories" || $type_name === "AverageHeartRateBpm"){
+				if($type_name === "AverageHeartRateBpm"){
+					$type_name = "HeartRateBpm";
+				}
+			echo <<<END
+			<tr>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+				<td>$type_name</td>
+				<td>
+END;
+			DataImportView::showSelectTypePossibles($types_possibles);
+			echo <<<END
+				</td>
+			</tr>
+END;
+			}
+		}
 		echo "</table>";
 	}
 
