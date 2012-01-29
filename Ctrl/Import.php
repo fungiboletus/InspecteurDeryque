@@ -136,8 +136,9 @@ END;
 				<th></th>
 			</tr>
 END;
-	//code a foutre ici
+	//code a METTRE ICI
 		echo "</table>";
+		echo "<p><h2>Nous somme désolés, mais le schéma XSD des fichiers TCX étant immonde et mal fait, nous avons préféré nous concentrer sur le format GPX, celui-ci étant plus abordable...</h2></p>";
 
 //partie selection des types de donnée :
 		$types_possibles = array("GPS", "Calories", "RythmeCardiaque", "Temperature", "Vitesse");
