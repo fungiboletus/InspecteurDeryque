@@ -1,12 +1,18 @@
 <?php
 class Import extends AbstractView{
 
+/**
+* affiche la page d'import/upload de fichier
+*/
 	public function xmlImport() {
 		CNavigation::setTitle('Importer des données XML');
 		DataImportView::showFormImport();
 		//$this->displayXML();
 	}
 
+/**
+* Fonction d'upload de fichiers
+*/
 	public function submit() {
 		$dossier = 'Uploaded/';
 		$fichier = $_FILES['fichierXML']['name'];
@@ -32,6 +38,9 @@ class Import extends AbstractView{
 		}
 	}
 
+/**
+* affiche la page de sélection des données à importer
+*/
 	public function dataSelection(){
 		if(isset($_SESSION['fichierXML'])){
 			$fichier = $_SESSION['fichierXML'];
@@ -42,9 +51,23 @@ class Import extends AbstractView{
 		}
 	}
 
-/////////
-// GPX //
-/////////
+/**
+* Fonction qui supprime tous les fichiers d'un répertoire, à l'exception de index.html, ., et ..
+*/
+	public function deleteDirContent($dir_path){
+		$dir = opendir($dir_path);
+		while (($file = readdir($dir)) !== false){
+			$file_path = $dir_path."/".$file;
+			if(!is_dir($file) && $file != "." && $file != ".." && $file != "index.html"){
+				unlink($file_path);
+			}
+		}
+		closedir($dir);
+	}
+
+/**
+* Permet d'afficher un formulaire de sélection des données à importer pour le fichier uploadé de type GPX
+*/
 	public function recupDonneesImportablesGPX($gpx){
 		echo <<<END
 		<table class="bordered-table">
@@ -122,11 +145,12 @@ END;
 END;
 		}
 		echo "</table>";
+		Import::deleteDirContent("Uploaded");
 	}
 
-/////////
-// TCX //
-/////////
+/**
+* Permet d'afficher un formulaire de sélection des données à importer pour le fichier uploadé de type TCX
+*/
 	public function recupDonneesImportablesTCX($gpx){
 		echo <<<END
 		<table class="bordered-table">
@@ -163,6 +187,9 @@ END;
 		echo "</table>";
 	}
 
+/**
+* Fonction très laide qui permet d'afficher des informations provenant d'un fichier au format TCX
+*/
 	public function DataDisplay($xml){
 		foreach($xml->children() as $balise){
 			if($balise->getName() === "Folders" || $balise->getName() === "Workouts" || 
@@ -251,6 +278,9 @@ END;
 		}
 	}
 
+/**
+* affiche le document TCX en appelant la fonction laide ci dessus
+*/
 	public function displayXML(){
 		if (file_exists('test.tcx')) {
 			$text_xml = file_get_contents('test.tcx');
