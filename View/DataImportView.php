@@ -4,6 +4,7 @@ class DataImportView{
 	public static function showFormImport(){
 		echo <<<END
 		<h4>Sélectionnez le fichier xml contenant vos données, puis cliquez sur le bouton "Importer"</h4>
+		<p>Les formats de données reconnus pour l'instant sont <Strong>.gpx</Strong> et <Strong>.tcx</Strong></p>
 END;
 		$url = CNavigation::generateUrlToApp('Import','submit');
 		echo <<<END
@@ -33,20 +34,42 @@ END;
 				$data = preg_replace('/<gpx.*?>/','<gpx>',$data, 1);
 				$data = preg_replace('/<\\/tp1:(.+)>/','</$1>',$data);
 				$data = preg_replace('/<tp1:(.+)>/','<$1>',$data);
-				
 				$xml = simplexml_load_string($data);
+
+			echo '<form id="choiximport" action="" method="post">';
 				if($extension === ".gpx"){
 					Import::recupDonneesImportablesGPX($xml);
 				}
 				elseif($extension === ".tcx"){
-					//rien pour l'instant
+					Import::recupDonneesImportablesTCX($xml);
 				}
+			echo <<<END
+				<div class="input" id="boutons">
+					<input type="submit" value="Importer" class="btn primary"/> <button class="btn" type="reset">Annuler</button>
+				</div>
+			</form>
+END;
 			}
 			else{}
 		}
 		else{
 			echo "<p>Ce format de fichier n'est pas reconnu. Nous allons voir ce que nous pouvons faire...</p>";
 		}
+	}
+
+	public static function showSelectTypePossibles($types){
+		echo <<<END
+		<label for="normalSelect">Selectionnez le type : </label>
+		<div class="input">
+			<select id="normalSelect" name="normalSelect">
+END;
+		foreach($types as $type){
+			echo "<option>", htmlspecialchars($type), "</option>";
+		}
+echo <<<END
+			</select>
+	    </div>
+END;
 	}
 
 }

@@ -42,6 +42,9 @@ class Import extends AbstractView{
 		}
 	}
 
+/////////
+// GPX //
+/////////
 	public function recupDonneesImportablesGPX($gpx){
 		echo <<<END
 		<table class="bordered-table">
@@ -80,6 +83,82 @@ END;
 			}
 			echo "</tr>";
 		}
+		echo "</table>";
+
+//partie selection des types de donnée :
+		$types_possibles = array("GPS", "Calories", "RythmeCardiaque", "Temperature", "Vitesse");
+		echo <<<END
+		<p>Vous pouvez choisir de n'importer que certaines données :</p>
+		<table class="zebra-striped bordered-table">
+			<tr>
+				<th><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></th>
+				<th>Nom de la donnée</th>
+				<th>Type ?</th>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td>Position GPS</td>
+				<td>
+END;
+		DataImportView::showSelectTypePossibles($types_possibles);
+		echo <<<END
+				</td>
+			</tr>
+END;
+		$extensions_dispos = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
+		$extensions_dispos = $extensions_dispos[0];
+		foreach($extensions_dispos->children() as $extdisp){
+			$chose = htmlspecialchars($extdisp->getName());
+			echo <<<END
+			<tr>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td>$chose</td>
+				<td>
+END;
+			DataImportView::showSelectTypePossibles($types_possibles);
+			echo <<<END
+				</td>
+			</tr>
+END;
+		}
+		echo "</table>";
+	}
+
+/////////
+// TCX //
+/////////
+	public function recupDonneesImportablesTCX($gpx){
+		echo <<<END
+		<table class="bordered-table">
+			<tr>
+				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
+				<th>Lap</th>
+				<th></th>
+			</tr>
+END;
+	//code
+		echo "</table>";
+
+//partie selection des types de donnée :
+		$types_possibles = array("GPS", "Calories", "RythmeCardiaque", "Temperature", "Vitesse");
+		echo <<<END
+		<p>Vous pouvez choisir de n'importer que certaines données :</p>
+		<table class="zebra-striped bordered-table">
+			<tr>
+				<th><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></th>
+				<th>Nom de la donnée</th>
+				<th>Type ?</th>
+			</tr>
+			<tr>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td>Position GPS</td>
+				<td>
+END;
+		DataImportView::showSelectTypePossibles($types_possibles);
+		echo <<<END
+				</td>
+			</tr>
+END;
 		echo "</table>";
 	}
 
