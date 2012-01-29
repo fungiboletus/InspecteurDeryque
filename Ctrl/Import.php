@@ -50,8 +50,8 @@ class Import extends AbstractView{
 		<table class="bordered-table">
 			<tr>
 				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
-				<th>Trks</th>
-				<th>Trksegs</th>
+				<th>Tracks</th>
+				<th>Tracks Segments</th>
 			</tr>
 END;
 		foreach($gpx->children() as $gpx_data){
@@ -91,7 +91,7 @@ END;
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
 			<tr>
-				<th><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></th>
+				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
 				<th>Nom de la donnée</th>
 				<th>Type ?</th>
 			</tr>
@@ -111,7 +111,7 @@ END;
 			$chose = htmlspecialchars($extdisp->getName());
 			echo <<<END
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
 				<td>$chose</td>
 				<td>
 END;
@@ -136,7 +136,7 @@ END;
 				<th></th>
 			</tr>
 END;
-	//code
+	//code a foutre ici
 		echo "</table>";
 
 //partie selection des types de donnée :
@@ -145,7 +145,7 @@ END;
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
 			<tr>
-				<th><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></th>
+				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
 				<th>Nom de la donnée</th>
 				<th>Type ?</th>
 			</tr>
