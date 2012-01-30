@@ -259,6 +259,12 @@ border-color:#00A1FF;
 #selection_graph li.display_prefs a:hover {
 border-color: #0069D6;
 } 
+#selection_graph li.display_selected a {
+border-color:red;
+} 
+#selection_graph li.display_selected a:hover {
+border-color:#CC1122;
+} 
 /*#selection_graph li.display_prefs a {
 background:pink;
 border:3px solid yellow;
