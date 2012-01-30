@@ -117,7 +117,7 @@ END;
 			<tr>
 				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
 				<th>Nom de la donnée</th>
-				<th>Type ?</th>
+				<th>Associer la donnée à un relevé</th>
 			</tr>
 			<tr>
 				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
