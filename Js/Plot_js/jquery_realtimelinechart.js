@@ -1,29 +1,16 @@
 
 function showLineChart () {
-    /* we use an inline data source in the example, usually data would
-     * be fetched from a server
-     */
     var data = [], totalPoints = 300;
-    function getRandomData() {
-        if (data.length > 0)
-            data = data.slice(1);
-
-        // do a random walk
-        var maximum=50;
-        var minimum=0;
+    /** Initialiser le tableau de données.
+     */
+    function getEmptyData() {
         while (data.length < totalPoints) {
-            var prev = data.length > 0 ? data[data.length - 1] : maximum;
-            var y = prev + Math.random() * 10 - 5;
-            if (y < minimum)
-                y = minimum;
-            if (y > maximum)
-                y = maximum;
-            data.push(y);
+            data.push(0);
         }
 
         // zip the generated y values with the x values
         var res = [];
-        for (var i = 0; i < data.length; ++i)
+        for (var i = 0; i < totalPoints; ++i)
             res.push([i, data[i]])
         return res;
     }
@@ -32,7 +19,7 @@ function showLineChart () {
      */
     function getJSONData(){
     	var oRequest = new XMLHttpRequest();
-		oRequest.open( "GET", 'realtime-json.php', false );
+		oRequest.open( "GET", '/InspecteurDeryque/realtime-json.php', false );
 		oRequest.setRequestHeader("User-Agent",navigator.userAgent);
 		oRequest.send(null)
 
@@ -41,7 +28,7 @@ function showLineChart () {
 		} else {
 			var donnee=JSON.parse(oRequest.responseText);
 		    data = data.slice(1);
-		    data.push(donnee);
+		    data.push(donnee[0]);
 
 		    // zip the generated y values with the x values
 		    var res = [];
@@ -72,7 +59,7 @@ function showLineChart () {
         yaxis: { min: 0, max: 50 },
         xaxis: { show: false }
     };
-    var plot = $.plot($("#holder"), [ getRandomData() ], options);
+    var plot = $.plot($("#holder"), [ getEmptyData() ], options);
     
     /**
      * Met à jour le tableau.
