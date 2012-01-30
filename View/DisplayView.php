@@ -81,13 +81,13 @@ END;
 END;
 		$releves = DataMod::getReleves($_SESSION['bd_id']);
 		foreach($releves as $releve){
+			$hname = htmlspecialchars($releve['name']);
 			echo <<<END
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
-				<td>
+				<td><input type="checkbox" value="$hname" name="optionsCheckboxes"/></td>
+				<td>$hname</td>
+			</tr>
 END;
-			echo htmlspecialchars($releve["name"]), "</td>";
-			echo "</tr>";
 		}
 		echo "</table></div>";
 	}

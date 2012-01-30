@@ -13,7 +13,7 @@ class DCarte extends DAbstract
 		$lon="<tr>";
 		foreach ($this->data as $data)
 		{
-			if (!$data['timestamp'] || !$data['lat'] || !$data['lon'])
+			if (!isset($data['timestamp']) || !isset($data['lat']) || !isset($data['lon']))
 			{
 				new CMessage('Impossible d\'afficher la carte', 'warning');
 				return;
