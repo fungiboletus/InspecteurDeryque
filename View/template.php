@@ -45,16 +45,18 @@ END;
 		$url_pref = CNavigation::generateUrlToApp('User', 'settings');
 		$url_help = 'http://perdu.com';
 		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
-		$url_xml = CNavigation::generateUrlToApp('Dashboard', 'xml');
+		$url_xml = CNavigation::generateUrlToApp('Import');
 		$url_data = CNavigation::generateUrlToApp('Data');
+		$url_musique_deryque = CNavigation::generateUrlToApp('Dashboard','musique_deryque');
 		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_dashboard = $CTRL_NAME === 'Dashboard' && $ACTION_NAME === 'index' ? ' class="active"' : '';
+		$c_import = $CTRL_NAME === 'Import' ? ' class="active"' : '';
 
 		echo <<<END
 		<ul class="nav left boutons_inspecteur">
 			<li$c_data><a href="$url_data" class="icon_button shoebox_text">Relevés</a></li>
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
-			<li><a href="$url_xml" class="icon_button upload_text">Importer un fichier xml</a></li>
+			<li$c_import><a href="$url_xml" class="icon_button upload_text">Importer des données</a></li>
 		</ul>
 		<ul class="nav right">	
 			<li class="dropdown">
@@ -63,6 +65,7 @@ END;
 						<li><a href="$url_pref">Préférences</a></li>
 						<li><a href="$url_help">Aide</a></li>
 						<li><a href="$url_not_found">Une erreur 404</a></li>
+						<li><a href="$url_musique_deryque">Écouter la musique</a></li>
 						<li class="divider"></li>
 						<li><a href="$url_logout">Déconnexion</a></li>
 					</ul>

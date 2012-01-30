@@ -11,5 +11,7 @@ class DGPS
 
 	const n_lon = 'Longitute';
 	public $lon;
+
+	const display_prefs = 'Carte Tableau';
 }
 ?>
