@@ -23,7 +23,10 @@ $('#search_releves').keyup(function() {
 });
 
 var click_releve = function(e) {
-	if (e.originalEvent.srcElement.nodeName == 'INPUT') return;
+	
+	if ((e.originalEvent.target && e.originalEvent.target.nodeName == 'INPUT')
+		|| (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName == 'INPUT')
+	) return;
 
 	var checkbox = $(this).find('input');
 
