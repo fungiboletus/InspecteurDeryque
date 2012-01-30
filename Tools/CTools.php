@@ -100,7 +100,7 @@ class CTools
 	{
 		$error = new Error();
 		$error->teapot();
-		throw new Exception('Hack Error');
+		throw new Exception('hack');
 	}
 }
 ?>

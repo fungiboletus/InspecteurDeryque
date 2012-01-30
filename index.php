@@ -65,7 +65,13 @@ CHead::addJS($CTRL_NAME);
 
 try {
 $CTRL->{$ACTION_NAME}();
-} catch (Exception $e) {}
+} catch (Exception $e) {
+	if ($e->getMessage() !== 'hack')
+	{
+		$ctrl = new Error();
+		$ctrl->server($e);
+	}
+}
 
 // If just the body is requested, the page is printed
 if (isset($_REQUEST['AJAX_MODE'])) {
