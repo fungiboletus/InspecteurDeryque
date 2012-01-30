@@ -3,13 +3,27 @@ class DBoites extends DAbstract
 {
 	const nom = 'Boites';
 	
+	/**
+	 * Permet d'accéder à un tableau par un index numérique 
+	 * alors qu'il ne l'est pas.
+	 * Par exemple avec a=array('a'=>"bon",'b'=>"jour"), a[0] ne marche pas,
+	 * tandis que goAssocArrayNumeric($a,0) renverra "bon".
+	 */
+	private static function goAssocArrayNumeric($arrAssoc, $key=-1){
+		$i = -1;
+		foreach ($arrAssoc as $k => $v){
+			$i++;
+			if ($i == $key){
+				return $v;
+			}
+		}
+		return FALSE;
+	}
+	
 	private static function quartiles($entry){
-		// FIXME code en dur, affiche la température
-		$type='temperature';
-		
 		$subtab=array();
 		foreach($entry as $c=>$key){
-			array_push($subtab,$key[$type]);
+			array_push($subtab,self::goAssocArrayNumeric($key,2));
 		}
 		
 		sort($subtab,SORT_NUMERIC);
@@ -37,10 +51,14 @@ class DBoites extends DAbstract
 	
 	public function show()
 	{
+		if ($this->gererVide()) return;
+		
 		CHead::addJs('raphael-min');
 		CHead::addJs('Plot_js/raphael_boxplot');
 
 		$tab = self::quartiles($this->data);
+		
+		$type=self::goAssocArrayNumeric($this->structure,1);
 		
 		$tds="<tr class=''>";
 		$i_max=count($tab);
@@ -49,7 +67,7 @@ class DBoites extends DAbstract
 		}
 		$tds.="</tr>";
 		echo "<div id='first' style='width:640px;height:480px;'></div>"
-					."<div id='data' style='display:none;'><table>"
+					."<div id='data' class='".$type."'><table>"
 					."<tr>
 						<th>Min</th>
 						<th>Quartile 1</th>
