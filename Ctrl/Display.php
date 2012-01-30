@@ -44,13 +44,14 @@ class Display
 		$g->structure = $n_datamod->getVariables();
 		$g->data = R::getAll('select * from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
 
-		return array($g,$d, $n_datamod);
+		return array($g,$d, $n_datamod,$releve);
 	}
 
 	public function view() {
 		$r_vue = $this->vue_commune();
 		$r_vue[0]->show();
 		CNavigation::setTitle($r_vue[0]::nom.' du relevé «'.$_REQUEST['nom'].'»');
+		CNavigation::setDescription($r_vue[3]['description']);
 		DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data','view',
 			array('nom'=>$_REQUEST['nom'])));
 	}
@@ -64,7 +65,8 @@ class Display
 		DisplayView::showGraphChoiceMenu($data, false, $r_vue[2]->display_prefs, 'iframe_view');
 
 		echo '<h2>', htmlspecialchars($r_vue[0]::nom), ' du relevé «',
-			 		htmlspecialchars($_REQUEST['nom']), '»</h2>';
+			 		htmlspecialchars($_REQUEST['nom']), '» <small>',
+					htmlspecialchars($r_vue[3]['description']),'</small></h2>';
 		$r_vue[0]->show();
 	}
 }

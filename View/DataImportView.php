@@ -72,7 +72,7 @@ END;
 			<select id="selectData" name="assoc_$sum">
 END;
 		foreach($releves_list as $r){
-			echo '<option value="', htmlspecialchars($r['name']), '">', htmlspecialchars($r['name']), "</option>";
+			echo '<option value="', htmlspecialchars($r['name']), '">', htmlspecialchars($r['name']), " (", htmlspecialchars($r['modname']), ")", "</option>";
 		}
 echo <<<END
 				<option>Nouveau Relevé</option>

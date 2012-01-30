@@ -34,7 +34,7 @@
 		var options = {
 			center: latlng,
 			zoom:2,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			mapTypeId: google.maps.MapTypeId.SATELLITE,
 			scaleControl: true
 		};
 		var carte = new google.maps.Map(document.getElementById("carte"), options);
