@@ -2,8 +2,6 @@
 class DBoites extends DAbstract
 {
 	const nom = 'Boites';
-	
-	public $data = null;
 
 	public function show()
 	{
