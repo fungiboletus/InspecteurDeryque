@@ -13,8 +13,8 @@ function showBoxPlot(){
 	var data = {
 			'bars' : [],
 			'labels' : [],
-			"x-axis" : "Courses",
-			"y-axis" : "Pouls"
+			"x-axis" : "",
+			"y-axis" : ""
 	};		
 	// Collecter les valeurs à la volée
 	var trs=document.getElementById("data").getElementsByTagName("table")[0].getElementsByTagName("tr");
