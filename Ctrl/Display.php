@@ -1,7 +1,7 @@
 <?php
 class Display
 {
-	private static function tableauRandom($nb = 10, $max = 100){
+	/*private static function tableauRandom($nb = 10, $max = 100){
 		for($i = 0 ; $i < $nb ; $i++){
 			$tab["abscisse"][$i] = rand(1, $max);
 			$tab["ordonnee"][$i] = rand(1, $max);
@@ -11,7 +11,7 @@ class Display
 	private static function TriPoint($tab){
 		array_multisort($tab["abscisse"], SORT_ASC, $tab["ordonnee"]);
 		return $tab;
-	}
+	}*/
 
 	public function index() {
 		CNavigation::setTitle('Super page');
