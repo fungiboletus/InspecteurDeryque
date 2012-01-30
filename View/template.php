@@ -42,7 +42,7 @@ END;
 		$user_name = htmlspecialchars($_SESSION['name']);
 		$url_user = CNavigation::generateUrlToApp('User');
 		$url_logout = CNavigation::generateUrlToApp('Session', 'logout');
-		$url_help = 'http://perdu.com';
+		$url_help = CNavigation::generateUrlToApp('Help');
 		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 		$url_xml = CNavigation::generateUrlToApp('Import');
 		$url_data = CNavigation::generateUrlToApp('Data');
