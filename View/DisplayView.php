@@ -1,7 +1,7 @@
 <?php
 class DisplayView extends AbstractView
 {
-	public static function showGraphChoiceMenu($data, $well = true, $prefs = array()){
+	public static function showGraphChoiceMenu($data, $well = true, $prefs = array(), $action = 'view'){
 		$cdata = count($data);
 		$ii = 0;
 		foreach ($prefs as $pref) {
@@ -25,7 +25,7 @@ END;
 		foreach ($data as $display)
 		{
 			$dossier = $display->dossier;
-			$url = CNavigation::generateMergedUrl('Display','view', array('type' => $dossier));
+			$url = CNavigation::generateMergedUrl('Display', $action, array('type' => $dossier));
 			$class = in_array($dossier, $prefs, true) ? ' class="display_prefs"' : '';
 			echo <<<END
 				<li$class>
@@ -62,8 +62,11 @@ END;
 			</div>
 			<div class="content">
 				<div class="hero-unit">
-				<h1>OWIIIII <small>C'est trop bien !'</small></h1>
-				<p>Pour commencer, sélectionnez votre relevé.</p>
+				<div id="message_visualisations_vide">
+					<h1>OWIIIII <small>C'est trop bien !'</small></h1>
+					<p>Pour commencer, sélectionnez votre relevé.</p>
+				</div>
+				<div id="espace_visualisations"></div>
 				</div>
 			</div>
 		</div>
@@ -82,9 +85,11 @@ END;
 		$releves = DataMod::getReleves($_SESSION['bd_id']);
 		foreach($releves as $releve){
 			$hname = htmlspecialchars($releve['name']);
+			$hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('nom'=>$releve['name']));
+			$hid = sha1($releve['name']);
 			echo <<<END
 			<tr>
-				<td><input type="checkbox" value="$hname" name="optionsCheckboxes"/></td>
+				<td><input type="checkbox" value="$hurl" name="i$hid"/></td>
 				<td>$hname</td>
 			</tr>
 END;

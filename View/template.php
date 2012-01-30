@@ -42,7 +42,6 @@ END;
 		$user_name = htmlspecialchars($_SESSION['name']);
 		$url_user = CNavigation::generateUrlToApp('User');
 		$url_logout = CNavigation::generateUrlToApp('Session', 'logout');
-		$url_pref = CNavigation::generateUrlToApp('User', 'settings');
 		$url_help = 'http://perdu.com';
 		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 		$url_xml = CNavigation::generateUrlToApp('Import');
@@ -62,7 +61,6 @@ END;
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle icon_button user_text">$user_name</a>
 					<ul class="dropdown-menu">
-						<li><a href="$url_pref">Préférences</a></li>
 						<li><a href="$url_help">Aide</a></li>
 						<li><a href="$url_not_found">Une erreur 404</a></li>
 						<li><a href="$url_musique_deryque">Écouter la musique</a></li>

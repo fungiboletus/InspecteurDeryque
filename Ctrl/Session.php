@@ -29,6 +29,7 @@ R::debug(true);
 				$_SESSION['mail'] = $user->mail;
 				$_SESSION['bd_id'] = $user->getID();
 				$_SESSION['user'] = $user;
+				$_SESSION['tadam'] = true;
 				CNavigation::redirectToApp('Dashboard');
 			}
 		}

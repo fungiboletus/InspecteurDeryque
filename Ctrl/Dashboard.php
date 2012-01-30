@@ -5,6 +5,16 @@ class Dashboard
 	public function index() {
 		CNavigation::setTitle('Tableau de bord');
 		DisplayView::showPageWithLayout();
+
+		if (isset($_SESSION['tadam']))
+		{
+			unset($_SESSION['tadam']);
+			global $ROOT_PATH;
+			echo <<<END
+<audio src="$ROOT_PATH/Img/tadaaaaammmmmtaadaaaaaam.ogg" autoplay></audio>
+END;
+		}
+		
 	}
 
 	public function musique_deryque() {

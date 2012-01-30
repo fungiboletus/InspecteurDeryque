@@ -61,18 +61,64 @@ END;
 		}
 	}
 
-	public static function showSelectTypePossibles($types){
+	public static function showAssocierAReleve($nomDonnee){
+		$releves_list = DataMod::getReleves($_SESSION['bd_id']);
 		echo <<<END
-		<label for="normalSelect">Selectionnez le type : </label>
+		<label for="selectData">Selectionnez le relevé</label>
 		<div class="input">
-			<select id="normalSelect" name="normalSelect">
+			<select id="selectData" name="selectData">
+				<option>Nouveau Relevé</option>
 END;
-		foreach($types as $type){
-			echo "<option>", htmlspecialchars($type), "</option>";
+		foreach($releves_list as $r){
+			echo '<option value="', htmlspecialchars($r['name']), '">', htmlspecialchars($r['name']), "</option>";
 		}
 echo <<<END
 			</select>
 	    </div>
+END;
+DataImportView::showNewReleveForm($nomDonnee);
+	}
+
+	public static function showSelectTypePossibles(){
+		$types = DataMod::getDataTypes();
+		echo <<<END
+		<div class="clearfix">
+		<label for="normalSelect">Type du Relevé</label>
+		<div class="input">
+			<select id="normalSelect" name="normalSelect">
+END;
+		foreach($types as $type){
+			echo '<option value="', htmlspecialchars($type->dossier), '">', htmlspecialchars($type->nom), "</option>";
+		}
+echo <<<END
+			</select>
+	    </div>
+		</div>
+END;
+	}
+
+	public static function showNewReleveForm($nomDonnee){
+
+	echo <<<END
+		<form action="" name="data_add_form" method="post" id="data_add_form">
+			<fieldset>
+END;
+	DataImportView::showSelectTypePossibles();
+	echo<<<END
+				<div class="clearfix">
+					<label for="input_nom_$nomDonnee">Nom</label>
+					<div class="input">
+						<input name="nom_$nomDonnee" id="input_nom_$nomDonnee" type="text" value="" required />
+					</div>
+				</div>
+				<div class="clearfix">
+					<label for="input_desc_$nomDonnee">Description</label>
+					<div class="input">
+						<textarea name="desc_$nomDonnee" id="input_desc_$nomDonnee"></textarea> 
+					</div>
+				</div>
+			</fieldset>
+		</form>
 END;
 	}
 
