@@ -1,7 +1,7 @@
 <?php
 class DGrapheTempsReel extends DAbstract
 {
-	const nom = 'Graphe en temps réel';
+	const nom = 'Temps réel';
 
 	public function show()
 	{
