@@ -6,7 +6,10 @@
 width:auto;
 	  margin-bottom:13px;
 }
-
+#releves {
+max-height:500px;
+overflow-y:auto;
+}
 #releves td {
 -moz-user-select: none;
 -webkit-user-select: none;
@@ -19,4 +22,7 @@ border:none;
 }
 .hero-unit {
 padding:10px;
+}
+#message_visualisations_vide {
+padding:15px 15px 0 15px;
 }

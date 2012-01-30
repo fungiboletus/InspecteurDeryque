@@ -53,8 +53,8 @@ END;
 
 		echo <<<END
 		<ul class="nav left boutons_inspecteur">
-			<li$c_data><a href="$url_data" class="icon_button shoebox_text">Relevés</a></li>
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
+			<li$c_data><a href="$url_data" class="icon_button shoebox_text">Relevés</a></li>
 			<li$c_import><a href="$url_xml" class="icon_button upload_text">Importer des données</a></li>
 		</ul>
 		<ul class="nav right">	

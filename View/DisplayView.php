@@ -63,7 +63,7 @@ END;
 			<div class="content">
 				<div class="hero-unit">
 				<div id="message_visualisations_vide">
-					<h1>OWIIIII <small>C'est trop bien !'</small></h1>
+					<h1>Bienvenue <small>sur l'Inspecteur Deryque</small></h1>
 					<p>Pour commencer, sélectionnez votre relevé.</p>
 				</div>
 				<div id="espace_visualisations"></div>
@@ -71,7 +71,7 @@ END;
 			</div>
 		</div>
 END;
-		/*$data = DisplayMod::getDisplayTypes();
+		/*'$data = DisplayMod::getDisplayTypes();
 		DisplayView::showGraphChoiceMenu($data, false);*/
 		//DashboardView::showGraph();
 	}
