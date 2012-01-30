@@ -205,7 +205,7 @@ END;
 								<td>Track : $nameTrack</td>
 							<tr>
 END;
-						}
+						}$data = file_get_contents($fichier);
 					}
 					echo <<<END
 						</table>
@@ -382,7 +382,49 @@ END;
 	}
 
 	public function submit_selection() {
-		groaw($_REQUEST);
+		groaw($_POST);
+		//groaw($_SESSION);
+		$path = $_SESSION['fichierXML'];
+		$extension = $_SESSION['extFichierXML'];
+		if(file_exists($path)){
+			$data = file_get_contents($path);
+			if($extension === ".gpx"){
+				$data = preg_replace('/<gpx.*?>/','<gpx>',$data, 1);
+				$data = preg_replace('/<\\/tp1:(.+)>/','</$1>',$data);
+				$data = preg_replace('/<tp1:(.+)>/','<$1>',$data);
+				$gpx = simplexml_load_string($data);
+
+				//recup les bonnes données
+
+				foreach($gpx->children() as $gpx_data){
+					if($gpx_data->getName() === "trk"){
+						$nameTrk = $gpx_data->xpath("name");
+						$sum = sha1($nameTrk[0]);
+						$hname = htmlspecialchars($nameTrk[0]);
+						if(array_key_exists("trk_".$sum, $_POST)){
+							foreach($gpx_data->children() as $trksegs){
+								if($trksegs->getName() === "trkseg"){
+									//recup le temps du premier trackpoint du trackseg en question
+									$trkpt1 = $trksegs->xpath("trkpt[1]/time");
+									$nameTrkseg = htmlspecialchars($trkpt1[0]);
+									$sum = sha1($trkpt1[0]);
+									if(array_key_exists("seg_".$sum, $_POST)){
+										groaw($trksegs);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			elseif($extension === ".tcx"){
+				$data = preg_replace('/<TrainingCenterDatabase.*?>/','<TrainingCenterDatabase>',$data, 1);
+				$data = preg_replace('/<(.+)xsi.*?".*?"(.*?)>/','<$1$2>',$data);
+	   			$tcx = simplexml_load_string($data);
+
+				//aucun traitement pour l'instant
+			}
+		}
 	}
 }
 ?>
