@@ -16,6 +16,7 @@ function showBoxPlot(){
 			"x-axis" : "",
 			"y-axis" : ""
 	};		
+	data['x-axis']=document.getElementById('data').className;
 	// Collecter les valeurs à la volée
 	var trs=document.getElementById("data").getElementsByTagName("table")[0].getElementsByTagName("tr");
 	// On ne veut pas parser les <th>
@@ -30,6 +31,9 @@ function showBoxPlot(){
 	}
 	// The Div id is the first param, the data object the second.
 	boxplot("first", data);
+	
+	// Cacher le div source
+	document.getElementById('data').style.display='none';
 }
 
 /**
