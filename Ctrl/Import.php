@@ -113,7 +113,6 @@ END;
 		echo "</table>";
 
 //partie selection des types de donnée :
-		$types_possibles = array("Calories", "GPS", "RythmeCardiaque", "Temperature", "Vitesse");
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
@@ -123,22 +122,24 @@ END;
 				<th>Associer la donnée à un relevé</th>
 			</tr>
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
 				<td>Position GPS</td>
 				<td>
 END;
-		DataImportView::showSelectTypePossibles($types_possibles);
+		$nomDonnee = "PositionGPS";
+		DataImportView::showAssocierAReleve($nomDonnee);
 		echo <<<END
 				</td>
 			</tr>
 END;
 		echo<<<END
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
 				<td>Vitesse</td>
 				<td>
 END;
-		DataImportView::showSelectTypePossibles($types_possibles);
+		$nomDonnee = "Vitesse";
+		DataImportView::showAssocierAReleve($nomDonnee);
 		echo <<<END
 				</td>
 			</tr>
@@ -153,7 +154,7 @@ END;
 				<td>$chose</td>
 				<td>
 END;
-			DataImportView::showSelectTypePossibles($types_possibles);
+			DataImportView::showAssocierAReleve($chose);
 			echo <<<END
 				</td>
 			</tr>
@@ -212,32 +213,33 @@ END;
 		}
 
 //partie selection des types de donnée :
-		$types_possibles = array("Calories", "GPS", "RythmeCardiaque", "Temperature", "Vitesse");
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
 			<tr>
 				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
 				<th>Nom de la donnée</th>
-				<th>Type ?</th>
+				<th>Associer la donnée à un relevé</th>
 			</tr>
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
 				<td>Position GPS</td>
 				<td>
 END;
-		DataImportView::showSelectTypePossibles($types_possibles);
+		$nomDonnee = "PositionGPS";
+		DataImportView::showAssocierAReleve($nomDonnee);
 		echo <<<END
 				</td>
 			</tr>
 END;
 		echo<<<END
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes" checked="checked"/></td>
+				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
 				<td>Vitesse</td>
 				<td>
 END;
-		DataImportView::showSelectTypePossibles($types_possibles);
+		$nomDonnee = "Vitesse";
+		DataImportView::showAssocierAReleve($nomDonnee);
 		echo <<<END
 				</td>
 			</tr>
@@ -257,7 +259,7 @@ END;
 				<td>$type_name</td>
 				<td>
 END;
-			DataImportView::showSelectTypePossibles($types_possibles);
+			DataImportView::showAssocierAReleve($type_name);
 			echo <<<END
 				</td>
 			</tr>
