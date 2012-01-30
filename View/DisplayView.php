@@ -62,15 +62,15 @@ END;
 			</div>
 			<div class="content">
 				<div class="hero-unit">
-END;
-		$data = DisplayMod::getDisplayTypes();
-		DisplayView::showGraphChoiceMenu($data, false);
-		DashboardView::showGraph();
-		echo <<<END
+				<h1>OWIIIII <small>C'est trop bien !'</small></h1>
+				<p>Pour commencer, sélectionnez votre relevé.</p>
 				</div>
 			</div>
 		</div>
 END;
+		/*$data = DisplayMod::getDisplayTypes();
+		DisplayView::showGraphChoiceMenu($data, false);*/
+		//DashboardView::showGraph();
 	}
 
 	public static function showRelevesChoiceMenu(){
@@ -81,13 +81,13 @@ END;
 END;
 		$releves = DataMod::getReleves($_SESSION['bd_id']);
 		foreach($releves as $releve){
+			$hname = htmlspecialchars($releve['name']);
 			echo <<<END
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
-				<td>
+				<td><input type="checkbox" value="$hname" name="optionsCheckboxes"/></td>
+				<td>$hname</td>
+			</tr>
 END;
-			echo htmlspecialchars($releve["name"]), "</td>";
-			echo "</tr>";
 		}
 		echo "</table></div>";
 	}

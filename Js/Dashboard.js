@@ -26,12 +26,23 @@ var click_releve = function(e) {
 	
 	if ((e.originalEvent.target && e.originalEvent.target.nodeName == 'INPUT')
 		|| (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName == 'INPUT')
-	) return;
+	)
+	{
+		gerer_releves();		
+		return;
+	}
 
 	var checkbox = $(this).find('input');
 
 	checkbox.attr('checked', checkbox.attr('checked') != 'checked');
+	
+	gerer_releves();		
 };
 
 $('#releves tr').click(click_releve);
+
+var gerer_releves = function () {
+	var releves_selectionnes = $('#releves input:checked');
+	log(releves_selectionnes);
+}
 });

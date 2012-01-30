@@ -20,17 +20,23 @@ class Display
 
 	public function view() {
 
-		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'default';
-
 		$releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
 
-		$d = DisplayMod::loadDisplayType($type);
-		if (!$d||!$releve){
+		if (!$releve){
 			CTools::hackError();
 			return;
 		}
 
 		$n_datamod = DataMod::loadDataType($releve['modname']);
+		
+		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod->display_prefs) ? 'default' : $n_datamod->display_prefs[0]);
+		$d = DisplayMod::loadDisplayType($type);
+
+		if (!$d) {
+			CTools::hackError();
+			return;
+		}
+
 		$g = $d->instancier();
 
 		/*$salut = 42;
@@ -38,9 +44,7 @@ class Display
 		echo $$coucou;*/
 		CNavigation::setTitle($g::nom);
 
-
 		$g->structure = $n_datamod->getVariables();
-		$g->data = self::TriPoint(self::tableauRandom(15));
 		$g->data = R::getAll('select * from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
 		$g->show();
 
