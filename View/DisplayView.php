@@ -62,15 +62,15 @@ END;
 			</div>
 			<div class="content">
 				<div class="hero-unit">
-END;
-		$data = DisplayMod::getDisplayTypes();
-		DisplayView::showGraphChoiceMenu($data, false);
-		DashboardView::showGraph();
-		echo <<<END
+				<h1>OWIIIII <small>C'est trop bien !'</small></h1>
+				<p>Pour commencer, sélectionnez votre relevé.</p>
 				</div>
 			</div>
 		</div>
 END;
+		/*$data = DisplayMod::getDisplayTypes();
+		DisplayView::showGraphChoiceMenu($data, false);*/
+		//DashboardView::showGraph();
 	}
 
 	public static function showRelevesChoiceMenu(){

@@ -30,6 +30,8 @@ var click_releve = function(e) {
 
 	var checkbox = $(this).find('input');
 
+	var value = 
+
 	checkbox.attr('checked', checkbox.attr('checked') != 'checked');
 };
 
