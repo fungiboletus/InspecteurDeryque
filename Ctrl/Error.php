@@ -20,6 +20,12 @@ class Error
 		CNavigation::setTitle('Error 418');
 		ErrorView::showError(418, "Je suis une théière", "600px-Tetsubin.jpg");
 	}
+
+	public function server($error = 'Erreur interne du serveur') {
+		header("Status: 500 Internal Server Error");
+		CNavigation::setTitle('Error 500');
+		ErrorView::showError(500, $error, "669px-The.Matrix.glmatrix.2.png");
+	}
 }
 
 ?>
