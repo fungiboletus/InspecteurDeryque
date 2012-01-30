@@ -59,7 +59,7 @@ class Import extends AbstractView{
 		$dir = opendir($dir_path);
 		while (($file = readdir($dir)) !== false){
 			$file_path = $dir_path."/".$file;
-			if(!is_dir($file) && $file != "." && $file != ".." && $file != "index.html"){
+			if(!is_dir($file_path) && $file != "." && $file != ".." && $file != "index.html"){
 				unlink($file_path);
 			}
 		}
