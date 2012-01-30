@@ -43,6 +43,36 @@ $('#releves tr').click(click_releve);
 
 var gerer_releves = function () {
 	var releves_selectionnes = $('#releves input:checked');
-	log(releves_selectionnes);
+
+	if (releves_selectionnes.length == 0) {
+		$('#message_visualisations_vide').show();
+	} else {
+		$('#message_visualisations_vide').hide();
+	}
+
+	var espace_visualisations = $('#espace_visualisations');
+
+	releves_selectionnes.each(function() {
+	
+		var url = $(this).val();
+		var id = 'f'+$(this).attr('name');
+
+		if (!document.getElementById(id))
+		{
+			var iframe = document.createElement('iframe');
+			iframe.setAttribute('src', url);
+			iframe.className = 'visualisation';
+			iframe.id = id;
+			espace_visualisations.after(iframe);
+			iframe.onload = function() {
+				iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';	
+			};
+		}
+	});
+
+	$('#releves input:not(:checked)').each(function() {
+		var id = 'f'+$(this).attr('name');
+		$(document.getElementById(id)).remove();
+	});
 }
 });

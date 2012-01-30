@@ -33,7 +33,7 @@ if (file_exists($ctrl_filename)) {
 }
 
 $CTRL = new $CTRL_NAME();
-if (!method_exists($CTRL, $ACTION_NAME)) {
+if (!is_callable(array($CTRL, $ACTION_NAME))) {
 	$CTRL = new Error();
 	$CTRL_NAME = 'Error';
 	$ACTION_NAME = 'page_not_found';
@@ -63,7 +63,9 @@ CHead::addJS('bootstrap-dropdown');
 CHead::addJS('application');
 CHead::addJS($CTRL_NAME);
 
+try {
 $CTRL->{$ACTION_NAME}();
+} catch (Exception $e) {}
 
 // If just the body is requested, the page is printed
 if (isset($_REQUEST['AJAX_MODE'])) {

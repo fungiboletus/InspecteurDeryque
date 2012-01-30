@@ -1,0 +1,15 @@
+body {
+padding:0;
+background:#F5F5F5;
+}
+#mainContent {
+width:auto;
+padding:0;
+}
+html {
+overflow-y:auto;
+}
+h2 {
+margin:10px 0 10px 0;
+	   padding-left:0.5em;
+}

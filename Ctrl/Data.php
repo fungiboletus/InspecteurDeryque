@@ -42,7 +42,6 @@ class Data
 					else
 					{
 						CTools::hackError();
-						return;
 					}
 				}
 
@@ -68,7 +67,6 @@ class Data
 		if (!isset($_REQUEST['type']))
 		{
 			CTools::hackError();
-			return;
 		}
 
 		$data_type = DataMod::loadDataType($_REQUEST['type']);
@@ -92,7 +90,6 @@ END;*/
 		
 		if (!$releve) {
 			CTools::hackError();
-			return;
 		}
 
 		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
@@ -123,7 +120,6 @@ END;*/
 		$releve = DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']);
 		if (!$releve) {
 			CTools::hackError();
-			return;
 		}
 
 		if (isset($_REQUEST['confirm'])) {
@@ -151,7 +147,6 @@ END;*/
 
 		if (!$releve) {
 			CTools::hackError();
-			return;
 		}
 		
 		$n_datamod = DataMod::loadDataType($releve['modname']);
