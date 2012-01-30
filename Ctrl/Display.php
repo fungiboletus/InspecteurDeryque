@@ -1,7 +1,7 @@
 <?php
 class Display
 {
-	private static function tableauRandom($nb = 10, $max = 100){
+	/*private static function tableauRandom($nb = 10, $max = 100){
 		for($i = 0 ; $i < $nb ; $i++){
 			$tab["abscisse"][$i] = rand(1, $max);
 			$tab["ordonnee"][$i] = rand(1, $max);
@@ -11,20 +11,19 @@ class Display
 	private static function TriPoint($tab){
 		array_multisort($tab["abscisse"], SORT_ASC, $tab["ordonnee"]);
 		return $tab;
-	}
+	}*/
 
 	public function index() {
 		CNavigation::setTitle('Super page');
 		CNavigation::setDescription('Tout reste à faire');
 	}
 
-	public function view() {
+	private function vue_commune() {
 
 		$releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
 
 		if (!$releve){
 			CTools::hackError();
-			return;
 		}
 
 		$n_datamod = DataMod::loadDataType($releve['modname']);
@@ -34,7 +33,6 @@ class Display
 
 		if (!$d) {
 			CTools::hackError();
-			return;
 		}
 
 		$g = $d->instancier();
@@ -42,14 +40,32 @@ class Display
 		/*$salut = 42;
 		$coucou = 'salut';
 		echo $$coucou;*/
-		CNavigation::setTitle($g::nom);
 
 		$g->structure = $n_datamod->getVariables();
 		$g->data = R::getAll('select * from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
-		$g->show();
 
+		return array($g,$d, $n_datamod);
+	}
+
+	public function view() {
+		$r_vue = $this->vue_commune();
+		$r_vue[0]->show();
+		CNavigation::setTitle($r_vue[0]::nom.' du relevé «'.$_REQUEST['nom'].'»');
 		DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data','view',
 			array('nom'=>$_REQUEST['nom'])));
+	}
+
+	public function iframe_view() {
+		define('NO_HEADER_BAR', true);
+		CHead::addCss('iframe_view');
+
+		$r_vue = $this->vue_commune();
+		$data = DisplayMod::getDisplayTypes();
+		DisplayView::showGraphChoiceMenu($data, false, $r_vue[2]->display_prefs, 'iframe_view');
+
+		echo '<h2>', htmlspecialchars($r_vue[0]::nom), ' du relevé «',
+			 		htmlspecialchars($_REQUEST['nom']), '»</h2>';
+		$r_vue[0]->show();
 	}
 }
 ?>

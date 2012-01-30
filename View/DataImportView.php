@@ -23,6 +23,7 @@ END;
 			</div>
 		</form>
 END;
+		//'
 	}
 
 	public static function showDataSelection($fichier, $extension){
@@ -33,7 +34,8 @@ END;
 			echo "<p>Sélectionnez parmi les données proposées ci-dessous celles que vous désirez importer :</p>";
 			if (file_exists($fichier)){
 				$data = file_get_contents($fichier);
-				echo '<form id="choiximport" action="" method="post">';
+				$action = CNavigation::generateUrlToApp('Import', 'submit_selection');
+				echo '<form id="choiximport" action="',$action,'" method="post">';
 				if($extension === ".gpx"){
 					$data = preg_replace('/<gpx.*?>/','<gpx>',$data, 1);
 					$data = preg_replace('/<\\/tp1:(.+)>/','</$1>',$data);
@@ -48,8 +50,8 @@ END;
 					Import::recupDonneesImportablesTCX($tcx);
 				}
 			echo <<<END
-				<div class="input" id="boutons">
-					<input type="submit" value="Importer" class="btn primary"/> <button class="btn" type="reset">Annuler</button>
+				<div class="well" id="boutons">
+					<input type="submit" value="Importer" class="btn primary large"/>
 				</div>
 			</form>
 END;
@@ -63,20 +65,21 @@ END;
 
 	public static function showAssocierAReleve($nomDonnee){
 		$releves_list = DataMod::getReleves($_SESSION['bd_id']);
+		$sum = sha1($nomDonnee);
 		echo <<<END
 		<label for="selectData">Selectionnez le relevé</label>
 		<div class="input">
-			<select id="selectData" name="selectData">
-				<option>Nouveau Relevé</option>
+			<select id="selectData" name="assoc_$sum">
 END;
 		foreach($releves_list as $r){
 			echo '<option value="', htmlspecialchars($r['name']), '">', htmlspecialchars($r['name']), "</option>";
 		}
 echo <<<END
+				<option>Nouveau Relevé</option>
 			</select>
 	    </div>
 END;
-DataImportView::showNewReleveForm($nomDonnee);
+		//DataImportView::showNewReleveForm($nomDonnee);
 	}
 
 	public static function showSelectTypePossibles(){
@@ -100,7 +103,7 @@ END;
 	public static function showNewReleveForm($nomDonnee){
 
 	echo <<<END
-		<form action="" name="data_add_form" method="post" id="data_add_form">
+		<form action="" name="data_add_form" method="post" id="data_add_form" style="display:none;">
 			<fieldset>
 END;
 	DataImportView::showSelectTypePossibles();

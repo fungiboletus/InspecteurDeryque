@@ -84,10 +84,12 @@ END;
 		foreach($gpx->children() as $gpx_data){
 			echo "<tr>";
 			if($gpx_data->getName() === "trk"){
-				echo '<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>';
 				
 				$nameTrk = $gpx_data->xpath("name");
-				echo "<td>Trk : ",htmlspecialchars($nameTrk[0]),"</td>";
+				$sum = sha1($nameTrk[0]);
+				$hname = htmlspecialchars($nameTrk[0]);
+				echo '<td><input type="checkbox" value="',$hname,'" name="trk_',$sum,'"/></td>';
+				echo "<td>Trk : $hname</td>";
 
 				echo <<<END
 				<td>
@@ -98,9 +100,10 @@ END;
 						//recup le temps du premier trackpoint du trackseg en question
 						$trkpt1 = $trksegs->xpath("trkpt[1]/time");
 						$nameTrkseg = htmlspecialchars($trkpt1[0]);
+						$sum = sha1($trkpt1[0]);
 						echo <<<END
 						<tr>
-							<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+							<td><input type="checkbox" value="$nameTrkseg" name="seg_$sum"/></td>
 							<td>Trkseg : $nameTrkseg</td>
 						<tr>
 END;
@@ -122,10 +125,11 @@ END;
 				<th>Associer la donnée à un relevé</th>
 			</tr>
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+				<td><input type="checkbox" value="PositionGPS" name="data_gps"/></td>
 				<td>Position GPS</td>
 				<td>
 END;
+		//'
 		$nomDonnee = "PositionGPS";
 		DataImportView::showAssocierAReleve($nomDonnee);
 		echo <<<END
@@ -134,7 +138,7 @@ END;
 END;
 		echo<<<END
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+				<td><input type="checkbox" value="Vitesse" name="data_vitesse"/></td>
 				<td>Vitesse</td>
 				<td>
 END;
@@ -148,9 +152,10 @@ END;
 		$extensions_dispos = $extensions_dispos[0];
 		foreach($extensions_dispos->children() as $extdisp){
 			$chose = htmlspecialchars($extdisp->getName());
+			$sum = sha1($extdisp->getName());
 			echo <<<END
 			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
+				<td><input type="checkbox" value="$chose" name="data_$sum"/></td>
 				<td>$chose</td>
 				<td>
 END;
@@ -226,6 +231,7 @@ END;
 				<td>Position GPS</td>
 				<td>
 END;
+		//'
 		$nomDonnee = "PositionGPS";
 		DataImportView::showAssocierAReleve($nomDonnee);
 		echo <<<END
@@ -373,6 +379,10 @@ END;
 		} else {
     		new CMessage('Echec lors de l\'ouverture du fichier test.tcx.', 'error');
 		}
+	}
+
+	public function submit_selection() {
+		groaw($_REQUEST);
 	}
 }
 ?>
