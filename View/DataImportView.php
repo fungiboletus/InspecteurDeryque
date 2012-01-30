@@ -25,9 +25,9 @@ END;
 END;
 	}
 
-	public static function showDataSelection($fichier){
+	public static function showDataSelection($fichier, $extension){
 		$extensions = array('.tcx', '.gpx');
-		$extension = strrchr($fichier, '.');
+		//$extension = strrchr($fichier, '.');
 		if(in_array($extension, $extensions)){
 			echo "<p>Nous avons reconnu un fichier de type <Strong>$extension</Strong>.</p>";
 			echo "<p>Sélectionnez parmi les données proposées ci-dessous celles que vous désirez importer :</p>";

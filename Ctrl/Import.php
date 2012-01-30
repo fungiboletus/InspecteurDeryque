@@ -16,20 +16,21 @@ class Import extends AbstractView{
 */
 	public function submit() {
 		$dossier = 'Uploaded/';
-		$fichier = $_FILES['fichierXML']['name'];
+		$fichier = $dossier.sha1($_FILES['fichierXML']['name']);
+		$extention = strrchr($_FILES['fichierXML']['name'], '.');
 		$taille_max = 3000000;
 		$taille = filesize($_FILES['fichierXML']['tmp_name']);
 		if($taille>$taille_max){
 			$erreur = 'Ce fichier est trop volumineux';
 		}
 		if(!isset($erreur)){
-			if(move_uploaded_file($_FILES['fichierXML']['tmp_name'], $dossier.$fichier)){
+			if(move_uploaded_file($_FILES['fichierXML']['tmp_name'], $fichier)){
 				$_SESSION['fichierXML'] = $fichier;
-				new CMessage('Upload effectué avec succès !');
+				$_SESSION['extFichierXML'] = $extention;
 				CNavigation::redirectToApp('Import', 'dataSelection');
 			}
 			else{
-				new CMessage('Echec de l\'upload', 'error');
+				new CMessage('Échec de l\'upload', 'error');
 				CNavigation::redirectToApp('Import');
 			}
 		}
@@ -47,9 +48,11 @@ class Import extends AbstractView{
 			$fichier = $_SESSION['fichierXML'];
 			if (file_exists($fichier)){
 				CNavigation::setTitle('Selectionner vos données à importer');
-				DataImportView::showDataSelection($fichier);
+				DataImportView::showDataSelection($fichier, $_SESSION['extFichierXML']);
+				return;
 			}
 		}
+		CTools::hackError();
 	}
 
 /**
@@ -157,7 +160,7 @@ END;
 END;
 		}
 		echo "</table>";
-		Import::deleteDirContent("Uploaded");
+		//Import::deleteDirContent("Uploaded");
 	}
 
 /**
