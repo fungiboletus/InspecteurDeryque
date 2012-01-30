@@ -7,7 +7,7 @@ class DCarte extends DAbstract
 	{
 		CHead::addJs('carte');
 		CHead::addJs('http://maps.google.com/maps/api/js?sensor=false');
-		echo '<div id="carte" style="width:960px; height:600px"></div>';
+		echo '<div id="carte" style="width:960px; height:600px; margin-bottom:20px;"></div>';
 		$timestamp="<tr>";
 		$lat="<tr>";
 		$lon="<tr>";

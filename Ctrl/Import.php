@@ -90,7 +90,8 @@ class Import extends AbstractView{
 	}
 
 	public function xmlImport() {
-		CNavigation::setTitle('Importer des données XML');
+		CNavigation::setTitle('Importer des données');
+		CNavigation::setDescription('GPX ou TCX');
 		DataImportView::showFormImport();
 		//$this->displayXML();
 	}
