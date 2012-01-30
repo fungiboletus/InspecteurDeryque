@@ -4,7 +4,7 @@ class Import extends AbstractView{
 /**
 * affiche la page d'import/upload de fichier
 */
-	public function xmlImport() {
+	public function index() {
 		CNavigation::setTitle('Importer des données');
 		CNavigation::setDescription('GPX ou TCX');
 		DataImportView::showFormImport();
@@ -30,12 +30,12 @@ class Import extends AbstractView{
 			}
 			else{
 				new CMessage('Echec de l\'upload', 'error');
-				CNavigation::redirectToApp('Import', 'xmlImport');
+				CNavigation::redirectToApp('Import');
 			}
 		}
 		else{
 			new CMessage($erreur, 'error');
-			CNavigation::redirectToApp('Import', 'xmlImport');
+			CNavigation::redirectToApp('Import');
 		}
 	}
 
