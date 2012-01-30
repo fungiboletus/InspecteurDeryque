@@ -65,7 +65,7 @@ var gerer_releves = function () {
 			iframe.id = id;
 			espace_visualisations.after(iframe);
 			iframe.onload = function() {
-				iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';	
+				iframe.style.height = iframe.contentWindow.document.body.offsetHeight + 'px';
 			};
 		}
 	});
