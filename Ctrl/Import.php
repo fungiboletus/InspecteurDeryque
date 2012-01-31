@@ -194,17 +194,34 @@ class Import extends AbstractView{
 				foreach($gpx->children() as $gpx_data){
 					if($gpx_data->getName() === "trk"){
 						$nameTrk = $gpx_data->xpath("name");
-						$sum = sha1($nameTrk[0]);
+						$sum_trk = sha1($nameTrk[0]);
 						$hname = htmlspecialchars($nameTrk[0]);
-						if(array_key_exists("trk_".$sum, $_POST)){
+						if(array_key_exists("trk_".$sum_trk, $_POST)){
 							foreach($gpx_data->children() as $trksegs){
 								if($trksegs->getName() === "trkseg"){
 									//recup le temps du premier trackpoint du trackseg en question
 									$trkpt1 = $trksegs->xpath("trkpt[1]/time");
+									if(empty($trkpt1)){
+										continue;
+									}
 									$nameTrkseg = htmlspecialchars($trkpt1[0]);
-									$sum = sha1($trkpt1[0]);
-									if(array_key_exists("seg_".$sum, $_POST)){
-										groaw($trksegs);
+									$sum_seg = sha1($trkpt1[0]);
+									$seg_sum_seg = "seg_".$sum_seg;
+									if(array_key_exists($seg_sum_seg, $_POST)){
+										$prout = $_POST[$seg_sum_seg];
+										echo $prout;
+										//$trkseg_arecup = $gpx->xpath("/gpx/trk/trkseg/time[$_POST[$segsumgeniale]]");
+										//groaw($trkseg_arecup);
+										//groaw($trksegs);
+										//remplissage relevé par relevé
+										/*foreach($_POST as $key => $post){
+											if($this->startswith($key, "assoc_")){
+												$sum_assoc = substr(strrchr($key, '_'), 1);
+												foreach($key as $k){
+													$sum_trk
+												}
+											}
+										}*/
 									}
 								}
 							}
@@ -219,7 +236,15 @@ class Import extends AbstractView{
 
 				//aucun traitement pour l'instant
 			}
+			else{
+				echo "You Failed at Failing !";
+			}
 		}
 	}
+	
+	public function startswith($chaine, $debut) {
+  		return substr($chaine, 0, strlen($debut)) === $debut;
+  	}
+
 }
 ?>
