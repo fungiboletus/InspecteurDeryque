@@ -70,6 +70,9 @@ $CTRL->{$ACTION_NAME}();
 	if ($e->getMessage() !== 'hack')
 	{
 		ob_clean();
+		CHead::delCSS($CTRL_NAME);
+		CHead::delJS($CTRL_NAME);
+		CHead::addCSS('Error');
 		$ctrl = new Error();
 		$ctrl->server($e);
 	}
