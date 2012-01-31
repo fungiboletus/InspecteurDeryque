@@ -1,6 +1,6 @@
 <?php
 
-class DataImportView{
+class DataImportView {
 	public static function showFormImport(){
 		echo <<<END
 		<div class="alert-message block-message info">
@@ -83,9 +83,11 @@ END;
 				
 				$nameTrk = $gpx_data->xpath("name");
 				$sum = sha1($nameTrk[0]);
+
+				$hdate = AbstractView::formateDate($nameTrk[0]);
 				$hname = htmlspecialchars($nameTrk[0]);
-				echo '<td><input type="checkbox" value="',$hname,'" name="trk_',$sum,'"/></td>';
-				echo "<td>Trk : $hname</td>";
+				echo '<td><input type="checkbox" value="',$hname,'" name="trk_',$sum,'" id="trk_',$sum,'"/></td>';
+				echo "<td><label class=\"td_label\" for=\"trk_$sum\">Trk: $hdate</label></td>";
 
 				echo <<<END
 				<td>
@@ -99,16 +101,19 @@ END;
 							continue;
 						}
 						$nameTrkseg = htmlspecialchars($trkpt1[0]);
+						$hdate = AbstractView::formateDate($trkpt1[0]);
 						$sum = sha1($trkpt1[0]);
+						$nb = count($trksegs->children());
 						echo <<<END
 						<tr>
-							<td><input type="checkbox" value="$nameTrkseg" name="seg_$sum"/></td>
-							<td>Trkseg : $nameTrkseg</td>
+							<td><input type="checkbox" value="$nameTrkseg" name="seg_$sum" id="seg_$sum"/></td>
+							<td><label class="td_label" for="seg_$sum">Trkseg: $hdate</label></td>
+							<td>$nb</td>
 						<tr>
 END;
 					}
 				}
-				echo "</table>";
+				echo "</table></td>";
 			}
 			echo "</tr>";
 		}
@@ -126,8 +131,8 @@ END;
 				<th>Associer la donnée à un relevé</th>
 			</tr>
 			<tr>
-				<td><input type="checkbox" value="PositionGPS" name="data_$sum"/></td>
-				<td>Position GPS</td>
+				<td><input type="checkbox" value="PositionGPS" name="data_$sum" id="data_$sum"/></td>
+				<td><label class="td_label" for="data_$sum">Position GPS</label></td>
 				<td>
 END;
 		//'
@@ -140,8 +145,8 @@ END;
 		$sum = sha1($nomDonnee);
 		echo<<<END
 			<tr>
-				<td><input type="checkbox" value="Vitesse" name="data_$sum"/></td>
-				<td>Vitesse</td>
+				<td><input type="checkbox" value="Vitesse" name="data_$sum" id="data_$sum"/></td>
+				<td><label class="td_label" for="data_$sum">Vitesse</label></td>
 				<td>
 END;
 		self::showAssocierAReleve($nomDonnee);
@@ -157,8 +162,8 @@ END;
 				$sum = sha1($extdisp->getName());
 				echo <<<END
 				<tr>
-					<td><input type="checkbox" value="$chose" name="data_$sum"/></td>
-					<td>$chose</td>
+					<td><input type="checkbox" value="$chose" name="data_$sum" id="data_$sum"/></td>
+					<td><label class="td_label" for="data_$sum">$chose</label></td>
 					<td>
 END;
 				self::showAssocierAReleve($chose);

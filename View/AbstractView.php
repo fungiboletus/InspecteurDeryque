@@ -2,7 +2,7 @@
 
 abstract class AbstractView
 {
-	protected $now;
+	protected static $now;
 	
 	protected static function showButton($url, $class, $text, $icon) {
 		echo <<<END
@@ -11,7 +11,7 @@ abstract class AbstractView
 END;
 	}
 	
-	public function translateTimePeriod($period, $week = null)
+	public static function translateTimePeriod($period, $week = null)
 	{
 		switch($period)
 		{
@@ -40,11 +40,11 @@ END;
 		}
 	}
 
-	public function formateDate($date)
+	public static function formateDate($date)
 	{
 		if (!is_array($date))
 		{
-			$date = $this->locateDate($date);
+			$date = self::locateDate($date);
 		}
 
 		$period = $date[0];
@@ -65,7 +65,7 @@ END;
 		return strftime($format, $date[1]);
 	}
 
-	public function locateDate($date) {
+	public static function locateDate($date) {
 		// It's interessant to note that it's work fine
 		if (is_numeric($date)) {
 			$t = intval($date);
@@ -74,11 +74,11 @@ END;
 		}
 
 		// The time is cached for improve performance
-		if (!isset($this->now)) {
-			$this->now = time();
+		if (!isset(self::$now)) {
+			self::$now = time();
 		}
 
-		$n = $this->now;
+		$n = self::$now;
 
 		$an = getdate($n);
 
@@ -114,7 +114,7 @@ END;
 		return array(-1, $t, null);
 	}
 
-	public function getMimeIcone($mimetype)
+	public static function getMimeIcone($mimetype)
 	{
 
 		$m;

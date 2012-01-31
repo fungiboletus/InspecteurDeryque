@@ -18,3 +18,7 @@ padding-top:10px;
 #choiximport table .btn {
 margin-left:20px;
 }
+#choiximport label.td_label {
+width:auto;
+padding:0;
+}
