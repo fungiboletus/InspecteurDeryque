@@ -115,6 +115,8 @@ END;
 		echo "</table>";
 
 //partie selection des types de donnée :
+		$nomDonnee = "PositionGPS";
+		$sum = sha1($nomDonnee);
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
@@ -124,24 +126,24 @@ END;
 				<th>Associer la donnée à un relevé</th>
 			</tr>
 			<tr>
-				<td><input type="checkbox" value="PositionGPS" name="data_gps"/></td>
+				<td><input type="checkbox" value="PositionGPS" name="data_$sum"/></td>
 				<td>Position GPS</td>
 				<td>
 END;
 		//'
-		$nomDonnee = "PositionGPS";
 		self::showAssocierAReleve($nomDonnee);
 		echo <<<END
 				</td>
 			</tr>
 END;
+		$nomDonnee = "Vitesse";
+		$sum = sha1($nomDonnee);
 		echo<<<END
 			<tr>
-				<td><input type="checkbox" value="Vitesse" name="data_vitesse"/></td>
+				<td><input type="checkbox" value="Vitesse" name="data_$sum"/></td>
 				<td>Vitesse</td>
 				<td>
 END;
-		$nomDonnee = "Vitesse";
 		self::showAssocierAReleve($nomDonnee);
 		echo <<<END
 				</td>

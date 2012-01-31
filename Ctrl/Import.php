@@ -209,20 +209,22 @@ class Import extends AbstractView{
 									$sum_seg = sha1($trkpt1[0]);
 									$seg_sum_seg = "seg_".$sum_seg;
 									if(array_key_exists($seg_sum_seg, $_POST)){
-										$prout = $_POST[$seg_sum_seg];
-										echo $prout;
-										//$trkseg_arecup = $gpx->xpath("/gpx/trk/trkseg/time[$_POST[$segsumgeniale]]");
-										//groaw($trkseg_arecup);
+										/*$prout = $_POST[$seg_sum_seg];
+										echo $prout;*/
 										//groaw($trksegs);
+										
 										//remplissage relevé par relevé
-										/*foreach($_POST as $key => $post){
+										foreach($_POST as $key => $post){
 											if($this->startswith($key, "assoc_")){
-												$sum_assoc = substr(strrchr($key, '_'), 1);
-												foreach($key as $k){
-													$sum_trk
+												$sum_assoc = strrchr($key, '_');
+												//groaw($key);
+												//groaw($post);
+												if (isset($_POST['data'.$sum_assoc])) {
+													//groaw($_POST['data'.$sum_assoc]);
+													$this->saveData($post, $_POST['data'.$sum_assoc], $trksegs);
 												}
 											}
-										}*/
+										}
 									}
 								}
 							}
@@ -243,7 +245,60 @@ class Import extends AbstractView{
 		}
 	}
 	
-	public function startswith($chaine, $debut) {
+	private function saveData($nom_releve, $type_donnees, $donnees) {
+		$releve = DataMod::getReleve($nom_releve, $_SESSION['bd_id']);
+		$b_releve = R::load('releve', $releve['id']);
+
+		if (!$releve) CTools::hackError();
+		
+		$n_datamod = DataMod::loadDataType($releve['modname']);
+		$variables = $n_datamod->getVariables();
+
+		foreach($donnees as $d) {
+			if ($d->getName() !== 'trkpt') continue;
+			
+			$datamod = $n_datamod->instancier();
+
+			$vars = array();
+
+			switch($type_donnees) {
+				case 'PositionGPS':
+					$vars['lat'] = floatval($d['lat']);
+					$vars['lon'] = floatval($d['lon']);
+					break;
+				case 'Vitesse':
+					// TODO calculer la vitesse
+					$vars['vitesse'] = 42.0;
+					break;
+				default:
+					$exts = $d->xpath('extensions/TrackPointExtension/'.$type_donnees);
+					if(!empty($exts)){
+						$vars['hr'] = floatval($exts[0]);
+					}
+			}
+			
+			$time = $d->xpath('time');
+			if (!empty($time)) {
+				$vars['timestamp'] = strtotime($time[0]);
+			}
+			
+			foreach ($variables as $k => $var) {
+				if (isset($vars[$k]))
+				{
+					$datamod->$k = $vars[$k];
+				}
+				else
+				{
+					$datamod->$k = isset($vars[$type_donnees]) ? $vars[$type_donnees] : 0.0;
+				}
+			}
+
+			groaw($datamod);
+			$n_datamod->save($_SESSION['user'], $b_releve, $datamod);
+		}
+	}
+	
+	private function startswith($chaine, $debut) {
   		return substr($chaine, 0, strlen($debut)) === $debut;
   	}
 
