@@ -59,6 +59,7 @@ if (!defined('NO_LOGIN_REQUIRED')) {
 CHead::addCSS('bootstrap.min');
 CHead::addCSS('application');
 CHead::addCSS($CTRL_NAME);
+if (isset($_REQUEST['iframe_mode'])) CHead::addCSS('iframe_mode');
 CHead::addJS('jquery-1.6.2.min');
 CHead::addJS('bootstrap-dropdown');
 CHead::addJS('application');

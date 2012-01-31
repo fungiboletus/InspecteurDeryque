@@ -1,3 +1,16 @@
 #import #boutons{
 	margin-top:10px;
 }
+
+#createnewlapin {
+width: 1000px;
+margin-left: -500px;
+max-height:570px;
+}
+
+#createnewlapin iframe {
+width:100%;
+height:490px;
+border:none;
+padding-top:10px;
+}
