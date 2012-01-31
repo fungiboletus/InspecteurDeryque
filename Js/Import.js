@@ -12,17 +12,46 @@ $('#choiximport table:last input:checkbox:first').change(function() {
 	$('#choiximport table:last input:checkbox:not(:first)').attr('checked', $(this).attr('checked') == 'checked');
 });
 
-$('#choiximport table:last select').change(function(e) {
-	log(e);	
+var click_create_releve = function() {
+	$('#createnewlapin').modal('show');
+	$('#createnewlapin iframe')[0].src = $(this)[0].href;
+
+	return false;
+};
+
+$('#choiximport table:last a').each(function(e) {
+	$(this).click(click_create_releve);
 });
 
-$('#choiximport').after('<div class="modal hide fade in" id="createnewlapin"><iframe src="http://localhost/InspecteurDeryque/app/Data/choose/iframe_mode/true" ></iframe></div>');
-
+$('#choiximport').after('<div class="modal hide fade in" id="createnewlapin"><iframe src="" ></iframe></div>');
 
 $('#createnewlapin').modal({
   keyboard: true,
   backdrop: true
 });
-$('#createnewlapin').modal('show');
+
+$('#createnewlapin iframe').load(function() {
+	var url = $(this)[0].contentWindow.location.pathname;
+	if (url.search('/Data/add')==-1&&url.search('/Data/choose')==-1) {
+		$.ajax({
+		url: window.location.pathname,
+		success: function(html){
+			var dom = $(html);
+			var selects = dom.find('#choiximport table:last select');
+
+			$('#choiximport table:last select').each(function(i) {
+				var value = $(this).find(':selected').attr('value');
+				$(dom).find('option').each(function() {
+					if ($(this).attr('value') == value) {
+						$(this).attr('selected',true);
+					}
+				});
+				$(this).before(selects[i]).remove();
+			});
+		}
+		});
+		$('#createnewlapin').modal('hide');
+	}
+});
 });
 

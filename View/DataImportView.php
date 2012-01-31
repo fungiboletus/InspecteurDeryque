@@ -281,6 +281,7 @@ END;
 	private static function showAssocierAReleve($nomDonnee){
 		$releves_list = DataMod::getReleves($_SESSION['bd_id']);
 		$sum = sha1($nomDonnee);
+		$new_url = CNavigation::generateUrlToApp('Data','choose', array('iframe_mode'=>true));
 		echo <<<END
 		<label for="selectData">Selectionnez le relevé</label>
 		<div class="input">
@@ -290,8 +291,9 @@ END;
 			echo '<option value="', htmlspecialchars($r['name']), '">', htmlspecialchars($r['name']), " (", htmlspecialchars($r['modname']), ")", "</option>";
 		}
 echo <<<END
-				<option>Nouveau Relevé</option>
 			</select>
+
+			<a class="btn" href="$new_url">Nouveau relevé</a>
 	    </div>
 END;
 		//DataImportView::showNewReleveForm($nomDonnee);

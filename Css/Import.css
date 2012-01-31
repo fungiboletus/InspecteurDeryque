@@ -14,3 +14,7 @@ height:490px;
 border:none;
 padding-top:10px;
 }
+
+#choiximport table .btn {
+margin-left:20px;
+}
