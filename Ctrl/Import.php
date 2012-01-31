@@ -99,6 +99,9 @@ END;
 					if($trksegs->getName() === "trkseg"){
 						//recup le temps du premier trackpoint du trackseg en question
 						$trkpt1 = $trksegs->xpath("trkpt[1]/time");
+						if(empty($trkpt1)){
+							continue;
+						}
 						$nameTrkseg = htmlspecialchars($trkpt1[0]);
 						$sum = sha1($trkpt1[0]);
 						echo <<<END
@@ -149,21 +152,23 @@ END;
 			</tr>
 END;
 		$extensions_dispos = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
-		$extensions_dispos = $extensions_dispos[0];
-		foreach($extensions_dispos->children() as $extdisp){
-			$chose = htmlspecialchars($extdisp->getName());
-			$sum = sha1($extdisp->getName());
-			echo <<<END
-			<tr>
-				<td><input type="checkbox" value="$chose" name="data_$sum"/></td>
-				<td>$chose</td>
-				<td>
+		if(!empty($extensions_dispos)){
+			$extensions_dispos = $extensions_dispos[0];
+			foreach($extensions_dispos->children() as $extdisp){
+				$chose = htmlspecialchars($extdisp->getName());
+				$sum = sha1($extdisp->getName());
+				echo <<<END
+				<tr>
+					<td><input type="checkbox" value="$chose" name="data_$sum"/></td>
+					<td>$chose</td>
+					<td>
 END;
-			DataImportView::showAssocierAReleve($chose);
-			echo <<<END
-				</td>
-			</tr>
+				DataImportView::showAssocierAReleve($chose);
+				echo <<<END
+					</td>
+				</tr>
 END;
+			}
 		}
 		echo "</table>";
 		//Import::deleteDirContent("Uploaded");
