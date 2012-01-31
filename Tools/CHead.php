@@ -21,5 +21,10 @@ class CHead
 	{
 		unset(self::$css[array_search($n_css, self::$css)]);
 	}
+	
+	public static function delJS($n_js)
+	{
+		unset(self::$js[array_search($n_js, self::$js)]);
+	}
 }
 ?>

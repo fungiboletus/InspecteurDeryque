@@ -167,5 +167,6 @@ END;*/
 		new CMessage('10 valeurs aléatoires ont étés générées');
 		CNavigation::redirectToApp('Data', 'view', array('nom' => $_REQUEST['nom']));
 	}
+
 }
 ?>

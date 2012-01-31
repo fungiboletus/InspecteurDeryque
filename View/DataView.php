@@ -24,7 +24,7 @@ class DataView extends AbstractView
 		foreach ($data as $type) {
 			$hnom = htmlspecialchars($type->nom);
 			$hdir = htmlspecialchars($type->dossier);
-			$url = CNavigation::generateUrlToApp('Data','add', array('type'=>$type->dossier));
+			$url = CNavigation::generateMergedUrl('Data','add', array('type'=>$type->dossier));
 			echo <<<END
 	<li>
 		<a href="$url">
