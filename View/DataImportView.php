@@ -154,6 +154,19 @@ END;
 				</td>
 			</tr>
 END;
+		$nomDonnee = "Calories";
+		$sum = sha1($nomDonnee);
+		echo<<<END
+			<tr>
+				<td><input type="checkbox" value="Calories" name="data_$sum" id="data_$sum"/></td>
+				<td><label class="td_label" for="data_$sum">Calories</label></td>
+				<td>
+END;
+		self::showAssocierAReleve($nomDonnee);
+		echo <<<END
+				</td>
+			</tr>
+END;
 		$extensions_dispos = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
 		if(!empty($extensions_dispos)){
 			$extensions_dispos = $extensions_dispos[0];
@@ -290,9 +303,9 @@ END;
 		$sum = sha1($nomDonnee);
 		$new_url = CNavigation::generateUrlToApp('Data','choose', array('iframe_mode'=>true));
 		echo <<<END
-		<label for="selectData">Selectionnez le relevé</label>
+		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="input">
-			<select id="selectData" name="assoc_$sum">
+			<select name="assoc_$sum" id="assoc_$sum">
 END;
 		foreach($releves_list as $r){
 			echo '<option value="', htmlspecialchars($r['name']), '">', htmlspecialchars($r['name']), " (", htmlspecialchars($r['modname']), ")", "</option>";

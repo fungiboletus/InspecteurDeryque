@@ -28,8 +28,11 @@ END;
 		{
 			echo "<tr>";
 			foreach ($this->structure as $k => $v) {
-			echo "<td>", htmlspecialchars($data[$k]), "</td>";
-
+				if ($k === 'timestamp') {
+					echo "<td><span style=\"display:none\">",htmlspecialchars($data[$k]),"</span>", strftime('%d/%m/%Y %H:%M:%S', $data[$k]), "</td>";	
+				} else {
+					echo "<td>", htmlspecialchars($data[$k]), "</td>";
+				}
 			}
 			echo "</tr>\n";
 		}
