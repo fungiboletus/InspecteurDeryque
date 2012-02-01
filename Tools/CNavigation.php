@@ -157,7 +157,13 @@ class CNavigation
 				$url .= '/'.rawurlencode($action);
 			}
 
-			if ($params != null) {
+			if (isset($_REQUEST['iframe_mode']))
+				if (!is_array($params))
+					$params = array('iframe_mode' => true);
+				else 
+					$params['iframe_mode'] = true;
+			
+			if (is_array($params)) {
 				if ($action == null) {
 					$url .= '/index';
 				}
@@ -174,6 +180,10 @@ class CNavigation
 		else {
 			if (!is_array($params)) {
 				$params = array();
+			}
+
+			if (isset($_REQUEST['iframe_mode']) && !isset($params['iframe_mode'])) {
+				$params['iframe_mode'] = true;
 			}
 
 			if ($ctrl != null) {

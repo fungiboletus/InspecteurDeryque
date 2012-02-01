@@ -1,7 +1,7 @@
 <?php
 class DisplayView extends AbstractView
 {
-	public static function showGraphChoiceMenu($data, $well = true, $prefs = array(), $action = 'view'){
+	public static function showGraphChoiceMenu($data, $well = true, $prefs = array(), $selected = null, $action = 'view'){
 		$cdata = count($data);
 		$ii = 0;
 		foreach ($prefs as $pref) {
@@ -27,6 +27,7 @@ END;
 			$dossier = $display->dossier;
 			$url = CNavigation::generateMergedUrl('Display', $action, array('type' => $dossier));
 			$class = in_array($dossier, $prefs, true) ? ' class="display_prefs"' : '';
+			$class = $dossier === $selected ? ' class="display_selected"' : $class;
 			echo <<<END
 				<li$class>
 					<a href="$url" class="liengraph">

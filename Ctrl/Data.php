@@ -124,8 +124,10 @@ END;*/
 
 		if (isset($_REQUEST['confirm'])) {
 			$nom = $releve['name'];
+			$releve = R::load('releve', $releve['id']);
+			$modname = R::load('datamod', $releve->mod_id)->modname;
+			R::exec('delete from d_'.$modname.' where releve_id = ?', array($releve['id']));
 			R::trash(R::load('releve', $releve['id']));
-			new CMessage("Le relevé «${nom}» a bien été supprimé.");
 			CNavigation::redirectToApp('Data');
 		}
 		else
@@ -151,7 +153,8 @@ END;*/
 		
 		$n_datamod = DataMod::loadDataType($releve['modname']);
 		$variables = $n_datamod->getVariables();
-
+		
+		R::begin();
 		for ($i = 0; $i < 10; ++$i) {
 			$datamod = $n_datamod->instancier();
 
@@ -163,9 +166,11 @@ END;*/
 
 			$n_datamod->save($_SESSION['user'], $b_releve, $datamod);
 		}
+		R::commit();
 
 		new CMessage('10 valeurs aléatoires ont étés générées');
 		CNavigation::redirectToApp('Data', 'view', array('nom' => $_REQUEST['nom']));
 	}
+
 }
 ?>

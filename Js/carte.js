@@ -41,7 +41,7 @@
 		var maxvit = 0;
 		var minvit = Number.MAX_VALUE;
 		for(i=1;i<lat.length;i++){
-			var dist = Math.sqrt(Math.pow((lat[i]-lat[i-1]),2) + Math.pow((lon[i]-lon[i-1]),2))
+			var dist = Math.sqrt(Math.pow((lat[i]-lat[i-1]),2) + Math.pow((lon[i]-lon[i-1]),2));
 			var tps = timestamp[i] - timestamp[i-1];
 			if (maxvit < dist /tps)
 				maxvit = dist /tps;

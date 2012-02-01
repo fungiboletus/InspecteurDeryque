@@ -62,7 +62,7 @@ class Display
 
 		$r_vue = $this->vue_commune();
 		$data = DisplayMod::getDisplayTypes();
-		DisplayView::showGraphChoiceMenu($data, false, $r_vue[2]->display_prefs, 'iframe_view');
+		DisplayView::showGraphChoiceMenu($data, false, $r_vue[2]->display_prefs, $r_vue[1]->dossier, 'iframe_view');
 
 		echo '<h2>', htmlspecialchars($r_vue[0]::nom), ' du relevé «',
 			 		htmlspecialchars($_REQUEST['nom']), '» <small>',

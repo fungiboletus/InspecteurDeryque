@@ -24,7 +24,7 @@ class Error
 	public function server($error = 'Erreur interne du serveur') {
 		header("Status: 500 Internal Server Error");
 		CNavigation::setTitle('Error 500');
-		ErrorView::showError(500, $error, "669px-The.Matrix.glmatrix.2.png");
+		ErrorView::showError(500, 'Erreur interne du serveur', "669px-The.Matrix.glmatrix.2.png", $error);
 	}
 }
 

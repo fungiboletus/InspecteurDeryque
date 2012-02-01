@@ -48,6 +48,7 @@ class Import extends AbstractView{
 			$fichier = $_SESSION['fichierXML'];
 			if (file_exists($fichier)){
 				CNavigation::setTitle('Selectionner vos données à importer');
+				CHead::addJS('bootstrap-modal');
 				DataImportView::showDataSelection($fichier, $_SESSION['extFichierXML']);
 				return;
 			}
@@ -69,211 +70,6 @@ class Import extends AbstractView{
 		closedir($dir);
 	}
 
-/**
-* Permet d'afficher un formulaire de sélection des données à importer pour le fichier uploadé de type GPX
-*/
-	public function recupDonneesImportablesGPX($gpx){
-		echo <<<END
-		<table class="bordered-table">
-			<tr>
-				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
-				<th>Tracks</th>
-				<th>Track Segments</th>
-			</tr>
-END;
-		foreach($gpx->children() as $gpx_data){
-			echo "<tr>";
-			if($gpx_data->getName() === "trk"){
-				
-				$nameTrk = $gpx_data->xpath("name");
-				$sum = sha1($nameTrk[0]);
-				$hname = htmlspecialchars($nameTrk[0]);
-				echo '<td><input type="checkbox" value="',$hname,'" name="trk_',$sum,'"/></td>';
-				echo "<td>Trk : $hname</td>";
-
-				echo <<<END
-				<td>
-					<table class="zebra-striped bordered-table">
-END;
-				foreach($gpx_data->children() as $trksegs){
-					if($trksegs->getName() === "trkseg"){
-						//recup le temps du premier trackpoint du trackseg en question
-						$trkpt1 = $trksegs->xpath("trkpt[1]/time");
-						$nameTrkseg = htmlspecialchars($trkpt1[0]);
-						$sum = sha1($trkpt1[0]);
-						echo <<<END
-						<tr>
-							<td><input type="checkbox" value="$nameTrkseg" name="seg_$sum"/></td>
-							<td>Trkseg : $nameTrkseg</td>
-						<tr>
-END;
-					}
-				}
-				echo "</table>";
-			}
-			echo "</tr>";
-		}
-		echo "</table>";
-
-//partie selection des types de donnée :
-		echo <<<END
-		<p>Vous pouvez choisir de n'importer que certaines données :</p>
-		<table class="zebra-striped bordered-table">
-			<tr>
-				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
-				<th>Nom de la donnée</th>
-				<th>Associer la donnée à un relevé</th>
-			</tr>
-			<tr>
-				<td><input type="checkbox" value="PositionGPS" name="data_gps"/></td>
-				<td>Position GPS</td>
-				<td>
-END;
-		//'
-		$nomDonnee = "PositionGPS";
-		DataImportView::showAssocierAReleve($nomDonnee);
-		echo <<<END
-				</td>
-			</tr>
-END;
-		echo<<<END
-			<tr>
-				<td><input type="checkbox" value="Vitesse" name="data_vitesse"/></td>
-				<td>Vitesse</td>
-				<td>
-END;
-		$nomDonnee = "Vitesse";
-		DataImportView::showAssocierAReleve($nomDonnee);
-		echo <<<END
-				</td>
-			</tr>
-END;
-		$extensions_dispos = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
-		$extensions_dispos = $extensions_dispos[0];
-		foreach($extensions_dispos->children() as $extdisp){
-			$chose = htmlspecialchars($extdisp->getName());
-			$sum = sha1($extdisp->getName());
-			echo <<<END
-			<tr>
-				<td><input type="checkbox" value="$chose" name="data_$sum"/></td>
-				<td>$chose</td>
-				<td>
-END;
-			DataImportView::showAssocierAReleve($chose);
-			echo <<<END
-				</td>
-			</tr>
-END;
-		}
-		echo "</table>";
-		//Import::deleteDirContent("Uploaded");
-	}
-
-/**
-* Permet d'afficher un formulaire de sélection des données à importer pour le fichier uploadé de type TCX
-*/
-	public function recupDonneesImportablesTCX($tcx){
-		$activities = $tcx->xpath("/TrainingCenterDatabase/Activities");
-		$activities = $activities[0];
-		foreach($activities->children() as $activity){
-			$activity_name = htmlspecialchars($activity['Sport']);
-			echo <<<END
-			<h3>Activité : $activity_name</h3>
-			<table class="bordered-table">
-				<tr>
-					<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
-					<th>Laps</th>
-					<th>Tracks</th>
-				</tr>
-END;
-			foreach($activity->children() as $lapsandmore){
-				if(htmlspecialchars($lapsandmore->getName()) === "Lap"){
-					echo "<tr>";
-					echo '<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>';
-					echo "<td>Lap - StartTime : ", htmlspecialchars($lapsandmore['StartTime']),"</td>";
-					echo <<<END
-					<td>
-						<table class="zebra-striped bordered-table">
-END;
-					foreach($lapsandmore->children() as $datalap){
-						if(htmlspecialchars($datalap->getName()) === "Track"){
-							$track_first_date = $datalap->xpath("Trackpoint[1]/Time");
-							$nameTrack = htmlspecialchars($track_first_date[0]);
-							echo <<<END
-							<tr>
-								<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
-								<td>Track : $nameTrack</td>
-							<tr>
-END;
-						}
-					}
-					echo <<<END
-						</table>
-					</td>
-				</tr>
-END;
-				}
-			}
-			echo "</table>";
-		}
-
-//partie selection des types de donnée :
-		echo <<<END
-		<p>Vous pouvez choisir de n'importer que certaines données :</p>
-		<table class="zebra-striped bordered-table">
-			<tr>
-				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
-				<th>Nom de la donnée</th>
-				<th>Associer la donnée à un relevé</th>
-			</tr>
-			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
-				<td>Position GPS</td>
-				<td>
-END;
-		//'
-		$nomDonnee = "PositionGPS";
-		DataImportView::showAssocierAReleve($nomDonnee);
-		echo <<<END
-				</td>
-			</tr>
-END;
-		echo<<<END
-			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
-				<td>Vitesse</td>
-				<td>
-END;
-		$nomDonnee = "Vitesse";
-		DataImportView::showAssocierAReleve($nomDonnee);
-		echo <<<END
-				</td>
-			</tr>
-END;
-//autres types de donnee :
-		$types = $tcx->xpath("/TrainingCenterDatabase/Activities/Activity[1]/Lap[1]");
-		$types = $types[0];
-		foreach($types->children() as $type){
-			$type_name = htmlspecialchars($type->getName());
-			if($type_name === "Calories" || $type_name === "AverageHeartRateBpm"){
-				if($type_name === "AverageHeartRateBpm"){
-					$type_name = "HeartRateBpm";
-				}
-			echo <<<END
-			<tr>
-				<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>
-				<td>$type_name</td>
-				<td>
-END;
-			DataImportView::showAssocierAReleve($type_name);
-			echo <<<END
-				</td>
-			</tr>
-END;
-			}
-		}
-		echo "</table>";
-	}
 
 /**
 * Fonction très laide qui permet d'afficher des informations provenant d'un fichier au format TCX
@@ -382,7 +178,167 @@ END;
 	}
 
 	public function submit_selection() {
-		groaw($_REQUEST);
+		//groaw($_POST);
+		//groaw($_SESSION);
+		//pour calculer vitesse et calories :
+		$GLOBALS['ancienne_lat'] = null;
+		$GLOBALS['ancienne_lon'] = null;
+		$GLOBALS['ancienne_date'] = null;
+		///////////
+		$path = $_SESSION['fichierXML'];
+		$extension = $_SESSION['extFichierXML'];
+		if(file_exists($path)){
+			$data = file_get_contents($path);
+			if($extension === ".gpx"){
+				$data = preg_replace('/<gpx.*?>/','<gpx>',$data, 1);
+				$data = preg_replace('/<\\/tp1:(.+)>/','</$1>',$data);
+				$data = preg_replace('/<tp1:(.+)>/','<$1>',$data);
+				$gpx = simplexml_load_string($data);
+
+				//recup les bonnes données
+
+				R::begin();
+				foreach($gpx->children() as $gpx_data){
+					if($gpx_data->getName() === "trk"){
+						$nameTrk = $gpx_data->xpath("name");
+						$sum_trk = sha1($nameTrk[0]);
+						$hname = htmlspecialchars($nameTrk[0]);
+						if(array_key_exists("trk_".$sum_trk, $_POST)){
+							foreach($gpx_data->children() as $trksegs){
+								if($trksegs->getName() === "trkseg"){
+									//recup le temps du premier trackpoint du trackseg en question
+									$trkpt1 = $trksegs->xpath("trkpt[1]/time");
+									if(empty($trkpt1)){
+										continue;
+									}
+									$nameTrkseg = htmlspecialchars($trkpt1[0]);
+									$sum_seg = sha1($trkpt1[0]);
+									$seg_sum_seg = "seg_".$sum_seg;
+									if(array_key_exists($seg_sum_seg, $_POST)){
+										//groaw($trksegs);
+										
+										//remplissage relevé par relevé
+										foreach($_POST as $key => $post){
+											if($this->startswith($key, "assoc_")){
+												$sum_assoc = strrchr($key, '_');
+												//groaw($key);
+												//groaw($post);
+												if (isset($_POST['data'.$sum_assoc])) {
+													//groaw($_POST['data'.$sum_assoc]);
+													$this->saveData($post, $_POST['data'.$sum_assoc], $trksegs);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				R::commit();
+			}
+			elseif($extension === ".tcx"){
+				$data = preg_replace('/<TrainingCenterDatabase.*?>/','<TrainingCenterDatabase>',$data, 1);
+				$data = preg_replace('/<(.+)xsi.*?".*?"(.*?)>/','<$1$2>',$data);
+	   			$tcx = simplexml_load_string($data);
+
+				//aucun traitement pour l'instant
+			}
+			else{
+				echo "You Failed at Failing !";
+			}
+		}
 	}
+	
+	private function saveData($nom_releve, $type_donnees, $donnees) {
+		$releve = DataMod::getReleve($nom_releve, $_SESSION['bd_id']);
+		$b_releve = R::load('releve', $releve['id']);
+
+		if (!$releve) CTools::hackError();
+		
+		$n_datamod = DataMod::loadDataType($releve['modname']);
+		$variables = $n_datamod->getVariables();
+
+		foreach($donnees as $d) {
+			if ($d->getName() !== 'trkpt') continue;
+			
+			$datamod = $n_datamod->instancier();
+
+			$vars = array();
+
+			switch($type_donnees) {
+				case 'PositionGPS':
+					$vars['lat'] = floatval($d['lat']);
+					$vars['lon'] = floatval($d['lon']);
+					break;
+				case 'Vitesse':
+					$date = $d->xpath('time');
+					$date = strtotime($date[0]);
+					if($GLOBALS['ancienne_lat'] === null){
+						$GLOBALS['ancienne_lat'] = floatval($d['lat']);
+						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
+						$GLOBALS['ancienne_date'] = $date;
+					}
+					elseif($date !== $GLOBALS['ancienne_date']){
+						$lats = array($GLOBALS['ancienne_lat'], floatval($d['lat']));
+						$longs = array($GLOBALS['ancienne_lon'], floatval($d['lon']));
+						/*$lats = array(43.6210081, 43.6209744);
+						$longs = array(7.0493919, 7.0493517);*/
+						$dt = floatval(abs($date - $GLOBALS['ancienne_date']));
+						//$dt = floatval(abs(strtotime("2011-02-05T12:29:47Z") - strtotime("2011-02-05T12:29:49Z")));
+						$distance = floatval($this->distanceParcoursGPSenM($lats, $longs));
+						$vitesse = $distance/floatval($dt);
+						$vars['vitesse'] = floatval($vitesse);
+						//actualiser les vieux
+						$GLOBALS['ancienne_lat'] = floatval($d['lat']);
+						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
+						$GLOBALS['ancienne_date'] = $date;
+					}
+					break;
+				case 'Calories':
+					break;
+				default:
+					$exts = $d->xpath('extensions/TrackPointExtension/'.$type_donnees);
+					if(!empty($exts)){
+						$vars["$type_donnees"] = floatval($exts[0]);
+					}
+			}
+			
+			$time = $d->xpath('time');
+			if (!empty($time)) {
+				$vars['timestamp'] = strtotime($time[0]);
+			}
+			
+			foreach ($variables as $k => $var) {
+				if (isset($vars[$k]))
+				{
+					$datamod->$k = $vars[$k];
+				}
+				else
+				{
+					$datamod->$k = isset($vars[$type_donnees]) ? $vars[$type_donnees] : 0.0;
+				}
+			}
+
+			//groaw($datamod);
+			$n_datamod->save($_SESSION['user'], $b_releve, $datamod);
+		}
+	}
+	
+	private function startswith($chaine, $debut) {
+  		return substr($chaine, 0, strlen($debut)) === $debut;
+  	}
+  	
+  	private function distanceParcoursGPSenM($lats, $longs){
+  		$distance = 0.0;
+  		$a = pi()/180.0;
+  		for($i = 0 ; $i < count($lats) - 1 ; $i++){
+  			$distance += 6367445.0*acos(sin(floatval($lats[$i]*$a))*sin(floatval($lats[$i+1]*$a)) + cos(floatval($lats[$i]*$a))*cos(floatval($lats[$i+1]*$a))*cos(floatval($longs[$i]*$a - $longs[$i+1]*$a)));
+  			//$distance += sqrt(pow(($lats[$i+1]-$lats[$i]),2) + pow(($longs[$i+1]-$longs[$i]),2))*111.16/3.6;
+  		}
+  		return floatval($distance);
+  	}
+
 }
 ?>

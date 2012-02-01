@@ -7,9 +7,11 @@ require_once('config.php');
 
 require_once('Tools/autoload.php');
 require_once('Tools/debug.php');
+require_once('Tools/exceptions.php');
 
 // DB connection
 R::setup(DB_DSN_PDO, DB_USER, DB_PASSWORD);
+R::freeze(DB_FREEZE);
 
 $ROOT_PATH = dirname($_SERVER['SCRIPT_NAME']);
 
@@ -58,6 +60,7 @@ if (!defined('NO_LOGIN_REQUIRED')) {
 CHead::addCSS('bootstrap.min');
 CHead::addCSS('application');
 CHead::addCSS($CTRL_NAME);
+if (isset($_REQUEST['iframe_mode'])) CHead::addCSS('iframe_mode');
 CHead::addJS('jquery-1.6.2.min');
 CHead::addJS('bootstrap-dropdown');
 CHead::addJS('application');
@@ -68,6 +71,10 @@ $CTRL->{$ACTION_NAME}();
 } catch (Exception $e) {
 	if ($e->getMessage() !== 'hack')
 	{
+		ob_clean();
+		CHead::delCSS($CTRL_NAME);
+		CHead::delJS($CTRL_NAME);
+		CHead::addCSS('Error');
 		$ctrl = new Error();
 		$ctrl->server($e);
 	}

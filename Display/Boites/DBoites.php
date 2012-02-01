@@ -1,7 +1,7 @@
 <?php
 class DBoites extends DAbstract
 {
-	const nom = 'Boites';
+	const nom = 'Boite';
 	
 	/**
 	 * Permet d'accéder à un tableau par un index numérique 
