@@ -303,9 +303,9 @@ END;
 		$sum = sha1($nomDonnee);
 		$new_url = CNavigation::generateUrlToApp('Data','choose', array('iframe_mode'=>true));
 		echo <<<END
-		<label for="selectData">Selectionnez le relevé</label>
+		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="input">
-			<select id="selectData" name="assoc_$sum">
+			<select name="assoc_$sum" id="assoc_$sum">
 END;
 		foreach($releves_list as $r){
 			echo '<option value="', htmlspecialchars($r['name']), '">', htmlspecialchars($r['name']), " (", htmlspecialchars($r['modname']), ")", "</option>";

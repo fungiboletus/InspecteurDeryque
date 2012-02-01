@@ -12,6 +12,16 @@ $('#choiximport table:last input:checkbox:first').change(function() {
 	$('#choiximport table:last input:checkbox:not(:first)').attr('checked', $(this).attr('checked') == 'checked');
 });
 
+var select_change = function(e, noeud) {
+	if (noeud == undefined) {
+		noeud = $(this)[0];
+	}
+	log(noeud);
+	noeud.parentNode.parentNode.parentNode.getElementsByTagName('input')[0].checked = true;
+};
+
+$('#choiximport table:last select').change(select_change);
+
 var clicked_create_releve = null;
 
 var click_create_releve = function() {
@@ -35,28 +45,52 @@ $('#createnewlapin').modal({
 $('#createnewlapin iframe').load(function() {
 	var url = $(this)[0].contentWindow.location.pathname;
 	if (url.search('/Data/add')==-1&&url.search('/Data/choose')==-1) {
+		$('#createnewlapin').modal('hide');
 		$.ajax({
 		url: window.location.pathname,
 		success: function(html){
 			var dom = $(html);
 			var selects = dom.find('#choiximport table:last select');
+			var name_selected_select = null;
 
 			$('#choiximport table:last select').each(function(i) {
-				var value = $(this).find(':selected').attr('value');
-					/*if ($(dom)[0].parentNode.getAttribute('name') ==
-						clicked_create_releve.parentNode.getElementsByTagName('select')[0].getAttribute('name')) {
-						log('owiii');
-					}*/
+				var select_base = $(this);
+				var value = select_base.find(':selected').attr('value');
+				var options = select_base.find('option');
+				var option_selected = false;
+				var select_selected = select_base.attr('name') ==
+						clicked_create_releve.parentNode.getElementsByTagName('select')[0].getAttribute('name');
+
+				var values = [];
+				if (select_selected) {
+					options.each(function() {
+						values.push($(this).attr('value'));
+					});
+
+					name_selected_select = $(this).attr('name');
+				}
+
 				$(dom).find('option').each(function() {
-					if ($(this).attr('value') == value) {
-						$(this).attr('selected',true);
+					var option_dom = $(this);
+					var new_value = option_dom.attr('value');
+					if (new_value == value && !option_selected) {
+						option_dom.attr('selected',true);
+					}
+					else if (select_selected && values.indexOf(new_value) == -1) {
+						option_selected = true;
+						option_dom.attr('selected',true);
 					}
 				});
+				$(selects[i]).change(select_change);
 				$(this).before(selects[i]).remove();
+
 			});
+
+			if (name_selected_select != null) {
+				select_change(null, $('#choiximport table:last select[name='+name_selected_select+']')[0]);
+			}
 		}
 		});
-		$('#createnewlapin').modal('hide');
 	}
 });
 });
