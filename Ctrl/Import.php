@@ -280,21 +280,23 @@ class Import extends AbstractView{
 						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
 						$GLOBALS['ancienne_date'] = $date;
 					}
-					else{
+					elseif($date !== $GLOBALS['ancienne_date']){
 						$lats = array($GLOBALS['ancienne_lat'], floatval($d['lat']));
 						$longs = array($GLOBALS['ancienne_lon'], floatval($d['lon']));
-						$dt = abs($date - $GLOBALS['ancienne_date']);
-						$distance = $this->distanceParcoursGPSenM($lats, $longs);
-						$vitesse = $distance/$dt;
+						/*$lats = array(43.6210081, 43.6209744);
+						$longs = array(7.0493919, 7.0493517);*/
+						$dt = floatval(abs($date - $GLOBALS['ancienne_date']));
+						//$dt = floatval(abs(strtotime("2011-02-05T12:29:47Z") - strtotime("2011-02-05T12:29:49Z")));
+						$distance = floatval($this->distanceParcoursGPSenM($lats, $longs));
+						$vitesse = $distance/floatval($dt);
 						$vars['vitesse'] = floatval($vitesse);
-						$vars['lat'] = floatval($d['lat']);
-						$vars['lon'] = floatval($d['lon']);
-						//groaw($distance);
 						//actualiser les vieux
-						$GLOBALS['ancienne_lat'] = $d['lat'];
-						$GLOBALS['ancienne_lon'] = $d['lon'];
+						$GLOBALS['ancienne_lat'] = floatval($d['lat']);
+						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
 						$GLOBALS['ancienne_date'] = $date;
 					}
+					break;
+				case 'Calories':
 					break;
 				default:
 					$exts = $d->xpath('extensions/TrackPointExtension/'.$type_donnees);
@@ -329,13 +331,13 @@ class Import extends AbstractView{
   	}
   	
   	private function distanceParcoursGPSenM($lats, $longs){
-  		$distance = 0;
-  		//$a = pi()/180;
+  		$distance = 0.0;
+  		$a = pi()/180.0;
   		for($i = 0 ; $i < count($lats) - 1 ; $i++){
-  			//$distance += 6367445*acos(sin($lats[$i]*$a)*sin($lats[$i+1]*$a) + cos($lats[$i]*$a)*cos($lats[$i+1]*$a)*cos($longs[$i]*$a - $longs[$i+1]*$a));
-  			$distance += sqrt(pow(($lats[$i+1]-$lats[$i]),2) + pow(($longs[$i+1]-$longs[$i]),2))*111.16;
+  			$distance += 6367445.0*acos(sin(floatval($lats[$i]*$a))*sin(floatval($lats[$i+1]*$a)) + cos(floatval($lats[$i]*$a))*cos(floatval($lats[$i+1]*$a))*cos(floatval($longs[$i]*$a - $longs[$i+1]*$a)));
+  			//$distance += sqrt(pow(($lats[$i+1]-$lats[$i]),2) + pow(($longs[$i+1]-$longs[$i]),2))*111.16/3.6;
   		}
-  		return $distance;
+  		return floatval($distance);
   	}
 
 }
