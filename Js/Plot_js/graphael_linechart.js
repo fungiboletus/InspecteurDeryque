@@ -24,8 +24,8 @@ function showLineChart(){
 	}
 
 	var lines = r.linechart(20, 40, 920, 300, abscisses,ordonnees,
-		{nostroke: false, axis: "0 0 1 1", symbol: "circle", smooth: true }
-		).hoverColumn(function () {
+		{nostroke: false, axis: "0 0 1 1", smooth: true, shade:true}
+		)/*.hoverColumn(function () {
 			this.tags = r.set();
 
 			for (var i = 0, ii = this.y.length; i < ii; i++) {
@@ -36,7 +36,7 @@ function showLineChart(){
 			}
 		}, function () {
 			this.tags && this.tags.remove();
-	});
+	})*/;
 
 	lines.symbols.attr({ r: 6 });
 }
