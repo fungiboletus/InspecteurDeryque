@@ -16,7 +16,6 @@ var select_change = function(e, noeud) {
 	if (noeud == undefined) {
 		noeud = $(this)[0];
 	}
-	log(noeud);
 	noeud.parentNode.parentNode.parentNode.getElementsByTagName('input')[0].checked = true;
 };
 
