@@ -124,8 +124,10 @@ END;*/
 
 		if (isset($_REQUEST['confirm'])) {
 			$nom = $releve['name'];
+			$releve = R::load('releve', $releve['id']);
+			$modname = R::load('datamod', $releve->mod_id)->modname;
+			R::exec('delete from d_'.$modname.' where releve_id = ?', array($releve['id']));
 			R::trash(R::load('releve', $releve['id']));
-			new CMessage("Le relevé «${nom}» a bien été supprimé.");
 			CNavigation::redirectToApp('Data');
 		}
 		else
