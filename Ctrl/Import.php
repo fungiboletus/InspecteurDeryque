@@ -240,6 +240,8 @@ class Import extends AbstractView{
 				}
 
 				R::commit();
+				new CMessage('Vos relevés ont été ajoutés avec succès ! Vous pouvez en sélectionner d\'autres, ou bien revenir au Tableau de Bord.');
+				CNavigation::redirectToApp('Import', 'dataSelection');
 			}
 			elseif($extension === ".tcx"){
 				$data = preg_replace('/<TrainingCenterDatabase.*?>/','<TrainingCenterDatabase>',$data, 1);
