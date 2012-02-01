@@ -178,8 +178,13 @@ class Import extends AbstractView{
 	}
 
 	public function submit_selection() {
-		groaw($_POST);
+		//groaw($_POST);
 		//groaw($_SESSION);
+		//pour calculer vitesse et calories :
+		$GLOBALS['ancienne_lat'] = null;
+		$GLOBALS['ancienne_lon'] = null;
+		$GLOBALS['ancienne_date'] = null;
+		///////////
 		$path = $_SESSION['fichierXML'];
 		$extension = $_SESSION['extFichierXML'];
 		if(file_exists($path)){
@@ -209,8 +214,6 @@ class Import extends AbstractView{
 									$sum_seg = sha1($trkpt1[0]);
 									$seg_sum_seg = "seg_".$sum_seg;
 									if(array_key_exists($seg_sum_seg, $_POST)){
-										/*$prout = $_POST[$seg_sum_seg];
-										echo $prout;*/
 										//groaw($trksegs);
 										
 										//remplissage relevé par relevé
@@ -267,13 +270,33 @@ class Import extends AbstractView{
 					$vars['lon'] = floatval($d['lon']);
 					break;
 				case 'Vitesse':
-					// TODO calculer la vitesse
-					$vars['vitesse'] = 42.0;
+					$date = $d->xpath('time');
+					$date = strtotime($date[0]);
+					if($GLOBALS['ancienne_lat'] === null){
+						$GLOBALS['ancienne_lat'] = floatval($d['lat']);
+						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
+						$GLOBALS['ancienne_date'] = $date;
+					}
+					else{
+						$lats = array($GLOBALS['ancienne_lat'], floatval($d['lat']));
+						$longs = array($GLOBALS['ancienne_lon'], floatval($d['lon']));
+						$dt = abs($date - $GLOBALS['ancienne_date']);
+						$distance = $this->distanceParcoursGPSenM($lats, $longs);
+						$vitesse = $distance/$dt;
+						$vars['vitesse'] = floatval($vitesse);
+						$vars['lat'] = floatval($d['lat']);
+						$vars['lon'] = floatval($d['lon']);
+						//groaw($distance);
+						//actualiser les vieux
+						$GLOBALS['ancienne_lat'] = $d['lat'];
+						$GLOBALS['ancienne_lon'] = $d['lon'];
+						$GLOBALS['ancienne_date'] = $date;
+					}
 					break;
 				default:
 					$exts = $d->xpath('extensions/TrackPointExtension/'.$type_donnees);
 					if(!empty($exts)){
-						$vars['hr'] = floatval($exts[0]);
+						$vars["$type_donnees"] = floatval($exts[0]);
 					}
 			}
 			
@@ -293,13 +316,23 @@ class Import extends AbstractView{
 				}
 			}
 
-			groaw($datamod);
+			//groaw($datamod);
 			$n_datamod->save($_SESSION['user'], $b_releve, $datamod);
 		}
 	}
 	
 	private function startswith($chaine, $debut) {
   		return substr($chaine, 0, strlen($debut)) === $debut;
+  	}
+  	
+  	private function distanceParcoursGPSenM($lats, $longs){
+  		$distance = 0;
+  		//$a = pi()/180;
+  		for($i = 0 ; $i < count($lats) - 1 ; $i++){
+  			//$distance += 6367445*acos(sin($lats[$i]*$a)*sin($lats[$i+1]*$a) + cos($lats[$i]*$a)*cos($lats[$i+1]*$a)*cos($longs[$i]*$a - $longs[$i+1]*$a));
+  			$distance += sqrt(pow(($lats[$i+1]-$lats[$i]),2) + pow(($longs[$i+1]-$longs[$i]),2))*111.16;
+  		}
+  		return $distance;
   	}
 
 }
