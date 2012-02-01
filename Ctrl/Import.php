@@ -184,6 +184,9 @@ class Import extends AbstractView{
 		$GLOBALS['ancienne_lat'] = null;
 		$GLOBALS['ancienne_lon'] = null;
 		$GLOBALS['ancienne_date'] = null;
+		$GLOBALS['ancienne_latcal'] = null;
+		$GLOBALS['ancienne_loncal'] = null;
+		$GLOBALS['distance_cumulee'] = 0.0;
 		///////////
 		$path = $_SESSION['fichierXML'];
 		$extension = $_SESSION['extFichierXML'];
@@ -297,6 +300,18 @@ class Import extends AbstractView{
 					}
 					break;
 				case 'Calories':
+					if($GLOBALS['ancienne_latcal'] === null){
+							$GLOBALS['ancienne_latcal'] = floatval($d['lat']);
+							$GLOBALS['ancienne_loncal'] = floatval($d['lon']);
+					}
+					else{
+						$lats = array($GLOBALS['ancienne_latcal'], floatval($d['lat']));
+						$longs = array($GLOBALS['ancienne_loncal'], floatval($d['lon']));
+						$distance = floatval($this->distanceParcoursGPSenM($lats, $longs));
+						$GLOBALS['distance_cumulee'] += $distance;
+						$cals = floatval(floatval($GLOBALS['distance_cumulee']) * 70.0 * 0.001036/1000.0);
+						$vars['calories'] = $cals;
+					}
 					break;
 				default:
 					$exts = $d->xpath('extensions/TrackPointExtension/'.$type_donnees);

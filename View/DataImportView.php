@@ -154,6 +154,19 @@ END;
 				</td>
 			</tr>
 END;
+		$nomDonnee = "Calories";
+		$sum = sha1($nomDonnee);
+		echo<<<END
+			<tr>
+				<td><input type="checkbox" value="Calories" name="data_$sum" id="data_$sum"/></td>
+				<td><label class="td_label" for="data_$sum">Calories</label></td>
+				<td>
+END;
+		self::showAssocierAReleve($nomDonnee);
+		echo <<<END
+				</td>
+			</tr>
+END;
 		$extensions_dispos = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
 		if(!empty($extensions_dispos)){
 			$extensions_dispos = $extensions_dispos[0];
