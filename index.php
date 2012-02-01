@@ -11,6 +11,7 @@ require_once('Tools/exceptions.php');
 
 // DB connection
 R::setup(DB_DSN_PDO, DB_USER, DB_PASSWORD);
+R::freeze(DB_FREEZE);
 
 $ROOT_PATH = dirname($_SERVER['SCRIPT_NAME']);
 

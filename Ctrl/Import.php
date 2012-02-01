@@ -192,6 +192,7 @@ class Import extends AbstractView{
 
 				//recup les bonnes données
 
+				R::begin();
 				foreach($gpx->children() as $gpx_data){
 					if($gpx_data->getName() === "trk"){
 						$nameTrk = $gpx_data->xpath("name");
@@ -231,6 +232,8 @@ class Import extends AbstractView{
 						}
 					}
 				}
+
+				R::commit();
 			}
 			elseif($extension === ".tcx"){
 				$data = preg_replace('/<TrainingCenterDatabase.*?>/','<TrainingCenterDatabase>',$data, 1);
