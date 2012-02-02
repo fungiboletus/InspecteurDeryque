@@ -11,14 +11,14 @@ function showLineChart(){
 		trs=tables[i].getElementsByTagName("th");
 		tempabs=Array();
 		for(j=0;j<trs.length;j++){
-			tempabs.push(parseInt(trs[j].innerHTML));
+			tempabs.push(parseFloat(trs[j].innerHTML));
 		}
 		abscisses.push(tempabs);
 
 		trs=tables[i].getElementsByTagName("td");
 		tempord=Array();
 		for(j=0;j<trs.length;j++){
-			tempord.push(parseInt(trs[j].innerHTML));
+			tempord.push(parseFloat(trs[j].innerHTML));
 		}
 		ordonnees.push(tempord);
 	}
