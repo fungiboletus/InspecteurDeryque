@@ -7,12 +7,12 @@ function showPieChart(){
 	for(i=0;i<tables.length;i++){
 		trs=tables[i].getElementsByTagName("th");
 		for(j=0;j<trs.length;j++){
-			labels.push(parseInt(trs[j].innerHTML));
+			labels.push(parseFloat(trs[j].innerHTML));
 		}
 
 		trs=tables[i].getElementsByTagName("td");
 		for(j=0;j<trs.length;j++){
-			values.push(parseInt(trs[j].innerHTML));
+			values.push(parseFloat(trs[j].innerHTML));
 		}
 	}
 	//Lines below will draw the chart
