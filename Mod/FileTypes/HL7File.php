@@ -2,7 +2,7 @@
 
 class HL7File implements FileType {
 
-    public static function isOfThisDataType($fichier, $extension) {
+    public static function isOfThisDataType($file, $extension) {
         return TRUE;
     }
 
@@ -12,7 +12,7 @@ class HL7File implements FileType {
         return $table;
     }
 
-    public static function recupDonneesImportables($fichier) {
+    public static function getImportableData($file) {
 
         echo <<<END
 		<table class="bordered-table">
@@ -24,7 +24,7 @@ class HL7File implements FileType {
 END;
 
         $dom = new DOMDocument("1.0", "utf-8");
-        $dom -> load($fichier);
+        $dom -> load($file);
         $sequence = $dom -> getElementsByTagName('sequenceSet') -> item(0);
         $startTime = $sequence -> getElementsByTagName('head') -> item(0) -> getAttribute('value');
         $increment = $sequence -> getElementsByTagName('increment') -> item(0) -> getAttribute('value');
@@ -73,8 +73,8 @@ END;
 END;
 
         //partie selection des types de donnée :
-        $nomDonnee = "ECG";
-        $sum = sha1($nomDonnee);
+        $nameData = "ECG";
+        $sum = sha1($nameData);
         echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
@@ -89,7 +89,7 @@ END;
 				<td>
 END;
 
-        self::showAssocierAReleve($nomDonnee);
+        self::displayDataAssociationChoice($nameData);
         echo <<<END
 				</td>
 			</tr>
@@ -99,16 +99,16 @@ END;
 
     }
 
-    private static function showAssocierAReleve($nomDonnee) {
-        $releves_list = DataMod::getReleves($_SESSION['bd_id']);
-        $sum = sha1($nomDonnee);
+    private static function displayDataAssociationChoice($nameData) {
+        $statements_list = DataMod::getStatements($_SESSION['bd_id']);
+        $sum = sha1($nameData);
         $new_url = CNavigation::generateUrlToApp('Data', 'choose', array('iframe_mode' => true));
         echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="input">
 			<select name="assoc_$sum" id="assoc_$sum">
 END;
-        foreach ($releves_list as $r) {
+        foreach ($statements_list as $r) {
             echo '<option value="',              htmlspecialchars($r['name']), '">',              htmlspecialchars($r['name']), " (",              htmlspecialchars($r['modname']), ")", "</option>";
         }
         echo <<<END
@@ -119,7 +119,7 @@ END;
 END;
     }
 
-    public static function submit_selection($data) {
+    public static function submitSelection($data) {
 
         $dom = new DOMDocument();
 
@@ -155,10 +155,7 @@ END;
         foreach ($_POST as $key => $post) {
             if (self::startswith($key, "assoc_")) {
                 $sum_assoc = strrchr($key, '_');
-                //groaw($key);
-                //groaw($post);
                 if (isset($_POST['data' . $sum_assoc])) {
-                    //groaw($_POST['data'.$sum_assoc]);
                     self::saveData($post, $_POST['data' . $sum_assoc], $tableaux);
                 }
             }
@@ -169,30 +166,30 @@ END;
         CNavigation::redirectToApp('Import', 'dataSelection');
     }
 
-    private static function saveData($nom_releve_prefix, $type_donnees, $tableaux) {
+    private static function saveData($name_statement_prefix, $type_Datas, $tableaux) {
         
-        $multi_releve = new CompositionReleve($nom_releve_prefix,$_SESSION['user']);
+        $multi_releve = new CompositionReleve($name_statement_prefix,$_SESSION['user']);
         
 
         for ($sequence = 1; $sequence < count($tableaux) - 1; $sequence++) {
 
-            $nom_releve = $nom_releve_prefix . " (" . $tableaux['names'][$sequence] . ")";
+            $name_statement = $name_statement_prefix . " (" . $tableaux['names'][$sequence] . ")";
 
-            $r = self::create_releve($nom_releve);
+            $r = self::create_releve($name_statement);
 
-            $releve = DataMod::getReleve($nom_releve, $_SESSION['bd_id']);
+            $statement = DataMod::getStatement($name_statement, $_SESSION['bd_id']);
 
-            //echo print_r($releve) . "\n";
+            //echo print_r($statement) . "\n";
 
-            $b_releve = R::load('releve', $releve['id']);
+            $b_statement = R::load('releve', $statement['id']);
 
-            if (!$releve)
+            if (!$statement)
                 CTools::hackError();
 
-            $n_datamod = DataMod::loadDataType($releve['modname']);
+            $n_datamod = DataMod::loadDataType($statement['modname']);
             $variables = $n_datamod -> getVariables();
 
-            $datamod = $n_datamod -> instancier();
+            $datamod = $n_datamod -> initialize();
 
             for ($i = 0; $i < count($tableaux['timestamp']); $i++) {
 
@@ -202,14 +199,14 @@ END;
 
                 //echo print_r($datamod);
 
-                $n_datamod -> save($_SESSION['user'], $b_releve, $datamod);
+                $n_datamod -> save($_SESSION['user'], $b_statement, $datamod);
             }
             
-            $multi_releve->addReleve($nom_releve);
+            $multi_releve->addReleve($name_statement);
 
         }
         
-        $rTodelete = R::findOne('releve', 'name = ? and user_id = ?', array($nom_releve_prefix, $_SESSION['bd_id']));
+        $rTodelete = R::findOne('releve', 'name = ? and user_id = ?', array($name_statement_prefix, $_SESSION['bd_id']));
         R::trash($rTodelete);
 
     }
@@ -225,15 +222,15 @@ END;
 
             $user = $_SESSION['user'];
 
-            $releve = R::dispense('releve');
-            $releve -> mod = $mode;
-            $releve -> user = $user;
-            $releve -> name = $name;
-            $releve -> description = "";
+            $statement = R::dispense('releve');
+            $statement -> mod = $mode;
+            $statement -> user = $user;
+            $statement -> name = $name;
+            $statement -> description = "";
 
-            R::store($releve);
+            R::store($statement);
 
-            return $releve;
+            return $statement;
         }
     }
 

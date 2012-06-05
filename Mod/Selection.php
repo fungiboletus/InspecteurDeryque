@@ -6,7 +6,7 @@
 class Selection {
 
     private $_selectionBean;
-    private $_releveBean;
+    private $_statementBean;
 
     /**
      * Ajoute une selection au relevé.
@@ -15,23 +15,23 @@ class Selection {
         $beans = R::find('releve', "name = ?", array($rname));
 
         foreach ($beans as $bean) {
-            $this -> _releveBean = $bean;
+            $this -> _statementBean = $bean;
             break;
         }
 
-        if ($this -> _releveBean === NULL) {
+        if ($this -> _statementBean === NULL) {
             $beans = R::find('multi_releve', "name = ?", array($rname));
 
             foreach ($beans as $bean) {
-                $this -> _releveBean = $bean;
+                $this -> _statementBean = $bean;
                 break;
             }
         }
 
         $this -> _selectionBean = R::dispense('selection');
 
-        $this -> _selectionBean -> releve_id = $this -> _releveBean -> getID();
-        $this -> _selectionBean -> releve_type = $this -> _releveBean -> getMeta('type');
+        $this -> _selectionBean -> releve_id = $this -> _statementBean -> getID();
+        $this -> _selectionBean -> releve_type = $this -> _statementBean -> getMeta('type');
         $this -> _selectionBean -> name = $graphName;
         $this -> _selectionBean -> begin = $begin;
         $this -> _selectionBean -> end = $end;
@@ -44,7 +44,7 @@ class Selection {
      */
     public function save() {
 
-        R::store($this -> _releveBean);
+        R::store($this -> _statementBean);
 
         R::store($this -> _selectionBean);
 
@@ -54,18 +54,18 @@ class Selection {
      * Récupère toutes les selections associées à un relevé (et non attaché à une composition).
      */
     public static function getSelections($rname) {
-        $releves = R::find('releve', "name = ?", array($rname));
-        if ($releves == NULL) {
-            $releves = R::find('multi_releve', "name = ?", array($rname));
+        $statements = R::find('releve', "name = ?", array($rname));
+        if ($statements == NULL) {
+            $statements = R::find('multi_releve', "name = ?", array($rname));
         }
         
         
         
 
-        foreach ($releves as $releve) {
+        foreach ($statements as $statement) {
             
-            $values['id'] = $releve->getID();
-            $values['type'] = $releve->getMeta('type');
+            $values['id'] = $statement->getID();
+            $values['type'] = $statement->getMeta('type');
             
             $selections = R::find ( 'selection', 'releve_id = :id AND releve_type = :type AND composition_id IS NULL',$values );
             

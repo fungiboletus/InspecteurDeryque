@@ -71,9 +71,9 @@ END;
 END;
 	}
 
-	public static function showRelevesList($releves)
+	public static function showRelevesList($statements)
 	{
-		if ($releves)
+		if ($statements)
 		{
 			CHead::addJS('jquery.tablesorter.min');
 			echo <<<END
@@ -85,11 +85,11 @@ END;
 				</tr></thead>
 				<tbody>
 END;
-			foreach ($releves as $releve) {
-				$url = CNavigation::generateUrlToApp('Data', 'view', array('nom' => $releve['name']));
-				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($releve['name']),
-					 "</a></td><td><a href=\"$url\">", htmlspecialchars($releve['description']),
-					 "</a></td><td><a href=\"$url\">", htmlspecialchars($releve['modname']), "</a></td></tr>\n";
+			foreach ($statements as $statement) {
+				$url = CNavigation::generateUrlToApp('Data', 'view', array('nom' => $statement['name']));
+				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
 			}
 
 			echo "</tbody></table>";

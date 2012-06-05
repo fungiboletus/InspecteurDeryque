@@ -26,21 +26,21 @@ END;
 		//'
 	}
 
-	public static function showDataSelection($fichier, $extension) {
+	public static function showDataSelection($file, $extension) {
 		$extensions = array('.tcx', '.gpx', '.xml');
-		//$extension = strrchr($fichier, '.');
+		//$extension = strrchr($file, '.');
 		if (in_array($extension, $extensions)) {
 			echo "<p>Nous avons reconnu un fichier de type <Strong>$extension</Strong>.</p>";
 			echo "<p>Sélectionnez parmi les données proposées ci-dessous celles que vous désirez importer :</p>";
-			if (file_exists($fichier)) {				
-				$action = CNavigation::generateUrlToApp('Import', 'submit_selection');
+			if (file_exists($file)) {				
+				$action = CNavigation::generateUrlToApp('Import', 'submitSelection');
 				echo '<form id="choiximport" action="', $action, '" method="post">';
-				if (GPXFile::isOfThisDataType($fichier,$extension)) {
-					GPXFile::recupDonneesImportables($fichier);
-				} elseif (TCXFile::isOfThisDataType($fichier,$extension)) {					
-					TCXFile::recupDonneesImportables($fichier);
-				} elseif (HL7File::isOfThisDataType($fichier,$extension)) {
-					HL7File::recupDonneesImportables($fichier);
+				if (GPXFile::isOfThisDataType($file,$extension)) {
+					GPXFile::getImportableData($file);
+				} elseif (TCXFile::isOfThisDataType($file,$extension)) {					
+					TCXFile::getImportableData($file);
+				} elseif (HL7File::isOfThisDataType($file,$extension)) {
+					HL7File::getImportableData($file);
 				}
 				echo <<<END
 				<div class="well" id="boutons">
@@ -82,7 +82,7 @@ END;
 END;
 	}
 
-	private function showNewReleveForm($nomDonnee) {
+	private function showNewReleveForm($nameData) {
 
 		echo <<<END
 		<form action="" name="data_add_form" method="post" id="data_add_form" style="display:none;">
@@ -91,15 +91,15 @@ END;
 		DataImportView::showSelectTypePossibles();
 		echo <<<END
 				<div class="clearfix">
-					<label for="input_nom_$nomDonnee">Nom</label>
+					<label for="input_nom_$nameData">Nom</label>
 					<div class="input">
-						<input name="nom_$nomDonnee" id="input_nom_$nomDonnee" type="text" value="" required />
+						<input name="nom_$nameData" id="input_nom_$nameData" type="text" value="" required />
 					</div>
 				</div>
 				<div class="clearfix">
-					<label for="input_desc_$nomDonnee">Description</label>
+					<label for="input_desc_$nameData">Description</label>
 					<div class="input">
-						<textarea name="desc_$nomDonnee" id="input_desc_$nomDonnee"></textarea> 
+						<textarea name="desc_$nameData" id="input_desc_$nameData"></textarea> 
 					</div>
 				</div>
 			</fieldset>

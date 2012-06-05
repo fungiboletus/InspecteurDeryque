@@ -2,7 +2,7 @@
 
 class TCXFile implements FileType {
 
-	public static function isOfThisDataType($fichier, $extension) {
+	public static function isOfThisDataType($file, $extension) {
 
 		return $extension === ".tcx";
 
@@ -11,9 +11,9 @@ class TCXFile implements FileType {
 	/**
 	 * Permet d'afficher un formulaire de sélection des données à importer pour le fichier uploadé de type TCX
 	 */
-	public static function recupDonneesImportables($fichier) {
+	public static function getImportableData($file) {
 
-		$tcx = self::getData($fichier);
+		$tcx = self::getData($file);
 
 		$activities = $tcx -> xpath("/TrainingCenterDatabase/Activities");
 		$activities = $activities[0];
@@ -47,7 +47,7 @@ END;
 								<td>Track : $nameTrack</td>
 							<tr>
 END;
-						}$data = file_get_contents($fichier);
+						}$data = file_get_contents($file);
 					}
 					echo <<<END
 						</table>
@@ -74,8 +74,8 @@ END;
 				<td>
 END;
 		//'
-		$nomDonnee = "PositionGPS";
-		self::showAssocierAReleve($nomDonnee);
+		$nameData = "PositionGPS";
+		self::displayDataAssociationChoice($nameData);
 		echo <<<END
 				</td>
 			</tr>
@@ -86,13 +86,13 @@ END;
 				<td>Vitesse</td>
 				<td>
 END;
-		$nomDonnee = "Vitesse";
-		self::showAssocierAReleve($nomDonnee);
+		$nameData = "Vitesse";
+		self::displayDataAssociationChoice($nameData);
 		echo <<<END
 				</td>
 			</tr>
 END;
-		//autres types de donnee :
+		//autres types de Data :
 		$types = $tcx -> xpath("/TrainingCenterDatabase/Activities/Activity[1]/Lap[1]");
 		$types = $types[0];
 		foreach ($types->children() as $type) {
@@ -107,7 +107,7 @@ END;
 				<td>$type_name</td>
 				<td>
 END;
-				self::showAssocierAReleve($type_name);
+				self::displayDataAssociationChoice($type_name);
 				echo <<<END
 				</td>
 			</tr>
@@ -118,9 +118,9 @@ END;
 
 	}
 
-	private static function getData($fichier) {
+	private static function getData($file) {
 
-		$data = file_get_contents($fichier);
+		$data = file_get_contents($file);
 
 		$data = preg_replace('/<TrainingCenterDatabase.*?>/', '<TrainingCenterDatabase>', $data, 1);
 		$data = preg_replace('/<(.+)xsi.*?".*?"(.*?)>/', '<$1$2>', $data);
@@ -128,16 +128,16 @@ END;
 		return $tcx;
 	}
 
-	private static function showAssocierAReleve($nomDonnee) {
-		$releves_list = DataMod::getReleves($_SESSION['bd_id']);
-		$sum = sha1($nomDonnee);
+	private static function displayDataAssociationChoice($nameData) {
+		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
+		$sum = sha1($nameData);
 		$new_url = CNavigation::generateUrlToApp('Data', 'choose', array('iframe_mode' => true));
 		echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="input">
 			<select name="assoc_$sum" id="assoc_$sum">
 END;
-		foreach ($releves_list as $r) {
+		foreach ($statements_list as $r) {
 			echo '<option value="',        htmlspecialchars($r['name']), '">',        htmlspecialchars($r['name']), " (",        htmlspecialchars($r['modname']), ")", "</option>";
 		}
 		echo <<<END
@@ -146,10 +146,10 @@ END;
 			<a class="btn" href="$new_url">Nouveau relevé</a>
 	    </div>
 END;
-		//DataImportView::showNewReleveForm($nomDonnee);
+		//DataImportView::showNewReleveForm($nameData);
 	}
 
-	public static function submit_selection($data) {
+	public static function submitSelection($data) {
 		$data = preg_replace('/<TrainingCenterDatabase.*?>/', '<TrainingCenterDatabase>', $data, 1);
 		$data = preg_replace('/<(.+)xsi.*?".*?"(.*?)>/', '<$1$2>', $data);
 		$tcx = simplexml_load_string($data);

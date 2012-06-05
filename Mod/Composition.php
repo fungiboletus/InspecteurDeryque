@@ -1,29 +1,29 @@
 <?php
 
 /**
- * Associe une ou plusieurs compositions à un relevé.
+ * Associates some compositions to a statement.
  */
 class Composition {
 
     private $_compositionBean;
-    private $_releveBean;
+    private $_statementBean;
 
     /**
-     * Ajoute une composition au relevé.
+     * Add a composition to a statement.
      */
     public function __construct($rname, $name) {
         $beans = R::find('releve', "name = ?", array($rname));
 
         foreach ($beans as $bean) {
-            $this -> _releveBean = $bean;
+            $this -> _statementBean = $bean;
             break;
         }
 
-        if ($this -> _releveBean === NULL) {
+        if ($this -> _statementBean === NULL) {
             $beans = R::find('multi_releve', "name = ?", array($rname));
 
             foreach ($beans as $bean) {
-                $this -> _releveBean = $bean;
+                $this -> _statementBean = $bean;
                 break;
             }
         }
@@ -32,13 +32,13 @@ class Composition {
 
         $this -> _compositionBean -> name = $name;
 
-        $this -> _compositionBean -> releve_id = $this -> _releveBean -> getID();
-        $this -> _compositionBean -> releve_type = $this -> _releveBean -> getMeta('type');
+        $this -> _compositionBean -> releve_id = $this -> _statementBean -> getID();
+        $this -> _compositionBean -> releve_type = $this -> _statementBean -> getMeta('type');
 
     }
 
     /**
-     * Ajoute une sélection (bean) à la composition.
+     * Add a selection (bean) to a composition.
      */
     public function addSelection($selectionBean) {
         $selectionBean -> composition = $this -> _compositionBean;
@@ -47,10 +47,10 @@ class Composition {
     }
 
     /**
-     * Ajoute une sélection (crée à partir des données) à la composition.
+     * Add a selection (obtained from data) to a composition.
      */
     public function addNewSelection($graphName, $debut, $fin) {
-        $selection = new Selection($this -> _releveBean -> name, $graphName, $debut, $fin);
+        $selection = new Selection($this -> _statementBean -> name, $graphName, $debut, $fin);
 
         $selection -> save();
 
@@ -61,29 +61,29 @@ class Composition {
     }
 
     /**
-     * Envoie la selection dans la BD.
+     * Store selection into the database.
      */
     public function save() {
 
-        R::store($this -> _releveBean);
+        R::store($this -> _statementBean);
 
         R::store($this -> _selectionBean);
 
     }
 
     /**
-     * Récupère toutes les compositions associées à un relevé.
+     * Get all compositions associated to a statement.
      */
     public static function getCompositions($rname) {
-        $releves = R::find('releve', "name = ?", array($rname));
-        if ($releves == NULL) {
-            $releves = R::find('multi_releve', "name = ?", array($rname));
+        $statements = R::find('releve', "name = ?", array($rname));
+        if ($statements == NULL) {
+            $statements = R::find('multi_releve', "name = ?", array($rname));
         }
 
-        foreach ($releves as $releve) {
+        foreach ($statements as $statement) {
 
-            $values['id'] = $releve -> getID();
-            $values['type'] = $releve -> getMeta('type');
+            $values['id'] = $statement -> getID();
+            $values['type'] = $statement -> getMeta('type');
 
             $compositions = R::find('composition', 'releve_id = :id AND releve_type = :type', $values);
 
@@ -93,7 +93,7 @@ class Composition {
     }
 
     /**
-     * Récupère toutes les selections associées à une composition.
+     * Get all selections associated to a composition.
      */
     public static function getSelections($cname) {
         $composition = R::findOne('composition', "name = ?", array($cname));
@@ -104,6 +104,9 @@ class Composition {
 
     }
     
+    /**
+     * Remove the actual composition.
+     */
     public function delete() {
         R::trash($this -> _compositionBean);
     }

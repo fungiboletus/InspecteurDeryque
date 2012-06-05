@@ -16,7 +16,7 @@ class Import extends AbstractView {
 	 */
 	public function submit() {
 		$dossier = 'Uploaded/';
-		$fichier = $dossier . sha1($_FILES['fichierXML']['name']);
+		$file = $dossier . sha1($_FILES['fichierXML']['name']);
 		$extention = strrchr($_FILES['fichierXML']['name'], '.');
 		$taille_max = 3000000;
 		$taille = filesize($_FILES['fichierXML']['tmp_name']);
@@ -24,8 +24,8 @@ class Import extends AbstractView {
 			$erreur = 'Ce fichier est trop volumineux';
 		}
 		if (!isset($erreur)) {
-			if (move_uploaded_file($_FILES['fichierXML']['tmp_name'], $fichier)) {
-				$_SESSION['fichierXML'] = $fichier;
+			if (move_uploaded_file($_FILES['fichierXML']['tmp_name'], $file)) {
+				$_SESSION['fichierXML'] = $file;
 				$_SESSION['extFichierXML'] = $extention;
 				CNavigation::redirectToApp('Import', 'dataSelection');
 			} else {
@@ -43,11 +43,11 @@ class Import extends AbstractView {
 	 */
 	public function dataSelection() {
 		if (isset($_SESSION['fichierXML'])) {
-			$fichier = $_SESSION['fichierXML'];
-			if (file_exists($fichier)) {
+			$file = $_SESSION['fichierXML'];
+			if (file_exists($file)) {
 				CNavigation::setTitle('Selectionner vos données à importer');
 				CHead::addJS('bootstrap-modal');
-				DataImportView::showDataSelection($fichier, $_SESSION['extFichierXML']);
+				DataImportView::showDataSelection($file, $_SESSION['extFichierXML']);
 				return;
 			}
 		}
@@ -166,7 +166,7 @@ class Import extends AbstractView {
 		}
 	}
 
-	public function submit_selection() {
+	public function submitSelection() {
 		//groaw($_POST);
 		//groaw($_SESSION);
 		//pour calculer vitesse et calories :
@@ -182,11 +182,11 @@ class Import extends AbstractView {
 		if (file_exists($path)) {
 			$data = file_get_contents($path);
 			if (GPXFile::isOfThisDataType($data, $extension)) {
-				GPXFile::submit_selection($data);
+				GPXFile::submitSelection($data);
 			} elseif (TCXFile::isOfThisDataType($data, $extension)) {
-				TCXFile::submit_selection($data);
+				TCXFile::submitSelection($data);
 			} elseif (HL7File::isOfThisDataType($data, $extension)) {
-				HL7File::submit_selection($data);
+				HL7File::submitSelection($data);
 			} else {
 				echo "You Failed at Failing !";
 			}

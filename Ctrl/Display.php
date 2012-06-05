@@ -32,9 +32,9 @@ class Display {
 
             foreach ($simpleReleves as $simpleReleve) {
                 
-                $releve = DataMod::getReleve($simpleReleve->name, $_SESSION['bd_id']);
+                $statement = DataMod::getStatement($simpleReleve->name, $_SESSION['bd_id']);
                 
-                $n_datamod = DataMod::loadDataType($releve['modname']);
+                $n_datamod = DataMod::loadDataType($statement['modname']);
                 
                 if ($g === NULL) {                   
                                                            
@@ -47,22 +47,22 @@ class Display {
                        CTools::hackError();
                     }
 
-                    $g = $d -> instancier();
+                    $g = $d -> initialize();
 
                 }
 
                 foreach ($n_datamod -> getVariables() as $key => $value) {
                     if($key != 'timestamp') {
-                        $g -> structure[ sha1($releve['name']).$key] = $releve['name'] . ' [ '. $value . ' ]';
+                        $g -> structure[ sha1($statement['name']).$key] = $statement['name'] . ' [ '. $value . ' ]';
                     } else {
                         $g -> structure['timestamp'] = $value;
                     }
                 }
                 
-                foreach (R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id'])) as $index => $data) {
+                foreach (R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id'])) as $index => $data) {
                     foreach ($data as $key => $value) {
                         if($key != 'timestamp') {
-                            $g -> data[$index][sha1($releve['name']).$key] = $value;
+                            $g -> data[$index][sha1($statement['name']).$key] = $value;
                         } else {
                             $g -> data[$index][$key] = $value;
                         }
@@ -77,13 +77,13 @@ class Display {
             
         } else {
 
-            $releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+            $statement = isset($_REQUEST['nom']) ? DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
 
-            if (!$releve) {
+            if (!$statement) {
                 CTools::hackError();
             }
 
-            $n_datamod = DataMod::loadDataType($releve['modname']);
+            $n_datamod = DataMod::loadDataType($statement['modname']);
 
             $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod -> display_prefs) ? 'default' : $n_datamod -> display_prefs[0]);
             $d = DisplayMod::loadDisplayType($type);
@@ -92,16 +92,16 @@ class Display {
                 CTools::hackError();
             }
 
-            $g = $d -> instancier();
+            $g = $d -> initialize();
 
             /*$salut = 42;
              $coucou = 'salut';
              echo $$coucou;*/
 
             $g -> structure = $n_datamod -> getVariables();
-            $g -> data = R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
+            $g -> data = R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
             
-            return array($g, $d, $n_datamod, $releve);
+            return array($g, $d, $n_datamod, $statement);
 
         }
     }
@@ -120,7 +120,7 @@ class Display {
 
         $r_vue = $this -> vue_commune();
         $data = DisplayMod::getDisplayTypes();
-        DisplayView::showGraphChoiceMenu($data, false, $r_vue[2] -> display_prefs, $r_vue[1] -> dossier, 'iframe_view');
+        DisplayView::showGraphicChoiceMenu($data, false, $r_vue[2] -> display_prefs, $r_vue[1] -> dossier, 'iframe_view');
 
         echo '<h2>',    htmlspecialchars($r_vue[0]::nom), ' du relevé «',
         htmlspecialchars($_REQUEST['nom']), '» <small>',

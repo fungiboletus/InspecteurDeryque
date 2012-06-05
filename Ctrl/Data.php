@@ -1,13 +1,16 @@
 <?php
+/**
+ * Manages statements.
+ */
 class Data
 {
 	public function index() {
 		CNavigation::setTitle('Gestion des données');
 		CNavigation::setDescription('All your data are belong to us');
 
-		$releves = DataMod::getReleves($_SESSION['bd_id']);
+		$statements = DataMod::getStatements($_SESSION['bd_id']);
 
-		DataView::showRelevesList($releves);
+		DataView::showRelevesList($statements);
 
 		DataView::showAddButton();
 	}
@@ -47,16 +50,16 @@ class Data
 
 				$user = $_SESSION['user'];
 
-				$releve = R::dispense('releve');
-				$releve->mod = $mode;
-				$releve->user = $user;
-				$releve->name = $_REQUEST['nom'];
-				$releve->description = $_REQUEST['desc'];
-                $releve->PicMinLine = NULL;
-                $releve->PicMaxLine = NULL;
-                $releve->PicEndTime = NULL;
+				$statement = R::dispense('releve');
+				$statement->mod = $mode;
+				$statement->user = $user;
+				$statement->name = $_REQUEST['nom'];
+				$statement->description = $_REQUEST['desc'];
+                $statement->PicMinLine = NULL;
+                $statement->PicMaxLine = NULL;
+                $statement->PicEndTime = NULL;
 
-				R::store($releve);
+				R::store($statement);
 
 				new CMessage('Relevé correctement ajouté');
 				CNavigation::redirectToApp('Data');
@@ -76,11 +79,6 @@ class Data
 		
 		CNavigation::setTitle('Nouveau relevé de type «'.$data_type->nom.'»');
 
-		/*$hdir = htmlspecialchars($data_type->dossier);
-		echo <<<END
-			<img class="thumbnail" src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
-END;*/
-
 		DataView::showAddForm(array_merge(array(
 						'nom' => '',
 						'desc' => '',
@@ -89,26 +87,26 @@ END;*/
 
 	public function view()
 	{
-		$releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+		$statement = isset($_REQUEST['nom']) ? DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
 		
-		if (!$releve) {
+		if (!$statement) {
 			CTools::hackError();
 		}
 
-		CNavigation::setTitle('Relevé «'.$releve['name'].'»');
-		CNavigation::setDescription($releve['description']);
+		CNavigation::setTitle('Relevé «'.$statement['name'].'»');
+		CNavigation::setDescription($statement['description']);
 		
-		$n_datamod = DataMod::loadDataType($releve['modname']);
+		$n_datamod = DataMod::loadDataType($statement['modname']);
 		$sql = '';
 		foreach ($n_datamod->getVariables() as $k => $v) {
 			$sql .= "min($k), max($k), avg($k), ";	
 		}
-		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $releve['id']));
+		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
 		DataView::showInformations($stats, $n_datamod);
 	
 		$data = DisplayMod::getDisplayTypes();
 		DataView::showDisplayViewChoiceTitle();
-		DisplayView::showGraphChoiceMenu($data, true, $n_datamod->display_prefs);
+		DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
 
 		DataView::showAPIInformations();
 
@@ -120,26 +118,27 @@ END;*/
 
 	public function remove()
 	{
-		$releve = DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']);
-		if (!$releve) {
+		$statement = DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']);
+		if (!$statement) {
 			CTools::hackError();
 		}
 
 		if (isset($_REQUEST['confirm'])) {
-			$nom = $releve['name'];
-			$releve = R::load('releve', $releve['id']);
-			$modname = R::load('datamod', $releve->mod_id)->modname;
-			R::exec('delete from d_'.$modname.' where releve_id = ?', array($releve['id']));
-			R::trash(R::load('releve', $releve['id']));
+			//TODO check uselessness of : 
+			//$name = $statement['name'];
+			$statement = R::load('releve', $statement['id']);
+			$modname = R::load('datamod', $statement->mod_id)->modname;
+			R::exec('delete from d_'.$modname.' where releve_id = ?', array($statement['id']));
+			R::trash(R::load('releve', $statement['id']));
 			CNavigation::redirectToApp('Data');
 		}
 		else
 		{
-			CNavigation::setTitle('Suppression du relevé «'.$releve['name'].'»');
+			CNavigation::setTitle('Suppression du relevé «'.$statement['name'].'»');
 			CNavigation::setDescription('Consequences will never be the same!');
 
 			DataView::showRemoveForm(
-					$releve['description'],
+					$statement['description'],
 					CNavigation::generateMergedUrl('Data', 'remove', array('confirm' => 'yes')),
 					CNavigation::generateMergedUrl('Data', 'view'));
 		}
@@ -147,19 +146,19 @@ END;*/
 
 	public function random()
 	{
-		$releve = isset($_REQUEST['nom']) ? DataMod::getReleve($_REQUEST['nom'], $_SESSION['bd_id']) : false;
-		$b_releve = R::load('releve', $releve['id']);
+		$statement = isset($_REQUEST['nom']) ? DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+		$b_statement = R::load('releve', $statement['id']);
 
-		if (!$releve) {
+		if (!$statement) {
 			CTools::hackError();
 		}
 		
-		$n_datamod = DataMod::loadDataType($releve['modname']);
+		$n_datamod = DataMod::loadDataType($statement['modname']);
 		$variables = $n_datamod->getVariables();
 		
 		R::begin();
 		for ($i = 0; $i < 10; ++$i) {
-			$datamod = $n_datamod->instancier();
+			$datamod = $n_datamod->initialize();
 
 			foreach ($variables as $k => $var) {
 				if ($k === 'timestamp') $datamod->timestamp = microtime(true);
@@ -167,7 +166,7 @@ END;*/
 					$datamod->$k = rand(0,6000)*0.02345;
 			}
 
-			$n_datamod->save($_SESSION['user'], $b_releve, $datamod);
+			$n_datamod->save($_SESSION['user'], $b_statement, $datamod);
 		}
 		R::commit();
 

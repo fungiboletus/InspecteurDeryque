@@ -1,17 +1,18 @@
 <?php
-
+/**
+ * Manage data import from GPX file.
+ * The GPX xsd is ugly.
+ */
 class GPXFile implements FileType {
-
-	public static function isOfThisDataType($fichier, $extension) {
+	/** Check file's data type. */
+	public static function isOfThisDataType($file, $extension) {
 		return $extension === ".gpx";
 	}
 
-	/**
-	 * Permet d'afficher un formulaire de sélection des données à importer pour le fichier uploadé de type GPX
-	 */
-	public static function recupDonneesImportables($fichier) {
+	/** Display a form listing importable data from the incoming file. */
+	public static function getImportableData($file) {
 
-		$gpx = self::getData($fichier);
+		$gpx = self::getData($file);
 
 		echo <<<END
 		<table class="bordered-table">
@@ -64,8 +65,8 @@ END;
 		echo "</table>";
 
 		//partie selection des types de donnée :
-		$nomDonnee = "PositionGPS";
-		$sum = sha1($nomDonnee);
+		$nameData = "PositionGPS";
+		$sum = sha1($nameData);
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
@@ -80,33 +81,33 @@ END;
 				<td>
 END;
 		//'
-		self::showAssocierAReleve($nomDonnee);
+		self::displayDataAssociationChoice($nameData);
 		echo <<<END
 				</td>
 			</tr>
 END;
-		$nomDonnee = "Vitesse";
-		$sum = sha1($nomDonnee);
+		$nameData = "Vitesse";
+		$sum = sha1($nameData);
 		echo <<<END
 			<tr>
 				<td><input type="checkbox" value="Vitesse" name="data_$sum" id="data_$sum"/></td>
 				<td><label class="td_label" for="data_$sum">Vitesse</label></td>
 				<td>
 END;
-		self::showAssocierAReleve($nomDonnee);
+		self::displayDataAssociationChoice($nameData);
 		echo <<<END
 				</td>
 			</tr>
 END;
-		$nomDonnee = "Calories";
-		$sum = sha1($nomDonnee);
+		$nameData = "Calories";
+		$sum = sha1($nameData);
 		echo <<<END
 			<tr>
 				<td><input type="checkbox" value="Calories" name="data_$sum" id="data_$sum"/></td>
 				<td><label class="td_label" for="data_$sum">Calories</label></td>
 				<td>
 END;
-		self::showAssocierAReleve($nomDonnee);
+		self::displayDataAssociationChoice($nameData);
 		echo <<<END
 				</td>
 			</tr>
@@ -123,7 +124,7 @@ END;
 					<td><label class="td_label" for="data_$sum">$chose</label></td>
 					<td>
 END;
-				self::showAssocierAReleve($chose);
+				self::displayDataAssociationChoice($chose);
 				echo <<<END
 					</td>
 				</tr>
@@ -134,25 +135,28 @@ END;
 		//Import::deleteDirContent("Uploaded");
 	}
 
-	private static function getData($fichier) {
-		$data = file_get_contents($fichier);
+	private static function getData($file) {
+		$data = file_get_contents($file);
 		$data = preg_replace('/<gpx.*?>/', '<gpx>', $data, 1);
 		$data = preg_replace('/<\\/tp1:(.+)>/', '</$1>', $data);
 		$data = preg_replace('/<tp1:(.+)>/', '<$1>', $data);
 		$gpx = simplexml_load_string($data);
 		return $gpx;
 	}
-
-	private static function showAssocierAReleve($nomDonnee) {
-		$releves_list = DataMod::getReleves($_SESSION['bd_id']);
-		$sum = sha1($nomDonnee);
+    /**
+     * Used in the form's table to select the kind of data to import.
+     * Every line of that table corresponds to one use of that method.
+     */
+	private static function displayDataAssociationChoice($nameData) {
+		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
+		$sum = sha1($nameData);
 		$new_url = CNavigation::generateUrlToApp('Data', 'choose', array('iframe_mode' => true));
 		echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="input">
 			<select name="assoc_$sum" id="assoc_$sum">
 END;
-		foreach ($releves_list as $r) {
+		foreach ($statements_list as $r) {
 			echo '<option value="',    htmlspecialchars($r['name']), '">',    htmlspecialchars($r['name']), " (",    htmlspecialchars($r['modname']), ")", "</option>";
 		}
 		echo <<<END
@@ -161,16 +165,17 @@ END;
 			<a class="btn" href="$new_url">Nouveau relevé</a>
 	    </div>
 END;
-		//DataImportView::showNewReleveForm($nomDonnee);
+		//DataImportView::showNewReleveForm($nameData);
 	}
-
-	public static function submit_selection($data) {
+	
+	/** Store selection into the database. */
+	public static function submitSelection($data) {
 		$data = preg_replace('/<gpx.*?>/', '<gpx>', $data, 1);
 		$data = preg_replace('/<\\/tp1:(.+)>/', '</$1>', $data);
 		$data = preg_replace('/<tp1:(.+)>/', '<$1>', $data);
 		$gpx = simplexml_load_string($data);
 
-		//recup les bonnes données
+		// Get the wanted data
 
 		R::begin();
 		foreach ($gpx->children() as $gpx_data) {
@@ -181,7 +186,7 @@ END;
 				if (array_key_exists("trk_" . $sum_trk, $_POST)) {
 					foreach ($gpx_data->children() as $trksegs) {
 						if ($trksegs -> getName() === "trkseg") {
-							//recup le temps du premier trackpoint du trackseg en question
+							// get trackseg's first trackpoint's time
 							$trkpt1 = $trksegs -> xpath("trkpt[1]/time");
 							if (empty($trkpt1)) {
 								continue;
@@ -190,16 +195,11 @@ END;
 							$sum_seg = sha1($trkpt1[0]);
 							$seg_sum_seg = "seg_" . $sum_seg;
 							if (array_key_exists($seg_sum_seg, $_POST)) {
-								//groaw($trksegs);
-
-								//remplissage relevé par relevé
+								//store each statement into the database
 								foreach ($_POST as $key => $post) {
 									if (self::startswith($key, "assoc_")) {
 										$sum_assoc = strrchr($key, '_');
-										//groaw($key);
-										//groaw($post);
 										if (isset($_POST['data' . $sum_assoc])) {
-											//groaw($_POST['data'.$sum_assoc]);
 											self::saveData($post, $_POST['data' . $sum_assoc], $trksegs);
 										}
 									}
@@ -216,25 +216,25 @@ END;
 		CNavigation::redirectToApp('Import', 'dataSelection');
 	}
 
-	private static function saveData($nom_releve, $type_donnees, $donnees) {
-		$releve = DataMod::getReleve($nom_releve, $_SESSION['bd_id']);
-		$b_releve = R::load('releve', $releve['id']);
+	private static function saveData($name_statement, $type_Datas, $Datas) {
+		$statement = DataMod::getStatement($name_statement, $_SESSION['bd_id']);
+		$b_statement = R::load('releve', $statement['id']);
 
-		if (!$releve)
+		if (!$statement)
 			CTools::hackError();
 
-		$n_datamod = DataMod::loadDataType($releve['modname']);
+		$n_datamod = DataMod::loadDataType($statement['modname']);
 		$variables = $n_datamod -> getVariables();
 
-		foreach ($donnees as $d) {
+		foreach ($Datas as $d) {
 			if ($d -> getName() !== 'trkpt')
 				continue;
 
-			$datamod = $n_datamod -> instancier();
+			$datamod = $n_datamod -> initialize();
 
 			$vars = array();
 
-			switch($type_donnees) {
+			switch($type_Datas) {
 				case 'PositionGPS' :
 					$vars['lat'] = floatval($d['lat']);
 					$vars['lon'] = floatval($d['lon']);
@@ -276,9 +276,9 @@ END;
 					}
 					break;
 				default :
-					$exts = $d -> xpath('extensions/TrackPointExtension/' . $type_donnees);
+					$exts = $d -> xpath('extensions/TrackPointExtension/' . $type_Datas);
 					if (!empty($exts)) {
-						$vars["$type_donnees"] = floatval($exts[0]);
+						$vars["$type_Datas"] = floatval($exts[0]);
 					}
 			}
 
@@ -291,12 +291,12 @@ END;
 				if (isset($vars[$k])) {
 					$datamod -> $k = $vars[$k];
 				} else {
-					$datamod -> $k = isset($vars[$type_donnees]) ? $vars[$type_donnees] : 0.0;
+					$datamod -> $k = isset($vars[$type_Datas]) ? $vars[$type_Datas] : 0.0;
 				}
 			}
 
 			//groaw($datamod);
-			$n_datamod -> save($_SESSION['user'], $b_releve, $datamod);
+			$n_datamod -> save($_SESSION['user'], $b_statement, $datamod);
 		}
 	}
 

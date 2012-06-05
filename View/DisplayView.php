@@ -1,6 +1,6 @@
 <?php
 class DisplayView extends AbstractView {
-    public static function showGraphChoiceMenu($data, $well = true, $prefs = array(), $selected = null, $action = 'view') {
+    public static function showGraphicChoiceMenu($data, $well = true, $prefs = array(), $selected = null, $action = 'view') {
     	global $ROOT_PATH;
         $cdata = count($data);
         $ii = 0;
@@ -74,7 +74,7 @@ END;
 		</div>
 END;
         /*'$data = DisplayMod::getDisplayTypes();
-         DisplayView::showGraphChoiceMenu($data, false);*/
+         DisplayView::showGraphicChoiceMenu($data, false);*/
         //DashboardView::showGraph();
     }
 
@@ -93,12 +93,12 @@ END;
 		  <div id="releves-list">
 			<table class="zebra-striped">
 END;
-        $releves = DataMod::getReleves($_SESSION['bd_id']);
-        foreach ($releves as $releve) {
-            $hname = htmlspecialchars($releve['name']);
-            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('nom' => $releve['name']));
-            $hid = sha1($releve['name']);
-            $rname = $releve['name'];
+        $statements = DataMod::getStatements($_SESSION['bd_id']);
+        foreach ($statements as $statement) {
+            $hname = htmlspecialchars($statement['name']);
+            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('nom' => $statement['name']));
+            $hid = sha1($statement['name']);
+            $rname = $statement['name'];
             echo <<<END
 			<tr>
 				<td><input type="checkbox" value="$hurl" name="i$hid" rname="$rname"/></td>
@@ -117,13 +117,13 @@ END;
 		  <table class="zebra-striped">
 END;
 
-        $releves = DataMod::getMultiReleves($_SESSION['bd_id']);
+        $statements = DataMod::getMultiReleves($_SESSION['bd_id']);
 
-        foreach ($releves as $releve) {
-            $hname = htmlspecialchars($releve['name']);
-            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('nom' => $releve['name']));
+        foreach ($statements as $statement) {
+            $hname = htmlspecialchars($statement['name']);
+            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('nom' => $statement['name']));
             $hurl .= "/multireleve/true";
-            $hid = sha1($releve['name']);
+            $hid = sha1($statement['name']);
             echo <<<END
             <tr>
                 <td><input type="checkbox" value="$hurl" name="i$hid" /></td>

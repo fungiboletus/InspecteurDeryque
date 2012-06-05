@@ -2,13 +2,13 @@
 
 abstract class AbstractMod
 {
-	public $nom;
+	public $name;
 	public $dossier;
 
 	private $cache_variables = null;
 
-	public function AbstractMod($nom, $dossier) {
-		$this->nom = $nom;
+	public function AbstractMod($name, $dossier) {
+		$this->nom = $name;
 		$this->dossier = $dossier;
 	}
 
@@ -16,7 +16,7 @@ abstract class AbstractMod
 		return preg_replace('/(\.\.)|\\\'/', '', $dossier);
 	}
 
-	public function instancier() {
+	public function initialize() {
 		$classe = 'D'.$this->dossier;
 		return new $classe();
 	}
