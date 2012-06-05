@@ -33,3 +33,51 @@ background:white;
 .hero-unit{
 	padding:20px;
 }
+
+#accordion ul {
+	list-style-type:none;
+}
+
+#holder {
+	margin-left: 0px;
+}
+fieldset div {
+	margin : 10px;
+}
+
+fieldset label {
+	margin-right : 20px;
+}
+
+select {
+	margin-right : 10px;
+}
+
+a img {
+	padding-top : 2px;
+}
+#tablePics tr td {
+	vertical-align:middle;
+	text-align:center;
+}
+
+#picsMax {
+	float :left;
+	width:600px;
+}
+
+#picsMin {
+	margin-left: 650px;
+	width:600px;
+}
+
+#chartBloc {
+	display:inline;
+	float :left;
+}
+
+#top-right {
+	position : absolute;
+	top : 5px;
+	right : 5px;
+}

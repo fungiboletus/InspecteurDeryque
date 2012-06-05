@@ -7,6 +7,15 @@ width:auto;
 	  margin-bottom:13px;
 }
 #releves {
+	overflow-y: auto;
+}
+
+#compose-btn {
+	margin-top: 10px;
+	text-align: center;
+}
+
+#releves-list {
 max-height:500px;
 overflow-y:auto;
 }

@@ -6,7 +6,8 @@ function __autoload($class)
 		'Tools/'.$class.'.php',
 		'Mod/'.$class.'.php',
 		'View/'.$class.'.php',
-		'Ctrl/'.$class.'.php'
+		'Ctrl/'.$class.'.php',
+		'Mod/FileTypes/'.$class.'.php'
 	);
 	
 	foreach($possible_paths as $chemin)
