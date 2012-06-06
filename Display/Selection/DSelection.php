@@ -1,9 +1,9 @@
 <?php
 class DSelection extends DAbstract {
-    const nom = 'Selection';
+    const name = 'Selection';
 
     public function show() {
-        if ($this -> gererVide())
+        if ($this->gererVide())
             return;
 
         CHead::addJs('jquery-ui-1.8.19.custom.min');
@@ -58,7 +58,7 @@ END;
 
         echo $addCharts;
 
-        $this -> getSelections();
+        $this->getSelections();
 
     }
 

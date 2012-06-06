@@ -15,27 +15,27 @@ class Selection {
         $beans = R::find('releve', "name = ?", array($rname));
 
         foreach ($beans as $bean) {
-            $this -> _statementBean = $bean;
+            $this->_statementBean = $bean;
             break;
         }
 
-        if ($this -> _statementBean === NULL) {
+        if ($this->_statementBean === NULL) {
             $beans = R::find('multi_releve', "name = ?", array($rname));
 
             foreach ($beans as $bean) {
-                $this -> _statementBean = $bean;
+                $this->_statementBean = $bean;
                 break;
             }
         }
 
-        $this -> _selectionBean = R::dispense('selection');
+        $this->_selectionBean = R::dispense('selection');
 
-        $this -> _selectionBean -> releve_id = $this -> _statementBean -> getID();
-        $this -> _selectionBean -> releve_type = $this -> _statementBean -> getMeta('type');
-        $this -> _selectionBean -> name = $graphName;
-        $this -> _selectionBean -> begin = $begin;
-        $this -> _selectionBean -> end = $end;
-        $this -> _selectionBean -> composition_id = NULL;
+        $this->_selectionBean->releve_id = $this->_statementBean->getID();
+        $this->_selectionBean->releve_type = $this->_statementBean->getMeta('type');
+        $this->_selectionBean->name = $graphName;
+        $this->_selectionBean->begin = $begin;
+        $this->_selectionBean->end = $end;
+        $this->_selectionBean->composition_id = NULL;
 
     }
 
@@ -44,9 +44,9 @@ class Selection {
      */
     public function save() {
 
-        R::store($this -> _statementBean);
+        R::store($this->_statementBean);
 
-        R::store($this -> _selectionBean);
+        R::store($this->_selectionBean);
 
     }
 
@@ -78,11 +78,11 @@ class Selection {
      * Récupérer le bean de la sélection.
      */
     public function getBean() {
-        return $this -> _selectionBean;
+        return $this->_selectionBean;
     }
     
     public function delete() {
-        R::trash($this -> _selectionBean);
+        R::trash($this->_selectionBean);
     }
 
 }

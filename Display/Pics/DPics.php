@@ -1,9 +1,9 @@
 <?php
 class DPics extends DAbstract {
-    const nom = 'Pics';
+    const name = 'Pics';
 
     public function show() {
-        if ($this -> gererVide())
+        if ($this->gererVide())
             return;
 
         CHead::addJs('jquery-ui-1.8.19.custom.min');
@@ -55,7 +55,7 @@ END;
 
         echo $addCharts;
 
-        $this -> getPics();
+        $this->getPics();
 
     }
 
@@ -67,17 +67,17 @@ END;
             $statement = CompositionReleve::getCReleve($_GET['nom']);
         }
         
-        $endTime = $statement -> PicEndTime;
+        $endTime = $statement->PicEndTime;
         
         if($endTime != NULL) {
-            echo "<script> setViewLength(". $statement -> PicBeginTime .", ". $statement -> PicEndTime ."); </script>\n";
+            echo "<script> setViewLength(". $statement->PicBeginTime .", ". $statement->PicEndTime ."); </script>\n";
         }
 
-        if ($statement -> PicMinLine != NULL) {
-            echo "<script> setMinLine(". $statement -> PicMinLine ."); </script>\n";
+        if ($statement->PicMinLine != NULL) {
+            echo "<script> setMinLine(". $statement->PicMinLine ."); </script>\n";
         }
-        if ($statement -> PicMaxLine != NULL) {
-            echo "<script> setMaxLine(".$statement -> PicMaxLine ."); </script>\n";
+        if ($statement->PicMaxLine != NULL) {
+            echo "<script> setMaxLine(".$statement->PicMaxLine ."); </script>\n";
         }
         echo '<script> initPics() </script>';
     }

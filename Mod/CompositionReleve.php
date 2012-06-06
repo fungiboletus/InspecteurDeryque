@@ -14,14 +14,14 @@ class CompositionReleve {
         $beans = R::findOrDispense('multi_releve', "name = ?", array($name));
 
         foreach ($beans as $bean) {
-            $this -> _statementBean = $bean;
+            $this->_statementBean = $bean;
             break;
         }
         
-        $this -> _statementBean -> name = $name;
-        $this -> _statementBean -> user = $user;
+        $this->_statementBean->name = $name;
+        $this->_statementBean->user = $user;
         
-        R::store($this -> _statementBean);
+        R::store($this->_statementBean);
 
     }
 
@@ -35,7 +35,7 @@ class CompositionReleve {
 
         foreach ($statements as $statement) {
             
-            R::associate($this -> _statementBean, $statement);
+            R::associate($this->_statementBean, $statement);
             
         }
 

@@ -1,7 +1,10 @@
 <?php
-
+/** Manages the Dashboard - the index when the user is logged in. */
 class Dashboard
 {
+    /**
+     * Displays the web page.
+     */
 	public function index() {
 		CNavigation::setTitle('Tableau de bord');
 		DisplayView::showPageWithLayout();
@@ -17,8 +20,10 @@ END;
 		
 	}
 
-	public function musique_deryque() {
-
+    /**
+     * Let the user hear about InspecteurDeryque's favorite theme.
+     */
+	public function deryque_music() {
 		CNavigation::setTitle('Musique de l\'inspecteur Derrick');
 		echo <<<END
 <iframe width="640" height="480" src="http://www.youtube.com/embed/z2e7oH1F7nI?autoplay=1&rel=0&loop=1" frameborder="0" allowfullscreen></iframe>

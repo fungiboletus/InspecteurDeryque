@@ -1,24 +1,25 @@
 <?php
 
+/** Abstract class governing types embedded into a specific directory tree. */
 abstract class AbstractMod
 {
-	public $name;
-	public $dossier;
+	public $name; /**< Object name, depending on the implementing ObjectMod class */
+	public $folder; /**< folder of that Object. */
 
 	private $cache_variables = null;
 
-	public function AbstractMod($name, $dossier) {
-		$this->nom = $name;
-		$this->dossier = $dossier;
+	public function AbstractMod($name, $folder) {
+		$this->name = $name;
+		$this->folder = $folder;
 	}
 
-	public static function secureDossier($dossier) {
-		return preg_replace('/(\.\.)|\\\'/', '', $dossier);
+	public static function secureDossier($folder) {
+		return preg_replace('/(\.\.)|\\\'/', '', $folder);
 	}
 
 	public function initialize() {
-		$classe = 'D'.$this->dossier;
-		return new $classe();
+		$class = 'D'.$this->folder;
+		return new $class();
 	}
 
 	public function getVariables() {
@@ -27,14 +28,14 @@ abstract class AbstractMod
 			return $this->cache_variables;
 		}
 
-		$classe = 'D'.$this->dossier;
+		$class = 'D'.$this->folder;
 
-		$vars = get_class_vars('D'.$this->dossier);
+		$vars = get_class_vars('D'.$this->folder);
 		$n_vars = $vars;
 
 		foreach ($vars as $var => $value) {
 			$var_name = 'n_'.$var;
-			$n_vars[$var] = constant($classe.'::'.$var_name);
+			$n_vars[$var] = constant($class.'::'.$var_name);
 		}
 
 		$this->cache_variables = $n_vars;

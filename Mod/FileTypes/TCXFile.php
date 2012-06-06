@@ -15,7 +15,7 @@ class TCXFile implements FileType {
 
 		$tcx = self::getData($file);
 
-		$activities = $tcx -> xpath("/TrainingCenterDatabase/Activities");
+		$activities = $tcx->xpath("/TrainingCenterDatabase/Activities");
 		$activities = $activities[0];
 		foreach ($activities->children() as $activity) {
 			$activity_name = htmlspecialchars($activity['Sport']);
@@ -29,7 +29,7 @@ class TCXFile implements FileType {
 				</tr>
 END;
 			foreach ($activity->children() as $lapsandmore) {
-				if (htmlspecialchars($lapsandmore -> getName()) === "Lap") {
+				if (htmlspecialchars($lapsandmore->getName()) === "Lap") {
 					echo "<tr>";
 					echo '<td><input type="checkbox" value="option1" name="optionsCheckboxes"/></td>';
 					echo "<td>Lap - StartTime : ",     htmlspecialchars($lapsandmore['StartTime']), "</td>";
@@ -38,8 +38,8 @@ END;
 						<table class="zebra-striped bordered-table">
 END;
 					foreach ($lapsandmore->children() as $datalap) {
-						if (htmlspecialchars($datalap -> getName()) === "Track") {
-							$track_first_date = $datalap -> xpath("Trackpoint[1]/Time");
+						if (htmlspecialchars($datalap->getName()) === "Track") {
+							$track_first_date = $datalap->xpath("Trackpoint[1]/Time");
 							$nameTrack = htmlspecialchars($track_first_date[0]);
 							echo <<<END
 							<tr>
@@ -93,10 +93,10 @@ END;
 			</tr>
 END;
 		//autres types de Data :
-		$types = $tcx -> xpath("/TrainingCenterDatabase/Activities/Activity[1]/Lap[1]");
+		$types = $tcx->xpath("/TrainingCenterDatabase/Activities/Activity[1]/Lap[1]");
 		$types = $types[0];
 		foreach ($types->children() as $type) {
-			$type_name = htmlspecialchars($type -> getName());
+			$type_name = htmlspecialchars($type->getName());
 			if ($type_name === "Calories" || $type_name === "AverageHeartRateBpm") {
 				if ($type_name === "AverageHeartRateBpm") {
 					$type_name = "HeartRateBpm";

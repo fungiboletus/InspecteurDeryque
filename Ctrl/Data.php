@@ -77,12 +77,12 @@ class Data
 
 		$data_type = DataMod::loadDataType($_REQUEST['type']);
 		
-		CNavigation::setTitle('Nouveau relevé de type «'.$data_type->nom.'»');
+		CNavigation::setTitle('Nouveau relevé de type «'.$data_type->name.'»');
 
 		DataView::showAddForm(array_merge(array(
 						'nom' => '',
 						'desc' => '',
-						'mode' => $data_type->dossier),$_REQUEST));
+						'mode' => $data_type->folder),$_REQUEST));
 	}
 
 	public function view()
@@ -101,7 +101,7 @@ class Data
 		foreach ($n_datamod->getVariables() as $k => $v) {
 			$sql .= "min($k), max($k), avg($k), ";	
 		}
-		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->dossier.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
+		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
 		DataView::showInformations($stats, $n_datamod);
 	
 		$data = DisplayMod::getDisplayTypes();

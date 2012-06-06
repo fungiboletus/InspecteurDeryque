@@ -22,9 +22,9 @@ class DataView extends AbstractView
 		echo '<ul class="media-grid">';
 
 		foreach ($data as $type) {
-			$hnom = htmlspecialchars($type->nom);
-			$hdir = htmlspecialchars($type->dossier);
-			$url = CNavigation::generateUrlToApp('Data','add', array('type'=>$type->dossier));
+			$hnom = htmlspecialchars($type->name);
+			$hdir = htmlspecialchars($type->folder);
+			$url = CNavigation::generateUrlToApp('Data','add', array('type'=>$type->folder));
 			echo <<<END
 	<li>
 		<a href="$url">
@@ -141,7 +141,7 @@ END;
 	}
 
 	public static function showInformations($stats, $data_type) {
-		$hdata_type = htmlspecialchars($data_type->nom);
+		$hdata_type = htmlspecialchars($data_type->name);
 
 		echo <<<END
 <h3>Informations</h3>

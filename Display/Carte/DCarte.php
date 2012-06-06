@@ -1,7 +1,7 @@
 <?php
 class DCarte extends DAbstract
 {
-	const nom = 'Carte';
+	const name = 'Carte';
 
 	public function show()
 	{

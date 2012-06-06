@@ -1,7 +1,7 @@
 <?php
 class DRythmeCardiaque
 {
-	const nom = 'Rythme cardiaque';
+	const name = 'Rythme cardiaque';
 	
 	const n_timestamp = 'Date';
 	public $timestamp;

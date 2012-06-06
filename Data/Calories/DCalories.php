@@ -2,7 +2,7 @@
 
 class DCalories
 {
-	const nom = 'Calories';
+	const name = 'Calories';
 	
 	const n_timestamp = 'Date';
 	public $timestamp;

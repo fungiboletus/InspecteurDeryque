@@ -1,7 +1,7 @@
 <?php
 class DGPS
 {
-	const nom = 'GPS';
+	const name = 'GPS';
 
 	const n_timestamp = 'Date';
 	public $timestamp;

@@ -46,7 +46,7 @@ END;
 		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 		$url_xml = CNavigation::generateUrlToApp('Import');
 		$url_data = CNavigation::generateUrlToApp('Data');
-		$url_musique_deryque = CNavigation::generateUrlToApp('Dashboard','musique_deryque');
+		$url_deryque_music = CNavigation::generateUrlToApp('Dashboard','deryque_music');
 		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_dashboard = $CTRL_NAME === 'Dashboard' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_import = $CTRL_NAME === 'Import' ? ' class="active"' : '';
@@ -63,7 +63,7 @@ END;
 					<ul class="dropdown-menu">
 						<li><a href="$url_help">Aide</a></li>
 						<li><a href="$url_not_found">Une erreur 404</a></li>
-						<li><a href="$url_musique_deryque">Écouter la musique</a></li>
+						<li><a href="$url_deryque_music">Écouter la musique</a></li>
 						<li class="divider"></li>
 						<li><a href="$url_logout">Déconnexion</a></li>
 					</ul>

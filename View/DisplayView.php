@@ -6,7 +6,7 @@ class DisplayView extends AbstractView {
         $ii = 0;
         foreach ($prefs as $pref) {
             for ($i = 0; $i < $cdata; ++$i) {
-                if ($data[$i] -> dossier === $pref) {
+                if ($data[$i]->folder === $pref) {
                     $tmp = $data[$i];
                     $data[$i] = $data[$ii];
                     $data[$ii] = $tmp;
@@ -24,15 +24,15 @@ class DisplayView extends AbstractView {
 END;
 
         foreach ($data as $display) {
-            $dossier = $display -> dossier;
-            $url = CNavigation::generateMergedUrl('Display', $action, array('type' => $dossier));
-            $class = in_array($dossier, $prefs, true) ? ' class="display_prefs"' : '';
-            $class = $dossier === $selected ? ' class="display_selected"' : $class;
+            $folder = $display->folder;
+            $url = CNavigation::generateMergedUrl('Display', $action, array('type' => $folder));
+            $class = in_array($folder, $prefs, true) ? ' class="display_prefs"' : '';
+            $class = $folder === $selected ? ' class="display_selected"' : $class;
             echo <<<END
 				<li$class>
 					<a href="$url" class="liengraph">
-						<img alt="" src="$ROOT_PATH/Display/$dossier/thumbnail.png" class="thumbnail"/>
-						<h4>{$display->nom}</h4>
+						<img alt="" src="$ROOT_PATH/Display/$folder/thumbnail.png" class="thumbnail"/>
+						<h4>{$display->name}</h4>
 					</a>
 				</li>
 END;

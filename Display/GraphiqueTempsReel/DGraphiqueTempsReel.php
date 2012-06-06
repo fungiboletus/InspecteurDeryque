@@ -1,9 +1,9 @@
 <?php
 class DGraphiqueTempsReel extends DAbstract {
-    const nom = 'GraphiqueRT';
+    const name = 'GraphiqueRT';
 
     public function show() {
-        if ($this -> gererVide())
+        if ($this->gererVide())
             return;
 
         CHead::addJs('jquery-ui-1.8.19.custom.min');
@@ -281,12 +281,12 @@ END;
 
         echo $addCharts;
 
-        $this -> getPics();
-        $this -> addPics();
+        $this->getPics();
+        $this->addPics();
 
-        $this -> addSelection();
+        $this->addSelection();
 
-        $this -> addComposition();
+        $this->addComposition();
 
     }
 
@@ -304,22 +304,22 @@ END;
             if ($statement != NULL) {// si on a un relevé simple
                 $mode = R::findOne('datamod', 'modname = ?', array($statementRow['modname']));
 
-                $statement -> mod = $mode;
+                $statement->mod = $mode;
 
             } else {
                 $statement = CompositionReleve::getCReleve($_GET['nom']);
             }
 
             if (isset($_GET['minLine'])) {
-                $statement -> PicMinLine = $_GET['minLine'];
+                $statement->PicMinLine = $_GET['minLine'];
             }
 
             if (isset($_GET['maxLine'])) {
-                $statement -> PicMaxLine = $_GET['maxLine'];
+                $statement->PicMaxLine = $_GET['maxLine'];
             }
 
-            $statement -> PicBeginTime = $_GET['beginTime'];
-            $statement -> PicEndTime = $_GET['endTime'];
+            $statement->PicBeginTime = $_GET['beginTime'];
+            $statement->PicEndTime = $_GET['endTime'];
 
             R::store($statement);
 
@@ -349,7 +349,7 @@ END;
 
             $selection = new Selection($_GET['nom'], $_GET['graphName'], $_GET['selectionBegin'], $_GET['selectionEnd']);
 
-            $selection -> save();
+            $selection->save();
 
         }
     }
@@ -367,7 +367,7 @@ END;
             $compostion = new Composition($_GET['nom'], $name);
 
             for ($i = 0; $i < count($sNames); $i++) {
-                $compostion -> addNewSelection($sNames[$i], $sDebuts[$i], $sFins[$i]);
+                $compostion->addNewSelection($sNames[$i], $sDebuts[$i], $sFins[$i]);
             }
 
         }

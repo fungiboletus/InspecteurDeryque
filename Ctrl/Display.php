@@ -37,32 +37,32 @@ class Display {
                 $n_datamod = DataMod::loadDataType($statement['modname']);
                 // for first loop iteration, define expected graphic
                 if ($g === NULL) {                   
-                    $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod -> display_prefs) ? 'default' : $n_datamod -> display_prefs[0]);
+                    $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod->display_prefs) ? 'default' : $n_datamod->display_prefs[0]);
                     // Get display informations
                     $d = DisplayMod::loadDisplayType($type);
                     if (!$d) CTools::hackError();
                     // Get kind of graphic
-                    $g = $d -> initialize();
+                    $g = $d->initialize();
                 }
                 
                 // Initializes timestamps
-                foreach ($n_datamod -> getVariables() as $key => $value) {
+                foreach ($n_datamod->getVariables() as $key => $value) {
                     // Deal with statements not relying on a timestamp
                     if($key != 'timestamp') {
-                        $g -> structure[ sha1($statement['name']).$key] = $statement['name'] . ' [ '. $value . ' ]';
+                        $g->structure[ sha1($statement['name']).$key] = $statement['name'] . ' [ '. $value . ' ]';
                     } else {
-                        $g -> structure['timestamp'] = $value;
+                        $g->structure['timestamp'] = $value;
                     }
                 }
                 
                 // Initializes other data values
-                foreach (R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id'])) as $index => $data) {
+                foreach (R::getAll('select * from d_' . $n_datamod->folder . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id'])) as $index => $data) {
                     foreach ($data as $key => $value) {
                         // Deal with statements not relying on a timestamp
                         if($key != 'timestamp') {
-                            $g -> data[$index][sha1($statement['name']).$key] = $value;
+                            $g->data[$index][sha1($statement['name']).$key] = $value;
                         } else {
-                            $g -> data[$index][$key] = $value;
+                            $g->data[$index][$key] = $value;
                         }
                     }
                 }
@@ -78,16 +78,16 @@ class Display {
             
             // Get data informations
             $n_datamod = DataMod::loadDataType($statement['modname']);
-            $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod -> display_prefs) ? 'default' : $n_datamod -> display_prefs[0]);
+            $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod->display_prefs) ? 'default' : $n_datamod->display_prefs[0]);
             // Get display informations
             $d = DisplayMod::loadDisplayType($type);
 
             if (!$d) CTools::hackError();
             
             // Get kind of graphic
-            $g = $d -> initialize();
-            $g -> structure = $n_datamod -> getVariables();
-            $g -> data = R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
+            $g = $d->initialize();
+            $g->structure = $n_datamod->getVariables();
+            $g->data = R::getAll('select * from d_' . $n_datamod->folder . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
             
             return array($g, $d, $n_datamod, $statement);
 
@@ -96,9 +96,9 @@ class Display {
 
     /** Default view when no statement neither any kind of graphic is selected. */
     public function view() {
-        $infos = $this -> getStatementInfos();
-        $infos[0] -> show();
-        CNavigation::setTitle($infos[0]::nom . ' du relevé «' . $_REQUEST['nom'] . '»');
+        $infos = $this->getStatementInfos();
+        $infos[0]->show();
+        CNavigation::setTitle($infos[0]::name . ' du relevé «' . $_REQUEST['nom'] . '»');
         CNavigation::setDescription($infos[3]['description']);
         DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data', 'view', array('nom' => $_REQUEST['nom'])));
     }
@@ -108,14 +108,14 @@ class Display {
         define('NO_HEADER_BAR', true);
         CHead::addCss('iframe_view');
 
-        $infos = $this -> getStatementInfos();
+        $infos = $this->getStatementInfos();
         $data = DisplayMod::getDisplayTypes();
-        DisplayView::showGraphicChoiceMenu($data, false, $infos[2] -> display_prefs, $infos[1] -> dossier, 'iframe_view');
+        DisplayView::showGraphicChoiceMenu($data, false, $infos[2]->display_prefs, $infos[1]->folder, 'iframe_view');
 
-        echo '<h2>',    htmlspecialchars($infos[0]::nom), ' du relevé «',
+        echo '<h2>',    htmlspecialchars($infos[0]::name), ' du relevé «',
         htmlspecialchars($_REQUEST['nom']), '» <small>',
         htmlspecialchars($infos[3]['description']), '</small></h2>';
-        $infos[0] -> show();
+        $infos[0]->show();
     }
 
 }

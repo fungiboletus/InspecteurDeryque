@@ -1,7 +1,7 @@
 <?php
 class DDiagramme extends DAbstract
 {
-	const nom = 'Diagramme';
+	const name = 'Diagramme';
 
 	public function show()
 	{

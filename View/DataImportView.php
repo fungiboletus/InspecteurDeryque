@@ -73,7 +73,7 @@ END;
 			<select id="normalSelect" name="normalSelect">
 END;
 		foreach ($types as $type) {
-			echo '<option value="',  htmlspecialchars($type -> dossier), '">',  htmlspecialchars($type -> nom), "</option>";
+			echo '<option value="',  htmlspecialchars($type->folder), '">',  htmlspecialchars($type->name), "</option>";
 		}
 		echo <<<END
 			</select>

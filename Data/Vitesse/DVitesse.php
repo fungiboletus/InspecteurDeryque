@@ -2,7 +2,7 @@
 
 class DVitesse
 {
-	const nom = 'Vitesse';
+	const name = 'Vitesse';
 	
 	const n_timestamp = 'Date';
 	public $timestamp;

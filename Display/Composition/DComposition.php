@@ -1,9 +1,9 @@
 <?php
 class DComposition extends DAbstract {
-    const nom = 'Composition';
+    const name = 'Composition';
 
     public function show() {
-        if ($this -> gererVide())
+        if ($this->gererVide())
             return;
 
         CHead::addJs('jquery-ui-1.8.19.custom.min');
@@ -56,7 +56,7 @@ END;
     
     echo $addCharts;
     
-    $this -> getCompositions();
+    $this->getCompositions();
     
     }
     
@@ -68,9 +68,9 @@ END;
     
     	foreach ($compositions as $composition) {
     		echo "addComposition('". $composition->name ."');";
-            $selections = $composition -> ownSelection;
+            $selections = $composition->ownSelection;
             foreach ($selections as $selection) {
-                echo "addSelectionToComposition('". $composition->name ."', '". $selection->name ."', ". $selection->begin .", ". $selection -> end .");";
+                echo "addSelectionToComposition('". $composition->name ."', '". $selection->name ."', ". $selection->begin .", ". $selection->end .");";
             }
     	}
     

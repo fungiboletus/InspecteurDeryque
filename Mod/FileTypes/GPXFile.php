@@ -24,9 +24,9 @@ class GPXFile implements FileType {
 END;
 		foreach ($gpx->children() as $gpx_data) {
 			echo "<tr>";
-			if ($gpx_data -> getName() === "trk") {
+			if ($gpx_data->getName() === "trk") {
 
-				$nameTrk = $gpx_data -> xpath("name");
+				$nameTrk = $gpx_data->xpath("name");
 				$sum = sha1($nameTrk[0]);
 
 				$hdate = AbstractView::formateDate($nameTrk[0]);
@@ -39,16 +39,16 @@ END;
 					<table class="zebra-striped bordered-table">
 END;
 				foreach ($gpx_data->children() as $trksegs) {
-					if ($trksegs -> getName() === "trkseg") {
+					if ($trksegs->getName() === "trkseg") {
 						//recup le temps du premier trackpoint du trackseg en question
-						$trkpt1 = $trksegs -> xpath("trkpt[1]/time");
+						$trkpt1 = $trksegs->xpath("trkpt[1]/time");
 						if (empty($trkpt1)) {
 							continue;
 						}
 						$nameTrkseg = htmlspecialchars($trkpt1[0]);
 						$hdate = AbstractView::formateDate($trkpt1[0]);
 						$sum = sha1($trkpt1[0]);
-						$nb = count($trksegs -> children());
+						$nb = count($trksegs->children());
 						echo <<<END
 						<tr>
 							<td><input type="checkbox" value="$nameTrkseg" name="seg_$sum" id="seg_$sum"/></td>
@@ -112,12 +112,12 @@ END;
 				</td>
 			</tr>
 END;
-		$extensions_dispos = $gpx -> xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
+		$extensions_dispos = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
 		if (!empty($extensions_dispos)) {
 			$extensions_dispos = $extensions_dispos[0];
 			foreach ($extensions_dispos->children() as $extdisp) {
-				$chose = htmlspecialchars($extdisp -> getName());
-				$sum = sha1($extdisp -> getName());
+				$chose = htmlspecialchars($extdisp->getName());
+				$sum = sha1($extdisp->getName());
 				echo <<<END
 				<tr>
 					<td><input type="checkbox" value="$chose" name="data_$sum" id="data_$sum"/></td>
@@ -179,15 +179,15 @@ END;
 
 		R::begin();
 		foreach ($gpx->children() as $gpx_data) {
-			if ($gpx_data -> getName() === "trk") {
-				$nameTrk = $gpx_data -> xpath("name");
+			if ($gpx_data->getName() === "trk") {
+				$nameTrk = $gpx_data->xpath("name");
 				$sum_trk = sha1($nameTrk[0]);
 				$hname = htmlspecialchars($nameTrk[0]);
 				if (array_key_exists("trk_" . $sum_trk, $_POST)) {
 					foreach ($gpx_data->children() as $trksegs) {
-						if ($trksegs -> getName() === "trkseg") {
+						if ($trksegs->getName() === "trkseg") {
 							// get trackseg's first trackpoint's time
-							$trkpt1 = $trksegs -> xpath("trkpt[1]/time");
+							$trkpt1 = $trksegs->xpath("trkpt[1]/time");
 							if (empty($trkpt1)) {
 								continue;
 							}
@@ -224,13 +224,13 @@ END;
 			CTools::hackError();
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
-		$variables = $n_datamod -> getVariables();
+		$variables = $n_datamod->getVariables();
 
 		foreach ($Datas as $d) {
-			if ($d -> getName() !== 'trkpt')
+			if ($d->getName() !== 'trkpt')
 				continue;
 
-			$datamod = $n_datamod -> initialize();
+			$datamod = $n_datamod->initialize();
 
 			$vars = array();
 
@@ -240,7 +240,7 @@ END;
 					$vars['lon'] = floatval($d['lon']);
 					break;
 				case 'Vitesse' :
-					$date = $d -> xpath('time');
+					$date = $d->xpath('time');
 					$date = strtotime($date[0]);
 					if ($GLOBALS['ancienne_lat'] === null) {
 						$GLOBALS['ancienne_lat'] = floatval($d['lat']);
@@ -276,27 +276,27 @@ END;
 					}
 					break;
 				default :
-					$exts = $d -> xpath('extensions/TrackPointExtension/' . $type_Datas);
+					$exts = $d->xpath('extensions/TrackPointExtension/' . $type_Datas);
 					if (!empty($exts)) {
 						$vars["$type_Datas"] = floatval($exts[0]);
 					}
 			}
 
-			$time = $d -> xpath('time');
+			$time = $d->xpath('time');
 			if (!empty($time)) {
 				$vars['timestamp'] = strtotime($time[0]);
 			}
 
 			foreach ($variables as $k => $var) {
 				if (isset($vars[$k])) {
-					$datamod -> $k = $vars[$k];
+					$datamod->$k = $vars[$k];
 				} else {
-					$datamod -> $k = isset($vars[$type_Datas]) ? $vars[$type_Datas] : 0.0;
+					$datamod->$k = isset($vars[$type_Datas]) ? $vars[$type_Datas] : 0.0;
 				}
 			}
 
 			//groaw($datamod);
-			$n_datamod -> save($_SESSION['user'], $b_statement, $datamod);
+			$n_datamod->save($_SESSION['user'], $b_statement, $datamod);
 		}
 	}
 

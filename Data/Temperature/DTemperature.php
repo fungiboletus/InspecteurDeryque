@@ -1,7 +1,7 @@
 <?php
 class DTemperature
 {
-	const nom = 'Température';
+	const name = 'Température';
 	
 	const n_timestamp = 'Date';
 	public $timestamp;

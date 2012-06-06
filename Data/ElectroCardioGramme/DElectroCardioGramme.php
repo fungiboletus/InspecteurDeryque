@@ -1,7 +1,7 @@
 <?php
 class DElectroCardioGramme
 {
-	const nom = 'Electrocardiogramme';
+	const name = 'Electrocardiogramme';
 	
 	const n_timestamp = 'Date';
 	public $timestamp;

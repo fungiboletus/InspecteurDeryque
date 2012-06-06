@@ -24,11 +24,11 @@ class HL7File implements FileType {
 END;
 
         $dom = new DOMDocument("1.0", "utf-8");
-        $dom -> load($file);
-        $sequence = $dom -> getElementsByTagName('sequenceSet') -> item(0);
-        $startTime = $sequence -> getElementsByTagName('head') -> item(0) -> getAttribute('value');
-        $increment = $sequence -> getElementsByTagName('increment') -> item(0) -> getAttribute('value');
-        $digits = $sequence -> getElementsByTagName('digits');
+        $dom->load($file);
+        $sequence = $dom->getElementsByTagName('sequenceSet')->item(0);
+        $startTime = $sequence->getElementsByTagName('head')->item(0)->getAttribute('value');
+        $increment = $sequence->getElementsByTagName('increment')->item(0)->getAttribute('value');
+        $digits = $sequence->getElementsByTagName('digits');
         /** tableaux[0] = timestamp, tableaux[1+] = valeurs */
         $tableaux = array();
         $i = 1;
@@ -43,7 +43,7 @@ END;
 
         /** on extrait les séquences */
         foreach ($digits as $digit) {
-            $code = $digit -> parentNode -> parentNode -> getElementsByTagName('code') -> item(0) -> getAttribute('code');
+            $code = $digit->parentNode->parentNode->getElementsByTagName('code')->item(0)->getAttribute('code');
 
             echo <<<END
 							<tr>
@@ -52,7 +52,7 @@ END;
 							<tr>
 END;
 
-            //$tableaux[$i] = self::table($digit -> nodeValue);
+            //$tableaux[$i] = self::table($digit->nodeValue);
             //$i++;
         }
         /* on remplit le timestamp */
@@ -123,24 +123,24 @@ END;
 
         $dom = new DOMDocument();
 
-        $dom -> loadXML($data);
+        $dom->loadXML($data);
 
-        $sequence = $dom -> getElementsByTagName('sequenceSet') -> item(0);
-        //$startTime = $sequence -> getElementsByTagName('head') -> item(0) -> getAttribute('value');
+        $sequence = $dom->getElementsByTagName('sequenceSet')->item(0);
+        //$startTime = $sequence->getElementsByTagName('head')->item(0)->getAttribute('value');
         $startTime = 0;
-        $increment = $sequence -> getElementsByTagName('increment') -> item(0) -> getAttribute('value');
-        $digits = $sequence -> getElementsByTagName('digits');
+        $increment = $sequence->getElementsByTagName('increment')->item(0)->getAttribute('value');
+        $digits = $sequence->getElementsByTagName('digits');
         /** tableaux[0] = timestamp, tableaux[1+] = valeurs */
         $tableaux = array();
         $i = 1;
 
         /** on extrait les séquences */
         foreach ($digits as $digit) {
-            $code = $digit -> parentNode -> parentNode -> getElementsByTagName('code') -> item(0) -> getAttribute('code');
+            $code = $digit->parentNode->parentNode->getElementsByTagName('code')->item(0)->getAttribute('code');
 
             if (isset($_POST[$code])) {
                 $tableaux['names'][$i] = $code;
-                $tableaux[$i] = self::table($digit -> nodeValue);
+                $tableaux[$i] = self::table($digit->nodeValue);
                 $i++;
             }
         }
@@ -187,19 +187,19 @@ END;
                 CTools::hackError();
 
             $n_datamod = DataMod::loadDataType($statement['modname']);
-            $variables = $n_datamod -> getVariables();
+            $variables = $n_datamod->getVariables();
 
-            $datamod = $n_datamod -> initialize();
+            $datamod = $n_datamod->initialize();
 
             for ($i = 0; $i < count($tableaux['timestamp']); $i++) {
 
-                $datamod -> timestamp = $tableaux['timestamp'][$i];
+                $datamod->timestamp = $tableaux['timestamp'][$i];
 
-                $datamod -> voltage = $tableaux[$sequence][$i];
+                $datamod->voltage = $tableaux[$sequence][$i];
 
                 //echo print_r($datamod);
 
-                $n_datamod -> save($_SESSION['user'], $b_statement, $datamod);
+                $n_datamod->save($_SESSION['user'], $b_statement, $datamod);
             }
             
             $multi_releve->addReleve($name_statement);
@@ -223,10 +223,10 @@ END;
             $user = $_SESSION['user'];
 
             $statement = R::dispense('releve');
-            $statement -> mod = $mode;
-            $statement -> user = $user;
-            $statement -> name = $name;
-            $statement -> description = "";
+            $statement->mod = $mode;
+            $statement->user = $user;
+            $statement->name = $name;
+            $statement->description = "";
 
             R::store($statement);
 

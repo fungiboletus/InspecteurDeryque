@@ -1,7 +1,7 @@
 <?php
 class DTableau extends DAbstract
 {
-	const nom = 'Tableau';
+	const name = 'Tableau';
 
 	public function show() 
 	{
