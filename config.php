@@ -11,6 +11,6 @@ define('DEBUG',true);
 
 define('DB_DSN_PDO', 'mysql:host=localhost;dbname=inspecteurderyque');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'vivelescanards');
+define('DB_PASSWORD', 'root');
 define('DB_FREEZE', false);
 ?>

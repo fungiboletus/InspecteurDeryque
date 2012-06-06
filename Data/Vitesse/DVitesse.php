@@ -10,6 +10,6 @@ class DVitesse
 	const n_vitesse = 'Vitesse en m/s';
 	public $vitesse;
 	
-	const display_prefs = 'Graphe Tableau';
+	const display_prefs = 'Graphique Tableau';
 }
 ?>

@@ -1,57 +1,53 @@
 <?php
+/** This class manages the graphics display. */
 class Display {
-    /*private static function tableauRandom($nb = 10, $max = 100){
-     for($i = 0 ; $i < $nb ; $i++){
-     $tab["abscisse"][$i] = rand(1, $max);
-     $tab["ordonnee"][$i] = rand(1, $max);
-     }
-     return $tab;
-     }
-     private static function TriPoint($tab){
-     array_multisort($tab["abscisse"], SORT_ASC, $tab["ordonnee"]);
-     return $tab;
-     }*/
 
     public function index() {
         CNavigation::setTitle('Super page');
         CNavigation::setDescription('Tout reste à faire');
     }
-
-    private function vue_commune() {
-
+    
+    /** 
+     * Loads required data and informations to display one or more statements.
+     * @return array:
+     * g : object inherited of DAbstract, kind of graphic to use.
+     * d : object of type DisplayMod  - contains informations about the display
+     * n_datamod : object of type DataMod - contains informations about the data
+     * statement(s) : Statements (array containing data about statements to display)
+     */
+    private function getStatementInfos() {
+        // For multiple statements display
         if (isset($_GET['multireleve']) && $_GET['multireleve'] === "true") {
-            
+            // object inherited of DAbstract (= a graphic) expected.
             $g = NULL;
+            // object of type DisplayMode expected.
             $d = NULL;
+            // object of type DataMod expected FIXME renaming required?
             $n_datamod = NULL;
+            // array of statements
+            $statements = CompositionReleve::getCReleve($_REQUEST['nom']);
             
-            $mreleves = CompositionReleve::getCReleve($_REQUEST['nom']);
+            // The fuck?? Moar statements?
+            // FIXME A database analysis is required.
+            $associatedStatements = R::related($statements, "releve");
 
-            $simpleReleves = R::related($mreleves, "releve");
-
-
-            foreach ($simpleReleves as $simpleReleve) {
-                
-                $statement = DataMod::getStatement($simpleReleve->name, $_SESSION['bd_id']);
-                
+            foreach ($associatedStatements as $oneStatement) {
+                $statement = DataMod::getStatement($oneStatement->name, $_SESSION['bd_id']);
+                // get Data informations
                 $n_datamod = DataMod::loadDataType($statement['modname']);
-                
+                // for first loop iteration, define expected graphic
                 if ($g === NULL) {                   
-                                                           
-
                     $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod -> display_prefs) ? 'default' : $n_datamod -> display_prefs[0]);
-                    
+                    // Get display informations
                     $d = DisplayMod::loadDisplayType($type);
-                    
-                    if (!$d) {
-                       CTools::hackError();
-                    }
-
+                    if (!$d) CTools::hackError();
+                    // Get kind of graphic
                     $g = $d -> initialize();
-
                 }
-
+                
+                // Initializes timestamps
                 foreach ($n_datamod -> getVariables() as $key => $value) {
+                    // Deal with statements not relying on a timestamp
                     if($key != 'timestamp') {
                         $g -> structure[ sha1($statement['name']).$key] = $statement['name'] . ' [ '. $value . ' ]';
                     } else {
@@ -59,8 +55,10 @@ class Display {
                     }
                 }
                 
+                // Initializes other data values
                 foreach (R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id'])) as $index => $data) {
                     foreach ($data as $key => $value) {
+                        // Deal with statements not relying on a timestamp
                         if($key != 'timestamp') {
                             $g -> data[$index][sha1($statement['name']).$key] = $value;
                         } else {
@@ -68,36 +66,26 @@ class Display {
                         }
                     }
                 }
-                
-                
-
-            }
-
-            return array($g, $d, $n_datamod, $mreleves);
+            } // end of foreach($associatedStatements);
+            return array($g, $d, $n_datamod, $statements);
             
         } else {
-
+            // For one-statement-at-a-time display.
+            // So there is only one statement to get
             $statement = isset($_REQUEST['nom']) ? DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
 
-            if (!$statement) {
-                CTools::hackError();
-            }
-
+            if (!$statement) CTools::hackError();
+            
+            // Get data informations
             $n_datamod = DataMod::loadDataType($statement['modname']);
-
             $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : (empty($n_datamod -> display_prefs) ? 'default' : $n_datamod -> display_prefs[0]);
+            // Get display informations
             $d = DisplayMod::loadDisplayType($type);
 
-            if (!$d) {
-                CTools::hackError();
-            }
-
+            if (!$d) CTools::hackError();
+            
+            // Get kind of graphic
             $g = $d -> initialize();
-
-            /*$salut = 42;
-             $coucou = 'salut';
-             echo $$coucou;*/
-
             $g -> structure = $n_datamod -> getVariables();
             $g -> data = R::getAll('select * from d_' . $n_datamod -> dossier . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
             
@@ -106,19 +94,21 @@ class Display {
         }
     }
 
+    /** Default view when no statement neither any kind of graphic is selected. */
     public function view() {
-        $r_vue = $this -> vue_commune();
+        $r_vue = $this -> getStatementInfos();
         $r_vue[0] -> show();
         CNavigation::setTitle($r_vue[0]::nom . ' du relevé «' . $_REQUEST['nom'] . '»');
         CNavigation::setDescription($r_vue[3]['description']);
         DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data', 'view', array('nom' => $_REQUEST['nom'])));
     }
-
+    
+    /** Update view when either a statement or a kind of graphic is selected. */
     public function iframe_view() {
         define('NO_HEADER_BAR', true);
         CHead::addCss('iframe_view');
 
-        $r_vue = $this -> vue_commune();
+        $r_vue = $this -> getStatementInfos();
         $data = DisplayMod::getDisplayTypes();
         DisplayView::showGraphicChoiceMenu($data, false, $r_vue[2] -> display_prefs, $r_vue[1] -> dossier, 'iframe_view');
 

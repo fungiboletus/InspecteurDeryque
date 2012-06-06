@@ -61,23 +61,23 @@ END;
 
     private function getPics() {
 
-        $releve = R::findOne('releve', 'name = ?', array( $_GET['nom']));
+        $statement = R::findOne('releve', 'name = ?', array( $_GET['nom']));
         
-        if($releve == NULL) {
-            $releve = CompositionReleve::getCReleve($_GET['nom']);
+        if($statement == NULL) {
+            $statement = CompositionReleve::getCReleve($_GET['nom']);
         }
         
-        $endTime = $releve -> PicEndTime;
+        $endTime = $statement -> PicEndTime;
         
         if($endTime != NULL) {
-            echo "<script> setViewLength(". $releve -> PicBeginTime .", ". $releve -> PicEndTime ."); </script>\n";
+            echo "<script> setViewLength(". $statement -> PicBeginTime .", ". $statement -> PicEndTime ."); </script>\n";
         }
 
-        if ($releve -> PicMinLine != NULL) {
-            echo "<script> setMinLine(". $releve -> PicMinLine ."); </script>\n";
+        if ($statement -> PicMinLine != NULL) {
+            echo "<script> setMinLine(". $statement -> PicMinLine ."); </script>\n";
         }
-        if ($releve -> PicMaxLine != NULL) {
-            echo "<script> setMaxLine(".$releve -> PicMaxLine ."); </script>\n";
+        if ($statement -> PicMaxLine != NULL) {
+            echo "<script> setMaxLine(".$statement -> PicMaxLine ."); </script>\n";
         }
         echo '<script> initPics() </script>';
     }

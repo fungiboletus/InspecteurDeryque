@@ -1,18 +1,18 @@
 <?php
+/** This class manages the file upload for data import view. */
 class Import extends AbstractView {
 
 	/**
-	 * affiche la page d'import/upload de fichier
+	 * show the file upload webpage.
 	 */
 	public function index() {
 		CNavigation::setTitle('Importer des données');
 		CNavigation::setDescription('GPX ou TCX ou HL7');
 		DataImportView::showFormImport();
-		//$this->displayXML();
 	}
 
 	/**
-	 * Fonction d'upload de fichiers
+	 * File upload method
 	 */
 	public function submit() {
 		$dossier = 'Uploaded/';
@@ -39,7 +39,7 @@ class Import extends AbstractView {
 	}
 
 	/**
-	 * affiche la page de sélection des données à importer
+	 * Show the "data to import" selection webpage
 	 */
 	public function dataSelection() {
 		if (isset($_SESSION['fichierXML'])) {
@@ -55,7 +55,8 @@ class Import extends AbstractView {
 	}
 
 	/**
-	 * Fonction qui supprime tous les fichiers d'un répertoire, à l'exception de index.html, ., et ..
+	 * Method to remove every file but the index in a given folder.
+	 * Used to clean up the upload directory after an upload.
 	 */
 	public function deleteDirContent($dir_path) {
 		$dir = opendir($dir_path);
@@ -69,7 +70,9 @@ class Import extends AbstractView {
 	}
 
 	/**
-	 * Fonction très laide qui permet d'afficher des informations provenant d'un fichier au format TCX
+	 * UGLY - this method uses 7 nested loops.
+	 * Displays some infos from a TCX file.
+	 * FIXME - TCX import leads to errors at the end of the procedure.
 	 */
 	public function DataDisplay($xml) {
 		foreach ($xml->children() as $balise) {
@@ -152,7 +155,8 @@ class Import extends AbstractView {
 	}
 
 	/**
-	 * affiche le document TCX en appelant la fonction laide ci dessus
+	 * Displays the TCX file.
+	 * UGLY - this method relies on DataDisplay which has been tagged as UGLY.
 	 */
 	public function displayXML() {
 		if (file_exists('test.tcx')) {
@@ -167,8 +171,6 @@ class Import extends AbstractView {
 	}
 
 	public function submitSelection() {
-		//groaw($_POST);
-		//groaw($_SESSION);
 		//pour calculer vitesse et calories :
 		$GLOBALS['ancienne_lat'] = null;
 		$GLOBALS['ancienne_lon'] = null;
@@ -188,7 +190,7 @@ class Import extends AbstractView {
 			} elseif (HL7File::isOfThisDataType($data, $extension)) {
 				HL7File::submitSelection($data);
 			} else {
-				echo "You Failed at Failing !";
+				echo "L'inspecteur ne reconnait pas ce type de fichier.";
 			}
 		}
 	}

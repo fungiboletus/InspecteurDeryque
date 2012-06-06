@@ -9,6 +9,6 @@ class DElectroCardioGramme
 	const n_voltage = 'Voltage';
 	public $voltage;
 	
-	const display_prefs = 'GrapheTempsReel';
+	const display_prefs = 'GraphiqueTempsReel';
 }
 ?>
