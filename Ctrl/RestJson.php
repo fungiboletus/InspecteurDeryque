@@ -79,14 +79,6 @@ class RestJson
     
     /**
     * sends a Json message which contains all data from a user's report (with dates ISO-8601)
-    GET restjson/:NOM/data[/start[/end]
-	{
-		data: [
-		    {time_t: "yyyy-mm-dd-hh-mm-ss-mm", data1: 42, data2: 3},
-		    {time_t: "yyyy-mm-dd-hh-mm-ss-mm", data1: 42, data2: 3},
-		    {time_t: "yyyy-mm-dd-hh-mm-ss-mm", data1: 51, data2: 12}
-		]
-	}
     */
     public function data(){
     	if(isset($_REQUEST['INFOS'][2])){
@@ -149,7 +141,7 @@ class RestJson
     * sends a Json message which contains all data from a user's report 
     * (with durations between two values instead of dates) (this is lighter)
     */
-    public function data_dt(){ //TODO
+    public function data_dt(){
     	if(isset($_REQUEST['INFOS'][2])){
     		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
 		
@@ -183,11 +175,21 @@ class RestJson
 			$arr = array();
             $data = array();
 			
+			$first = true;
+			
 			foreach($report_data as $d){
 				$pieceofdata = array();
+				
 				foreach($datamod->getVariables() as $datatype => $value){
 					if($datatype === "timestamp"){
-						$pieceofdata['time_t'] = date(DateTime::ISO8601, $d[$datatype]);
+						if($first){
+							$pieceofdata['dt'] = 0;
+							$first = false;
+						}
+						else{
+							$pieceofdata['dt'] = $d[$datatype] - $previous_date;
+						}
+						$previous_date = $d[$datatype];
 					}
 					else{
 						$pieceofdata[$datatype] = $d[$datatype];
@@ -197,8 +199,14 @@ class RestJson
 			}
             
             $arr['data'] = $data;
-            //groaw($arr);
-            $this->sendJson($arr);
+            groaw($arr);
+            //$this->sendJson($arr);
+            
+        }
+    	else{
+			$error = new Error();
+			$error->bad_request();
+		}
     }
 }
 
