@@ -128,7 +128,6 @@ class RestJson
 			}
             
             $arr['data'] = $data;
-            //groaw($arr);
             $this->sendJson($arr);
     	}
     	else{
@@ -144,7 +143,7 @@ class RestJson
     public function data_dt(){
     	if(isset($_REQUEST['INFOS'][2])){
     		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
-		
+			
 			if (!$report) {
 				$error = new Error();
 				$error->page_not_found();
@@ -199,8 +198,7 @@ class RestJson
 			}
             
             $arr['data'] = $data;
-            groaw($arr);
-            //$this->sendJson($arr);
+            $this->sendJson($arr);
             
         }
     	else{
