@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resume xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="resume.xsd">
+	<name>canard</name>
+	<desc>c'est la danse</desc>
+	<count>42</count>
+	<start_t>1997−07−16T19:20:30,4+01:00</start_t>
+	<end_t>aaaa−mm−qqThh:mi:ss,nzzzzzz</end_t>
+	<format>
+		<datatype>
+			<dataname>lat</dataname>
+			<label>lattitude</label>
+			<unit>degree</unit>
+		</datatype>
+		<datatype>
+			<dataname>lon</dataname>
+			<label>longitude</label>
+			<unit>degree</unit>
+		</datatype>
+	</format>
+	<mod>average</mod>
+	<mod>derivative</mod>
+</resume>
