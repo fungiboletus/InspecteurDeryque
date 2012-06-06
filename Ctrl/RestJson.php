@@ -5,6 +5,12 @@ CNavigation::setDescription('REST interface');
 
 class RestJson
 {   
+	private function sendJson($json)
+	{
+		header ('Content-Type: application/json; charset=utf-8');
+    	echo json_encode($json, defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0);
+		exit();
+	}
     /**
     * sends a Json message which contains a list of reports
     */
@@ -14,18 +20,19 @@ class RestJson
     	foreach($reports as $report){
     		$arr[$report['name']] = $report['description'];
     	}
-    	echo json_encode($arr);
+		$this->sendJson($arr);
     }
     
-    public function resume($name){
+    public function resume(){
     	//TO DO
+		groaw($_REQUEST);
     }
     
-    public function data($name){
+    public function data(){
     
     }
     
-    public function data_dt($name){
+    public function data_dt(){
     
     }
 }
