@@ -1,11 +1,10 @@
 <?php
+
+CNavigation::setTitle('RestJson');
+CNavigation::setDescription('REST interface');
+
 class RestJson
-{
-	public function index(){
-        CNavigation::setTitle('RestJson');
-        CNavigation::setDescription('REST interface');
-    }
-    
+{   
     /**
     * sends a Json message which contains a list of reports
     */
