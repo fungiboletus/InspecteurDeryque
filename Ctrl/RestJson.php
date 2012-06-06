@@ -57,11 +57,11 @@ class RestJson
 				return;
 			}
 			groaw($report);
-			groaw($_SESSION);
+            $datamod = DataMod::loadDataType($report['modname']);
 			$arr = array();
 			$arr['name'] = $report['name'];
 			$arr['desc'] = $report['description'];
-			groaw(R::getCell('SELECT COUNT(*) FROM releve r WHERE r.user_id = ? and r.name = ?', array($_SESSION['bd_id'], $report['name'])));
+			groaw(R::getCell('SELECT COUNT(*) FROM d_'.$datamod->dossier.' r WHERE r.user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])));
 			/*faire un load datatype puis récupérer les données et les compter...
 			$arr['count'] = ;
 			$arr['start_t'] = ;
