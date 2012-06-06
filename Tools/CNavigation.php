@@ -78,6 +78,10 @@ class CNavigation
 				$infos[$i] = $id;
 				$infos[$i+1] = $info;
 			}
+
+			if ($c_infos > 2 && $c_infos%2 === 1) {
+				$infos[$c_infos-1] = rawurldecode($infos[$c_infos-1]);
+			}
 		}
 
 	}
