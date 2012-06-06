@@ -59,7 +59,11 @@ class DataMod extends AbstractMod {
     }
     
     /**
-     *
+     * Save a statement.
+     * @param $user the user of the statement
+     * @param $statement The statement's' data
+     * @param $data The data type
+     * @return The result of the data saving query.
      */
     public function save($user, $statement, $data) {
         $vars = $this->getVariables();
@@ -75,11 +79,21 @@ class DataMod extends AbstractMod {
         return R::store($tuple);
     }
 
+    /**
+     * Get all statements created by a given user.
+     * @param $user_id The id of the user
+     * @return array of statements.
+     */
     public static function getStatements($user_id) {
         return R::getAll('select name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id order by name', array($user_id));
     }
-
-    public static function getMultiReleves($user_id) {
+    
+    /**
+     * Get all statement names created by a given user.
+     * @param $user_id The id of the user
+     * @return array of statements names.
+     */
+    public static function getStatementsNames($user_id) {
         return R::getAll('select name from multi_releve r where r.user_id = ? order by name', array($user_id));
     }
 

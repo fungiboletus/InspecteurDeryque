@@ -117,7 +117,7 @@ END;
 		  <table class="zebra-striped">
 END;
 
-        $statements = DataMod::getMultiReleves($_SESSION['bd_id']);
+        $statements = DataMod::getStatementsNames($_SESSION['bd_id']);
 
         foreach ($statements as $statement) {
             $hname = htmlspecialchars($statement['name']);
