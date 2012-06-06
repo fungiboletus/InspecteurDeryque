@@ -26,6 +26,12 @@ class Error
 		CNavigation::setTitle('Error 500');
 		ErrorView::showError(500, 'Erreur interne du serveur', "669px-The.Matrix.glmatrix.2.png", $error);
 	}
+	
+	public function bad_request(){
+		header("Status: 400 Bad Request");
+		CNavigation::setTitle('Error 400');
+		ErrorView::showError(400, 'Bad Request', "invalid_argument.jpg");
+	}
 }
 
 ?>
