@@ -81,7 +81,56 @@ class RestXML
     * sends an XML message which contains all data from a user's report (with dates ISO-8601)
     */
     public function data(){
-    	
+    	if(isset($_REQUEST['INFOS'][2])){
+    		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		
+			if (!$report) {
+				$error = new Error();
+				$error->page_not_found();
+				return;
+			}
+            $datamod = DataMod::loadDataType($report['modname']);
+            
+            //test if there are time restriction parameters
+            if(isset($_REQUEST['INFOS'][3]) && !isset($_REQUEST['INFOS'][4])){
+            	$start = $_REQUEST['INFOS'][3];
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
+					array($_SESSION['bd_id'], $report['id'], $start));
+            }
+            else if(isset($_REQUEST['INFOS'][4])){
+				$start = $_REQUEST['INFOS'][3];
+				$end = $_REQUEST['INFOS'][4];
+				$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
+					array($_SESSION['bd_id'], $report['id'], $start, $end));
+			}
+			else{
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+			}
+			
+			$message = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+            $message .= "<data>\n";
+			foreach($report_data as $d){
+				$message .= "  <tuple>\n";
+				foreach($datamod->getVariables() as $datatype => $value){
+					if($datatype === "timestamp"){
+						$message .= "    <time_t>".date(DateTime::ISO8601, $d[$datatype])."</time_t>\n";
+					}
+					else{
+						$message .= '    <data name="'.$datatype.'">'.$d[$datatype]."</data>\n";
+					}
+				}
+				$message .= "  </tuple>\n";
+			}
+			$message .= "</data>\n";
+			groaw($message);
+    	}
+    	else{
+			$error = new Error();
+			$error->bad_request();
+		}
     }
     
     /**
@@ -89,7 +138,65 @@ class RestXML
     * (with durations between two values instead of dates) (this is lighter)
     */
     public function data_dt(){
-    	
+    	if(isset($_REQUEST['INFOS'][2])){
+    		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		
+			if (!$report) {
+				$error = new Error();
+				$error->page_not_found();
+				return;
+			}
+            $datamod = DataMod::loadDataType($report['modname']);
+            
+            //test if there are time restriction parameters
+            if(isset($_REQUEST['INFOS'][3]) && !isset($_REQUEST['INFOS'][4])){
+            	$start = $_REQUEST['INFOS'][3];
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
+					array($_SESSION['bd_id'], $report['id'], $start));
+            }
+            else if(isset($_REQUEST['INFOS'][4])){
+				$start = $_REQUEST['INFOS'][3];
+				$end = $_REQUEST['INFOS'][4];
+				$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
+					array($_SESSION['bd_id'], $report['id'], $start, $end));
+			}
+			else{
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+			}
+			
+			$message = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+            $message .= "<data_dt>\n";
+            
+            $first = true;
+			foreach($report_data as $d){
+				$message .= "  <tuple>\n";
+				foreach($datamod->getVariables() as $datatype => $value){
+					if($datatype === "timestamp"){
+						if($first){
+							$message .= "    <dt>"."0"."</dt>\n";
+							$first = false;
+						}
+						else{
+							$message .= "    <dt>".($d[$datatype] - $previous_date)."</dt>\n";
+						}
+						$previous_date = $d[$datatype];
+					}
+					else{
+						$message .= '    <data name="'.$datatype.'">'.$d[$datatype]."</data>\n";
+					}
+				}
+				$message .= "  </tuple>\n";
+			}
+			$message .= "</data_dt>\n";
+			groaw($message);
+    	}
+    	else{
+			$error = new Error();
+			$error->bad_request();
+		}
     }
 }
 
