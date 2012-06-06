@@ -96,10 +96,10 @@ class Display {
 
     /** Default view when no statement neither any kind of graphic is selected. */
     public function view() {
-        $r_vue = $this -> getStatementInfos();
-        $r_vue[0] -> show();
-        CNavigation::setTitle($r_vue[0]::nom . ' du relevé «' . $_REQUEST['nom'] . '»');
-        CNavigation::setDescription($r_vue[3]['description']);
+        $infos = $this -> getStatementInfos();
+        $infos[0] -> show();
+        CNavigation::setTitle($infos[0]::nom . ' du relevé «' . $_REQUEST['nom'] . '»');
+        CNavigation::setDescription($infos[3]['description']);
         DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data', 'view', array('nom' => $_REQUEST['nom'])));
     }
     
@@ -108,14 +108,14 @@ class Display {
         define('NO_HEADER_BAR', true);
         CHead::addCss('iframe_view');
 
-        $r_vue = $this -> getStatementInfos();
+        $infos = $this -> getStatementInfos();
         $data = DisplayMod::getDisplayTypes();
-        DisplayView::showGraphicChoiceMenu($data, false, $r_vue[2] -> display_prefs, $r_vue[1] -> dossier, 'iframe_view');
+        DisplayView::showGraphicChoiceMenu($data, false, $infos[2] -> display_prefs, $infos[1] -> dossier, 'iframe_view');
 
-        echo '<h2>',    htmlspecialchars($r_vue[0]::nom), ' du relevé «',
+        echo '<h2>',    htmlspecialchars($infos[0]::nom), ' du relevé «',
         htmlspecialchars($_REQUEST['nom']), '» <small>',
-        htmlspecialchars($r_vue[3]['description']), '</small></h2>';
-        $r_vue[0] -> show();
+        htmlspecialchars($infos[3]['description']), '</small></h2>';
+        $infos[0] -> show();
     }
 
 }
