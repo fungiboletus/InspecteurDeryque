@@ -3,6 +3,8 @@
 CNavigation::setTitle('RestJson');
 CNavigation::setDescription('REST interface');
 
+define('NO_LOGIN_REDIRECTION', true);
+
 class RestJson
 {   
 	private function sendJson($json)
@@ -182,6 +184,7 @@ class RestJson
 				foreach($datamod->getVariables() as $datatype => $value){
 					if($datatype === "timestamp"){
 						if($first){
+							$arr['start_t'] = date(DateTime::ISO8601, $d[$datatype]);
 							$pieceofdata['dt'] = 0;
 							$first = false;
 						}
