@@ -41,6 +41,7 @@ class CNavigation
 		global $ROOT_PATH;
 
 		// Get the information part of url
+		// TODO root bug to find
 		$schema = substr($_SERVER['REQUEST_URI'], strlen($ROOT_PATH)+strlen(URL_REWRITING)+2);
 
 		// URL part before ?
@@ -51,6 +52,7 @@ class CNavigation
 		}
 
 		$infos = explode('/', $schema);
+		$_REQUEST['INFOS'] = &$infos;
 
 		$c_infos = count($infos);
 		
@@ -69,11 +71,19 @@ class CNavigation
 
 				// %1D is group separator, used in replacment for %2F (slash) who
 				// is not allowed in this url part
+				$id = rawurldecode($infos[$i]);
 				$info = rawurldecode(str_replace('%1D', '/', $infos[$i+1]));
-				$_GET[$infos[$i]] = $info;
-				$_REQUEST[$infos[$i]] = $info;
+				$_GET[$id] = $info;
+				$_REQUEST[$id] = $info;
+				$infos[$i] = $id;
+				$infos[$i+1] = $info;
+			}
+
+			if ($c_infos > 2 && $c_infos%2 === 1) {
+				$infos[$c_infos-1] = rawurldecode($infos[$c_infos-1]);
 			}
 		}
+
 	}
 	
 

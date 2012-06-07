@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="resume.xsd">
+   <tuple>
+      <time_t>yyyy-mm-dd-hh-mm-ss-mm</time_t>
+      <data name="lat">42</data>
+      <data name="lon">3</data>
+   </tuple>
+</data>

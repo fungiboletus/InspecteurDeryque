@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="resume">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" />
+      <xs:element name="desc" type="xs:string" />
+      <xs:element name="count" type="xs:string" />
+      <xs:element name="start_t" type="xs:string" />
+      <xs:element name="end_t" type="xs:string" />
+      
+      <xs:element name="format">
+        <xs:complexType>
+          <xs:sequence>
+          
+            <xs:element name="datatype" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="dataname" type="xs:string" />
+                  <xs:element name="label" type="xs:string" />
+                  <xs:element name="unit" type="xs:string" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="mod" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+</xs:schema>

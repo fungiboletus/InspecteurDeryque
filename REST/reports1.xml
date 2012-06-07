@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reports>
+   <report>
+       <name>canard</name>
+       <description>C'est la danse</description>
+   </report>
+   <report>
+       <name>lapin</name>
+       <description>Super relevé sur la vitesse d'un lapin au galop</description>
+   </report>
+   <report>
+       <name>vache</name>
+       <description>C'est bon le lait</description>
+   </report>
+</reports>

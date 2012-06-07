@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="data_dt">
+  <xs:complexType>
+  	
+    <xs:sequence>
+      <xs:element name="tuple" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+          	<xs:element name="dt" type="xs:float"/>
+          	
+            <xs:element name="data" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+						<xs:attribute name="name" type="xs:string" />
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+            
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    
+    <xs:attribute name="start_t" type="xs:string"/>
+    
+  </xs:complexType>
+</xs:element>
+</xs:schema>
