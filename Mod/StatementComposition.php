@@ -3,7 +3,7 @@
 /**
  * Allows to combine multiple statements into one.
  */
-class CompositionReleve {
+class StatementComposition {
 
     private $_statementBean; /**< FIXME UNACCEPTABLEEEEEEEEEEEEEEE */
     
