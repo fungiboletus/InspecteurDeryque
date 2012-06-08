@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Permet de combiner plusieurs relevés en un seul.
+ * Allows to combine multiple statements into one.
  */
 class CompositionReleve {
 
-    private $_statementBean;
-
+    private $_statementBean; /**< FIXME UNACCEPTABLEEEEEEEEEEEEEEE */
+    
     /**
-     * Trouve ou ajoute un nouveau relevé multiple.
+     * Get or store a new multiple statements
      */
     public function __construct($name, $user) {
         $beans = R::findOrDispense('multi_releve', "name = ?", array($name));
@@ -17,41 +17,38 @@ class CompositionReleve {
             $this->_statementBean = $bean;
             break;
         }
-        
         $this->_statementBean->name = $name;
         $this->_statementBean->user = $user;
-        
-        R::store($this->_statementBean);
 
+        R::store($this->_statementBean);
     }
 
     /**
-     * Ajoute un relevé à la liste.
+     * Adds a statement to the current list of statements.
      */
-    public function addReleve($rname) {
-        
-
+    public function addStatement($rname) {
         $statements = R::find('releve', 'name = ?', array($rname));
-
         foreach ($statements as $statement) {
-            
             R::associate($this->_statementBean, $statement);
-            
         }
-
     }
 
     
     /**
-     * Retourne le relevé qui porte ce nom (NULL si il n'existe pas).
+     * Get a statement by its name.
+     * @param $name The name of the statement.
+     * @return $statement An array containing the statement data, or
+     *                    NULL if not found.
+     * FIXME it gets the first statement found regardless of
+     *       the owner of that statement.
      */
-    public static function getCReleve($name) {
-        $resList = R::find('multi_releve', "name = ?", array($name));
-        if(count($resList) === 0) {
+    public static function getStatement($name) {
+        $statementList = R::find('multi_releve', "name = ?", array($name));
+        if(count($statementList) === 0) {
             return NULL;
         } else {
-            foreach ($resList as $res) {
-                return $res;
+            foreach ($statementList as $statement) {
+                return $statement;
             }
             
         }
