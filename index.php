@@ -51,10 +51,15 @@ if (!defined('NO_LOGIN_REQUIRED')) {
 			CNavigation::redirectToURL($t);
 		}
     }
-    else {
+    else if (!defined('NO_LOGIN_REDIRECTION')) {
 		$_SESSION['redirection_url'] = $_SERVER['REQUEST_URI'];
 		CNavigation::redirectToApp('Session','login');
     }
+	else {
+		$CTRL = new Error();
+		$CTRL_NAME = 'Error';
+		$ACTION_NAME = 'unauthorized';
+	}
 }
 
 CHead::addCSS('bootstrap.min');
