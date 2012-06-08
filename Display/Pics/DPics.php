@@ -64,7 +64,7 @@ END;
         $statement = R::findOne('releve', 'name = ?', array( $_GET['nom']));
         
         if($statement == NULL) {
-            $statement = CompositionReleve::getCReleve($_GET['nom']);
+            $statement = StatementComposition::getStatement($_GET['nom']);
         }
         
         $endTime = $statement->PicEndTime;

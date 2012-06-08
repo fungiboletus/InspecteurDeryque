@@ -25,7 +25,7 @@ class Display {
             // object of type DataMod expected FIXME renaming required?
             $n_datamod = NULL;
             // array of statements
-            $statements = CompositionReleve::getCReleve($_REQUEST['nom']);
+            $statements = StatementComposition::getStatement($_REQUEST['nom']);
             
             // The fuck?? Moar statements?
             // FIXME A database analysis is required.

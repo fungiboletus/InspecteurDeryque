@@ -168,7 +168,7 @@ END;
 
     private static function saveData($name_statement_prefix, $type_Datas, $tableaux) {
         
-        $multi_releve = new CompositionReleve($name_statement_prefix,$_SESSION['user']);
+        $multi_releve = new StatementComposition($name_statement_prefix,$_SESSION['user']);
         
 
         for ($sequence = 1; $sequence < count($tableaux) - 1; $sequence++) {
@@ -202,7 +202,7 @@ END;
                 $n_datamod->save($_SESSION['user'], $b_statement, $datamod);
             }
             
-            $multi_releve->addReleve($name_statement);
+            $multi_releve->addStatement($name_statement);
 
         }
         

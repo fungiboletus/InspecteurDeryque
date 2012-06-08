@@ -14,7 +14,7 @@ class DataMod extends AbstractMod {
         $data = array();
 
         foreach (scandir('Data') as $folder) {
-            $folder = self::secureDossier($folder);
+            $folder = self::secureFolder($folder);
             if (strlen($folder) && $folder[0] !== '.' && is_dir('Data/' . $folder) && file_exists("Data/$folder/D$folder.php")) {
                 require_once ("Data/$folder/D$folder.php");
                 $class = "D$folder";
@@ -32,7 +32,7 @@ class DataMod extends AbstractMod {
      * @return $datamod A DataMod object with the name and folder of a data type.
      */
     public static function loadDataType($folder) {
-        $folder = self::secureDossier($folder);
+        $folder = self::secureFolder($folder);
         if (!file_exists("Data/$folder/D$folder.php"))
             return null;
         require_once ("Data/$folder/D$folder.php");
@@ -45,7 +45,7 @@ class DataMod extends AbstractMod {
 
     /** Check availability of a given Data. */
     public static function modExist($folder) {
-        $folder = self::secureDossier($folder);
+        $folder = self::secureFolder($folder);
         return file_exists("Data/$folder/D$folder.php");
     }
 

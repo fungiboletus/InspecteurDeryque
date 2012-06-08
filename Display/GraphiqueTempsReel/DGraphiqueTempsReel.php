@@ -307,7 +307,7 @@ END;
                 $statement->mod = $mode;
 
             } else {
-                $statement = CompositionReleve::getCReleve($_GET['nom']);
+                $statement = StatementComposition::getStatement($_GET['nom']);
             }
 
             if (isset($_GET['minLine'])) {
