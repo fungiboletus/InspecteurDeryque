@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * Abstract class for the different kind of graphic display.
+ */
 abstract class DAbstract
 {
-	public $data = null;
-	public $structure = null;
+	public $data = null; /**< The data to display*/
+	public $structure = null; /**< map of statements */
 
+    /** Display graphic.
+     * Because this is an abstract class a message error is delivered to the user.
+     */
 	public function show() {
 		echo <<<END
 <div class="alert-message error">
@@ -13,6 +18,9 @@ abstract class DAbstract
 END;
 	}
 
+    /**
+     * Manages situations where there is no data to display.
+     */
 	public function gererVide() {
 		if (count($this->data) === 0)
 		{
