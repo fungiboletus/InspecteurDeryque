@@ -15,9 +15,9 @@ class Composition {
     /**
      * Add to a statement a composition.
      * @param $sName Name of the statement.
-     * @param $name Name of the composition.
+     * @param $cName Name of the composition.
      */
-    public function __construct($sName, $name) {
+    public function __construct($sName, $cName) {
         $beans = R::find('releve', "name = ?", array($sName));
 
         foreach ($beans as $bean) {
@@ -35,7 +35,7 @@ class Composition {
         }
 
         $this->_compositionBean = R::dispense('composition');
-        $this->_compositionBean->name = $name;
+        $this->_compositionBean->name = $cName;
         $this->_compositionBean->releve_id = $this->_statementBean->getID();
         $this->_compositionBean->releve_type = $this->_statementBean->getMeta('type');
     }
@@ -74,6 +74,9 @@ class Composition {
 
     /**
      * Get all compositions associated to a statement.
+     * @param $sName The name of the statement.
+     * @return $compositions an array of Composition.
+     * FIXME This method could access to another user's statements.
      */
     public static function getCompositions($sName) {
         $statements = R::find('releve', "name = ?", array($sName));
@@ -82,31 +85,26 @@ class Composition {
         }
 
         foreach ($statements as $statement) {
-
             $values['id'] = $statement->getID();
             $values['type'] = $statement->getMeta('type');
-
             $compositions = R::find('composition', 'releve_id = :id AND releve_type = :type', $values);
-
             return $compositions;
         }
-
     }
 
     /**
-     * Get all selections associated to a composition.
+     * Get all selections of this composition.
+     * @param $cName The name of the composition. 
+     * @return $selections An array of Selection.
      */
-    public static function getSelections($cname) {
-        $composition = R::findOne('composition', "name = ?", array($cname));
-
+    public static function getSelections($cName) {
+        $composition = R::findOne('composition', "name = ?", array($cName));
         $selections = $composition->ownSelection;
-
         return $selections;
-
     }
     
     /**
-     * Remove the actual composition.
+     * Remove the actual composition to the database.
      */
     public function delete() {
         R::trash($this->_compositionBean);
