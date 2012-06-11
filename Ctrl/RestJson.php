@@ -188,7 +188,7 @@ class RestJson
 							$first = false;
 						}
 						else{
-							$pieceofdata['dt'] = $d[$datatype] - $previous_date;
+							$pieceofdata['dt'] = ($d[$datatype] - $previous_date)*1000; //TODO gérer les ms
 						}
 						$previous_date = $d[$datatype];
 					}
