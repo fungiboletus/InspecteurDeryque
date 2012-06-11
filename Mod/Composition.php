@@ -49,8 +49,8 @@ class Composition {
     /**
      * Add a selection (obtained from data) to a composition.
      */
-    public function addNewSelection($graphName, $debut, $fin) {
-        $selection = new Selection($this->_statementBean->name, $graphName, $debut, $fin);
+    public function addNewSelection($graphName, $start, $fin) {
+        $selection = new Selection($this->_statementBean->name, $graphName, $start, $fin);
 
         $selection->save();
 

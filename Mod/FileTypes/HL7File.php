@@ -1,17 +1,33 @@
 <?php
-
+/**
+ * Manage data import from GPX file.
+ */
 class HL7File implements FileType {
-
+    
+	/** Check file's data type.
+	 * @param $file The file. NOTE: unused parameter.
+	 * @param $extension The file extension.
+	 * @return TRUE or FALSE.
+	 * FIXME does not check anything at all.
+	 */
     public static function isOfThisDataType($file, $extension) {
         return TRUE;
     }
 
+    /** Splits words separated by whitespace(s).
+     * FIXME WHY BUT WHY??? R U INDIAN OR WAT?
+     * @param $str A string to split.
+     * @return $table an array of strings without whitespaces.
+     */
     private static function table($digit) {
         $table = array();
         $table = preg_split("/[\s]+/", $digit, NULL, PREG_SPLIT_NO_EMPTY);
         return $table;
     }
 
+	/** Display a form listing importable data from the incoming file.
+	 * @param $file The file to get the data from.
+	 */
     public static function getImportableData($file) {
 
         echo <<<END
@@ -29,8 +45,6 @@ END;
         $startTime = $sequence->getElementsByTagName('head')->item(0)->getAttribute('value');
         $increment = $sequence->getElementsByTagName('increment')->item(0)->getAttribute('value');
         $digits = $sequence->getElementsByTagName('digits');
-        /** tableaux[0] = timestamp, tableaux[1+] = valeurs */
-        $tableaux = array();
         $i = 1;
 
         echo "<tr>";
@@ -41,7 +55,7 @@ END;
 						<table class="zebra-striped bordered-table">
 END;
 
-        /** on extrait les séquences */
+        /** Extraction of sequences */
         foreach ($digits as $digit) {
             $code = $digit->parentNode->parentNode->getElementsByTagName('code')->item(0)->getAttribute('code');
 
@@ -52,15 +66,7 @@ END;
 							<tr>
 END;
 
-            //$tableaux[$i] = self::table($digit->nodeValue);
-            //$i++;
         }
-        /* on remplit le timestamp */
-        /*for ($j = 0; $j < count($tableaux[1]); $j++) {
-         $tableaux[0][] = $startTime + $j * $increment;
-         }*/
-
-        //echo "<pre>".print_r($tableaux[0])."</pre>";
 
         echo <<<END
 						</table>
@@ -72,7 +78,7 @@ END;
 		</table>
 END;
 
-        //partie selection des types de donnée :
+        // Data type selection view
         $nameData = "ECG";
         $sum = sha1($nameData);
         echo <<<END
@@ -98,7 +104,12 @@ END;
         echo "</table>";
 
     }
-
+    
+    /**
+     * Used in the form's table to select the kind of data to import.
+     * Every line of that table corresponds to one use of that method.
+     * @param $nameData Name of the kind of data.
+     */
     private static function displayDataAssociationChoice($nameData) {
         $statements_list = DataMod::getStatements($_SESSION['bd_id']);
         $sum = sha1($nameData);
@@ -119,6 +130,9 @@ END;
 END;
     }
 
+	/** Store selection into the database.
+	 * @param $data Data from an xml string.
+	 */
     public static function submitSelection($data) {
 
         $dom = new DOMDocument();
@@ -130,11 +144,10 @@ END;
         $startTime = 0;
         $increment = $sequence->getElementsByTagName('increment')->item(0)->getAttribute('value');
         $digits = $sequence->getElementsByTagName('digits');
-        /** tableaux[0] = timestamp, tableaux[1+] = valeurs */
         $tableaux = array();
         $i = 1;
 
-        /** on extrait les séquences */
+        // Extraction of sequences.
         foreach ($digits as $digit) {
             $code = $digit->parentNode->parentNode->getElementsByTagName('code')->item(0)->getAttribute('code');
 
@@ -144,14 +157,13 @@ END;
                 $i++;
             }
         }
-        /* on remplit le timestamp */
+        // Calculation of the timestamp
         for ($j = 0; $j < count($tableaux[1]); $j++) {
             $tableaux['timestamp'][] = $startTime + $j * $increment;
         }
 
         R::begin();
-
-        //remplissage relevé par relevé
+        // storing data per each statement
         foreach ($_POST as $key => $post) {
             if (self::startswith($key, "assoc_")) {
                 $sum_assoc = strrchr($key, '_');
@@ -160,13 +172,18 @@ END;
                 }
             }
         }
-
         R::commit();
+
         new CMessage('Vos relevés ont été ajoutés avec succès ! Vous pouvez en sélectionner d\'autres, ou bien revenir au Tableau de Bord.');
         CNavigation::redirectToApp('Import', 'dataSelection');
     }
-
-    private static function saveData($name_statement_prefix, $type_Datas, $tableaux) {
+    
+    /** Stores data in a given statement
+     * @param $name_statement the statement destination
+     * @param $data_type The type of the data
+     * @param $data An array of data to store.
+     */
+    private static function saveData($name_statement_prefix, $data_type, $tableaux) {
         
         $multi_releve = new StatementComposition($name_statement_prefix,$_SESSION['user']);
         
@@ -175,7 +192,7 @@ END;
 
             $name_statement = $name_statement_prefix . " (" . $tableaux['names'][$sequence] . ")";
 
-            $r = self::create_releve($name_statement);
+            $r = self::create_statement($name_statement);
 
             $statement = DataMod::getStatement($name_statement, $_SESSION['bd_id']);
 
@@ -211,11 +228,22 @@ END;
 
     }
 
-    private static function startswith($chaine, $debut) {
-        return substr($chaine, 0, strlen($debut)) === $debut;
+    /** Check a string's start.
+     * @param $str The string to evaluate.
+     * @param $start The string that you ask if it is at the start of $str.
+     * @return True or False.
+     */
+    private static function startswith($str, $start) {
+        return substr($str, 0, strlen($start)) === $start;
     }
 
-    private static function create_releve($name) {
+    /**
+     * Creates a new statement into the database.
+     * Defines the name, data mod and user.
+     * @param $name Name of the statement.
+     * @return $statement The created statement.
+     */
+    private static function create_statement($name) {
         if (!R::findOne('releve', 'name = ? and user_id = ?', array($name, $_SESSION['bd_id']))) {
 
             $mode = R::findOne('datamod', 'modname = ?', array('ElectroCardioGramme'));

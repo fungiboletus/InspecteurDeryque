@@ -2,10 +2,13 @@
 
 class TCXFile implements FileType {
 
+    /** Check file's data type.
+	 * @param $file The file. NOTE: unused parameter.
+	 * @param $extension The file extension.
+	 * @return TRUE or FALSE.
+	 */
 	public static function isOfThisDataType($file, $extension) {
-
 		return $extension === ".tcx";
-
 	}
 
 	/**
@@ -59,7 +62,7 @@ END;
 			echo "</table>";
 		}
 
-		//partie selection des types de donnée :
+		//Data type selection view
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
 		<table class="zebra-striped bordered-table">
@@ -92,7 +95,7 @@ END;
 				</td>
 			</tr>
 END;
-		//autres types de Data :
+		// Other kind of data
 		$types = $tcx->xpath("/TrainingCenterDatabase/Activities/Activity[1]/Lap[1]");
 		$types = $types[0];
 		foreach ($types->children() as $type) {
@@ -117,7 +120,11 @@ END;
 		echo "</table>";
 
 	}
-
+    /**
+     * Get data from a tcx file (which is of type xml).
+     * @param $file The tcx file to parse.
+     * @return $tcx a SimpleXML object.
+     */
 	private static function getData($file) {
 
 		$data = file_get_contents($file);
@@ -128,6 +135,11 @@ END;
 		return $tcx;
 	}
 
+    /**
+     * Used in the form's table to select the kind of data to import.
+     * Every line of that table corresponds to one use of that method.
+     * @param $nameData Name of the kind of data.
+     */
 	private static function displayDataAssociationChoice($nameData) {
 		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
 		$sum = sha1($nameData);
@@ -148,7 +160,11 @@ END;
 END;
 		//DataImportView::showNewReleveForm($nameData);
 	}
-
+    
+    /** Store selection into the database.
+	 * @param $data Data from an xml string.
+	 * FIXME nothing is parsed, nothing is stored.
+	 */
 	public static function submitSelection($data) {
 		$data = preg_replace('/<TrainingCenterDatabase.*?>/', '<TrainingCenterDatabase>', $data, 1);
 		$data = preg_replace('/<(.+)xsi.*?".*?"(.*?)>/', '<$1$2>', $data);

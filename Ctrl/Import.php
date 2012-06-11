@@ -17,7 +17,7 @@ class Import extends AbstractView {
 	public function submit() {
 		$folder = 'Uploaded/';
 		$file = $folder . sha1($_FILES['fichierXML']['name']);
-		$extention = strrchr($_FILES['fichierXML']['name'], '.');
+		$extension = strrchr($_FILES['fichierXML']['name'], '.');
 		$taille_max = 3000000;
 		$taille = filesize($_FILES['fichierXML']['tmp_name']);
 		if ($taille > $taille_max) {
@@ -26,7 +26,7 @@ class Import extends AbstractView {
 		if (!isset($erreur)) {
 			if (move_uploaded_file($_FILES['fichierXML']['tmp_name'], $file)) {
 				$_SESSION['fichierXML'] = $file;
-				$_SESSION['extFichierXML'] = $extention;
+				$_SESSION['extFichierXML'] = $extension;
 				CNavigation::redirectToApp('Import', 'dataSelection');
 			} else {
 				new CMessage('Échec de l\'upload', 'error');

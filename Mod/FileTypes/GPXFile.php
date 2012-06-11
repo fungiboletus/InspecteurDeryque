@@ -4,7 +4,11 @@
  * The GPX xsd is ugly.
  */
 class GPXFile implements FileType {
-	/** Check file's data type. */
+	/** Check file's data type.
+	 * @param $file The file. NOTE: unused parameter.
+	 * @param $extension The file extension.
+	 * @return TRUE or FALSE.
+	 */
 	public static function isOfThisDataType($file, $extension) {
 		return $extension === ".gpx";
 	}
@@ -40,7 +44,7 @@ END;
 END;
 				foreach ($gpx_data->children() as $trksegs) {
 					if ($trksegs->getName() === "trkseg") {
-						//recup le temps du premier trackpoint du trackseg en question
+						// Get the trackseg's first trackpoint's time
 						$trkpt1 = $trksegs->xpath("trkpt[1]/time");
 						if (empty($trkpt1)) {
 							continue;
@@ -64,7 +68,7 @@ END;
 		}
 		echo "</table>";
 
-		//partie selection des types de donnée :
+		// Data type selection view.
 		$nameData = "PositionGPS";
 		$sum = sha1($nameData);
 		echo <<<END
@@ -112,19 +116,19 @@ END;
 				</td>
 			</tr>
 END;
-		$extensions_dispos = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
-		if (!empty($extensions_dispos)) {
-			$extensions_dispos = $extensions_dispos[0];
-			foreach ($extensions_dispos->children() as $extdisp) {
-				$chose = htmlspecialchars($extdisp->getName());
-				$sum = sha1($extdisp->getName());
+		$extensions_available = $gpx->xpath("/gpx/trk/trkseg/trkpt/extensions/TrackPointExtension");
+		if (!empty($extensions_available)) {
+			$extensions_available = $extensions_available[0];
+			foreach ($extensions_available->children() as $extavail) {
+				$extension = htmlspecialchars($extavail->getName());
+				$sum = sha1($extavail->getName());
 				echo <<<END
 				<tr>
-					<td><input type="checkbox" value="$chose" name="data_$sum" id="data_$sum"/></td>
-					<td><label class="td_label" for="data_$sum">$chose</label></td>
+					<td><input type="checkbox" value="$extension" name="data_$sum" id="data_$sum"/></td>
+					<td><label class="td_label" for="data_$sum">$extension</label></td>
 					<td>
 END;
-				self::displayDataAssociationChoice($chose);
+				self::displayDataAssociationChoice($extension);
 				echo <<<END
 					</td>
 				</tr>
@@ -135,6 +139,11 @@ END;
 		//Import::deleteDirContent("Uploaded");
 	}
 
+    /**
+     * Get data from a gpx file (which is of type xml).
+     * @param $file The gpx file to parse.
+     * @return $gpx a SimpleXML object.
+     */
 	private static function getData($file) {
 		$data = file_get_contents($file);
 		$data = preg_replace('/<gpx.*?>/', '<gpx>', $data, 1);
@@ -168,7 +177,9 @@ END;
 		//DataImportView::showNewReleveForm($nameData);
 	}
 	
-	/** Store selection into the database. */
+	/** Store selection into the database.
+	 * @param $data Data from an xml string.
+	 */
 	public static function submitSelection($data) {
 		$data = preg_replace('/<gpx.*?>/', '<gpx>', $data, 1);
 		$data = preg_replace('/<\\/tp1:(.+)>/', '</$1>', $data);
@@ -215,8 +226,13 @@ END;
 		new CMessage('Vos relevés ont été ajoutés avec succès ! Vous pouvez en sélectionner d\'autres, ou bien revenir au Tableau de Bord.');
 		CNavigation::redirectToApp('Import', 'dataSelection');
 	}
-
-	private static function saveData($name_statement, $type_Datas, $Datas) {
+    
+    /** Stores data in a given statement
+     * @param $name_statement the statement destination
+     * @param $data_type The type of the data
+     * @param $data An array of data to store.
+     */
+	private static function saveData($name_statement, $data_type, $data) {
 		$statement = DataMod::getStatement($name_statement, $_SESSION['bd_id']);
 		$b_statement = R::load('releve', $statement['id']);
 
@@ -226,7 +242,7 @@ END;
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 		$variables = $n_datamod->getVariables();
 
-		foreach ($Datas as $d) {
+		foreach ($data as $d) {
 			if ($d->getName() !== 'trkpt')
 				continue;
 
@@ -234,7 +250,7 @@ END;
 
 			$vars = array();
 
-			switch($type_Datas) {
+			switch($data_type) {
 				case 'PositionGPS' :
 					$vars['lat'] = floatval($d['lat']);
 					$vars['lon'] = floatval($d['lon']);
@@ -253,10 +269,10 @@ END;
 						 $longs = array(7.0493919, 7.0493517);*/
 						$dt = floatval(abs($date - $GLOBALS['ancienne_date']));
 						//$dt = floatval(abs(strtotime("2011-02-05T12:29:47Z") - strtotime("2011-02-05T12:29:49Z")));
-						$distance = floatval(self::distanceParcoursGPSenM($lats, $longs));
-						$vitesse = $distance / floatval($dt);
-						$vars['vitesse'] = floatval($vitesse);
-						//actualiser les vieux
+						$distance = floatval(self::distanceRunWithGPSinMeters($lats, $longs));
+						$speed = $distance / floatval($dt);
+						$vars['vitesse'] = floatval($speed);
+						// refresh old data
 						$GLOBALS['ancienne_lat'] = floatval($d['lat']);
 						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
 						$GLOBALS['ancienne_date'] = $date;
@@ -269,16 +285,16 @@ END;
 					} else {
 						$lats = array($GLOBALS['ancienne_latcal'], floatval($d['lat']));
 						$longs = array($GLOBALS['ancienne_loncal'], floatval($d['lon']));
-						$distance = floatval(self::distanceParcoursGPSenM($lats, $longs));
+						$distance = floatval(self::distanceRunWithGPSinMeters($lats, $longs));
 						$GLOBALS['distance_cumulee'] += $distance;
 						$cals = floatval(floatval($GLOBALS['distance_cumulee']) * 70.0 * 0.001036 / 1000.0);
 						$vars['calories'] = $cals;
 					}
 					break;
 				default :
-					$exts = $d->xpath('extensions/TrackPointExtension/' . $type_Datas);
+					$exts = $d->xpath('extensions/TrackPointExtension/' . $data_type);
 					if (!empty($exts)) {
-						$vars["$type_Datas"] = floatval($exts[0]);
+						$vars["$data_type"] = floatval($exts[0]);
 					}
 			}
 
@@ -291,20 +307,30 @@ END;
 				if (isset($vars[$k])) {
 					$datamod->$k = $vars[$k];
 				} else {
-					$datamod->$k = isset($vars[$type_Datas]) ? $vars[$type_Datas] : 0.0;
+					$datamod->$k = isset($vars[$data_type]) ? $vars[$data_type] : 0.0;
 				}
 			}
 
-			//groaw($datamod);
 			$n_datamod->save($_SESSION['user'], $b_statement, $datamod);
 		}
 	}
-
-	private static function startswith($chaine, $debut) {
-		return substr($chaine, 0, strlen($debut)) === $debut;
+	
+    /** Check a string's start.
+     * @param $str The string to evaluate.
+     * @param $start The string that you ask if it is at the start of $str.
+     * @return True or False.
+     */
+	private static function startswith($str, $start) {
+		return substr($str, 0, strlen($start)) === $start;
 	}
 
-	private static function distanceParcoursGPSenM($lats, $longs) {
+    /**
+     * Deduces the distance run in meters using GPS's data
+     * @param $lats a list of latitudes. Goes along with $longs.
+     * @param $longs a list of longitudes to determines the steps of the run.
+     * @return $distance The distance value in meters.
+     */
+	private static function distanceRunWithGPSinMeters($lats, $longs) {
 		$distance = 0.0;
 		$a = pi() / 180.0;
 		for ($i = 0; $i < count($lats) - 1; $i++) {
