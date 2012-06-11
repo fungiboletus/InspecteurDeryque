@@ -1,4 +1,7 @@
 <?php
+/**
+ * Manages navigation - pages infos, url rewriting, etc.
+ */
 class CNavigation
 {
 	public static function getTitle() {

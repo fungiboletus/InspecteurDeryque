@@ -1,4 +1,7 @@
 <?php
+/**
+ * Request(s) execution.
+ */
 class CPDO
 {
 

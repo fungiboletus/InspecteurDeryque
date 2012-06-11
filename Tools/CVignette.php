@@ -1,4 +1,7 @@
 <?php
+/**
+ * Manage thumbnails manipulation - get path, resizing…
+ */
 class CVignette
 {
 	public static function cheminVignette($chemin,$ext,$x,$y)

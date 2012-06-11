@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Manages headers
+ */
 class CHead
 {
 	public static $css = array();

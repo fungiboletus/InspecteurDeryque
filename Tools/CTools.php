@@ -1,4 +1,8 @@
 <?php
+/**
+ * A few tools…
+ * FIXME moar details?
+ */
 class CTools
 {
 	public static function toUtf8($charset, $texte)

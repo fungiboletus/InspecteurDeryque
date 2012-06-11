@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Manages messages - errors or not.
+ */
 class CMessage
 {
 	public $message;

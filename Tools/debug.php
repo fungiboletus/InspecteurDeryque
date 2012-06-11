@@ -1,6 +1,9 @@
 <?php
-// GROAW (raving rabbit cry) print the information with print_r in a special html part.
 
+/**
+ * print the information with print_r in a special html part.
+ * @param $info infos to display like an array.
+ */
 function groaw($info)
 {
     if (DEBUG)
@@ -13,6 +16,10 @@ function groaw($info)
     }
 }
 
+/**
+ * Disply a groaw.
+ * @see groaw
+ */
 function showGroaw() {
 	global $groaw_array;
 	
