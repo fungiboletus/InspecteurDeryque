@@ -1,9 +1,18 @@
 <?php
-
+/**
+ * Abstract class for the different graphics view available.
+ */
 abstract class AbstractView
 {
-	protected static $now;
+	protected static $now; /**< time cache for performances. */
 	
+	/**
+	 * Display a button.
+	 * @param $url the wanted url.
+	 * @param $class the class, for css display
+	 * @param $text The text associated to the button
+	 * @param $icon The button icon.
+	 */
 	protected static function showButton($url, $class, $text, $icon) {
 		echo <<<END
 			<a href="$url" class="btn large $class">
@@ -11,6 +20,12 @@ abstract class AbstractView
 END;
 	}
 	
+	/**
+	 * Converts time period to a more human readable format.
+	 * @param $period The time to convert.
+	 * @param $week OPTIONAL - indicates weeks instead of days.
+	 * @return $str A string about the current period.
+	 */
 	public static function translateTimePeriod($period, $week = null)
 	{
 		switch($period)
@@ -40,6 +55,9 @@ END;
 		}
 	}
 
+    /**
+     *
+     */
 	public static function formateDate($date)
 	{
 		if (!is_array($date))
@@ -66,20 +84,19 @@ END;
 	}
 
 	public static function locateDate($date) {
-		// It's interessant to note that it's work fine
+		// It's interesting to note that it works fine
 		if (is_numeric($date)) {
 			$t = intval($date);
 		} else {
 			$t =  strtotime($date);
 		}
 
-		// The time is cached for improve performance
+		// The time is cached to improve performance
 		if (!isset(self::$now)) {
 			self::$now = time();
 		}
 
 		$n = self::$now;
-
 		$an = getdate($n);
 
 		// we start at midnight
@@ -114,6 +131,13 @@ END;
 		return array(-1, $t, null);
 	}
 
+    /**
+     * Get the icon associated to a given mimetype.
+     * @param $mimetype String, the mimetype.
+     * @return $str The file location if known,
+     *              or a generic mimetype information,
+     *              or unknown if not recognized
+     */
 	public static function getMimeIcone($mimetype)
 	{
 
