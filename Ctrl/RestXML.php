@@ -3,13 +3,16 @@
 CNavigation::setTitle('RestXML');
 CNavigation::setDescription('REST interface');
 
+/**
+ * Manges REST calls to communicate data inside an XML structure.
+ */ 
 class RestXML
 {   
     /**
     * sends an XML message which contains a list of reports
     */
     public function reports(){
-    	$reports = DataMod::getReleves($_SESSION['bd_id']);
+    	$reports = DataMod::getStatements($_SESSION['bd_id']);
     	$message = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
     	$message .= "<reports>\n";
     	foreach($reports as $report){
@@ -27,9 +30,9 @@ class RestXML
     * sends an XML message which contains a resume of a user's report
     */
     public function resume(){
-    	$reports = DataMod::getReleves($_SESSION['bd_id']);
+    	$reports = DataMod::getStatements($_SESSION['bd_id']);
 		if(isset($_REQUEST['INFOS'][2])){
-			$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+			$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
 		
 			if (!$report) {
 				$error = new Error();
@@ -43,15 +46,15 @@ class RestXML
             $message .= "  <name>".$report['name']."</name>\n";
     		$message .= "  <desc>".$report['description']."</desc>\n";
     		$message .= "  <count>"
-    					.R::getCell('SELECT COUNT(*) FROM d_'.$datamod->dossier.
+    					.R::getCell('SELECT COUNT(*) FROM d_'.$datamod->folder.
 						' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']))
 						."</count>\n";
 			$message .= "  <start_t>"
-						.date(DateTime::ISO8601, R::getCell('SELECT MIN(timestamp) FROM d_'.$datamod->dossier.
+						.date(DateTime::ISO8601, R::getCell('SELECT MIN(timestamp) FROM d_'.$datamod->folder.
 						' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])))
 						."</start_t>\n";
 			$message .= "  <end_t>"
-						.date(DateTime::ISO8601, R::getCell('SELECT MAX(timestamp) FROM d_'.$datamod->dossier.
+						.date(DateTime::ISO8601, R::getCell('SELECT MAX(timestamp) FROM d_'.$datamod->folder.
 						' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])))
 						."</end_t>\n";
 						
@@ -82,7 +85,7 @@ class RestXML
     */
     public function data(){
     	if(isset($_REQUEST['INFOS'][2])){
-    		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
     		
 			if (!$report) {
 				$error = new Error();
@@ -94,19 +97,19 @@ class RestXML
             //test if there are time restriction parameters
             if(isset($_REQUEST['INFOS'][3]) && !isset($_REQUEST['INFOS'][4])){
             	$start = $_REQUEST['INFOS'][3];
-            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start));
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
-				$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start, $end));
 			}
 			else{
-            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
 			}
 			
@@ -139,7 +142,7 @@ class RestXML
     */
     public function data_dt(){
     	if(isset($_REQUEST['INFOS'][2])){
-    		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
     		
 			if (!$report) {
 				$error = new Error();
@@ -151,19 +154,19 @@ class RestXML
             //test if there are time restriction parameters
             if(isset($_REQUEST['INFOS'][3]) && !isset($_REQUEST['INFOS'][4])){
             	$start = $_REQUEST['INFOS'][3];
-            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start));
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
-				$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start, $end));
 			}
 			else{
-            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
 			}
 			
