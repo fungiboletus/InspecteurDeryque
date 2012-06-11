@@ -21,7 +21,9 @@ END;
 ?>
 
 <?php
-
+/**
+ * Just for a few tests with random data…
+ */
 class TestRandom{
 	public static function tableauRandom(){
 		for($i = 0 ; $i < 10 ; $i++){

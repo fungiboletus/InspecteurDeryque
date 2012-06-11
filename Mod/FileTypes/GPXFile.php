@@ -174,7 +174,7 @@ END;
 			<a class="btn" href="$new_url">Nouveau relevé</a>
 	    </div>
 END;
-		//DataImportView::showNewReleveForm($nameData);
+		//DataImportView::showNewStatementForm($nameData);
 	}
 	
 	/** Store selection into the database.

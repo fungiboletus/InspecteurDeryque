@@ -1,4 +1,7 @@
 <?php
+/**
+ * View for the login and registration steps.
+ */
 class SessionView {
 	public function __construct() {
 		$label_mail = _('Email');

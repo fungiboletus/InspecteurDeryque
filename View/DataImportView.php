@@ -1,6 +1,11 @@
 <?php
-
+/**
+ * View for the importing-data-for-a-statement step. 
+ */
 class DataImportView {
+    /**
+     * show form import - pretty self-explanatory.
+     */
 	public static function showFormImport() {
 		echo <<<END
 		<div class="alert-message block-message info">
@@ -26,6 +31,9 @@ END;
 		//'
 	}
 
+    /**
+     * Submits to the user a choice of data to select.
+     */
 	public static function showDataSelection($file, $extension) {
 		$extensions = array('.tcx', '.gpx', '.xml');
 		//$extension = strrchr($file, '.');
@@ -63,8 +71,10 @@ END;
 	//////////////////////////////////////////////////////
 
 
-
-	private function showSelectTypePossibles() {
+    /**
+     * Submits to the user a choice of possible data types.
+     */
+	private function showSelectPossibleTypes() {
 		$types = DataMod::getDataTypes();
 		echo <<<END
 		<div class="clearfix">
@@ -82,13 +92,17 @@ END;
 END;
 	}
 
-	private function showNewReleveForm($nameData) {
+    /**
+     * Show the form to add a statement.
+     * @param $nameData the kind of data of the future statement.
+     */
+	private function showNewStatementForm($nameData) {
 
 		echo <<<END
 		<form action="" name="data_add_form" method="post" id="data_add_form" style="display:none;">
 			<fieldset>
 END;
-		DataImportView::showSelectTypePossibles();
+		DataImportView::showSelectPossibleTypes();
 		echo <<<END
 				<div class="clearfix">
 					<label for="input_nom_$nameData">Nom</label>
