@@ -10,7 +10,7 @@ class Data
 
 		$statements = DataMod::getStatements($_SESSION['bd_id']);
 
-		DataView::showRelevesList($statements);
+		DataView::showStatementsList($statements);
 
 		DataView::showAddButton();
 	}

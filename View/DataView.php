@@ -1,7 +1,12 @@
 <?php
-
+/**
+ * View to see the statements.
+ */
 class DataView extends AbstractView
 {
+    /**
+     * Display the button to add a statement.
+     */
 	public static function showAddButton() {
 		$url = CNavigation::generateUrlToApp('Data','choose');
 		echo '<div class="well">';
@@ -9,6 +14,12 @@ class DataView extends AbstractView
 		echo '</div>';
 	}
 
+    /**
+     * Used when looking at a statement. Show some user buttons.
+     * @param $url_del the url to try to delete a statement.
+     * @param $url_back the url to go back to the statement list.
+     * @param $url_rand the url to put random data to the statement.
+     */
 	public static function showViewButtons($url_del, $url_back, $url_rand) {
 		echo '<div class="well">';
 		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
@@ -17,6 +28,11 @@ class DataView extends AbstractView
 		echo '</div>';
 	}
 
+    /**
+     * Display kinds of data.
+     * @param $data The statement's data.
+     * Used to show data's compatibility with existing kind of data.
+     */
 	public static function showDataTypeList($data) {
 		global $ROOT_PATH;
 		echo '<ul class="media-grid">';
@@ -37,6 +53,10 @@ END;
 		echo '</ul>';
 	}
 
+    /**
+     * Displays form to create a statement.
+     * @param $values Array to resume the future statement's infos.
+     */
 	public static function showAddForm($values) {
 
 		$label_name = _('Nom');
@@ -71,7 +91,11 @@ END;
 END;
 	}
 
-	public static function showRelevesList($statements)
+    /**
+     * Displays a list of statements.
+     * @param $statements Array of statements to show.
+     */
+	public static function showStatementsList($statements)
 	{
 		if ($statements)
 		{
@@ -104,6 +128,12 @@ END;
 		}
 	}
 
+    /**
+     * Shows the form to remove a statement.
+     * @param $desc The statement's description.
+     * @param $url_confirm The url to confirm the removal of the statement.
+     * @param $url_back The url to not remove the statement and go back.
+     */
 	public static function showRemoveForm($desc, $url_confirm, $url_back)
 	{
 		$hdesc = htmlspecialchars($desc);
@@ -119,7 +149,8 @@ END;
 		self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
 		echo '</div>';
 	}
-
+    
+    
 	public static function showDisplayViewChoiceTitle() {
 		echo <<<END
 <h3>Visualiser ce relevé directement
@@ -140,7 +171,12 @@ END;
 END;
 	}
 
-	public static function showInformations($stats, $data_type) {
+    /**
+     * Displays informations about a statement's data.
+     * @param $data The statement's data.
+     * @param $data_type The type of the data.
+     */
+	public static function showInformations($data, $data_type) {
 		$hdata_type = htmlspecialchars($data_type->name);
 
 		echo <<<END
@@ -152,13 +188,13 @@ END;
 
 	<dt>Statistiques</dt>
 END;
-		if (empty($stats) || $stats['count(*)'] == 0)
+		if (empty($data) || $data['count(*)'] == 0)
 		{
 			echo "<dd>Ce relevé est vide.</dd></dl>\n";
 		}
 		else
 		{
-			echo "<dd>Ce relevé contient ${stats['count(*)']} enregistrements.</dd>\n</dl>\n";
+			echo "<dd>Ce relevé contient ${data['count(*)']} enregistrements.</dd>\n</dl>\n";
 		}
 
 			echo <<<END
@@ -180,11 +216,11 @@ END;
 			$hk = htmlspecialchars($k);
 
 			$min = null; $max = null; $avg = null;
-			if (!empty($stats))
+			if (!empty($data))
 			{
-				$min = $stats["min($k)"];
-				$max = $stats["max($k)"];
-				$avg = $stats["avg($k)"];
+				$min = $data["min($k)"];
+				$max = $data["max($k)"];
+				$avg = $data["avg($k)"];
 			}
 			echo <<<END
 	<tr>

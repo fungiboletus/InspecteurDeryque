@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract class for the different graphics view available.
+ * Abstract class for the different views.
  */
 abstract class AbstractView
 {
@@ -56,7 +56,10 @@ END;
 	}
 
     /**
-     *
+     * Formats date.
+     * @param $date Date to format.
+     *        If $date is not a valid date array (e.g. NULL), get local date.
+     * @return $d Formatted date in string.
      */
 	public static function formateDate($date)
 	{
@@ -83,6 +86,14 @@ END;
 		return strftime($format, $date[1]);
 	}
 
+    /**
+     * Analyzes a date.
+     * @param $date Date to look at (either a timestamp or a string)
+     * @return $array ($i,$t,$y) : 
+     *          $i : if the date is in the future -1 is given, else a value >0.
+     *          $t : The timestamp of the given date.
+     *          $y : The year in String, or NULL.
+     */
 	public static function locateDate($date) {
 		// It's interesting to note that it works fine
 		if (is_numeric($date)) {
