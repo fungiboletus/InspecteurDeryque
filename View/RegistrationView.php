@@ -1,5 +1,11 @@
 <?php
+/**
+ * View to manage registration.
+ */
 class RegistrationView {
+    /**
+     * Display registration form.
+     */
 	public static function showForm() {
 		$label_name = _('Nom');
 		$label_mail = _('Adresse mail');

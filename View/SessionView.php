@@ -1,6 +1,6 @@
 <?php
 /**
- * View for the login and registration steps.
+ * View for the login (and redirection to registration)
  */
 class SessionView {
 	public function __construct() {
