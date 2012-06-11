@@ -1,4 +1,11 @@
 <?php
+/**
+ * Displays a selection.
+ * @see Selection
+ * @see INDIAN
+ * @see wtf
+ * @see FIXME
+ */
 class DSelection extends DAbstract {
     const name = 'Selection';
 

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Display a composition of multiple statements.
+ * @see Composition
+ * @see INDIAN
+ * @see wtf
+ * @see FIXME
+ */
 class DComposition extends DAbstract {
     const name = 'Composition';
 

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Displays a linear chart refreshed in real time.
+ */
 class DGraphiqueTempsReel extends DAbstract {
     const name = 'GraphiqueRT';
 

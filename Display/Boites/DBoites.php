@@ -1,4 +1,7 @@
 <?php
+/**
+ * Displays a box chart.
+ */
 class DBoites extends DAbstract
 {
 	const name = 'Boite';

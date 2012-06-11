@@ -1,4 +1,7 @@
 <?php
+/**
+ * Displays a map.
+ */
 class DCarte extends DAbstract
 {
 	const name = 'Carte';

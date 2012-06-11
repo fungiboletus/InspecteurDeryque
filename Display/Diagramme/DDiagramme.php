@@ -1,4 +1,7 @@
 <?php
+/**
+ * Displays a Pie chart.
+ */
 class DDiagramme extends DAbstract
 {
 	const name = 'Diagramme';

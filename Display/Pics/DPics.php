@@ -1,4 +1,11 @@
 <?php
+/**
+ * A nazi class to interact with a Highstock chart (non-libre).
+ * Detects the peaks based on the user's peaks values.
+ * @see DGraphiqueTempsReel
+ * @see Hitler
+ * @see FIXME
+ */
 class DPics extends DAbstract {
     const name = 'Pics';
 

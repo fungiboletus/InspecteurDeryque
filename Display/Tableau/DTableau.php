@@ -1,4 +1,7 @@
 <?php
+/**
+ * Displays a classic table.
+ */
 class DTableau extends DAbstract
 {
 	const name = 'Tableau';
