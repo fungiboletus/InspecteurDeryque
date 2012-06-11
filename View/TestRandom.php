@@ -29,7 +29,9 @@ END;
 ?>
 
 <?php
-
+/**
+ * To get random data for tests…
+ */ 
 class TestRandom{
 	public static function tableauRandom(){
 		for($i = 0 ; $i < 100 ; $i++){

@@ -1,5 +1,16 @@
 <?php
+/**
+ * Display a graphics.
+ */
 class DisplayView extends AbstractView {
+    /**
+     * Shows the available graphics.
+     * @param $data The data to display.
+     * @param $well OPTIONAL - default to true. Use the .well bootstrap class.
+     * @param $prefs OPTIONAL - default to array(). Array of preferences.
+     * @param $selected OPTIONAL - default to null. Indicated selected kind of data.
+     * @param $action OPTIONAL - default to 'view'. You should let it like that.
+     */ 
     public static function showGraphicChoiceMenu($data, $well = true, $prefs = array(), $selected = null, $action = 'view') {
     	global $ROOT_PATH;
         $cdata = count($data);
@@ -46,19 +57,25 @@ END;
             echo '</div>';
     }
 
+    /**
+     * Show button to get back to the statement infos.
+     * @param $url_back The url to get
+     */
     public static function showBackButtons($url_back) {
         echo '<div class="well">';
         self::showButton($url_back, 'info', 'Retour au relevé', 'back');
         echo '</div>';
     }
-
+    /**
+     * Central view - once logged - to display statements and graphics together!
+     */
     public static function showPageWithLayout() {
         echo <<<END
 		<div class="container-fluid">
 			<div class="sidebar">
 				<div class="well">
 END;
-        DisplayView::showRelevesChoiceMenu();
+        DisplayView::showStatementsChoiceMenu();
         echo <<<END
 				</div>
 			</div>
@@ -78,7 +95,11 @@ END;
         //DashboardView::showGraph();
     }
 
-    public static function showRelevesChoiceMenu() {
+    /**
+     * Display statements to… display into graphics.
+     * @see showPageWithLayout.
+     */
+    public static function showStatementsChoiceMenu() {
         echo <<<END
 		
 		<ul class="tabs" data-tabs="tabs">
