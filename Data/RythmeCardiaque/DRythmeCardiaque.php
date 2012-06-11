@@ -1,4 +1,7 @@
 <?php
+/**
+ * Infos about the Heart Rate data.
+ */
 class DRythmeCardiaque
 {
 	const name = 'Rythme cardiaque';

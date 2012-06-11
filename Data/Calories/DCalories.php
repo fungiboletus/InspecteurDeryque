@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Infos about the Calorie data.
+ */
 class DCalories
 {
 	const name = 'Calories';

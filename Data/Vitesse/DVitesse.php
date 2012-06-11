@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Infos about the Speed data.
+ */
 class DVitesse
 {
 	const name = 'Vitesse';

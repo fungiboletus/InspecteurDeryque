@@ -1,4 +1,7 @@
 <?php
+/**
+ * Infos about the Electrocardiography data.
+ */
 class DElectroCardioGramme
 {
 	const name = 'Electrocardiogramme';

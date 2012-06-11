@@ -1,4 +1,7 @@
 <?php
+/**
+ * Infos about the GPS data.
+ */
 class DGPS
 {
 	const name = 'GPS';

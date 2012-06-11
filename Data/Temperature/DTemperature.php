@@ -1,4 +1,7 @@
 <?php
+/**
+ * Infos about the Temperature data.
+ */
 class DTemperature
 {
 	const name = 'Température';
