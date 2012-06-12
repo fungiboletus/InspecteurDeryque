@@ -23,7 +23,7 @@ class RestJson
     * sends a Json message which contains a list of reports
     */
     public function reports(){
-    	$reports = DataMod::getReleves($_SESSION['bd_id']);
+    	$reports = DataMod::getStatements($_SESSION['bd_id']);
     	$arr = array();
     	foreach($reports as $report){
     		$arr[$report['name']] = $report['description'];
@@ -35,9 +35,9 @@ class RestJson
     * sends a Json message which contains a resume of a user's report
     */
     public function resume(){
-		$reports = DataMod::getReleves($_SESSION['bd_id']);
+		$reports = DataMod::getStatements($_SESSION['bd_id']);
 		if(isset($_REQUEST['INFOS'][2])){
-			$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+			$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
 		
 			if (!$report) {
 				$error = new Error();
@@ -49,13 +49,13 @@ class RestJson
 			$arr = array();
 			$arr['name'] = $report['name'];
 			$arr['desc'] = $report['description'];
-			$arr['count'] = R::getCell('SELECT COUNT(*) FROM d_'.$datamod->dossier.
+			$arr['count'] = R::getCell('SELECT COUNT(*) FROM d_'.$datamod->folder.
 				' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
 			
-			$arr['start_t'] = date(DateTime::ISO8601, R::getCell('SELECT MIN(timestamp) FROM d_'.$datamod->dossier.
+			$arr['start_t'] = date(DateTime::ISO8601, R::getCell('SELECT MIN(timestamp) FROM d_'.$datamod->folder.
 				' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])));
 			
-			$arr['end_t'] = date(DateTime::ISO8601, R::getCell('SELECT MAX(timestamp) FROM d_'.$datamod->dossier.
+			$arr['end_t'] = date(DateTime::ISO8601, R::getCell('SELECT MAX(timestamp) FROM d_'.$datamod->folder.
 				' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])));
 			
 			$format = array();
@@ -84,7 +84,7 @@ class RestJson
     */
     public function data(){
     	if(isset($_REQUEST['INFOS'][2])){
-    		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
     		
 			if (!$report) {
 				$error = new Error();
@@ -96,19 +96,19 @@ class RestJson
             //test if there are time restriction parameters
             if(isset($_REQUEST['INFOS'][3]) && !isset($_REQUEST['INFOS'][4])){
             	$start = $_REQUEST['INFOS'][3];
-            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start));
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
-				$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start, $end));
 			}
 			else{
-            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
 			}
 			
@@ -144,7 +144,7 @@ class RestJson
     */
     public function data_dt(){
     	if(isset($_REQUEST['INFOS'][2])){
-    		$report = DataMod::getReleve($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
 			
 			if (!$report) {
 				$error = new Error();
@@ -156,19 +156,19 @@ class RestJson
             //test if there are time restriction parameters
             if(isset($_REQUEST['INFOS'][3]) && !isset($_REQUEST['INFOS'][4])){
             	$start = $_REQUEST['INFOS'][3];
-            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start));
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
-				$report_data = R::getAll('SELECT * FROM d_'.$datamod->dossier.
+				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
 					array($_SESSION['bd_id'], $report['id'], $start, $end));
 			}
 			else{
-            	$report_data = R::find('d_'.$datamod->dossier, 'user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+            	$report_data = R::find('d_'.$datamod->folder, 'user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
 			}
 			
 			//build the array for Json
