@@ -5,6 +5,9 @@ CNavigation::setDescription('REST interface');
 
 define('NO_LOGIN_REDIRECTION', true);
 
+/**
+ * Manages REST calls to communicate data using a Json structure.
+ */
 class RestJson
 {   
 	private function sendJson($json)

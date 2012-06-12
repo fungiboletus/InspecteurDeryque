@@ -3,6 +3,9 @@
 CNavigation::setTitle('RestXML');
 CNavigation::setDescription('REST interface');
 
+/**
+ * Manges REST calls to communicate data inside an XML structure.
+ */ 
 class RestXML
 {   
     /**
