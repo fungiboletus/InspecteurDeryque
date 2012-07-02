@@ -35,3 +35,17 @@ padding:10px;
 #message_visualisations_vide {
 padding:15px 15px 0 15px;
 }
+
+#jschrist {
+position:absolute;
+top:39px;
+bottom:0;
+left:0;
+right:0;
+background:black;
+}
+
+#jschrist table td
+{
+border:none;
+}

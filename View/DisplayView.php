@@ -195,6 +195,24 @@ END;
 END;
 
     }
+   
+   	/**
+	 * Print code for JsCHRIST display
+	 */
+	public static function showJsCHRIST() {
+		$jschrist_file = file_get_contents('JsCHRIST/index.html');
+		
+		preg_match_all('/<link href=\"(.+)\.css\".*?>/i', $jschrist_file, $m);
+		foreach ($m[1] as $path)
+			CHead::addCss("../JsCHRIST/$path");
+		
+		preg_match_all('/<script.*?src=\"(.+)\.js\">/i', $jschrist_file, $m);
+		foreach ($m[1] as $path)
+			CHead::addJS("../JsCHRIST/$path");
+
+		preg_match('/<body>(.*)<\/body>/is', $jschrist_file, $body);
+		echo '<div id="jschrist">', $body[1], '</div>';
+	}
 
 }
 ?>

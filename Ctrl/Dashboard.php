@@ -2,10 +2,20 @@
 /** Manages the Dashboard - the index when the user is logged in. */
 class Dashboard
 {
+	
+	/**
+	 * Show JsCHRIST.
+	 */
+	public function index()
+	{
+		CNavigation::setTitle('JsCHRIST');
+		DisplayView::showJsCHRIST();
+	}
+
     /**
      * Displays the web page.
      */
-	public function index() {
+	public function old_index() {
 		CNavigation::setTitle('Tableau de bord');
 		DisplayView::showPageWithLayout();
 
