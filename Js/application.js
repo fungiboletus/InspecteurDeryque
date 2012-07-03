@@ -140,5 +140,14 @@ HTMLElement.prototype.allOffset = function()
 };
 
 $(document).ready(function(){
-$('.topbar').dropdown();
+	$('.topbar').dropdown();
+	
+	$(window).resize(function()
+	{
+		if (window.innerWidth == window.screen.width && window.innerHeight == window.screen.height)
+			$(document.body).addClass('fullscreen');
+		else
+			$(document.body).removeClass('fullscreen');
+	});
+
 });

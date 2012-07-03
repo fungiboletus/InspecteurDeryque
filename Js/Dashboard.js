@@ -155,9 +155,6 @@ var composerReleves = function() {
 
 var ajouterComposition = function(a) {
 	var name = $('#mrname').val();
-
-	console.log(a);
-	console.log($(this));
 	
 	$.get(a.getAttribute('href'), { cname: name, creleves: nomsRelevesSelectionnes }, function() {window.location.reload(); });
 	

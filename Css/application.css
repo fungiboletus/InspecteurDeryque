@@ -278,3 +278,15 @@ background:blue;
 border:3px solid green;
 -webkit-transform:rotate(72deg);
 }*/
+
+body.fullscreen .topbar {
+transition:top 1s ease 0s;
+-webkit-transition:top 1s ease 0s;
+-moz-transition:top 1s ease 0s;
+}
+body.fullscreen .topbar {
+top:-36px;
+}
+body.fullscreen .topbar:hover {
+top:0px;
+}
