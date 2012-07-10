@@ -153,10 +153,12 @@ var composerReleves = function() {
 
 }
 
-var ajouterComposition = function() {
+var ajouterComposition = function(a) {
 	var name = $('#mrname').val();
 	
-	$.get("/InspecteurDeryque/Composition.php", { cname: name, creleves: nomsRelevesSelectionnes.join(',') } );
+	console.log(a);
+ 	console.log($(this));
+	$.get(a.getAttribute('href'), { cname: name, creleves: nomsRelevesSelectionnes }, function() {window.location.reload(); });
 	
-	window.location.reload();
+	return false;
 }

@@ -27,10 +27,15 @@ class RestJson
     */
     public function reports(){
     	$reports = DataMod::getStatements($_SESSION['bd_id']);
+	$rep = DataMod::getStatementComp($_SESSION['bd_id']);	
     	$arr = array();
+    	foreach($rep as $report){
+    		$arr[$report['name']] = $report['description'];
+    	}
     	foreach($reports as $report){
     		$arr[$report['name']] = $report['description'];
     	}
+
 		$this->sendJson($arr);
     }
     

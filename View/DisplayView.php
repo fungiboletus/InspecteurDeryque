@@ -153,6 +153,7 @@ END;
 END;
         }
 
+	$url_composition = CNavigation::generateUrlToApp('Data', 'composition');
         echo <<<END
 	       </table>
 		  </div>	  
@@ -174,7 +175,7 @@ END;
           </div>
           <div class="modal-footer">
             <a href="#" onClick="$('#popup_composition').modal('hide')" class="btn">Annuler</a>
-            <a href="#" onClick="$('#popup_composition').modal('hide');ajouterComposition();" class="btn btn-primary">Composer</a>
+            <a href="$url_composition" onClick="$('#popup_composition').modal('hide');return ajouterComposition(this);" class="btn btn-primary">Composer</a>
           </div>
         </div>
         
