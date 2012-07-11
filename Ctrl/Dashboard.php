@@ -4,9 +4,20 @@ class Dashboard
 {
 	
 	/**
+	 * Show new index (development)
+	 */
+	public function new_index()
+	{
+		CNavigation::setTitle('Tableau de bord');
+		CHead::addCSS('Boites');
+		CHead::addJS('Boxes_Layout');
+		CHead::addJS('Boxes_Dashboard');
+	}
+
+	/**
 	 * Show JsCHRIST.
 	 */
-	public function index()
+	public function jschrist_index()
 	{
 		CNavigation::setTitle('JsCHRIST');
 		DisplayView::showJsCHRIST();
@@ -15,7 +26,7 @@ class Dashboard
     /**
      * Displays the web page.
      */
-	public function old_index() {
+	public function index() {
 		CNavigation::setTitle('Tableau de bord');
 		DisplayView::showPageWithLayout();
 

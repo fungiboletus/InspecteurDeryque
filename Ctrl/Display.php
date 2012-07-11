@@ -109,8 +109,12 @@ class Display {
         CHead::addCss('iframe_view');
 
         $infos = $this->getStatementInfos();
-        $data = DisplayMod::getDisplayTypes();
-        DisplayView::showGraphicChoiceMenu($data, false, $infos[2]->display_prefs, $infos[1]->folder, 'iframe_view');
+
+        if (!isset($_REQUEST['no_choice_menu']))
+        {
+            $data = DisplayMod::getDisplayTypes();
+            DisplayView::showGraphicChoiceMenu($data, false, $infos[2]->display_prefs, $infos[1]->folder, 'iframe_view');
+        }
 
         echo '<h2>',    htmlspecialchars($infos[0]::name), ' du relevé «',
         htmlspecialchars($_REQUEST['nom']), '» <small>',

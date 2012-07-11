@@ -74,6 +74,25 @@ var arrayShuffle = function(tableau)
 	return tableau;
 };
 
+Array.prototype.remove = function(elem) {
+    var match = -1;
+
+    while( (match = this.indexOf(elem)) > -1 ) {
+        this.splice(match, 1);
+    }
+};
+
+String.prototype.hashCode = function(){
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        var char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+};
+
 var addEventFunction = function(e, o, f) {
 	if (o.addEventListener) {
 		o.addEventListener(e, f, false);

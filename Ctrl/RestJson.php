@@ -211,6 +211,12 @@ class RestJson
 			$error->bad_request();
 		}
     }
+
+    public function display_type() {
+        $data = DisplayMod::getDisplayTypes();
+        $this->sendJson($data);
+    }
+
 }
 
 ?>
