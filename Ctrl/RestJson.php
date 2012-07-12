@@ -214,7 +214,13 @@ class RestJson
 
     public function display_type() {
         $data = DisplayMod::getDisplayTypes();
-        $this->sendJson($data);
+
+        $json = array();
+
+        foreach ($data as $d)
+        	$json[$d->folder] = $d->name;
+
+        $this->sendJson($json);
     }
 
 }

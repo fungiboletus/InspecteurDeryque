@@ -276,9 +276,8 @@ $(document).ready(function() {
 
 	var remplir_input_types = function(list) {
 		list.empty();
-		for (var i = 0; i < json_input_types.length; ++i)
+		for (var key in json_input_types)
 		{
-			var report = json_input_types[i];
 			var li = newDom('li');
 			layout.disableDrag(li);
 
@@ -286,11 +285,11 @@ $(document).ready(function() {
 
 			var img = newDom('img');
 			// TODO c'est vraiment trop moche les urls en dur
-			img.setAttribute('src', "/InspecteurDeryque/Display/"+report.folder+"/thumbnail.png");
+			img.setAttribute('src', "/InspecteurDeryque/Display/"+key+"/thumbnail.png");
 			li.appendChild(img);
 			var h4 = newDom('h4');
-			li.setAttribute('name', report.folder);
-			h4.appendChild(document.createTextNode(report.name));
+			li.setAttribute('name', key);
+			h4.appendChild(document.createTextNode(json_input_types[key]));
 			li.appendChild(h4);
 			list.append(li);
 		}
