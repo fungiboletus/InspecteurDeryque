@@ -8,9 +8,11 @@ class Dashboard
 	 */
 	public function new_index()
 	{
+		global $ROOT_PATH;
 		CNavigation::setTitle('Tableau de bord');
-		CHead::addCSS('Boites');
-		CHead::addJS('Boxes_Layout');
+		CHead::addCSS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.css');
+		CHead::addJS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.js');
+		CHead::addCSS('Boxes_Dashboard');
 		CHead::addJS('Boxes_Dashboard');
 	}
 
