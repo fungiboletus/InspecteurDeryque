@@ -155,13 +155,6 @@ $(document).ready(function() {
 			bouton_user.show();
 			front_boutons_bar.show();
 			back_boutons_bar.addClass('boutons_caches');
-		}
-		// Or toggle to front mode
-		else
-		{
-			back_boutons_bar.show();
-			front_boutons_bar.addClass('boutons_caches');
-			bouton_user.addClass('boutons_caches');
 
 			// Updating the display
 			jboxes.each(function() {
@@ -201,6 +194,13 @@ $(document).ready(function() {
 				front.find('iframe:not(.updated)').remove();
 				front.find('iframe:.updated').removeClass('updated');
 			});
+		}
+		else
+		{
+			back_boutons_bar.show();
+			front_boutons_bar.addClass('boutons_caches');
+			bouton_user.addClass('boutons_caches');
+
 		}
 	});
 
@@ -310,7 +310,7 @@ $(document).ready(function() {
 	}});
 
 	jbouton.mousedown(function(e) {
-		var boite = bb();
+		var boite = create_perfect_box();
 		remplir_releves_list($(boite).find('.back .releves_list table'));
 		remplir_input_types($(boite).find('.back .input_types ul'));
 		boite.style.display = 'none';
@@ -353,7 +353,7 @@ $(document).ready(function() {
 
 		for (var i = boxes.length; i < releves.length; ++i)
 		{
-			var boite = bb();
+			var boite = create_perfect_box();
 		boite.style.display = 'none';
 			var jboite = $(boite);
 			remplir_releves_list(jboite.find('.back .releves_list table'));

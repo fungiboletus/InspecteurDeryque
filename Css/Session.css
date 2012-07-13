@@ -21,11 +21,11 @@ left:0;
 	width:60px;
 	height:60px;
 	background-size:100% 100%;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	-ms-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
 				text-indent:-50em;
 }
 
@@ -130,14 +130,21 @@ background-color:lightgreen;
 }
 
 h1#titre_deryque {
-ext-align:center;
+text-align:center;
+text-indent:-5000px;
+display:none;
+}
+
+#logo_deryque{
 position:absolute;
 z-index:50;
 width:100%;
-top:20px;
-text-indent:-5000px;
-background:url(../Img/titre.png) no-repeat center;
-min-height:194px;
+top:8%;
+text-align: center;
+}	
+#logo_deryque img{
+max-height:40%;
+max-width:100%;
 }
 
 div.alert-message {
