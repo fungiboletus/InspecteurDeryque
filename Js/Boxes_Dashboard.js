@@ -171,7 +171,7 @@ $(document).ready(function() {
 				releves_selectionnes.each(function() {
 
 					var value = $(this).val();
-					var url = "../Display/iframe_view"+type+"/no_choice_menu/true?nom="+encodeURIComponent(value);
+					var url = ROOT_PATH+"/app/Display/iframe_view"+type+"/no_choice_menu/true?nom="+encodeURIComponent(value);
 					var id = 'f' + Math.abs(($(this).parent('.boxdiv').attr('id')+url).hashCode());
 
 					var iframe = byId(id);
@@ -285,7 +285,7 @@ $(document).ready(function() {
 
 			var img = newDom('img');
 			// TODO c'est vraiment trop moche les urls en dur
-			img.setAttribute('src', "/InspecteurDeryque/Display/"+key+"/thumbnail.png");
+			img.setAttribute('src', ROOT_PATH+"/Display/"+key+"/thumbnail.png");
 			li.appendChild(img);
 			var h4 = newDom('h4');
 			li.setAttribute('name', key);
@@ -297,7 +297,7 @@ $(document).ready(function() {
 	};
 
 	$.ajax({
-		url: "../../app/RestJson/reports",
+		url: ROOT_PATH + "/app/RestJson/reports",
 		success: function(json) {
 			json_releves_list = json;
 			$('.releves_list table').each(function(){
@@ -325,7 +325,7 @@ $(document).ready(function() {
 
 
 	$.ajax({
-		url: "../../app/RestJson/display_type",
+		url: ROOT_PATH + "/app/RestJson/display_type",
 		success: function(json) {
 			json_input_types = json;
 			$('.input_types ul').each(function(){

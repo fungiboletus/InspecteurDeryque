@@ -290,3 +290,6 @@ top:-36px;
 body.fullscreen .topbar:hover {
 top:0px;
 }
+
+#topbar_logo a {
+}
