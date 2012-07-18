@@ -7,7 +7,7 @@ function get_random_color() {
 		degree = Math.round(Math.random() * 360);
 		var j = 0;
 		for (var j = 0; j < get_random_color_degrees.length; ++j)
-			if (Math.abs(get_random_color_degrees[j] - degree) < 
+			if (Math.abs(get_random_color_degrees[j] - degree) <
 				30-get_random_color_degrees.length)
 				j = 1000;
 
@@ -56,7 +56,6 @@ $(document).ready(function() {
 			color+",0.6)), color-stop(55%,hsla("+color+",0.6)), color-stop(100%,hsla("+dark_color+",0.65)))";
 		border_line.style.background = "-webkit-linear-gradient(left, hsla("+color+",0.6) 0%,hsla("+color+
 			",0.6) 55%,hsla("+dark_color+",0.65) 100%)";
-
 		border_line.style.background = "linear-gradient(to right, hsla("+
 			color+",0.6) 0%,hsla("+color+",0.6) 55%,hsla("+dark_color+",0.65) 100%)";
 		border_line.style.background = "-moz-linear-gradient(left, hsla("
@@ -126,6 +125,7 @@ $(document).ready(function() {
 	back_boutons_bar.addClass('nav left boutons_back boutons_caches');
 
 	var bouton = create_toolbar_button('Flip!');
+	bouton.firstChild.className = 'icon_button flip_text';
 	$('.topbar .nav.right').append(bouton);
 
 	$(bouton).click(function() {
@@ -218,17 +218,19 @@ $(document).ready(function() {
 	for (var nom in boutonsLayouts)
 	{
 		var bouton = create_toolbar_button(nom);
+		bouton.className = 'layout_button';
+		bouton.firstChild.className = 'icon_button '+nom.toLowerCase()+'_text';
 		$(bouton).click(function() {
 			var nom = $(this)[0].firstChild.firstChild.data;
 			layout.changeLayout(boutonsLayouts[nom]);
 		});
 
-		$(bouton).addClass('layout_button');
 		back_boutons_bar.append(bouton);
 	}
 
 
 	jbouton = $(create_toolbar_button('Nouvelle boite'));
+	jbouton.find('a').addClass('icon_button newbox_text');
 	back_boutons_bar.append(jbouton);
 
 	var json_releves_list = null;
@@ -293,7 +295,7 @@ $(document).ready(function() {
 			li.appendChild(h4);
 			list.append(li);
 		}
-		
+
 	};
 
 	$.ajax({
@@ -369,7 +371,7 @@ $(document).ready(function() {
 			box.find('input').each(function() {
 				var input = $(this);
 				if (input.attr('value') == releve)
-					input.attr('checked', 'checked');	
+					input.attr('checked', 'checked');
 			});
 		}
 	});

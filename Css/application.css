@@ -59,7 +59,7 @@ font-size: 12px;
 #divTodayNotification ul li {
 margin:0;
 padding:0;
-} 
+}
 
 #divFetes {
 text-align:center;
@@ -238,6 +238,12 @@ padding-left:40px;
 .shoebox_text:before { content:url(../Img/icons/shoebox.png);}
 .line_text:before { content:url(../Img/icons/line-chart.png);}
 .upload_text:before { content:url(../Img/icons/upload.png);}
+.grid_text:before { content:url(../Img/icons/grid_t.png);}
+.vertical_text:before { content:url(../Img/icons/vertical_t.png);}
+.horizontal_text:before { content:url(../Img/icons/horizontal_t.png);}
+.multi_text:before { content:url(../Img/icons/multi_t.png);}
+.newbox_text:before { content:url(../Img/icons/newbox_t.png);}
+.flip_text:before { content:url(../Img/icons/flip_t.png);}
 
 .float_right {
 float:right;
@@ -256,16 +262,16 @@ padding-right:10px;
 
 #selection_graph li.display_prefs a {
 border-color:#00A1FF;
-} 
+}
 #selection_graph li.display_prefs a:hover {
 border-color: #0069D6;
-} 
+}
 #selection_graph li.display_selected a {
 border-color:red;
-} 
+}
 #selection_graph li.display_selected a:hover {
 border-color:#CC1122;
-} 
+}
 /*#selection_graph li.display_prefs a {
 background:pink;
 border:3px solid yellow;

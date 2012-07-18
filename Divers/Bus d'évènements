@@ -1,0 +1,41 @@
+# Architecture
+
+## Rangement
+
+Une architecture utilisant le système de fichier et des techniques d'introspection est utilisée pour définir les différentes visualisations.
+
+Les visualisations sont stockées dans dans le dossier Display, et utilisent un dossier à leurs noms respectif.
+
+Le dossier d'une visualisation contient une icône la représentant, thumbnail.png. Il contient aussi un fichier php commençant par la lettre D, et suivi du nom de la visualisation. Ce fichier contient des informations sémantique sur la visualisation, mais aussi les méthodes permettant de s'en servir, et les réglages techniques.
+
+Le dossier contient ensuite tout ce qui est nécessaire au fonctionnement de la visualisation.
+
+## Librairies
+
+L'inspecteur deryque utilise la libraire JQuery, comme un grand nombre d'applications web en 2012. Cependant, certaines visualisations peuvent nécessiter d'autres librairies.
+
+Ces librairies sont regroupées dans le dossier Libs, pour éviter de les avoir en plusieurs exemplaires dans les différentes visualisations. La visualisation indique qu'elle nécessite telles librairies, et l'inspecteur deryque s'occupe de les ajouter.
+
+Il arrive que ces librairies soient incompatibles entre elles, ou avec JQuery. Dans ce cas, la solution est d'isoler la visualisation dans une sous page, une iframe. Cela complique le code, mais c'est la seule solution qui fonctionne à tous les coups.
+
+
+## Un bus d'évènements
+
+La communication entre les boites de visualisation de l'inspecteur deryque se réalise à l'aide d'un bus d'évènements en javascript. Cela permet une grande séparation entre les différents modules de l'application, et une communication aisée, même à travers les iframes.
+
+- i15e.new_tuples {statement_name: $statement_name, tuples: [tuple*]}
+	- De nouveaux tuples sont arrivés
+- i15e.tuples_selected {$statement_name: [time_t*]}
+	- Les tuples indiqués sont sélectionnés, les autres sont déselectionnés. Pour tout déselectionner, il suffit de laisser vide la liste des tuples sélectionnées
+- i15e.range_selected {start_t: $start_t, end_t: $end_t}
+	- Une intervalle de temps est sélectionnée
+- i15e.time_sync {time_t: ...}
+	- Évènement de synchronisation de temps : l'utilisateur se concentre sur le temps time_t.
+- i15e.add_statement {statement_name: $statement_name, box_name: $box_name}
+	- Ajoute un nouveau relevé statement_name dans la boite box_name
+- i15e.del_statement {statement_name: $statement_name, box_name: $box_name}
+	- Supprime le relevé statement_name de la boite box_name
+- i15e.destruct {box: $box_name}
+	- Détruit la boite, nottamment au niveau de la gestion du code évènementiel
+- i15e.layout_change
+	- Évènement envoyé en cas de changement de layout, et donc de dimensions des boites.
