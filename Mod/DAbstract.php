@@ -11,25 +11,30 @@ abstract class DAbstract
      * Because this is an abstract class a message error is delivered to the user.
      */
 	public function show() {
+		global $ROOT_PATH;
 		$name = substr(get_class($this),1);
 
-		$path = "Display/$name/D$name.js";
-		if (file_exists($path))
+		$path_js = "Display/$name/D$name.js";
+		$path_css = "Display/$name/D$name.css";
+		if (file_exists($path_js))
 		{
-			CHead::addJS($GLOBALS['ROOT_PATH'].'/'.$path);
+			CHead::addJS($ROOT_PATH.'/'.$path_js);
 
-			echo <<<END
+			if (file_exists($path_css))
+				CHead::addCSS($ROOT_PATH.'/'.$path_css);
+
+			/*echo <<<END
 <div id="area"></div>
 <script type="text/javascript">
 $(document).ready(function(){
 new D$name(byId('area'));
 });
 </script>
-END;
+END;*/
 		}
 		else
 			echo <<<END
-<div class="alert-message error"ujsdhfjksdhfjhbwêncbfkjfb>
+<div class="alert-message error">
 <p>Désolé, mais ce type d'affichage n'est pas encore implémenté.</p>
 </div>
 END;

@@ -157,7 +157,7 @@ $(document).ready(function() {
 			back_boutons_bar.addClass('boutons_caches');
 
 			// Updating the display
-			jboxes.each(function() {
+			/*jboxes.each(function() {
 				var box = $(this);
 				var front = box.find('.front');
 				var releves_selectionnes = box.find('.releves_list input:checked');
@@ -171,7 +171,6 @@ $(document).ready(function() {
 				releves_selectionnes.each(function() {
 
 					var value = $(this).val();
-					var url = ROOT_PATH+"/app/Display/iframe_view"+type+"/no_choice_menu/true?nom="+encodeURIComponent(value);
 					var id = 'f' + Math.abs(($(this).parent('.boxdiv').attr('id')+url).hashCode());
 
 					var iframe = byId(id);
@@ -193,7 +192,7 @@ $(document).ready(function() {
 
 				front.find('iframe:not(.updated)').remove();
 				front.find('iframe:.updated').removeClass('updated');
-			});
+			});*/
 		}
 		else
 		{
@@ -272,6 +271,34 @@ $(document).ready(function() {
 		var li = $(this);
 		li.parent().find('li').removeClass('selected');
 		li.addClass('selected');
+
+		var type = encodeURIComponent(li.attr('name'));
+		var boxdiv = li.parents('.boxdiv');
+		var front = boxdiv.children('.front');
+		var url = ROOT_PATH+"/app/Display/load/type/"+type;
+		var id = 'f' + Math.abs((boxdiv.attr('id')+url).hashCode());
+		console.log(front);
+
+		var iframe = byId(id);
+		if (!iframe)
+		{
+			var other_frames = front.find('iframe');
+
+			if (other_frames.length) front.remove(other_frames);
+
+			iframe = newDom('iframe');
+			iframe.setAttribute('src', url);
+			iframe.id = id;
+			front.append(iframe);
+		}
+
+		iframe.className = 'visualization';
+
+		/*iframe.onload = function() {
+			iframe.style.height = iframe.contentWindow.document.body.offsetHeight + 20 + 'px';
+						//iframe.style.width = iframe.contentWindow.document.body.offsetWidth + 'px';
+					};*/
+
 	};
 
 	var json_input_types = null;
