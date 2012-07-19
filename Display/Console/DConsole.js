@@ -10,17 +10,17 @@ var DConsole = function()
 		var canard = {coucou: "salut", plop: 54};
 
 	for (var i = 0; i < events.length; ++i)
-		window.top.addEventListener('i15e.'+events[i], this.manageEvent);
+		EventBus.addListener('i15e.'+events[i], this.manageEvent);
 }
 
-DConsole.prototype.manageEvent = function(e)
+DConsole.prototype.manageEvent = function(e, detail)
 {
 	var li = newDom('li');
 	var type = newDom('strong');
 	type.appendChild(document.createTextNode(e.type));
 	li.appendChild(type);
 
-	if (typeof e.detail !== 'undefined')
+	if (typeof detail !== 'undefined')
 	{
 		var json = newDom('span');
 		json.className = 'json rainbow';
@@ -34,6 +34,10 @@ DConsole.prototype.manageEvent = function(e)
 
 	var console = byId('console');
 	console.appendChild(li);
+
+	if (console.childNodes.length > 512)
+		console.removeChild(console.firstChild);
+
 
 	console.scrollTop = console.scrollHeight;
 };

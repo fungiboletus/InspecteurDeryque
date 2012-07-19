@@ -55,7 +55,7 @@ var createButton = function(id, titre,rappel)
 	bouton.setAttribute("type","button");
 	bouton.setAttribute("name",id);
 	bouton.setAttribute("value",_(titre));
-				   
+
 	return bouton;
 };
 
@@ -158,9 +158,23 @@ HTMLElement.prototype.allOffset = function()
 	return o;
 };
 
+var EventBus = new Object();
+EventBus.addListener = function(name, method) {
+	window.top.addEventListener(name, function(e) {
+		method(e, e.detail);
+	});
+};
+EventBus.delListener = function(name) {
+	alert('todo');
+};
+EventBus.send = function(name, data) {
+	var e = new CustomEvent(name, {detail: data});
+	window.top.dispatchEvent(e);
+};
+
 $(document).ready(function(){
 	$('.topbar').dropdown();
-	
+
 	$(window).resize(function()
 	{
 		if (window.innerWidth == window.screen.width && window.innerHeight == window.screen.height)

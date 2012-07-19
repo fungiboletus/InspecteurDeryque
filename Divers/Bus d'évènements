@@ -39,3 +39,4 @@ La communication entre les boites de visualisation de l'inspecteur deryque se r�
 	- Détruit la boite, nottamment au niveau de la gestion du code évènementiel
 - i15e.layout_change
 	- Évènement envoyé en cas de changement de layout, et donc de dimensions des boites.
+- i15e.

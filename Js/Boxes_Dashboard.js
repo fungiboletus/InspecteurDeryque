@@ -40,6 +40,7 @@ $(document).ready(function() {
 			byId('mainContent'),
 			Cadreur_DIRECTIONS.VERTICAL);
 
+	var nb_boxes = 0;
 	function create_perfect_box() {
 		var box = layout.createBox();
 
@@ -109,7 +110,7 @@ $(document).ready(function() {
 		box.back.appendChild(input_types);
 
 		box.box.style.background = 'hsl('+color+')';
-		box.box.id = "box_"+color.slice(1);
+		box.box.id = "box_"+nb_boxes+++'_'+Math.abs(color.slice(1).hashCode());
 		return box.box;
 	}
 	var firstBox = create_perfect_box();
@@ -139,6 +140,7 @@ $(document).ready(function() {
 				back_boutons_bar.hide();
 				bouton_user.removeClass('boutons_caches');
 				front_boutons_bar.removeClass('boutons_caches');
+				EventBus.send('i15e.layout_change');
 			}
 			else
 			{
@@ -155,6 +157,19 @@ $(document).ready(function() {
 			bouton_user.show();
 			front_boutons_bar.show();
 			back_boutons_bar.addClass('boutons_caches');
+
+			// Select the first type of visualization by default
+			jboxes.each(function() {
+				var box = $(this);
+
+				var releve = box.find('.input_types li.selected_by_default');
+
+				if (releve.length) {
+					releve.removeClass('selected_by_default');
+					releve.click();
+				}
+
+			});
 
 			// Updating the display
 			/*jboxes.each(function() {
@@ -255,21 +270,25 @@ $(document).ready(function() {
 			list.append(tr);
 		}
 		list.find('tr').click(function(e){
-			if((e.originalEvent.target && e.originalEvent.target.nodeName == 'INPUT') ||
-				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName == 'INPUT')) {
-				return;
-			}
-
 			var checkbox = $(this).find('input');
 
-			checkbox.attr('checked', checkbox.attr('checked') != 'checked');
+			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') &&
+				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT')) {
+				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
+			}
+
+			var checked = checkbox.attr('checked') === 'checked';
+			var box_name = $(this).parents('.boxdiv').attr('id');
+			var statement_name = checkbox.attr('value');
+			EventBus.send('i15e.'+(checked ? 'add': 'del') +'_statement',
+				{statement_name: statement_name, box_name: box_name});
 
 		});
 	};
 
 	var clic_type_releve = function() {
 		var li = $(this);
-		li.parent().find('li').removeClass('selected');
+		li.parent().find('li').removeClass('selected selected_by_default');
 		li.addClass('selected');
 
 		var type = encodeURIComponent(li.attr('name'));
@@ -277,14 +296,12 @@ $(document).ready(function() {
 		var front = boxdiv.children('.front');
 		var url = ROOT_PATH+"/app/Display/load/type/"+type;
 		var id = 'f' + Math.abs((boxdiv.attr('id')+url).hashCode());
-		console.log(front);
 
 		var iframe = byId(id);
 		if (!iframe)
 		{
 			var other_frames = front.find('iframe');
-
-			if (other_frames.length) front.remove(other_frames);
+			other_frames.remove();
 
 			iframe = newDom('iframe');
 			iframe.setAttribute('src', url);
@@ -305,9 +322,14 @@ $(document).ready(function() {
 
 	var remplir_input_types = function(list) {
 		list.empty();
+		var first = true;
 		for (var key in json_input_types)
 		{
 			var li = newDom('li');
+			if (first) {
+				li.className = 'selected selected_by_default';
+				first = false;
+			}
 			layout.disableDrag(li);
 
 			$(li).click(clic_type_releve);
