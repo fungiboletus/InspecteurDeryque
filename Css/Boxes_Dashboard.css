@@ -1,4 +1,19 @@
-
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+	background:transparent;
+}
+::-webkit-scrollbar-thumb {
+	overflow:visible;
+	border-radius:3px;
+	box-shadow:inset 0px 0px 6px rgba(0,0,0,0.69);
+}
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(255,255,255,0.2);
+}
+::-webkit-scrollbar-corner {
+	background:transparent;
+}
 html {
 	overflow-y:hidden;
 }
