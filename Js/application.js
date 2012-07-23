@@ -164,16 +164,16 @@ HTMLElement.prototype.allOffset = function()
 
 var EventBus = new Object();
 EventBus.prefix = 'i15e.';
-// TODO Bind
 EventBus.addListener = function(name, method, caller) {
 	window.top.addEventListener(this.prefix+name, function(e) {
-		method(e.detail, caller, e);
+		// If the page still exist
+		if (self !== null)
+			method(e.detail, caller, e);
 	});
 };
 EventBus.delListener = function(name) {
 	alert('todo');
 };
-// Todo trigger
 EventBus.send = function(name, data) {
 	var e = new CustomEvent(this.prefix+name, {detail: data});
 	window.top.dispatchEvent(e);

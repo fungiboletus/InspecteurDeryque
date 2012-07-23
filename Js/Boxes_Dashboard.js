@@ -305,6 +305,7 @@ $(document).ready(function() {
 		if (!iframe)
 		{
 			var other_frames = front.find('iframe');
+			other_frames.contents().empty();
 			other_frames.remove();
 
 			iframe = newDom('iframe');

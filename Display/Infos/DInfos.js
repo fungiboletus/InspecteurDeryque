@@ -9,8 +9,14 @@ var DInfos = function(screen)
 	shadow.appendChild(number);
 	screen.appendChild(shadow);
 
-	EventBus.addListener('time_sync', function(d) {
+	var updateFnc = function(b) {
 		show.data = b.time_t;
+	};
+	EventBus.addListener('time_sync', updateFnc);
+	EventBus.addListener('new_tuples', function(e) {
+		var l = e.data.length;
+		if (l > 0)
+			updateFnc(e.data[l-1]);
 	});
 };
 

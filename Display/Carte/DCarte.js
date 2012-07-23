@@ -63,9 +63,16 @@ DCarte.prototype =
 					var line = new google.maps.Polyline({
 						path: [obj.last_point, ll],
 						strokeColor: "hsl("+color+", 50%, "+lum+"%)",
-						strokeWeight: 3
+						strokeWeight: 4,
+						map: obj.map
 					});
-					line.setMap(obj.map);
+					google.maps.event.addListener(line, 'click', function(e,b){
+						obj.marker.setPosition(ll);
+						EventBus.send('time_sync', {time_t: point.time_t});
+						/*console.log(e);
+						console.log(b);*/
+					});
+					// line.setMap(obj.map);
 					obj.marker.setPosition(ll);
 				}
 				if (!obj.map.getBounds().contains(ll))

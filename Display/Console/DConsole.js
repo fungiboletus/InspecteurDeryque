@@ -4,7 +4,7 @@ var DConsole = function()
 
 	var events = ['new_tuples', 'add_statement', 'del_statement',
 		'layout_change', 'log', 'error', 'statements_list',
-		'get_statements_list'];
+		'get_statements_list', 'time_sync'];
 
 		445487;
 
@@ -29,20 +29,25 @@ DConsole.prototype.manageEvent = function(detail, obj, e)
 	{
 		var json = newDom('span');
 		json.className = 'json rainbow';
+		li.appendChild(json);
 
 		var text = JSON.stringify(e.detail, null, 2);
 
+		var rainbow_a_fonctionne = false;
 		if (text.length < 512)
 		{
-			Rainbow.color(text,
-				'generic', function(html) {
-				json.innerHTML = html;
-			});
-		} else {
-			json.appendChild(document.createTextNode(text));
+			try {
+				Rainbow.color(text,
+					'generic', function(html) {
+					json.innerHTML = html;
+				});
+				rainbow_a_plante = true;
+			} catch (e) {console.log(e);}
 		}
 
-		li.appendChild(json);
+		if (!rainbow_a_fonctionne && json.innerHTML.childNodes)
+			json.appendChild(document.createTextNode(text));
+
 	}
 
 	var console = obj.console;
