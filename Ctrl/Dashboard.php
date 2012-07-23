@@ -2,7 +2,7 @@
 /** Manages the Dashboard - the index when the user is logged in. */
 class Dashboard
 {
-	
+
 	/**
 	 * Index
 	 */
@@ -13,6 +13,7 @@ class Dashboard
 		CHead::addCSS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.css');
 		CHead::addJS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.js');
 		CHead::addCSS('Boxes_Dashboard');
+		CHead::addJS('SuperOperator');
 		CHead::addJS('Boxes_Dashboard');
 
 		$this->tadam();
@@ -37,7 +38,7 @@ END;
 		CNavigation::setTitle('Tableau de bord');
 		DisplayView::showPageWithLayout();
 
-		$this->tadam();	
+		$this->tadam();
 	}
 
     /**

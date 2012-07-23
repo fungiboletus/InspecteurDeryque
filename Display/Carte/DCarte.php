@@ -10,6 +10,15 @@ class DCarte extends DAbstract
 	{
 		CHead::addJs('http://maps.google.com/maps/api/js?sensor=false');
 		DAbstract::show();
+?>
+<script type="text/javascript">
+$(document).ready(function(){
+	carte = new DCarte(byId('carte'));
+});
+</script>
+<div id="carte">
+</ul>
+<?php
 		/*
 		CHead::addJs('carte');
 
@@ -33,7 +42,7 @@ class DCarte extends DAbstract
 		echo '<div id="carte" style="width:960px; height:600px; margin-bottom:20px;"></div>';
 		echo "<div id='data' style='display:none;'><table>\n"
 					.$timestamp."\n".$lat."\n".$lon."\n</table>\n</div>";*/
-		
+
 	}
 }
 ?>

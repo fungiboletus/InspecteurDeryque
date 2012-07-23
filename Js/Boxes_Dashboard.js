@@ -40,6 +40,8 @@ $(document).ready(function() {
 			byId('mainContent'),
 			Cadreur_DIRECTIONS.VERTICAL);
 
+	new SuperOperator();
+
 	var nb_boxes = 0;
 	function create_perfect_box() {
 		var box = layout.createBox();
@@ -140,7 +142,9 @@ $(document).ready(function() {
 				back_boutons_bar.hide();
 				bouton_user.removeClass('boutons_caches');
 				front_boutons_bar.removeClass('boutons_caches');
-				EventBus.send('i15e.layout_change');
+
+				// In a setTimeout for event order (dirty but funny)
+				setTimeout(function(){EventBus.send('layout_change');}, 1);
 			}
 			else
 			{
@@ -280,7 +284,7 @@ $(document).ready(function() {
 			var checked = checkbox.attr('checked') === 'checked';
 			var box_name = $(this).parents('.boxdiv').attr('id');
 			var statement_name = checkbox.attr('value');
-			EventBus.send('i15e.'+(checked ? 'add': 'del') +'_statement',
+			EventBus.send((checked ? 'add': 'del') +'_statement',
 				{statement_name: statement_name, box_name: box_name});
 
 		});
@@ -347,18 +351,15 @@ $(document).ready(function() {
 
 	};
 
-	$.ajax({
-		url: ROOT_PATH + "/app/RestJson/reports",
-		success: function(json) {
-			json_releves_list = json;
-			$('.releves_list table').each(function(){
-				var list = $(this);
-				remplir_releves_list(list);
-			});
-		},
-		error: function(e) {
-			alert(e.status == 401 ? "Vous devez vous connecter." : e.statusText);
-	}});
+	EventBus.addListener('statements_list', function(statements) {
+		json_releves_list = statements;
+		$('.releves_list table').each(function(){
+			var list = $(this);
+			remplir_releves_list(list);
+		});
+	});
+
+	EventBus.send('get_statements_list');
 
 	jbouton.mousedown(function(e) {
 		var boite = create_perfect_box();

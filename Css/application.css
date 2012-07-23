@@ -30,6 +30,13 @@ width: 964px;
 .topbar .right {
 float:right;
 }
+.topbar {
+background:url(../Img/carbon.png);
+}
+.topbar-inner {
+background: -webkit-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%);
+background: -moz-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%);
+}
 /*
 .page-header {
 margin: 20px -20px 20px;

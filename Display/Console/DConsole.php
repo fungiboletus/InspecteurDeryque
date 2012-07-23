@@ -11,7 +11,7 @@ class DConsole extends DAbstract
 		CHead::addJs($GLOBALS['ROOT_PATH'].'/Display/Console/Rainbow.min.js');
 		DAbstract::show();
 
-		?>
+?>
 <script type="text/javascript">
 $(document).ready(function(){
 	new DConsole();
