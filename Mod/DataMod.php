@@ -56,6 +56,7 @@ class DataMod extends AbstractMod {
      */
     public static function getStatement($name, $user_id) {
         return R::getRow('select r.id, name, description, modname, PicMinLine, PicMaxLine from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $name));
+	/*return R::getRow('select r.id, concat_ws("/", r.name, m.name) as name, description, modname, PicMinLine, PicMaxLine from multi_releve m, releve r, multi_releve_releve mr, datamod d where r.user_id = ? and r.mod_id = d.id and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.name = ?', array($user_id, $name));*/
     }
     
     /**
@@ -93,6 +94,15 @@ class DataMod extends AbstractMod {
      * @param $user_id The id of the user
      * @return array of statements.
      */
+    public static function getStatementsMulti($user_id) {
+        return R::getAll('select m.name, description, modname from multi_releve m, releve r, multi_releve_releve mr, datamod d where m.user_id = ? and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.mod_id = d.id order by name ', array($user_id));
+    }
+
+    /**
+     * Get all statements created by a given user.
+     * @param $user_id The id of the user
+     * @return array of statements.
+     */
     public static function getStatementComp($user_id) {
         return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
     }
@@ -102,10 +112,10 @@ class DataMod extends AbstractMod {
      * @param $user_id id of the user who created the asked statement.
      * @return A query request.
      */
-    public static function getStatementCompo($name, $user_id) {
-        return R::getRow('select c.id, c.name, description, modname, PicMinLine, PicMaxLine from composition c, releve r, datamod d where r.id = ? and r.id = c.releve_id and r.mod_id = d.id and c.name = ?;', array($user_id, $name));
+    public static function getStatementMulti($name, $user_id) {
+        return R::getRow('select m.id, m.name, description, modname, PicMinLine, PicMaxLine from multi_releve m, releve r, multi_releve_releve mr, datamod d where m.user_id = ? and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.mod_id = d.id and m.name=?', array($user_id, $name));
     }
-    
+  
     /**
      * Get all statement names created by a given user.
      * @param $user_id The id of the user
@@ -113,6 +123,10 @@ class DataMod extends AbstractMod {
      */
     public static function getStatementsNames($user_id) {
         return R::getAll('select name from multi_releve r where r.user_id = ? order by name', array($user_id));
+    }
+
+    public static function getStatementsGnhh($user_id) {
+        return R::getAll('select (r.name, m.name) as name, description, modname from multi_releve m, releve r, multi_releve_releve mr, datamod d where r.user_id = 1 and r.mod_id = d.id and m.id = mr.multi_releve_id and mr.releve_id=r.id order by name ', array($user_id));
     }
 
 }

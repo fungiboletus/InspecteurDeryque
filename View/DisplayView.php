@@ -154,7 +154,7 @@ END;
         }
 
 	$url_composition = CNavigation::generateUrlToApp('Data', 'composition');
-        echo <<<END
+        ?>
 	       </table>
 		  </div>	  
 		  
@@ -171,10 +171,10 @@ END;
             <p>Nom de la composition : <input type="text" id="mrname" name="mrname" /> </p>
             <table id="table-composition-releves" class="zebra-striped">
             </table>
-            <p class="alert-message info">La composition de relevés avec un timestamp différent n'est pas encore supporté.</p>
+            <p class="alert-message info"><?php echo _("La composition de relevés avec un timestamp différent n'est pas encore supporté.");?></p>
           </div>
           <div class="modal-footer">
-            <a href="#" onClick="$('#popup_composition').modal('hide')" class="btn">Annuler</a>
+            <a href="#" onClick="$('#popup_composition').modal('hide')" class="btn"><?php echo _('Cancel');?></a>
             <a href="$url_composition" onClick="$('#popup_composition').modal('hide');return ajouterComposition(this);" class="btn btn-primary">Composer</a>
           </div>
         </div>
@@ -185,15 +185,14 @@ END;
             <h3>Composer des relevés</h3>
           </div>
           <div class="modal-body">
-            <p class="alert-message info">Vous n'avez s&eacute;lectionn&eacute; aucun relev&eacute;.<br />
-            Veuillez s&eacute;lectionner au moins deux relevés pour pouvoir faire une composition.</p>
+            <p class="alert-message info">Veuillez s&eacute;lectionner au moins deux relevés pour pouvoir faire une composition.</p>
           </div>
           <div class="modal-footer">
             <a href="#" onClick="$('#popup_composition_vide').modal('hide')" class="btn">Fermer</a>
           </div>
         </div>
         
-END;
+<?php
 
     }
 
