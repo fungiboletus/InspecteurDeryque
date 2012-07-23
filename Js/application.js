@@ -55,7 +55,7 @@ var createButton = function(id, titre,rappel)
 	bouton.setAttribute("type","button");
 	bouton.setAttribute("name",id);
 	bouton.setAttribute("value",_(titre));
-				   
+
 	return bouton;
 };
 
@@ -72,6 +72,29 @@ var arrayShuffle = function(tableau)
 	});
 
 	return tableau;
+};
+
+Array.prototype.remove = function(elem) {
+    var match = -1;
+
+    while( (match = this.indexOf(elem)) > -1 ) {
+        this.splice(match, 1);
+    }
+};
+
+String.prototype.hashCode = function(){
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        var char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+};
+
+Number.prototype.toRadians = function() {
+	return this * (Math.PI/180.0);
 };
 
 var addEventFunction = function(e, o, f) {
@@ -139,6 +162,36 @@ HTMLElement.prototype.allOffset = function()
 	return o;
 };
 
+var EventBus = new Object();
+EventBus.prefix = 'i15e.';
+// TODO Bind
+EventBus.addListener = function(name, method, caller) {
+	window.top.addEventListener(this.prefix+name, function(e) {
+		method(e.detail, caller, e);
+	});
+};
+EventBus.delListener = function(name) {
+	alert('todo');
+};
+// Todo trigger
+EventBus.send = function(name, data) {
+	var e = new CustomEvent(this.prefix+name, {detail: data});
+	window.top.dispatchEvent(e);
+};
+EventBus.addListeners = function(listeners, caller) {
+	for (var key in listeners)
+		this.addListener(key, listeners[key], caller);
+};
+
 $(document).ready(function(){
-$('.topbar').dropdown();
+	$('.topbar').dropdown();
+
+	$(window).resize(function()
+	{
+		if (window.innerWidth == window.screen.width && window.innerHeight == window.screen.height)
+			$(document.body).addClass('fullscreen');
+		else
+			$(document.body).removeClass('fullscreen');
+	});
+
 });

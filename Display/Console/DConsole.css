@@ -1,0 +1,91 @@
+#console {
+background: rgb(26,28,27); /* Old browsers */
+background: -moz-linear-gradient(-45deg,  rgba(26,28,27,1) 0%, rgba(20,20,20,1) 2%, rgba(15,15,15,1) 50%, rgba(12,12,12,1) 51%, rgba(7,7,7,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(26,28,27,1)), color-stop(2%,rgba(20,20,20,1)), color-stop(50%,rgba(15,15,15,1)), color-stop(51%,rgba(12,12,12,1)), color-stop(100%,rgba(7,7,7,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg,  rgba(26,28,27,1) 0%,rgba(20,20,20,1) 2%,rgba(15,15,15,1) 50%,rgba(12,12,12,1) 51%,rgba(7,7,7,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg,  rgba(26,28,27,1) 0%,rgba(20,20,20,1) 2%,rgba(15,15,15,1) 50%,rgba(12,12,12,1) 51%,rgba(7,7,7,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg,  rgba(26,28,27,1) 0%,rgba(20,20,20,1) 2%,rgba(15,15,15,1) 50%,rgba(12,12,12,1) 51%,rgba(7,7,7,1) 100%); /* IE10+ */
+background: linear-gradient(135deg,  rgba(26,28,27,1) 0%,rgba(20,20,20,1) 2%,rgba(15,15,15,1) 50%,rgba(12,12,12,1) 51%,rgba(7,7,7,1) 100%); /* W3C */
+box-shadow:inset 0px 0px 0.5em black;
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	padding:0.5em;
+	overflow-x:hidden;
+	overflow-y:auto;
+	margin:0;
+	font-family:"Ubuntu Mono", "DejaVu Sans Mono", "Lucida Console", "Andale Mono", Monaco, monospace;
+	font-size:1.2em;
+}
+#console li {
+	padding:0;
+	color:hsl(65,50%,65%);
+}
+#console li:hover {
+	background:hsla(0,0%,18%, 0.4);
+}
+
+#console li .json {
+	padding-left:1em;
+}
+
+
+/**
+ * Es.jsonsso Libre theme
+ *
+ * Adapted from Ultraviolet RubyGem
+ *
+ * @author Flinn Mueller
+ * @version 1.0
+ */
+.json {
+    color: #bdae9d;
+}
+
+.json .support.class, .json .support.type {
+    color: #6d79de;
+}
+
+.json .support.constant {
+    color: #00af0e;
+}
+
+.json .constant.language {
+    color: #585cf6;
+}
+
+.json .support.function {
+    font-weight: bold;
+    color: #7290d9;
+}
+
+.json .string {
+    color: #049b0a;
+}
+
+.json .constant.numeric {
+    color: #43A8ED;
+}
+
+.json .keyword, .json .storage {
+    color: #43a8ed;
+}
+
+.json .entity.function {
+    color: #ff9358;
+}
+
+.json .comment {
+    color: #0066ff;
+    font-style: italic;
+}
+
+.json .constant.symbol {
+    color:#c5656b;
+}
+
+.json .variable.instance, .json .variable.language, .json .constant {
+    color: #318495;
+}

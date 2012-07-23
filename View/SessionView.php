@@ -23,6 +23,7 @@ class SessionView {
 
 		echo <<<END
 <h1 id="titre_deryque">Inspecteur Deryque</h1>
+<div id="logo_deryque"><img alt="" src="${GLOBALS['ROOT_PATH']}/Img/titre.png" /></div>
 
 <a href="$url_registration"><div id="lien_inscription">
 $text_registration

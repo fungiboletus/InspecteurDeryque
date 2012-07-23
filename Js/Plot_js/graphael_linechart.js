@@ -1,5 +1,10 @@
 function showLineChart(){
-	var r = Raphael("holder", 940, 400),
+	//$(document).ready(function() {
+
+	var width = 940;//$('holder').width();
+	//console.log(this);
+
+	var r = Raphael("holder", width, 400),
 	txtattr = { font: "12px sans-serif" };
 	r.text(150, 20, "").attr(txtattr);
 
@@ -23,7 +28,7 @@ function showLineChart(){
 		ordonnees.push(tempord);
 	}
 
-	var lines = r.linechart(20, 40, 920, 300, abscisses,ordonnees,
+	var lines = r.linechart(20, 40, width-20, 300, abscisses,ordonnees,
 		{nostroke: false, axis: "0 0 1 1", smooth: true, shade:true}
 		)/*.hoverColumn(function () {
 			this.tags = r.set();
@@ -39,4 +44,5 @@ function showLineChart(){
 	})*/;
 
 	lines.symbols.attr({ r: 6 });
+//});
 }

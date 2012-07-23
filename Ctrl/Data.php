@@ -174,24 +174,21 @@ class Data
 		CNavigation::redirectToApp('Data', 'view', array('nom' => $_REQUEST['nom']));
 	}
 
+	public function composition()
+	{
+		if (!isset($_REQUEST['cname']) || !isset($_REQUEST['creleves']))
+			CTools::hackError();
 
- public function composition()
-{
- 	if (!isset($_REQUEST['cname']) || !isset($_REQUEST['creleves']))
-		 CTools::hackError();
+		$name = $_REQUEST['cname'];
+		$releves = $_REQUEST['creleves'];
 
- 	$name = $_REQUEST['cname'];
-	$releves = $_REQUEST['creleves'];
-	
-	$compostion = new StatementComposition($name, $_SESSION['user']);
+		$compostion = new StatementComposition($name, $_SESSION['user']);
 
-	foreach ($releves as $releve)
- 	
-		$compostion->addStatement($releve);
-	
-	CNavigation::redirectToApp('Dashboard');
+		foreach ($releves as $releve)
+			$compostion->addStatement($releve);
 
-  }
+		CNavigation::redirectToApp('Dashboard');
+	}
 
 }
 ?>

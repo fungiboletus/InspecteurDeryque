@@ -289,6 +289,18 @@ class RestJson
 			$error->bad_request();
 		}
     }
+
+    public function display_type() {
+        $data = DisplayMod::getDisplayTypes();
+
+        $json = array();
+
+        foreach ($data as $d)
+        	$json[$d->folder] = $d->name;
+
+        $this->sendJson($json);
+    }
+
 }
 
 

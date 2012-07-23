@@ -143,7 +143,7 @@ var traiterSomme = function()
 {
 	var mail = input_mail.value;
 	
-	var resultat = mail + " gROAw !.";
+	var resultat = mail + " gROAw !";
 
 	var s = new jsSHA(resultat, "ASCII");
 

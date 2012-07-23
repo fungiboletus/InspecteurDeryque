@@ -5,15 +5,37 @@
 abstract class DAbstract
 {
 	public $data = null; /**< The data to display*/
-	public $structure = null; /**< map of statements */
+	public $structure = null; /** <map of statements */
 
     /** Display graphic.
      * Because this is an abstract class a message error is delivered to the user.
      */
 	public function show() {
-		echo <<<END
+		global $ROOT_PATH;
+		$name = substr(get_class($this),1);
+
+		$path_js = "Display/$name/D$name.js";
+		$path_css = "Display/$name/D$name.css";
+		if (file_exists($path_js))
+		{
+			CHead::addJS($ROOT_PATH.'/'.$path_js);
+
+			if (file_exists($path_css))
+				CHead::addCSS($ROOT_PATH.'/'.$path_css);
+
+			/*echo <<<END
+<div id="area"></div>
+<script type="text/javascript">
+$(document).ready(function(){
+new D$name(byId('area'));
+});
+</script>
+END;*/
+		}
+		else
+			echo <<<END
 <div class="alert-message error">
-<p>Désolé, mais ce type d'affichage n'est pas encore implémenté.</p> 
+<p>Désolé, mais ce type d'affichage n'est pas encore implémenté.</p>
 </div>
 END;
 	}

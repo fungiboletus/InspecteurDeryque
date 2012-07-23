@@ -4,11 +4,12 @@
 	<title><?php echo htmlspecialchars(CNavigation::getTitle()); ?> - Inspecteur Deryque</title>
 <?php foreach (CHead::$css as $css)
 {
-	echo "\t<link href=\"$ROOT_PATH/Css/$css.css\" media=\"screen\" rel=\"Stylesheet\" type=\"text/css\" />\n";
+	if (strpos($css, 'http://')===false && $css[0] !== '/') $css = "$ROOT_PATH/Css/$css.css";
+	echo "\t<link href=\"$css\" media=\"screen\" rel=\"Stylesheet\" type=\"text/css\" />\n";
 }
 foreach (CHead::$js as $js)
 {
-	if (strpos($js, 'http://')===false) $js = "$ROOT_PATH/Js/$js.js";
+	if (strpos($js, 'http://')===false && $js[0] !== '/') $js = "$ROOT_PATH/Js/$js.js";
 	echo "\t<script type=\"text/javascript\" src=\"$js\"></script>\n";
 }
 ?>

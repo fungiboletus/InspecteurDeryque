@@ -195,6 +195,39 @@ END;
 <?php
 
     }
+   
+   	/**
+	 * Print code for JsCHRIST display
+	 */
+	public static function showJsCHRIST() {
+		$jschrist_file = file_get_contents('JsCHRIST/index.html');
+		
+		preg_match_all('/<link href=\"(.+)\.css\".*?>/i', $jschrist_file, $m);
+		foreach ($m[1] as $path)
+			CHead::addCss("../JsCHRIST/$path");
+
+		CHead::delJS('jquery-1.6.2.min');
+
+		$tmp_tab = array(); 
+
+		preg_match_all('/<script.*?src=\"(.+)\.js\">/i', $jschrist_file, $m);
+		foreach ($m[1] as $path)
+			$tmp_tab[] = "../JsCHRIST/$path";
+
+		CHead::$js = array_merge($tmp_tab, CHead::$js);
+
+		echo <<<END
+<script type="text/javascript">
+var JsCHRIST_Config = {
+	data_dt_url: "app/RestJson/data_dt/",
+	reports_url: "app/RestJson/reports"
+};
+</script>
+END;
+
+		preg_match('/<body>(.*)<\/body>/is', $jschrist_file, $body);
+		echo '<div id="jschrist">', $body[1], '</div>';
+	}
 
 }
 ?>
