@@ -58,23 +58,30 @@ add_statement: function(d, obj) {
 			}
 
 			var i = 0;
-			// for (; i < json.data.length/2; ++i)
-			// 	_addTuple(i);
+			for (; i < json.data.length; ++i)
+			 	_addTuple(i);
+
 			EventBus.send('new_tuples', {
 				statement_name: statement_name,
 				data: data.data});
 
 			EventBus.addListener('layout_change', function() {
-				var intervale = window.setInterval(function(){
-					if (i < json.data.length)
-						EventBus.send('new_tuples', {
-							statement_name: statement_name,
-							data: [_addTuple(i)]});
-					if (++i >= json.data.length)
-						window.clearInterval(intervale);
-
-				}, 42);
+				EventBus.send('time_sync', {
+					time_t: data.data[data.data.length -1].time_t
+				});
 			});
+
+			// EventBus.addListener('layout_change', function() {
+			// 	var intervale = window.setInterval(function(){
+			// 		if (i < json.data.length)
+			// 			EventBus.send('new_tuples', {
+			// 				statement_name: statement_name,
+			// 				data: [_addTuple(i)]});
+			// 		if (++i >= json.data.length)
+			// 			window.clearInterval(intervale);
+
+			// 	}, 42);
+			// });
 		});
 	//if (typeof this.database[hash]
 }

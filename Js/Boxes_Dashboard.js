@@ -282,7 +282,8 @@ $(document).ready(function() {
 			}
 
 			var checked = checkbox.attr('checked') === 'checked';
-			var box_name = $(this).parents('.boxdiv').attr('id');
+			var box = $(this).parents('.boxdiv');
+			var box_name = box.find('iframe').attr('id');
 			var statement_name = checkbox.attr('value');
 			EventBus.send((checked ? 'add': 'del') +'_statement',
 				{statement_name: statement_name, box_name: box_name});
@@ -299,13 +300,12 @@ $(document).ready(function() {
 		var boxdiv = li.parents('.boxdiv');
 		var front = boxdiv.children('.front');
 		var url = ROOT_PATH+"/app/Display/load/type/"+type;
-		var id = 'f' + Math.abs((boxdiv.attr('id')+url).hashCode());
+		var id = 'f' + Math.abs((boxdiv.attr('id')+type).hashCode());
 
 		var iframe = byId(id);
 		if (!iframe)
 		{
 			var other_frames = front.find('iframe');
-			other_frames.contents().empty();
 			other_frames.remove();
 
 			iframe = newDom('iframe');

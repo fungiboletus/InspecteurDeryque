@@ -15,22 +15,24 @@ var DCarte = function(screen)
 
 	EventBus.addListeners(this.listeners, this);
 
-	this.last_point = null;
-	this.last_time = null;
-	this.marker = null;
+	this.database = new Object();
+	this.markers = [];
 };
 
 DCarte.prototype =
 {
 	listeners: {
 		new_tuples: function(detail, obj) {
+			if (!(detail.statement_name in obj.database)) return;
+
+			var base = obj.database[detail.statement_name];
 			var data = detail.data;
 			for (var i = 0; i < data.length; ++i) {
 
 				var point = data[i];
 				var ll = new google.maps.LatLng(point.lat, point.lon);
 
-				if (obj.last_point === null)
+				if (base.last_point === null)
 				{
 
 					// var pinColor = "FFFFFF";
@@ -39,7 +41,7 @@ DCarte.prototype =
 			  //       new google.maps.Point(0,0),
 			  //       new google.maps.Point(10, 34));
 					// Create begin
-					obj.marker = new google.maps.Marker({
+					base.marker = new google.maps.Marker({
 						position:ll,
 						// icon: pinImage,
 						map: obj.map,
@@ -47,9 +49,9 @@ DCarte.prototype =
 				}
 				else
 				{
-					var distance = obj.distance(obj.last_point.lat(), obj.last_point.lng(),
+					var distance = obj.distance(base.last_point.lat(), base.last_point.lng(),
 							 ll.lat(), ll.lng());
-					var diff_t = point.time_t - obj.last_time;
+					var diff_t = point.time_t - base.last_time;
 					var speed = distance/diff_t * 3600.0;
 
 					// TODO véritable gestion des couleurs, avec légende
@@ -61,34 +63,117 @@ DCarte.prototype =
 					// console.log(speed * 3.6);
 					// console.log(color);
 					var line = new google.maps.Polyline({
-						path: [obj.last_point, ll],
+						path: [base.last_point, ll],
 						strokeColor: "hsl("+color+", 50%, "+lum+"%)",
 						strokeWeight: 4,
+						visible: false,
 						map: obj.map
 					});
-					google.maps.event.addListener(line, 'click', function(e,b){
-						obj.marker.setPosition(ll);
-						EventBus.send('time_sync', {time_t: point.time_t});
-						/*console.log(e);
-						console.log(b);*/
-					});
+					line.time_t = point.time_t;
+					base.lines.push(line);
+					google.maps.event.addListener(line, 'click', (function(taaame){
+							return function() {
+								EventBus.send('tuples_selected', {statement_name: detail.statement_name,
+									tuples: [taaame]});
+								EventBus.send('time_sync', {time_t: taaame.time_t});
+							}
+						})(point));
 					// line.setMap(obj.map);
-					obj.marker.setPosition(ll);
+					// base.marker.setPosition(ll);
 				}
-				if (!obj.map.getBounds().contains(ll))
-					obj.map.setCenter(ll);
-				obj.last_point = ll;
-				obj.last_time = point.time_t;
+				base.last_point = ll;
+				base.last_time = point.time_t;
 			}
 		},
-		add_statement: function(e) {
+		add_statement: function(e, obj) {
+			if (e.box_name != self.name) return;
 
+			if (!(e.statement_name in obj.database))
+			{
+				var new_obj = new Object();
+				new_obj.last_point = null;
+				new_obj.last_time = null;
+				new_obj.marker = null;
+				new_obj.lines = [];
+				obj.database[e.statement_name]  = new_obj;
+			}
 		},
 		del_statement: function(e) {
+			if (e.box_name != self.name) return;
 
+			if (e.statement_name in obj.database)
+				delete obj.database[e.statement_name];
 		},
 		layout_change: function(d, obj) {
 			obj.map.setCenter(obj.default_location);
+		},
+		time_sync: function(d, obj) {
+			var time = d.time_t;
+			for (var statement in obj.database)
+			{
+				var base = obj.database[statement];
+				base (if.lines.length === 0) continue;
+
+				var diff = Number.MAX_VALUE;
+				var best_point = null;
+
+				var intervalle = 50000;
+
+				for (var i = 0; i < base.lines.length; ++i)
+				{
+					var point = base.lines[i];
+					var tmp_diff = Math.abs(point.time_t - time);
+					if (tmp_diff <= diff)
+					{
+						diff = tmp_diff;
+						best_point = point;
+					}
+
+					var visibility = tmp_diff <= intervalle;
+					if (point.getVisible() != visibility)
+						point.setVisible(visibility);
+					// var opacity = 1.0;
+					// if (tmp_diff > intervalle) {
+					// 	if (tmp_diff < (intervalle + intervalle))
+					// 		opacity = 1.0-tmp_diff/(intervalle*1.75);
+					// 	else
+					// 		opacity = 0.2;
+					// }
+					// point.setOptions({strokeOpacity: opacity});
+				}
+
+				if (diff < intervalle)
+				{
+					var ll = best_point.getPath().getAt(1);
+					base.marker.setPosition(ll);
+					base.marker.setVisible(true);
+					if (!obj.map.getBounds().contains(ll))
+						obj.map.setCenter(ll);
+				}
+				else
+					base.marker.setVisible(false);
+			}
+		},
+		tuples_selected: function(d, obj) {
+			if (!(d.statement_name in obj.database)) return;
+
+			var tuples = d.tuples;
+
+			var options = {map: obj.map};
+
+			for (var i = tuples.length; i < obj.markers.length; ++i)
+				obj.markers[i].setVisible(false);
+
+			for (var i = obj.markers.length; i < tuples.length; ++i)
+				obj.markers[i] = new google.maps.Marker(options);
+
+			for (var i = 0; i < tuples.length; ++i)
+			{
+				obj.markers[i].setVisible(true);
+				var ll = new google.maps.LatLng(tuples[i].lat, tuples[i].lon);
+				obj.markers[i].setPosition(ll);
+			}
+
 		}
 	},
 
