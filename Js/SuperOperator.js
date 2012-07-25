@@ -36,7 +36,7 @@ get_statements_list: function(d, obj) {
 
 add_statement: function(d, obj) {
 	var statement_name = d.statement_name;
-	var hash = statement_name.hashCode();
+	// var hash = statement_name.hashCode();
 
 	obj.ajax('data_dt/'+encodeURIComponent(statement_name),
 		function(json) {
@@ -82,7 +82,28 @@ add_statement: function(d, obj) {
 
 			// 	}, 42);
 			// });
+
+			obj.database[statement_name] = data;
+
+			// Autosend of bounds
+			obj.listeners.get_bounds(null, obj);
+
+			EventBus.send('time_sync', {
+				start_t: data.time_tMin,
+				time_t: data.data[data.data.length -1].time_t,
+				end_t: data.time_tMax
+			});
+
 		});
-	//if (typeof this.database[hash]
+},
+
+get_bounds: function(d, obj) {
+	var response = {};
+
+	for (var statement_name in obj.database) {
+		response[statement_name] = $.extend({}, obj.database[statement_name]);
+		delete response[statement_name].data;
+	}
+	EventBus.send('bounds', response);
 }
 }};

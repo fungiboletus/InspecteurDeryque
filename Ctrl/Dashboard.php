@@ -14,6 +14,7 @@ class Dashboard
 		CHead::addJS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.js');
 		CHead::addCSS('Boxes_Dashboard');
 		CHead::addJS('SuperOperator');
+		CHead::addJS('TimeControl');
 		CHead::addJS('Boxes_Dashboard');
 
 		$this->tadam();

@@ -3,6 +3,7 @@ var DCarte = function(screen)
 	if (window['google'] == undefined || google['maps'] == undefined) return alert('Google maps library is required');
 	this.screen = screen;
 
+	// If we have nothing to display, display a heart island
 	this.default_location = new google.maps.LatLng(43.978487,15.383574);
 	var options = {
 		center: this.default_location,
@@ -26,12 +27,14 @@ DCarte.prototype =
 			if (!(detail.statement_name in obj.database)) return;
 
 			var base = obj.database[detail.statement_name];
+			// For each new tuple
 			var data = detail.data;
 			for (var i = 0; i < data.length; ++i) {
 
 				var point = data[i];
 				var ll = new google.maps.LatLng(point.lat, point.lon);
 
+				// We dont draw a line if we don't have two point or more
 				if (base.last_point === null)
 				{
 
@@ -71,6 +74,7 @@ DCarte.prototype =
 					});
 					line.time_t = point.time_t;
 					base.lines.push(line);
+
 					google.maps.event.addListener(line, 'click', (function(taaame){
 							return function() {
 								EventBus.send('tuples_selected', {statement_name: detail.statement_name,
@@ -98,7 +102,7 @@ DCarte.prototype =
 				obj.database[e.statement_name]  = new_obj;
 			}
 		},
-		del_statement: function(e) {
+		del_statement: function(e, obj) {
 			if (e.box_name != self.name) return;
 
 			if (e.statement_name in obj.database)
@@ -112,12 +116,10 @@ DCarte.prototype =
 			for (var statement in obj.database)
 			{
 				var base = obj.database[statement];
-				base (if.lines.length === 0) continue;
+				if (base.lines.length === 0) continue;
 
 				var diff = Number.MAX_VALUE;
 				var best_point = null;
-
-				var intervalle = 50000;
 
 				for (var i = 0; i < base.lines.length; ++i)
 				{
@@ -129,9 +131,12 @@ DCarte.prototype =
 						best_point = point;
 					}
 
-					var visibility = tmp_diff <= intervalle;
-					if (point.getVisible() != visibility)
-						point.setVisible(visibility);
+					if (d.start_t && d.end_t)
+					{
+						var visibility = point.time_t >= d.start_t && point.time_t <= d.end_t;
+						if (point.getVisible() != visibility)
+							point.setVisible(visibility);
+					}
 					// var opacity = 1.0;
 					// if (tmp_diff > intervalle) {
 					// 	if (tmp_diff < (intervalle + intervalle))
@@ -142,16 +147,16 @@ DCarte.prototype =
 					// point.setOptions({strokeOpacity: opacity});
 				}
 
-				if (diff < intervalle)
-				{
+				// if (diff < intervalle)
+				// {
 					var ll = best_point.getPath().getAt(1);
 					base.marker.setPosition(ll);
 					base.marker.setVisible(true);
 					if (!obj.map.getBounds().contains(ll))
 						obj.map.setCenter(ll);
-				}
-				else
-					base.marker.setVisible(false);
+				// }
+				// else
+				// 	base.marker.setVisible(false);
 			}
 		},
 		tuples_selected: function(d, obj) {

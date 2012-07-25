@@ -4,7 +4,8 @@ var DConsole = function()
 
 	var events = ['new_tuples', 'add_statement', 'del_statement',
 		'layout_change', 'log', 'error', 'statements_list',
-		'get_statements_list', 'time_sync', 'tuples_selected'];
+		'get_statements_list', 'time_sync', 'tuples_selected',
+		'get_bounds', 'bounds'];
 
 	var canard = {coucou: "salut", plop: 54};
 
