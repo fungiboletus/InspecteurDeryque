@@ -32,19 +32,19 @@ class DisplayView extends AbstractView {
             echo '<div class="well">';
         echo <<<END
         <div id="selection_graph">
-                <ul class="media-grid">
+                <ul class="thumbnails">
                                       
 END;
 
         foreach ($data as $display) {
             $folder = $display->folder;
             $url = CNavigation::generateMergedUrl('Display', $action, array('type' => $folder));
-            $class = in_array($folder, $prefs, true) ? ' class="display_prefs"' : '';
-            $class = $folder === $selected ? ' class="display_selected"' : $class;
+            $class = in_array($folder, $prefs, true) ? ' display_prefs' : '';
+            $class = $folder === $selected ? ' display_selected' : $class;
             echo <<<END
-            <li$class>
+            <li class="thumbnail$class">
                     <a href="$url" class="liengraph">
-                                             <img alt="" src="$ROOT_PATH/Display/$folder/thumbnail.png" class="thumbnail"/>
+                                             <img alt="" src="$ROOT_PATH/Display/$folder/thumbnail.png"/>
                                 <h4> {
                         $display->name
                     }</h4>
@@ -121,7 +121,7 @@ END;
                                                                                              <div id="my-tab-content" class="tab-content">
                                                                                                                                 <div class="tab-pane active" id="releves">
                                                                                                                                                                     <div id="releves-list">
-                                                                                                                                                                            <table class="zebra-striped">
+                                                                                                                                                                            <table class="table table-striped">
                                     
                                                                                                                                                              
 END;
@@ -148,7 +148,7 @@ END;
 
                                                 </div>
                                                 <div id="composition" class="tab-pane">
-                                                                                <table class="zebra-striped">
+                                                                                <table class="table table-striped">
                                                                                                      
 END;
 
@@ -184,9 +184,9 @@ END;
                                                                                                       </div>
                                                                                                       <div class="modal-body">
                                                                                                                      <p>Nom de la composition : <input type="text" id="mrname" name="mrname" /> </p>
-                                                                                                                                                            <table id="table-composition-releves" class="zebra-striped">
+                                                                                                                                                            <table id="table-composition-releves" class="table table-striped">
                                                                                                                                                                           </table>
-                                                                                                                                                                              <p class="alert-message info"><?php echo _("La composition de relevés avec un timestamp différent n'est pas encore supporté.");
+                                                                                                                                                                              <p class="alert alert-info"><?php echo _("La composition de relevés avec un timestamp différent n'est pas encore supporté.");
         ?></p>
         </div>
     <div class="modal-footer">
@@ -202,7 +202,7 @@ END;
                                                                                                                                              <h3>Composer des relevés</h3>
                                                                                                                                              </div>
                                                                                                                                              <div class="modal-body">
-                                                                                                                                                                <p class="alert-message info">Veuillez s&eacute;
+                                                                                                                                                                <p class="alert alert-info">Veuillez s&eacute;
         lectionner au moins deux relevés pour pouvoir faire une composition.</p>
         </div>
     <div class="modal-footer">

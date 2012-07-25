@@ -22,7 +22,7 @@ class CMessage
 
 	public function show()
 	{
-		echo "\t<div class=\"alert-message $this->type\">$this->message</div>\n";
+		echo "\t<div class=\"alert alert-$this->type\">$this->message</div>\n";
 	}
 
 	public static function showMessages()

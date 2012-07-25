@@ -34,7 +34,7 @@ END;*/
 		}
 		else
 			echo <<<END
-<div class="alert-message error">
+<div class="alert alert-error">
 <p>Désolé, mais ce type d'affichage n'est pas encore implémenté.</p>
 </div>
 END;
@@ -47,7 +47,7 @@ END;
 		if (count($this->data) === 0)
 		{
 			echo <<<END
-<div class="alert-message block-message warning">
+<div class="alert alert-block alert-warning">
 <p>Il n'y a aucune donnée pour l'instant.</p>
 </div>
 END;

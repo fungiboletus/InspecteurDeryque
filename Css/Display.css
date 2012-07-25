@@ -21,11 +21,11 @@
 #selection_graph li{
 	display: inline-block;
 }
-#selection_graph .media-grid {
+#selection_graph .thumbnails {
 	margin-left:-12px;
 }
 
-#selection_graph .media-grid a{
+#selection_graph .thumbnails a{
 	margin:0px 0px 0px 12px;
 background:white;
 }

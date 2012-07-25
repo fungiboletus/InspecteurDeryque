@@ -12,7 +12,7 @@ class DTableau extends DAbstract
 
 		CHead::addJS('jquery.tablesorter.min');
 		echo <<<END
-		<table class="zebra-striped bordered-table display_list">
+		<table class="table table-striped table-bordered display_list">
 			<thead><tr>
 END;
 		$couleurs = array('yellow', 'blue', 'green', 'purple','red', 'orange');

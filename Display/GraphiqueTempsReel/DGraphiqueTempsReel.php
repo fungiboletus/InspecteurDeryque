@@ -165,8 +165,8 @@ class DGraphiqueTempsReel extends DAbstract {
           </fieldset>
           </div>
           <div class="modal-footer">
-            <a href="#" class="btn primary" onClick="addMarqueur($('#nomMarqueur').val(),$('#descMarqueur').val(), $('#coulMarqueur').val());$('#popup_ajouter').modal('hide');">Ajouter</a>
-            <a href="#" class="btn secondary" onClick="$('#popup_ajouter').modal('hide')">Annuler</a>
+            <a href="#" class="btn btn-primary" onClick="addMarqueur($('#nomMarqueur').val(),$('#descMarqueur').val(), $('#coulMarqueur').val());$('#popup_ajouter').modal('hide');">Ajouter</a>
+            <a href="#" class="btn btn-secondary" onClick="$('#popup_ajouter').modal('hide')">Annuler</a>
           </div>
         </div>
         <!--                                                                     -->
@@ -179,8 +179,8 @@ class DGraphiqueTempsReel extends DAbstract {
             <p> Etes vous sur de vouloir supprimer le marqueur <span id="marqueur"></span> ? </p>
           </div>
           <div class="modal-footer">
-            <a href="#" class="btn danger" onClick="rmMarqueur($('#listeMarqueurs').val());$('#popup_supprimer').modal('hide')">Supprimer</a>
-            <a href="#" class="btn secondary" onClick="$('#popup_supprimer').modal('hide')">Annuler</a>
+            <a href="#" class="btn btn-danger" onClick="rmMarqueur($('#listeMarqueurs').val());$('#popup_supprimer').modal('hide')">Supprimer</a>
+            <a href="#" class="btn btn-secondary" onClick="$('#popup_supprimer').modal('hide')">Annuler</a>
           </div>
         </div>
         <!--                                                                     -->
@@ -210,8 +210,8 @@ class DGraphiqueTempsReel extends DAbstract {
                  </fieldset>
               </div>
               <div class="modal-footer">
-                <a href="#" class="btn primary" onClick="okMarqueurs();$('#popup_select_marqueurs').modal('hide')">Selectionner</a>
-                <a href="#" class="btn secondary" onClick="$('#popup_select_marqueurs').modal('hide')">Annuler</a>
+                <a href="#" class="btn btn-primary" onClick="okMarqueurs();$('#popup_select_marqueurs').modal('hide')">Selectionner</a>
+                <a href="#" class="btn btn-secondary" onClick="$('#popup_select_marqueurs').modal('hide')">Annuler</a>
               </div>
         </div>
         <div id="popup_select_dates" class="modal hide fade">
@@ -240,8 +240,8 @@ class DGraphiqueTempsReel extends DAbstract {
                  </fieldset>
               </div>
               <div class="modal-footer">
-                <a href="#" class="btn primary" onClick="okDates();$('#popup_select_dates').modal('hide')">Selectionner</a>
-                <a href="#" class="btn secondary" onClick="$('#popup_select_dates').modal('hide')">Annuler</a>
+                <a href="#" class="btn btn-primary" onClick="okDates();$('#popup_select_dates').modal('hide')">Selectionner</a>
+                <a href="#" class="btn btn-secondary" onClick="$('#popup_select_dates').modal('hide')">Annuler</a>
               </div>
         </div>
         <div id="popup_select_selection" class="modal hide fade">
@@ -258,8 +258,8 @@ class DGraphiqueTempsReel extends DAbstract {
                  </fieldset>
               </div>
               <div class="modal-footer">
-                <a href="#" class="btn primary" onClick="okSelection();$('#popup_select_selection').modal('hide')">Selectionner</a>
-                <a href="#" class="btn secondary" onClick="$('#popup_select_selection').modal('hide')">Annuler</a>
+                <a href="#" class="btn btn-primary" onClick="okSelection();$('#popup_select_selection').modal('hide')">Selectionner</a>
+                <a href="#" class="btn btn-secondary" onClick="$('#popup_select_selection').modal('hide')">Annuler</a>
               </div>
         </div>
         <div id="popup_composition" class="modal hide fade">
@@ -275,8 +275,8 @@ class DGraphiqueTempsReel extends DAbstract {
                     </div>
               </div>
               <div class="modal-footer">
-                <a href="#" class="btn primary" onClick="saveComposition($('#nomComposition').val());$('#popup_composition').modal('hide');"> Sauvegarder</a>
-                <a href="#" class="btn secondary" onClick="$('#popup_composition').modal('hide')">Annuler</a>
+                <a href="#" class="btn btn-primary" onClick="saveComposition($('#nomComposition').val());$('#popup_composition').modal('hide');"> Sauvegarder</a>
+                <a href="#" class="btn btn-secondary" onClick="$('#popup_composition').modal('hide')">Annuler</a>
               </div>
         </div>
         <script>$('#btnVertical').click();</script>

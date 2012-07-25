@@ -8,22 +8,22 @@ class DataImportView {
      */
 	public static function showFormImport() {
 		echo <<<END
-		<div class="alert-message block-message info">
+		<div class="alert alert-block alert-info">
 		<p>Sélectionnez le fichier xml contenant vos données, puis cliquez sur le bouton "Importer".</p>
 		<p><em>Les formats de données reconnus pour l'instant sont <Strong>.gpx</Strong>, <Strong>.tcx</Strong> et <Strong>.xml</Strong> (hl7). </em></p>
 		</div>
 END;
 		$url = CNavigation::generateUrlToApp('Import', 'submit');
 		echo <<<END
-		<form id="import" enctype="multipart/form-data" action="$url" method="post">
-			<div class="actions">
+		<form id="import" enctype="multipart/form-data" action="$url" method="post" class="form-horizontal">
+			<div class="actions control-group">
 				<input type="hidden" name="MAX_FILE_SIZE" value="3000000">
-				<label for="fileInput">Importer un fichier</label>
-				<div class="input">
+				<label for="fileInput" class="control-label">Importer un fichier</label>
+				<div class="controls">
 					<input type="file" name="fichierXML" id="fileInput" class="input-file"/>
 				</div>
-				<div class="input" id="boutons">
-					<input type="submit" value="Importer" class="btn primary large"/>
+				<div class="controls" id="boutons">
+					<input type="submit" value="Importer" class="btn btn-primary btn-large"/>
 				</div> 
 			</div>
 		</form>
@@ -52,7 +52,7 @@ END;
 				}
 				echo <<<END
 				<div class="well" id="boutons">
-					<input type="submit" value="Importer" class="btn primary large"/>
+					<input type="submit" value="Importer" class="btn btn-primary btn-large"/>
 				</div>
 			</form>
 END;
@@ -77,9 +77,9 @@ END;
 	private function showSelectPossibleTypes() {
 		$types = DataMod::getDataTypes();
 		echo <<<END
-		<div class="clearfix">
-		<label for="normalSelect">Type du Relevé</label>
-		<div class="input">
+		<div class="control-group">
+		<label for="normalSelect" class="control-label">Type du Relevé</label>
+		<div class="controls">
 			<select id="normalSelect" name="normalSelect">
 END;
 		foreach ($types as $type) {
@@ -99,20 +99,20 @@ END;
 	private function showNewStatementForm($nameData) {
 
 		echo <<<END
-		<form action="" name="data_add_form" method="post" id="data_add_form" style="display:none;">
+		<form action="" name="data_add_form" method="post" id="data_add_form" style="display:none;" class="form-horizontal">
 			<fieldset>
 END;
 		DataImportView::showSelectPossibleTypes();
 		echo <<<END
-				<div class="clearfix">
-					<label for="input_nom_$nameData">Nom</label>
-					<div class="input">
+				<div class="control-group">
+					<label for="input_nom_$nameData" class="control-label">Nom</label>
+					<div class="controls">
 						<input name="nom_$nameData" id="input_nom_$nameData" type="text" value="" required />
 					</div>
 				</div>
-				<div class="clearfix">
-					<label for="input_desc_$nameData">Description</label>
-					<div class="input">
+				<div class="control-group">
+					<label for="input_desc_$nameData" class="control-label">Description</label>
+					<div class="controls">
 						<textarea name="desc_$nameData" id="input_desc_$nameData"></textarea> 
 					</div>
 				</div>

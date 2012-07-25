@@ -3,7 +3,7 @@
 class HelpView{
 	public static function showHelp(){
 		echo <<<END
-		<div class="alert-message block-message info">
+		<div class="alert alert-block alert-info">
 			<h2>Bienvenue sur l'aide du site Inspecteur Deryque !<h2>
 		</div>
 		<div class="well">
