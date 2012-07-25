@@ -57,11 +57,15 @@ END;
 		echo <<<END
 		<ul class="nav left boutons_inspecteur">
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
-			<li$c_data><a href="$url_data" class="icon_button shoebox_text">Relevés</a></li>
-			<li$c_datacompo><a href="$url_datacompo" class="icon_button shoebox_text">Composés</a></li>
+			<li$c_data$c_datacompo><a href="#" class="icon_button shoebox_text dropdown-toggle">Relevés</a>
+				<ul class="dropdown-menu">
+					<li><a href="$url_data">Relevés simple</a></li>
+					<li><a href="$url_datacompo">Relevés composés</a></li>
+				</ul>
+			</li>
 			<li$c_import><a href="$url_xml" class="icon_button upload_text">Importer des données</a></li>
 		</ul>
-		<ul class="nav right">	
+		<ul class="nav right">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle icon_button user_text">$user_name</a>
 					<ul class="dropdown-menu">
