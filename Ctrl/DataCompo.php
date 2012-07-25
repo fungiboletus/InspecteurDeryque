@@ -27,7 +27,13 @@ class DataCompo {
         if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
             if (R::findOne('multi_releve', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id']))) {
                 new CMessage('Un relevé existe déjà avec le même nom', 'error');
-            } else {
+		CNavigation::redirectToApp('DataCompo', 'choose');
+            } 
+	    else if(count($_POST['releve']) < 2){
+		new CMessage('Vous devez selectionner au moins 2 relevés', 'error');
+		CNavigation::redirectToApp('DataCompo', 'choose');
+
+		} else {
 
                 $user = $_SESSION['user'];
 
@@ -61,7 +67,12 @@ class DataCompo {
 	public function change() {
 
 	    if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
+            
+	    if(!isset($_POST['releve']) || count($_POST['releve']) < 2){
+		new CMessage('Vous devez selectionner au moins 2 relevés', 'error');
+		CNavigation::redirectToApp('DataCompo', 'choosechange', array('nom' => $_REQUEST['nom']));
 
+	     } else {
 		$state = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
 		$state = R::load('multi_releve', $state['id']);
 		$state->description = $_REQUEST['desc'];
@@ -88,6 +99,7 @@ class DataCompo {
 
 		return;
 	    }
+	  }
 
 	    DataCompoView::showStatementsList();
 	}
