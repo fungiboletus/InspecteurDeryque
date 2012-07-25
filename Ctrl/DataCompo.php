@@ -29,8 +29,8 @@ class DataCompo {
                 new CMessage('Un relevé existe déjà avec le même nom', 'error');
 		CNavigation::redirectToApp('DataCompo', 'choose');
             } 
-	    else if(count($_POST['releve']) < 2){
-		new CMessage('Vous devez selectionner au moins 2 relevés', 'error');
+	    else if(count($_POST['releve']) < 1){
+		new CMessage('Vous devez selectionner au moins un relevé', 'error');
 		CNavigation::redirectToApp('DataCompo', 'choose');
 
 		} else {
@@ -68,8 +68,8 @@ class DataCompo {
 
 	    if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
             
-	    if(!isset($_POST['releve']) || count($_POST['releve']) < 2){
-		new CMessage('Vous devez selectionner au moins 2 relevés', 'error');
+	    if(!isset($_POST['releve']) || count($_POST['releve']) < 1){
+		new CMessage('Vous devez selectionner au moins un relevés', 'error');
 		CNavigation::redirectToApp('DataCompo', 'choosechange', array('nom' => $_REQUEST['nom']));
 
 	     } else {

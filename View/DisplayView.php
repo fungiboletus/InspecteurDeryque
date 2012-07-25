@@ -113,7 +113,7 @@ END;
 
         <ul class="tabs" data-tabs="tabs">
                                            <li class="active"><a href="#releves">Relevés</a></li>
-                                                                          <li><a href="#composition">Relevés composés</a></li>
+                                                                          <li><a href="#composition">Relevés multiples</a></li>
                                                                                       </ul>
 
                                                                                       <h4 id="titre_releves">Liste des relevés</h4>

@@ -60,7 +60,7 @@ END;
 			<li$c_data$c_datacompo><a href="#" class="icon_button shoebox_text dropdown-toggle">Relevés</a>
 				<ul class="dropdown-menu">
 					<li><a href="$url_data">Relevés simple</a></li>
-					<li><a href="$url_datacompo">Relevés composés</a></li>
+					<li><a href="$url_datacompo">Relevés multiples</a></li>
 				</ul>
 			</li>
 			<li$c_import><a href="$url_xml" class="icon_button upload_text">Importer des données</a></li>
