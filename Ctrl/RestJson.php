@@ -10,6 +10,7 @@ define('NO_LOGIN_REDIRECTION', true);
  */
 class RestJson
 {   
+	
 	private function sendJson($json)
 	{
 		header('Content-Type: application/json; charset=utf-8');
@@ -22,15 +23,22 @@ class RestJson
 		$error->page_not_found();
 	}
 	
+
     /**
     * sends a Json message which contains a list of reports
     */
     public function reports(){
     	$reports = DataMod::getStatements($_SESSION['bd_id']);
+			$rep = DataMod::getStatementsMulti($_SESSION['bd_id']);	
     	$arr = array();
+	groaw($rep);
+    	foreach($rep as $report){
+    		$arr[$report['name']] = $report['description'];
+    	}
     	foreach($reports as $report){
     		$arr[$report['name']] = $report['description'];
     	}
+
 		$this->sendJson($arr);
     }
     
@@ -206,6 +214,76 @@ class RestJson
             $this->sendJson($arr);
             
         }
+	   
+        
+    	else{
+			$error = new Error();
+			$error->bad_request();
+		}
+    }
+
+
+ public function data_dtt(){
+    	if(isset($_REQUEST['INFOS'][2])){
+    		$report = DataMod::getStatementMulti($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+			
+			if (!$report) {
+				$error = new Error();
+				$error->page_not_found();
+				return;
+			}
+            $datamod = DataMod::loadDataType($report['modname']);
+           
+            //test if there are time restriction parameters
+            if(isset($_REQUEST['INFOS'][3]) && !isset($_REQUEST['INFOS'][4])){
+            	$start = $_REQUEST['INFOS'][3];
+            	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
+					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
+					array($_SESSION['bd_id'], $report['id'], $start));
+            }
+            else if(isset($_REQUEST['INFOS'][4])){
+				$start = $_REQUEST['INFOS'][3];
+				$end = $_REQUEST['INFOS'][4];
+				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
+					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
+					array($_SESSION['bd_id'], $report['id'], $start, $end));
+			}
+			else{
+            	$report_data = R::find('d_'.$datamod->folder, 'user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+			}
+			
+			//build the array for Json
+			$arr = array();
+            $data = array();
+			
+			$first = true;
+			
+			foreach($report_data as $d){
+				$pieceofdata = array();
+				
+				foreach($datamod->getVariables() as $datatype => $value){
+					if($datatype === "timestamp"){
+						if($first){
+							$arr['start_t'] = date(DateTime::ISO8601, $d[$datatype]);
+							$pieceofdata['dt'] = 0;
+							$first = false;
+						}
+						else{
+							$pieceofdata['dt'] = ($d[$datatype] - $previous_date)*1000; //TODO gérer les ms
+						}
+						$previous_date = $d[$datatype];
+					}
+					else{
+						$pieceofdata[$datatype] = floatval($d[$datatype]);
+					}
+				}
+				$data[] = $pieceofdata;
+			}
+            
+            $arr['data'] = $data;
+            $this->sendJson($arr);
+            
+        }
     	else{
 			$error = new Error();
 			$error->bad_request();
@@ -224,5 +302,6 @@ class RestJson
     }
 
 }
+
 
 ?>
