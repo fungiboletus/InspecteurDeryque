@@ -185,6 +185,8 @@ EventBus.addListeners = function(listeners, caller) {
 
 $(document).ready(function(){
 	$('.topbar').dropdown();
+	var table = $('table.data_list');
+	if (table.length && table.tablesorter) table.tablesorter({sortList: [[0,0]]});
 
 	$(window).resize(function()
 	{
