@@ -2,195 +2,161 @@
 /**
  * Manages statements.
  */
-class DataCompo
-{
-	public function index() {
-		CNavigation::setTitle('Gestion des relevés composés');
+class DataCompo {
+    public function index() {
+        CNavigation::setTitle('Gestion des relevés multiples');
 
-		$statements = DataMod::getStatementsMulti($_SESSION['bd_id']);
+        $statements = DataMod::getStatementsMulti($_SESSION['bd_id']);
 
-		DataCompoView::showStatementsList($statements);
+        DataCompoView::showStatementsList($statements);
 
-		DataCompoView::showAddButton();
+        DataCompoView::showAddButton();
+    }
+
+    public function choose() {
+        CNavigation::setTitle('Nouveau relevé');
+        CNavigation::setDescription('Sélectionnez les relevés que vous souhaitez composer');
+
+        DataCompoView::showAddForm(array(
+                                       'nom' => '',
+                                       'desc' => ''));
+    }
+
+    public function add() {
+
+        if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
+            if (R::findOne('multi_releve', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id']))) {
+                new CMessage('Un relevé existe déjà avec le même nom', 'error');
+            } else {
+
+                $user = $_SESSION['user'];
+
+                $statement = R::dispense('multi_releve');
+                $statement->user = $user;
+                $statement->name = $_REQUEST['nom'];
+                $statement->description = $_REQUEST['desc'];
+
+                R::store($statement);
+		
+		$tab_releve = $_POST['releve'];
+                foreach($tab_releve as $rel){
+                	$stat = R::dispense('multi_releve_releve');
+                	$stat->multi_releve_id = $statement['id'];
+                	$stat->releve_id = $rel;
+			R::store($stat);
+		}
+
+                new CMessage('Relevé correctement ajouté');
+
+                CNavigation::redirectToApp('DataCompo');
+
+                return;
+            }
+
+        }
+
+        DataCompoView::showStatementsList();
+    }
+
+	public function change() {
+
+	    if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
+
+		$state = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
+		$state = R::load('multi_releve', $state['id']);
+		$state->description = $_REQUEST['desc'];
+
+		R::store($state);
+		
+		$multi = DataMod::getMultiRelRel($_SESSION['bd_id'], $state['id']);
+		foreach($multi as $mult){
+			$mul = R::load('multi_releve_releve', $mult['id']);
+			R::exec('delete from multi_releve_releve where id = ?', array($mul['id']));
+			R::trash(R::load('multi_releve_releve', $mul['id']));
+		}
+		$tab_releve = $_POST['releve'];
+		foreach($tab_releve as $rel) {
+		    $stat = R::dispense('multi_releve_releve');
+		    $stat->multi_releve_id = $state['id'];
+		    $stat->releve_id = $rel;
+		    R::store($stat);
+		}
+
+		new CMessage('Relevé correctement modifié');
+
+		CNavigation::redirectToApp('DataCompo');
+
+		return;
+	    }
+
+	    DataCompoView::showStatementsList();
 	}
 
-	public function choose() {
-		CNavigation::setTitle('Nouveau relevé composé');
-		CNavigation::setDescription('Sélectionnez le type de relevé');
+    public function view() {
+        $statements = isset($_REQUEST['nom']) ? DataMod::getMultiStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+  	if (!$statements) {
+            CTools::hackError();
+        }
+	CNavigation::setTitle('Relevé «'.$_REQUEST['nom'].'»');
+        //CNavigation::setDescription($statements['description']);
 
-		$data = DataMod::getDataTypes();
-		DataCompoView::showDataTypeList($data);
+	foreach($statements as $statement){
+	$stat = DataMod::getStatement($statement['name'], $_SESSION['bd_id']);
+      
+        $n_datamod = DataMod::loadDataType($stat['modname']);
+
+        $sql = '';
+        foreach ($n_datamod->getVariables() as $k => $v) {
+            $sql .= "min($k), max($k), avg($k), ";
+        }
+        $stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $stat['id']));
+        DataCompoView::showInformations($stats, $n_datamod, $stat['name']);
 	}
 
-	public function add() {
+        $data = DisplayMod::getDisplayTypes();
+        DataCompoView::showDisplayViewChoiceTitle();
+        DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
 
-		if (CNavigation::isValidSubmit(array('nom','desc', 'mode'), $_REQUEST))
-		{
-			$_REQUEST['type'] = $_REQUEST['mode'];
-			if (R::findOne('multi_releve', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id'])))
-			{
-				new CMessage('Un relevé existe déjà avec le même nom', 'error');
-			}
-			else
-			{
-				$mode = R::findOne('datamod', 'modname = ?', array($_REQUEST['mode']));
+        DataCompoView::showAPIInformations();
 
-				if (!$mode) {
-					if (DataMod::modExist($_REQUEST['mode'])) {
-						$mode = R::dispense('datamod');
-						$mode->modname = $_REQUEST['mode'];
-						R::store($mode);
-					}
-					else
-					{
-						CTools::hackError();
-					}
-				}
+        DataCompoView::showViewButtons(
+            CNavigation::generateMergedUrl('DataCompo', 'remove'),
+            CNavigation::generateUrlToApp('DataCompo'),
+            CNavigation::generateMergedUrl('DataCompo', 'choosechange'));
+    }
 
-				$user = $_SESSION['user'];
+    public function remove() {
+        $statement = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
+        if (!$statement) {
+            CTools::hackError();
+        }
 
-				$statement = R::dispense('multi_releve');
-				$statement->mod = $mode;
-				$statement->user = $user;
-				$statement->name = $_REQUEST['nom'];
-				$statement->description = $_REQUEST['desc'];
-                $statement->PicMinLine = NULL;
-                $statement->PicMaxLine = NULL;
-                $statement->PicEndTime = NULL;
+        if (isset($_REQUEST['confirm'])) {
+            $statement = R::load('multi_releve', $statement['id']);
+            R::exec('delete from multi_releve where id = ?', array($statement['id']));
+            R::trash(R::load('multi_releve', $statement['id']));
+            CNavigation::redirectToApp('DataCompo');
+        } else {
+            CNavigation::setTitle('Suppression du relevé «'.$statement['name'].'»');
+            CNavigation::setDescription('Consequences will never be the same!');
 
-				R::store($statement);
+            DataCompoView::showRemoveForm(
+                $statement['description'],
+                CNavigation::generateMergedUrl('DataCompo', 'remove', array('confirm' => 'yes')),
+                CNavigation::generateMergedUrl('DataCompo', 'view'));
+        }
+    }
 
-				new CMessage('Relevé correctement ajouté');
-				CNavigation::redirectToApp('DataCompo');
+    public function choosechange() {
+        CNavigation::setTitle('Modifier le relevé');
+        CNavigation::setDescription('Sélectionnez les relevés que vous souhaitez ajouter');
+	$desc = DataMod::getDescMulti($_REQUEST['nom'], $_SESSION['bd_id']);
+	DataCompoView::showChangeForm(array(
+                                       'nom' => $_REQUEST['nom'],
+                                       'desc' => $desc["description"]));
+        
+    }
 
-				return;
-			}
-
-		}
-		
-		global $ROOT_PATH;
-		if (!isset($_REQUEST['type']))
-		{
-			CTools::hackError();
-		}
-
-		$data_type = DataMod::loadDataType($_REQUEST['type']);
-		
-		CNavigation::setTitle('Nouveau relevé de type «'.$data_type->name.'»');
-
-		DataCompoView::showAddForm(array_merge(array(
-						'nom' => '',
-						'desc' => '',
-						'mode' => $data_type->folder),$_REQUEST));
-	}
-
-	public function view()
-	{
-		$statement = isset($_REQUEST['nom']) ? DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']) : false;
-		
-		if (!$statement) {
-			CTools::hackError();
-		}
-
-		CNavigation::setTitle('Relevé «'.$statement['name'].'»');
-		CNavigation::setDescription($statement['description']);
-		
-		$n_datamod = DataMod::loadDataType($statement['modname']);
-		$sql = '';
-		foreach ($n_datamod->getVariables() as $k => $v) {
-			$sql .= "min($k), max($k), avg($k), ";	
-		}
-		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
-		DataCompoView::showInformations($stats, $n_datamod);
-	
-		$data = DisplayMod::getDisplayTypes();
-		DataCompoView::showDisplayViewChoiceTitle();
-		DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
-
-		DataCompoView::showAPIInformations();
-
-		DataCompoView::showViewButtons(
-				CNavigation::generateMergedUrl('DataCompo', 'remove'),
-				CNavigation::generateUrlToApp('DataCompo'),
-				CNavigation::generateMergedUrl('DataCompo', 'random'));
-	}
-
-	public function remove()
-	{
-		$statement = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
-		if (!$statement) {
-			CTools::hackError();
-		}
-
-		if (isset($_REQUEST['confirm'])) {
-			//TODO check uselessness of : 
-			//$name = $statement['name'];
-			$statement = R::load('releve', $statement['id']);
-			$modname = R::load('datamod', $statement->mod_id)->modname;
-			R::exec('delete from d_'.$modname.' where releve_id = ?', array($statement['id']));
-			R::trash(R::load('releve', $statement['id']));
-			CNavigation::redirectToApp('DataCompo');
-		}
-		else
-		{
-			CNavigation::setTitle('Suppression du relevé «'.$statement['name'].'»');
-			CNavigation::setDescription('Consequences will never be the same!');
-
-			DataCompoView::showRemoveForm(
-					$statement['description'],
-					CNavigation::generateMergedUrl('DataCompo', 'remove', array('confirm' => 'yes')),
-					CNavigation::generateMergedUrl('DataCompo', 'view'));
-		}
-	}
-
-	public function random()
-	{
-		$statement = isset($_REQUEST['nom']) ? DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
-		$b_statement = R::load('releve', $statement['id']);
-
-		if (!$statement) {
-			CTools::hackError();
-		}
-		
-		$n_datamod = DataMod::loadDataType($statement['modname']);
-		$variables = $n_datamod->getVariables();
-		
-		R::begin();
-		for ($i = 0; $i < 10; ++$i) {
-			$datamod = $n_datamod->initialize();
-
-			foreach ($variables as $k => $var) {
-				if ($k === 'timestamp') $datamod->timestamp = microtime(true);
-				else
-					$datamod->$k = rand(0,6000)*0.02345;
-			}
-
-			$n_datamod->save($_SESSION['user'], $b_statement, $datamod);
-		}
-		R::commit();
-
-		new CMessage('10 valeurs aléatoires ont étés générées');
-		CNavigation::redirectToApp('DataCompo', 'view', array('nom' => $_REQUEST['nom']));
-	}
-
-
- public function composition()
-{
- 	if (!isset($_REQUEST['cname']) || !isset($_REQUEST['creleves']))
-		 CTools::hackError();
-
- 	$name = $_REQUEST['cname'];
-	$releves = $_REQUEST['creleves'];
-	
-	$compostion = new StatementComposition($name, $_SESSION['user']);
-
-	foreach ($releves as $releve)
- 	
-		$compostion->addStatement($releve);
-	
-	CNavigation::redirectToApp('Dashboard');
-
-  }
 
 }
 ?>

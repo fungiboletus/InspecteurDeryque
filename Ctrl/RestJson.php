@@ -13,9 +13,9 @@ class RestJson
 	
 	private function sendJson($json)
 	{
-		//header('Content-Type: application/json; charset=utf-8');
+		header('Content-Type: application/json; charset=utf-8');
     	echo json_encode($json, defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0);
-		//exit();
+		exit();
 	}
 	
 	public function index() {
