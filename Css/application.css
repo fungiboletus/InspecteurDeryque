@@ -10,6 +10,8 @@ padding-top:55px;
 h1,h2,h3,h4,h5,h6, .btn {
 font-family:FuturaPerso, "Helvetica Neue",Helvetica,Arial,sans-serif;
 font-weight:normal;
+}
+h1,h2,h3,h4,h5,h6 {
 padding:0;
 }
 
@@ -27,13 +29,13 @@ font-size: 11px;
 width: 964px;
 }
 */
-.topbar .right {
+.navbar .right {
 float:right;
 }
-.topbar {
+.navbar {
 background:url(../Img/carbon.png);
 }
-.topbar-inner {
+.navbar-inner {
 background: -webkit-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%);
 background: -moz-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%);
 }
@@ -183,7 +185,7 @@ border-bottom: 1px solid #EEEEEE;
 margin-bottom: 3px;
 }
 
-#photoProfile .media-grid a{
+#photoProfile .thumnails a{
 margin:0;
 }
 
@@ -204,18 +206,25 @@ margin-top: 10px;
 color:gray;
 }*/
 
-.media-grid li h4 {
+.thumbnails li h4 {
 	text-align:center;
 }
-.media-grid li:hover a {
+.thumbnails li:hover a {
 	text-decoration:none;
 }
 
+.navbar .container {
+	position:relative;
+}
 .nav.boutons_inspecteur {
 	margin-left:25px;
 }
 
-.btn{
+.nav.boutons_back {
+	position:absolute;
+	left:200px;
+}
+.navbar .btn{
 position:relative;
 }
 .icon_button:before {
@@ -234,7 +243,7 @@ left:auto;
 padding-left:30px;
 }
 
-.nav a.icon_button {
+.navbar .nav > li > a.icon_button {
 padding-left:40px;
 }
 .plus_text:before { content:url(../Img/icons/circle-plus.png); }
@@ -251,6 +260,10 @@ padding-left:40px;
 .multi_text:before { content:url(../Img/icons/multi_t.png);}
 .newbox_text:before { content:url(../Img/icons/newbox_t.png);}
 .flip_text:before { content:url(../Img/icons/flip_t.png);}
+
+.navbar .nav .active > a, .navbar .nav .active > a:hover {
+	background:rgba(128,128,128,0.12);
+}
 
 .float_right {
 float:right;
@@ -292,20 +305,18 @@ border:3px solid green;
 -webkit-transform:rotate(72deg);
 }*/
 
-body.fullscreen .topbar {
+body.fullscreen .navbar {
 transition:top 1s ease 0s;
 -webkit-transition:top 1s ease 0s;
 -moz-transition:top 1s ease 0s;
 }
-body.fullscreen .topbar {
+body.fullscreen .navbar {
 top:-36px;
 }
-body.fullscreen .topbar:hover {
+body.fullscreen .navbar:hover {
 top:0px;
 }
 
-#topbar_logo a {
-}
 .data_list td {
 padding:0;
 }
@@ -323,4 +334,93 @@ box-sizing: border-box;
 
 .data_list a:hover {
 text-decoration:none;
+}
+
+.alert .alert-img {
+margin-top:1.5em;
+text-align:center;
+}
+.alert .alert-img img {
+box-shadow:1px 1px 8px rgba(0,0,0,0.25);
+}
+
+table .header {
+  cursor: pointer;
+}
+table .header:after {
+  content: "";
+  float: right;
+  margin-top: 7px;
+  border-width: 0 4px 4px;
+  border-style: solid;
+  border-color: #000000 transparent;
+  visibility: hidden;
+}
+table .headerSortUp, table .headerSortDown {
+  background-color: #f7f7f9;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+}
+table .header:hover:after {
+  visibility: visible;
+}
+table .headerSortDown:after, table .headerSortDown:hover:after {
+  visibility: visible;
+  filter: alpha(opacity=60);
+  -moz-opacity: 0.6;
+  opacity: 0.6;
+}
+table .headerSortUp:after {
+  border-bottom: none;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #000000;
+  visibility: visible;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  filter: alpha(opacity=60);
+  -moz-opacity: 0.6;
+  opacity: 0.6;
+}
+table .blue {
+  color: #049cdb;
+  border-bottom-color: #049cdb;
+}
+table .headerSortUp.blue, table .headerSortDown.blue {
+  background-color: #ade6fe;
+}
+table .green {
+  color: #46a546;
+  border-bottom-color: #46a546;
+}
+table .headerSortUp.green, table .headerSortDown.green {
+  background-color: #cdeacd;
+}
+table .red {
+  color: #9d261d;
+  border-bottom-color: #9d261d;
+}
+table .headerSortUp.red, table .headerSortDown.red {
+  background-color: #f4c8c5;
+}
+table .yellow {
+  color: #ffc40d;
+  border-bottom-color: #ffc40d;
+}
+table .headerSortUp.yellow, table .headerSortDown.yellow {
+  background-color: #fff6d9;
+}
+table .orange {
+  color: #f89406;
+  border-bottom-color: #f89406;
+}
+table .headerSortUp.orange, table .headerSortDown.orange {
+  background-color: #fee9cc;
+}
+table .purple {
+  color: #7a43b6;
+  border-bottom-color: #7a43b6;
+}
+table .headerSortUp.purple, table .headerSortDown.purple {
+  background-color: #e2d5f0;
 }

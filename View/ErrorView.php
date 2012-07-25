@@ -21,13 +21,11 @@ class ErrorView
 		$number = intval($number);
 
 		echo <<<END
-<div class="alert-message error">
-<h4>Erreur $number</h4>
+<div class="alert alert-error">
+<h4 class="alert-heading">Erreur $number</h4>
 <p>$hmessage</p>
-</div>
-<div class="alert-message block-message error">
 $hcode
-<p>
+<p class="alert-img">
 	<img src="$ROOT_PATH/Img/photos/$image" alt="" />
 </p>
 </div>

@@ -120,8 +120,8 @@ $(document).ready(function() {
 
 	setTimeout(function(){layout.equilibrate();}, 1);
 
-	var front_boutons_bar = $('.topbar .nav.left.boutons_inspecteur');
-	var bouton_user = $('.topbar .nav.right .dropdown');
+	var front_boutons_bar = $('.navbar .nav.left.boutons_inspecteur');
+	var bouton_user = $('.navbar .nav.right .dropdown');
 	var back_boutons_bar = $(newDom('ul'));
 	back_boutons_bar.hide();
 	front_boutons_bar.after(back_boutons_bar);
@@ -129,7 +129,7 @@ $(document).ready(function() {
 
 	var bouton = create_toolbar_button('Flip!');
 	bouton.firstChild.className = 'icon_button flip_text';
-	$('.topbar .nav.right').append(bouton);
+	$('.navbar .nav.right').append(bouton);
 
 	$(bouton).click(function() {
 

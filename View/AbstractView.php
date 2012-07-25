@@ -15,7 +15,7 @@ abstract class AbstractView
 	 */
 	protected static function showButton($url, $class, $text, $icon) {
 		echo <<<END
-			<a href="$url" class="btn large $class">
+			<a href="$url" class="btn btn-large btn-$class">
 			<span class="icon_button ${icon}_text">$text</span></a>
 END;
 	}

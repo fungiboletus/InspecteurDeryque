@@ -88,7 +88,7 @@ class Import extends AbstractView {
 							///////////////////////////////////////////////
 							//affichage tableau données générales du lap
 							echo "<h1>",  htmlspecialchars($lapsandmore->getName()), "</h1>";
-							echo '<table class="zebra-striped">';
+							echo '<table class="table table-striped">';
 							echo "<tr>";
 							echo "<th>",  htmlspecialchars($lapsandmore->getName()), "</th>";
 							foreach ($lapsandmore->children() as $datalap) {//titres
@@ -117,7 +117,7 @@ class Import extends AbstractView {
 							foreach ($lapsandmore->children() as $datalap) {
 								if ($datalap->getName() === "Track") {
 									echo "<h1>",  htmlspecialchars($datalap->getName()), "</h1>";
-									echo '<table class="zebra-striped">';
+									echo '<table class="table table-striped">';
 									echo "<tr>";
 									$trackpoint = $datalap->xpath("Trackpoint[1]");
 									foreach ($trackpoint[0]->children() as $datatrackpoint) {//titres

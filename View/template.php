@@ -32,11 +32,10 @@ if (!defined('NO_HEADER_BAR'))
 	$c_user = $CTRL_NAME === 'User' ? ' class="active"' : '';
 
 	echo <<<END
-<div class="topbar">
-	<div class="topbar-inner">
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
 		<nav class="container">
-
-			<h3 id="topbar_logo"><a href="$url_root">Inspecteur Deryque</a></h3>
+			<a href="$url_root" class="brand">Inspecteur Deryque</a>
 END;
 
 	if (isset($_SESSION['logged'])) {
@@ -57,7 +56,7 @@ END;
 		echo <<<END
 		<ul class="nav left boutons_inspecteur">
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
-			<li$c_data$c_datacompo><a href="#" class="icon_button shoebox_text dropdown-toggle">Relevés</a>
+			<li class="dropdown"$c_data$c_datacompo><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Relevés <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="$url_data">Relevés simple</a></li>
 					<li><a href="$url_datacompo">Relevés composés</a></li>
@@ -67,7 +66,7 @@ END;
 		</ul>
 		<ul class="nav right">
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle icon_button user_text">$user_name</a>
+				<a href="#" class="dropdown-toggle icon_button user_text" data-toggle="dropdown">$user_name <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="$url_help">Aide</a></li>
 						<li><a href="$url_not_found">Une erreur 404</a></li>

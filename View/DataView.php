@@ -35,16 +35,16 @@ class DataView extends AbstractView
      */
 	public static function showDataTypeList($data) {
 		global $ROOT_PATH;
-		echo '<ul class="media-grid">';
+		echo '<ul class="thumbnails">';
 
 		foreach ($data as $type) {
 			$hnom = htmlspecialchars($type->name);
 			$hdir = htmlspecialchars($type->folder);
 			$url = CNavigation::generateUrlToApp('Data','add', array('type'=>$type->folder));
 			echo <<<END
-	<li>
+	<li class="thumbnail">
 		<a href="$url">
-			<img class="thumbnail" src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
+			<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
 			<h4>$hnom</h4>
 		</a>
 	</li>
@@ -68,23 +68,23 @@ END;
 		$hmode = htmlspecialchars($values['mode']);
 
 		echo <<<END
-<form action="$url_submit" name="data_add_form" method="post" id="data_add_form">
+<form action="$url_submit" name="data_add_form" method="post" id="data_add_form" class="well form-horizontal">
 <input type="hidden" name="mode" value="$hmode" />
 <fieldset>
-	<div class="clearfix">
-		<label for="input_nom">$label_name</label>
-		<div class="input">
+	<div class="control-group">
+		<label for="input_nom" class="control-label">$label_name</label>
+		<div class="controls">
 			<input name="nom" id="input_nom" type="text" value="$hnom" autofocus required />
 		</div>
 	</div>
-	<div class="clearfix">
-		<label for="input_desc">$label_desc</label>
-		<div class="input">
+	<div class="control-group">
+		<label for="input_desc" class="control-label">$label_desc</label>
+		<div class="controls">
 			<textarea name="desc" id="input_desc">$hdesc</textarea> 
 		</div>
 	</div>
 	<div class="actions">
-		<input type="submit" class="btn large primary" value="$text_submit" />
+		<input type="submit" class="btn btn-large btn-primary" value="$text_submit" />
 	</div>
 </fieldset>
 </form>	
@@ -101,7 +101,7 @@ END;
 		{
 			CHead::addJS('jquery.tablesorter.min');
 			echo <<<END
-			<table class="zebra-striped bordered-table data_list">
+			<table class="table table-striped table-bordered data_list">
 				<thead><tr>
 					<th class="header yellow">Nom</th>
 					<th class="header green">Description</th>
@@ -121,7 +121,7 @@ END;
 		else
 		{
 			echo <<<END
-<div class="alert-message block-message warning">
+<div class="alert alert-block alert-warning">
 <p>Il n'y a aucun relevé pour l'instant.</p>
 </div>
 END;
@@ -138,7 +138,7 @@ END;
 	{
 		$hdesc = htmlspecialchars($desc);
 		echo <<<END
-<div class="alert-message block-message warning">
+<div class="alert alert-block alert-warning">
 <p>Veuillez confirmer la suppression du relevé. La suppression est définitive.</p>
 <h4>Description du relevé</h4>
 <p><em>$hdesc</em></p>

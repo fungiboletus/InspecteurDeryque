@@ -24,7 +24,7 @@ class TCXFile implements FileType {
 			$activity_name = htmlspecialchars($activity['Sport']);
 			echo <<<END
 			<h3>Activité : $activity_name</h3>
-			<table class="bordered-table">
+			<table class="table table-bordered">
 				<tr>
 					<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
 					<th>Laps</th>
@@ -38,7 +38,7 @@ END;
 					echo "<td>Lap - StartTime : ",     htmlspecialchars($lapsandmore['StartTime']), "</td>";
 					echo <<<END
 					<td>
-						<table class="zebra-striped bordered-table">
+						<table class="table table-striped table-bordered">
 END;
 					foreach ($lapsandmore->children() as $datalap) {
 						if (htmlspecialchars($datalap->getName()) === "Track") {
@@ -65,7 +65,7 @@ END;
 		//Data type selection view
 		echo <<<END
 		<p>Vous pouvez choisir de n'importer que certaines données :</p>
-		<table class="zebra-striped bordered-table">
+		<table class="table table-striped table-bordered">
 			<tr>
 				<th><input type="checkbox" value="option1" name="optionsCheckboxes"/></th>
 				<th>Nom de la donnée</th>
@@ -146,7 +146,7 @@ END;
 		$new_url = CNavigation::generateUrlToApp('Data', 'choose', array('iframe_mode' => true));
 		echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
-		<div class="input">
+		<div class="controls">
 			<select name="assoc_$sum" id="assoc_$sum">
 END;
 		foreach ($statements_list as $r) {

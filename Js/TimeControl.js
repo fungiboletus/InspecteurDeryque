@@ -23,6 +23,8 @@ $(document).ready(function(){
 	time_info_time.appendChild(document.createTextNode('12:45:12.54'));
 	time_info.appendChild(time_info_time);
 	time_control.appendChild(time_info);
+	var bti = $('<button class="btn btn-mini btn-inverse">coucou<i class="icon-play"></i></button>');
+	bti.appendTo(time_control);
 
 	var zone_slider = newDom('div');
 	zone_slider.className = "zone_slider";

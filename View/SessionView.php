@@ -31,12 +31,12 @@ $text_registration
 		
 <form action="$url_submit" name="login" method="post" $class>
 	<p>
-		<label for="input_mail">$label_mail</label>
+		<label for="input_mail" class="control-label">$label_mail</label>
 		<input name="email_deryque" id="input_mail" type="email"
 			autofocus required />
 	</p>
 	<p>
-		<label for="input_pass">$label_password</label>
+		<label for="input_pass" class="control-label">$label_password</label>
 		<input name="password_deryque" id="input_pass" type="password"
 			required />
 	</p>
