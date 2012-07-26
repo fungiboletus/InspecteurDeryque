@@ -108,6 +108,25 @@ $(document).ready(function(){
 				time_max = d[statement_name].time_tMax;
 		}
 	});
+
+	var manage_new_position = function() {
+		var time_int = time_max - time_min;
+		var time_t = slider_pos / slider_width * time_int + time_min * 1;
+		var start_t = time_t - left_width / slider_width * time_int;
+		var end_t = time_t + right_width / slider_width * time_int;
+		var time_t_date = new Date(time_t);
+		var start_t_date = new Date(start_t);
+		var end_t_date = new Date(end_t);
+		EventBus.send('time_sync', {
+			time_t: time_t_date,
+			start_t: start_t_date,
+			end_t: end_t_date
+		});
+
+		date_display =  border_left_drag ? start_t_date :
+			border_right_drag ? end_t_date : time_t_date;
+	};
+
 	var dragdrop = function(e) {
 		if (ondrag)
 		{
@@ -131,24 +150,7 @@ $(document).ready(function(){
 				if (right_width < 0) right_width = 0;
 			}
 			// draw();
-
-
-			var time_int = time_max - time_min;
-			var time_t = slider_pos / slider_width * time_int + time_min * 1;
-			var start_t = time_t - left_width / slider_width * time_int;
-			var end_t = time_t + right_width / slider_width * time_int;
-			var time_t_date = new Date(time_t);
-			var start_t_date = new Date(start_t);
-			var end_t_date = new Date(end_t);
-			EventBus.send('time_sync', {
-				time_t: time_t_date,
-				start_t: start_t_date,
-				end_t: end_t_date
-			});
-
-			date_display =  border_left_drag ? start_t_date :
-				border_right_drag ? end_t_date : time_t_date;
-
+			manage_new_position();
 		}
 	};
 
@@ -196,15 +198,14 @@ $(document).ready(function(){
 		if (bti_icon.className == bti_icon_play_class)
 		{
 			bti_icon.className = bti_icon_pause_class;
-			var start_t = time_min * 1;
+			var time_int = time_max - time_min;
+			var begin_t = slider_pos / slider_width * time_int + time_min * 1;
 			play_interval = window.setInterval(function() {
-				start_t += 5000;
-				var date = new Date(start_t);
-				EventBus.send('time_sync', {
-					time_t: date,
-					end_t: date,
-					start_t: time_min
-				});
+				begin_t += 5000;
+				time_int = time_max - time_min;
+				slider_pos = (begin_t - time_min) * (slider_width / time_int);
+
+				manage_new_position();
 			}, 128);
 		}
 		else
