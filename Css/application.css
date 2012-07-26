@@ -7,7 +7,7 @@ body {
 padding-top:55px;
 }
 
-h1,h2,h3,h4,h5,h6, .btn {
+h1,h2,h3,h4,h5,h6, .btn, .brand {
 font-family:FuturaPerso, "Helvetica Neue",Helvetica,Arial,sans-serif;
 font-weight:normal;
 }
@@ -38,6 +38,9 @@ background:url(../Img/carbon.png);
 .navbar-inner {
 background: -webkit-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%);
 background: -moz-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%);
+}
+.navbar .brand {
+	color:white;
 }
 /*
 .page-header {
