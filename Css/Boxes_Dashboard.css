@@ -237,6 +237,12 @@ display:block;
 overflow-y:hidden;
 }
 
+.boxdiv .back .close {
+	position:absolute;
+	right:4px;
+	top:2px;
+}
+
 #time_control {
 background-image:-webkit-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%), url(../Img/carbon.png);
 	height:25px;

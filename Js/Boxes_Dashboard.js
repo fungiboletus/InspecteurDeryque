@@ -111,6 +111,16 @@ $(document).ready(function() {
 
 		box.back.appendChild(input_types);
 
+		var close_button = newDom('button');
+		close_button.className = 'close';
+		close_button.appendChild(document.createTextNode('×'));
+		box.back.appendChild(close_button);
+		layout.disableDrag(close_button);
+		$(close_button).click(function(e) {
+			layout.removeBox(box.box);
+			layout.equilibrate();
+		});
+
 		box.box.style.background = 'hsl('+color+')';
 		box.box.id = "box_"+nb_boxes+++'_'+Math.abs(color.slice(1).hashCode());
 		return box.box;
