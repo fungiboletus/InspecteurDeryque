@@ -18,7 +18,9 @@ background: -webkit-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0
 background: -moz-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%);
 }
 .navbar .brand {
-	color:white;
+	color:transparent;
+	min-width:200px;
+	background:url(../Img/brand.png) no-repeat 0px 8px;
 }
 .icon_button:before {
 position:absolute;

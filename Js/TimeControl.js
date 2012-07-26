@@ -24,7 +24,7 @@ $(document).ready(function(){
 	time_info.appendChild(time_info_time);
 	time_control.appendChild(time_info);
 	var bti = newDom('button');
-	bti.className = 'btn btn-mini btn-danger';
+	bti.className = 'btn btn-mini btn-inverse';
 	var bti_icon = newDom('i');
 	var bti_icon_play_class = 'icon-play icon-white';
 	var bti_icon_pause_class = 'icon-pause icon-white';
