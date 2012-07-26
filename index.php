@@ -62,7 +62,22 @@ if (!defined('NO_LOGIN_REQUIRED')) {
 	}
 }
 
-CHead::addCSS('bootstrap.min');
+$default_theme = true;
+if (isset($_SESSION['user']->theme))
+{
+	$theme = $_SESSION['user']->theme;
+
+	if ($theme !== 'default')
+	{
+		$default_theme = false;
+		CHead::addCSS('Bootswatch/'.$theme);
+	}
+}
+if ($default_theme)
+{
+	CHead::addCSS('bootstrap.min');
+	CHead::addCSS('theme');
+}
 CHead::addCSS('application');
 CHead::addCSS($CTRL_NAME);
 if (isset($_REQUEST['iframe_mode'])) CHead::addCSS('iframe_mode');
