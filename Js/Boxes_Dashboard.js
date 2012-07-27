@@ -43,6 +43,16 @@ $(document).ready(function() {
 	new SuperOperator();
 
 	var nb_boxes = 0;
+
+	var manage_close_buttons = function() {
+		var buttons = $('.boxdiv .back button.close');
+		if (nb_boxes <= 1)
+			buttons.hide();
+		else
+			buttons.show();
+
+	};
+
 	function create_perfect_box() {
 		var box = layout.createBox();
 
@@ -118,6 +128,8 @@ $(document).ready(function() {
 		layout.disableDrag(close_button);
 		$(close_button).click(function(e) {
 			layout.removeBox(box.box);
+			--nb_boxes;
+			manage_close_buttons();
 			layout.equilibrate();
 		});
 
@@ -127,6 +139,7 @@ $(document).ready(function() {
 	}
 	var firstBox = create_perfect_box();
 	layout.addBox(firstBox);
+	manage_close_buttons();
 
 	setTimeout(function(){layout.equilibrate();}, 1);
 
@@ -374,6 +387,7 @@ $(document).ready(function() {
 
 	jbouton.mousedown(function(e) {
 		var boite = create_perfect_box();
+		manage_close_buttons();
 		remplir_releves_list($(boite).find('.back .releves_list table'));
 		remplir_input_types($(boite).find('.back .input_types ul'));
 		boite.style.display = 'none';
