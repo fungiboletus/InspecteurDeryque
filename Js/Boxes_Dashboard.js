@@ -299,7 +299,7 @@ $(document).ready(function() {
 		list.find('tr').click(function(e){
 			var checkbox = $(this).find('input');
 
-			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') &&
+			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
 				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT')) {
 				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
 			}
