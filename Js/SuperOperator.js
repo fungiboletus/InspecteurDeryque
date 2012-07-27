@@ -38,6 +38,9 @@ add_statement: function(d, obj) {
 	var statement_name = d.statement_name;
 	// var hash = statement_name.hashCode();
 
+	if (typeof obj.database[statement_name] !== 'undefined')
+		return;
+
 	obj.ajax('data_dt/'+encodeURIComponent(statement_name),
 		function(json) {
 			var start_t = Date.parse(json.start_t);
@@ -61,16 +64,16 @@ add_statement: function(d, obj) {
 			for (; i < json.data.length; ++i)
 			 	_addTuple(i);
 
-			EventBus.send('new_tuples', {
-				statement_name: statement_name,
-				data: data.data});
+			// EventBus.send('new_tuples', {
+			// 	statement_name: statement_name,
+			// 	data: data.data});
 
-			EventBus.addListener('layout_change', function() {
+			/*EventBus.addListener('layout_change', function() {
 				EventBus.send('time_sync', {
 					//time_t: data.data[data.data.length -1].time_t
 					time_t: data.time_tMin,
 				});
-			});
+			});*/
 
 			// EventBus.addListener('layout_change', function() {
 			// 	var intervale = window.setInterval(function(){
@@ -106,5 +109,26 @@ get_bounds: function(d, obj) {
 		delete response[statement_name].data;
 	}
 	EventBus.send('bounds', response);
+},
+
+time_sync: function(d, obj) {
+	if (!d.start_t) d.start_t = Number.MIN_VALUE;
+	if (!d.end_t) d.end_t = Number.MAX_VALUE;
+
+	var response = {};
+
+	for (var statement_name in obj.database) {
+		var data = obj.database[statement_name].data;
+		var filtered_data = [];
+		for (var i = 0; i < data.length; ++i) {
+			var t = data[i];
+			if (t.time_t >= d.start_t && t.time_t <= d.end_t)
+				filtered_data.push(t);
+		}
+
+		response[statement_name] = filtered_data;
+	};
+
+	EventBus.send('tuples', response);
 }
 }};

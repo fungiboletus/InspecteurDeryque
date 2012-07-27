@@ -16,46 +16,69 @@ var DCarte = function(screen)
 
 	EventBus.addListeners(this.listeners, this);
 
-	this.database = new Object();
-	this.markers = [];
+	this.database = {};
+	this.lines = {};
 };
 
 DCarte.prototype =
 {
 	listeners: {
-		new_tuples: function(detail, obj) {
-			if (!(detail.statement_name in obj.database)) return;
+		tuples: function(detail, obj) {
 
-			var base = obj.database[detail.statement_name];
+			for (var key in obj.lines)
+				obj.lines[key].updated = false;
+
+			for (var statement_name in detail) {
+			if (!(statement_name in obj.database)) continue;
+
+			var base = obj.database[statement_name];
 			// For each new tuple
-			var data = detail.data;
-			for (var i = 0; i < data.length; ++i) {
+			var data = detail[statement_name];
 
-				var point = data[i];
-				var ll = new google.maps.LatLng(point.lat, point.lon);
+			if (data.length > 0) {
+				// var pinColor = "FFFFFF";
+				// var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+			 	// new google.maps.Size(21, 34),
+			 	// new google.maps.Point(0,0),
+			 	// new google.maps.Point(10, 34));
+				// Create begin
 
-				// We dont draw a line if we don't have two point or more
-				if (base.last_point === null)
+				var ll = new google.maps.LatLng(data[0].lat, data[0].lon);
+
+				if (base.marker) {
+					base.marker.setPosition(ll);
+				}
+				else
 				{
-
-					// var pinColor = "FFFFFF";
-	  		// 		var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
-			  //       new google.maps.Size(21, 34),
-			  //       new google.maps.Point(0,0),
-			  //       new google.maps.Point(10, 34));
-					// Create begin
 					base.marker = new google.maps.Marker({
 						position:ll,
 						// icon: pinImage,
 						map: obj.map,
 						title: "begin"});
 				}
+
+				if (!obj.map.getBounds().contains(ll))
+					obj.map.setCenter(ll);
+			}
+
+			for (var i = 1; i < data.length; ++i) {
+
+				var last_point = data[i-1];
+				var point = data[i];
+				var ll = new google.maps.LatLng(point.lat, point.lon);
+				var ll2 = new google.maps.LatLng(last_point.lat, last_point.lon);
+
+				var key = ll+":"+ll2;
+
+				if (obj.lines[key]) {
+					obj.lines[key].updated = true;
+				}
 				else
 				{
-					var distance = obj.distance(base.last_point.lat(), base.last_point.lng(),
-							 ll.lat(), ll.lng());
-					var diff_t = point.time_t - base.last_time;
-					var speed = distance/diff_t * 3600.0;
+					var distance = obj.distance(last_point.lat, last_point.lng,
+							 point.lat, point.lng);
+					var diff_t = point.time_t - last_point.time_t;
+					var speed = distance/diff_t * 36.0;
 
 					// TODO véritable gestion des couleurs, avec légende
 					var color = (280.0-speed * 20.0) % 360.0;
@@ -66,14 +89,14 @@ DCarte.prototype =
 					// console.log(speed * 3.6);
 					// console.log(color);
 					var line = new google.maps.Polyline({
-						path: [base.last_point, ll],
+						path: [ll, ll2],
 						strokeColor: "hsl("+color+", 50%, "+lum+"%)",
 						strokeWeight: 4,
-						visible: false,
+						// visible: false,
 						map: obj.map
 					});
-					line.time_t = point.time_t;
-					base.lines.push(line);
+					line.updated = true;
+					obj.lines[key] = line;
 
 					google.maps.event.addListener(line, 'click', (function(taaame){
 							return function() {
@@ -82,11 +105,18 @@ DCarte.prototype =
 								EventBus.send('time_sync', {time_t: taaame.time_t});
 							}
 						})(point));
-					// line.setMap(obj.map);
-					// base.marker.setPosition(ll);
 				}
-				base.last_point = ll;
-				base.last_time = point.time_t;
+
+				// line.setMap(obj.map);
+				// base.marker.setPosition(ll);
+			}
+		}
+
+		for (var key in obj.lines)
+			if (!obj.lines[key].updated)
+			{
+				obj.lines[key].setMap(null);
+				delete obj.lines[key];
 			}
 		},
 		add_statement: function(e, obj) {
@@ -95,8 +125,6 @@ DCarte.prototype =
 			if (!(e.statement_name in obj.database))
 			{
 				var new_obj = new Object();
-				new_obj.last_point = null;
-				new_obj.last_time = null;
 				new_obj.marker = null;
 				new_obj.lines = [];
 				obj.database[e.statement_name]  = new_obj;
@@ -111,7 +139,7 @@ DCarte.prototype =
 		layout_change: function(d, obj) {
 			obj.map.setCenter(obj.default_location);
 		},
-		time_sync: function(d, obj) {
+		/*time_sync: function(d, obj) {
 			var time = d.time_t;
 			for (var statement in obj.database)
 			{
@@ -158,7 +186,7 @@ DCarte.prototype =
 				// else
 				// 	base.marker.setVisible(false);
 			}
-		},
+		},*/
 		tuples_selected: function(d, obj) {
 			if (!(d.statement_name in obj.database)) return;
 
