@@ -45,7 +45,7 @@ class Import extends AbstractView {
 		if (isset($_SESSION['fichierXML'])) {
 			$file = $_SESSION['fichierXML'];
 			if (file_exists($file)) {
-				CNavigation::setTitle('Selectionner vos données à importer');
+				CNavigation::setTitle('Selectionnez vos données à importer');
 				CHead::addJS('bootstrap-modal');
 				DataImportView::showDataSelection($file, $_SESSION['extFichierXML']);
 				return;

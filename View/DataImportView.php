@@ -1,6 +1,6 @@
 <?php
 /**
- * View for the importing-data-for-a-statement step. 
+ * View for the importing-data-for-a-statement step.
  */
 class DataImportView {
     /**
@@ -24,7 +24,7 @@ END;
 				</div>
 				<div class="controls" id="boutons">
 					<input type="submit" value="Importer" class="btn btn-primary btn-large"/>
-				</div> 
+				</div>
 			</div>
 		</form>
 END;
@@ -40,12 +40,12 @@ END;
 		if (in_array($extension, $extensions)) {
 			echo "<p>Nous avons reconnu un fichier de type <Strong>$extension</Strong>.</p>";
 			echo "<p>Sélectionnez parmi les données proposées ci-dessous celles que vous désirez importer :</p>";
-			if (file_exists($file)) {				
+			if (file_exists($file)) {
 				$action = CNavigation::generateUrlToApp('Import', 'submitSelection');
 				echo '<form id="choiximport" action="', $action, '" method="post">';
 				if (GPXFile::isOfThisDataType($file,$extension)) {
 					GPXFile::getImportableData($file);
-				} elseif (TCXFile::isOfThisDataType($file,$extension)) {					
+				} elseif (TCXFile::isOfThisDataType($file,$extension)) {
 					TCXFile::getImportableData($file);
 				} elseif (HL7File::isOfThisDataType($file,$extension)) {
 					HL7File::getImportableData($file);
@@ -59,7 +59,9 @@ END;
 			} else {
 			}
 		} else {
-			echo "<p>Ce format de fichier n'est pas reconnu. Nous allons voir ce que nous pouvons faire...</p>";
+			echo "<div class=\"alert alert-error\">Ce format de fichier n'est pas reconnu. Nous allons voir ce que nous pouvons faire...</div>";
+			$back_url = CNavigation::generateUrlToApp('Import');
+			echo '<a href="',$back_url,'" class="btn btn-large btn-info">Retour à l\'importation</a>';
 		}
 	}
 
@@ -113,7 +115,7 @@ END;
 				<div class="control-group">
 					<label for="input_desc_$nameData" class="control-label">Description</label>
 					<div class="controls">
-						<textarea name="desc_$nameData" id="input_desc_$nameData"></textarea> 
+						<textarea name="desc_$nameData" id="input_desc_$nameData"></textarea>
 					</div>
 				</div>
 			</fieldset>
