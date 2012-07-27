@@ -52,6 +52,30 @@ END;
 END;
 	}
 
+	public function theme() {
+
+		if (isset($_REQUEST['theme'])) {
+			$theme = strtr($_REQUEST['theme'], '/\\.', '   ');
+			if ($theme === 'default' ||file_exists('Css/Bootswatch/'.$theme.'.css'))
+			{
+				$_SESSION['user']->theme = $_REQUEST['theme'];
+				R::store($_SESSION['user']);
+				CNavigation::redirectToApp('Dashboard', 'theme');
+			}
+		}
+
+		CNavigation::setTitle('Changer de thème');
+		$themes = glob('Css/Bootswatch/*.css');
+		array_unshift($themes, 'default');
+		echo '<ul>';
+		foreach ($themes as $theme) {
+			$name = basename($theme, '.css');
+			$url = CNavigation::generateUrlToApp('Dashboard', 'theme', array('theme' => $name));
+			echo '<li><a href="', $url, '">', htmlspecialchars(ucfirst($name)), '</a></li>';
+		}
+		echo '</ul>';
+	}
+
 	private function tadam() {
 		if (isset($_SESSION['tadam']))
 		{
@@ -62,7 +86,6 @@ END;
 END;
 		}
 	}
-
 }
 
 ?>

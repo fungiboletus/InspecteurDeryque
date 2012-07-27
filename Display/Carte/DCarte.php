@@ -13,11 +13,12 @@ class DCarte extends DAbstract
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
-	carte = new DCarte(byId('carte'));
+	carte = new DCarte(byId('map'));
 });
 </script>
 <div id="carte">
-</ul>
+	<div id="map"></div>
+</div>
 <?php
 		/*
 		CHead::addJs('carte');

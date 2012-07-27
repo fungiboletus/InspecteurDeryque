@@ -67,7 +67,8 @@ add_statement: function(d, obj) {
 
 			EventBus.addListener('layout_change', function() {
 				EventBus.send('time_sync', {
-					time_t: data.data[data.data.length -1].time_t
+					//time_t: data.data[data.data.length -1].time_t
+					time_t: data.time_tMin,
 				});
 			});
 
@@ -90,7 +91,7 @@ add_statement: function(d, obj) {
 
 			EventBus.send('time_sync', {
 				start_t: data.time_tMin,
-				time_t: data.data[data.data.length -1].time_t,
+				time_t: data.time_tMin,
 				end_t: data.time_tMax
 			});
 

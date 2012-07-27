@@ -20,11 +20,18 @@ $(document).ready(function(){
 	time_info.appendChild(time_info_month_year);
 	var time_info_time = newDom('div');
 	time_info_time.className = 'time';
-	time_info_time.appendChild(document.createTextNode('12:45:12.54'));
+	time_info_time.appendChild(document.createTextNode('12:45:12.054'));
 	time_info.appendChild(time_info_time);
 	time_control.appendChild(time_info);
-	var bti = $('<button class="btn btn-mini btn-inverse">coucou<i class="icon-play"></i></button>');
-	bti.appendTo(time_control);
+	var bti = newDom('button');
+	bti.className = 'btn btn-mini btn-inverse';
+	var bti_icon = newDom('i');
+	var bti_icon_play_class = 'icon-play icon-white';
+	var bti_icon_pause_class = 'icon-pause icon-white';
+	bti_icon.className = bti_icon_play_class;
+	bti.appendChild(bti_icon);
+	time_control.appendChild(bti);
+	var jbti = $(bti);
 
 	var zone_slider = newDom('div');
 	zone_slider.className = "zone_slider";
@@ -101,6 +108,25 @@ $(document).ready(function(){
 				time_max = d[statement_name].time_tMax;
 		}
 	});
+
+	var manage_new_position = function() {
+		var time_int = time_max - time_min;
+		var time_t = slider_pos / slider_width * time_int + time_min * 1;
+		var start_t = time_t - left_width / slider_width * time_int;
+		var end_t = time_t + right_width / slider_width * time_int;
+		var time_t_date = new Date(time_t);
+		var start_t_date = new Date(start_t);
+		var end_t_date = new Date(end_t);
+		EventBus.send('time_sync', {
+			time_t: time_t_date,
+			start_t: start_t_date,
+			end_t: end_t_date
+		});
+
+		date_display =  border_left_drag ? start_t_date :
+			border_right_drag ? end_t_date : time_t_date;
+	};
+
 	var dragdrop = function(e) {
 		if (ondrag)
 		{
@@ -124,24 +150,7 @@ $(document).ready(function(){
 				if (right_width < 0) right_width = 0;
 			}
 			// draw();
-
-
-			var time_int = time_max - time_min;
-			var time_t = slider_pos / slider_width * time_int + time_min * 1;
-			var start_t = time_t - left_width / slider_width * time_int;
-			var end_t = time_t + right_width / slider_width * time_int;
-			var time_t_date = new Date(time_t);
-			var start_t_date = new Date(start_t);
-			var end_t_date = new Date(end_t);
-			EventBus.send('time_sync', {
-				time_t: time_t_date,
-				start_t: start_t_date,
-				end_t: end_t_date
-			});
-
-			date_display =  border_left_drag ? start_t_date :
-				border_right_drag ? end_t_date : time_t_date;
-
+			manage_new_position();
 		}
 	};
 
@@ -182,6 +191,28 @@ $(document).ready(function(){
 		drag_margin = e.clientX - slider_left - slider_pos - right_width;
 		dragdrop(e);
 		iframe_mask.style.display  = 'block';
+	});
+
+	var play_interval = -1;
+	jbti.click(function() {
+		if (bti_icon.className == bti_icon_play_class)
+		{
+			bti_icon.className = bti_icon_pause_class;
+			var time_int = time_max - time_min;
+			var begin_t = slider_pos / slider_width * time_int + time_min * 1;
+			play_interval = window.setInterval(function() {
+				begin_t += 5000;
+				time_int = time_max - time_min;
+				slider_pos = (begin_t - time_min) * (slider_width / time_int);
+
+				manage_new_position();
+			}, 128);
+		}
+		else
+		{
+			window.clearInterval(play_interval);
+			bti_icon.className = bti_icon_play_class;
+		}
 	});
 
 	EventBus.addListener('time_sync', function(d, obj){

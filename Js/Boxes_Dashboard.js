@@ -1,3 +1,6 @@
+/**
+ *	Generate random fun colors.
+ */
 var get_random_color_degrees = [];
 function get_random_color() {
 
@@ -24,26 +27,38 @@ function get_random_color() {
 	return degree+','+saturation+'%,'+luminosite+'%';
 };
 
-function create_toolbar_button(text) {
-	var button = newDom('li');
-	var a_button = newDom('a');
-	a_button.setAttribute('href', '#');
-	a_button.onclick = noNo;
-	a_button.appendChild(document.createTextNode(text));
-	button.appendChild(a_button);
-
-	return button;
-};
-
 $(document).ready(function() {
+	// Création of the cadreur
 	var layout = new Cadreur(
 			byId('mainContent'),
 			Cadreur_DIRECTIONS.VERTICAL);
 
+	// Création of the proxy operator between the REST and the runtime
 	new SuperOperator();
 
+	var create_toolbar_button = function(text) {
+		var button = newDom('li');
+		var a_button = newDom('a');
+		a_button.setAttribute('href', '#');
+		a_button.onclick = noNo;
+		a_button.appendChild(document.createTextNode(text));
+		button.appendChild(a_button);
+
+		return button;
+	};
+
 	var nb_boxes = 0;
-	function create_perfect_box() {
+
+	var manage_close_buttons = function() {
+		var buttons = $('.boxdiv .back button.close');
+		if (nb_boxes <= 1)
+			buttons.hide();
+		else
+			buttons.show();
+
+	};
+
+	var create_perfect_box = function() {
 		var box = layout.createBox();
 
 		var data = document.createElement('div');
@@ -53,6 +68,7 @@ $(document).ready(function() {
 		var color = get_random_color();
 		var dark_color = color.substr(0, color.length-3)+'25%';
 
+		// It's just a line, but the code is epic
 		var border_line = document.createElement('div');
 		border_line.className = 'borderLine';
 		border_line.style.background = "-webkit-gradient(linear, left top, right top, color-stop(0%,hsla("+
@@ -66,29 +82,31 @@ $(document).ready(function() {
 				+dark_color+",0.65) 100%)";
 		box.back.appendChild(border_line);
 
-		var liste_releves = newDom('div');
-		liste_releves.className = 'releves_list';
+		// Statements list
+		var statements_list = newDom('div');
+		statements_list.className = 'statements_list';
 		var data_h = newDom('h2');
-		data_h.appendChild(document.createTextNode('Relevés'));
-		liste_releves.appendChild(data_h);
+		data_h.appendChild(document.createTextNode('Statements'));
+		statements_list.appendChild(data_h);
 
-		var input_releves = newDom('input');
-		input_releves.className = 'input_filter';
-		input_releves.setAttribute('type', 'text');
-		input_releves.setAttribute('placeholder', 'Filtrer');
-		layout.disableDrag(input_releves);
+		var input_statements = newDom('input');
+		input_statements.className = 'input_filter';
+		input_statements.setAttribute('type', 'text');
+		input_statements.setAttribute('placeholder', 'Filtrer');
+		layout.disableDrag(input_statements);
 
-		liste_releves.appendChild(input_releves);
-		var table_releves = newDom('table');
-		liste_releves.appendChild(table_releves);
-		layout.disableDrag(table_releves);
+		statements_list.appendChild(input_statements);
+		var table_statements = newDom('table');
+		statements_list.appendChild(table_statements);
+		layout.disableDrag(table_statements);
 
-		$(input_releves).keyup(function() {
+		// Filtering with regular expressions
+		$(input_statements).keyup(function() {
 			var value = $(this).val();
 			value = value.replace(/\//gi, '').replace(/\\$/gi, '');
 			value = new RegExp(value, 'i');
 
-			$(table_releves).find('tr').each(function() {
+			$(table_statements).find('tr').each(function() {
 				var tr = $(this);
 				var test = tr.contents('td:last').text().search(value);
 				if(test != -1) {
@@ -99,39 +117,56 @@ $(document).ready(function() {
 			});
 		});
 
-		box.back.appendChild(liste_releves);
+		box.back.appendChild(statements_list);
 
 		var input_types = newDom('div');
 		input_types.className = 'input_types';
 		var input_h = newDom('h2');
-		input_h.appendChild(document.createTextNode('Visualisation'));
+		input_h.appendChild(document.createTextNode('Visualization'));
 		input_types.appendChild(input_h);
 		var input_types_list = newDom('ul');
 		input_types.appendChild(input_types_list);
 
 		box.back.appendChild(input_types);
 
+		// Close button only if necessary
+		var close_button = newDom('button');
+		close_button.className = 'close';
+		close_button.appendChild(document.createTextNode('×'));
+		box.back.appendChild(close_button);
+		layout.disableDrag(close_button);
+		$(close_button).click(function(e) {
+			layout.removeBox(box.box);
+			--nb_boxes;
+			manage_close_buttons();
+			layout.equilibrate();
+		});
+
 		box.box.style.background = 'hsl('+color+')';
 		box.box.id = "box_"+nb_boxes+++'_'+Math.abs(color.slice(1).hashCode());
 		return box.box;
 	}
+	// First box
 	var firstBox = create_perfect_box();
 	layout.addBox(firstBox);
+	manage_close_buttons();
 
+	// Equilibrate in setTimeout for trigger CSS3 transitions
 	setTimeout(function(){layout.equilibrate();}, 1);
 
-	var front_boutons_bar = $('.navbar .nav.left.boutons_inspecteur');
-	var bouton_user = $('.navbar .nav.right .dropdown');
-	var back_boutons_bar = $(newDom('ul'));
-	back_boutons_bar.hide();
-	front_boutons_bar.after(back_boutons_bar);
-	back_boutons_bar.addClass('nav left boutons_back boutons_caches');
+	// Manage flip button
+	var front_buttons_bar = $('.navbar .nav.left.buttons_inspecteur');
+	var button_user = $('.navbar .nav.right .dropdown');
+	var back_buttons_bar = $(newDom('ul'));
+	back_buttons_bar.hide();
+	front_buttons_bar.after(back_buttons_bar);
+	back_buttons_bar.addClass('nav left buttons_back buttons_caches');
 
-	var bouton = create_toolbar_button('Flip!');
-	bouton.firstChild.className = 'icon_button flip_text';
-	$('.navbar .nav.right').append(bouton);
+	var button = create_toolbar_button('Flip!');
+	button.firstChild.className = 'icon_button flip_text';
+	$('.navbar .nav.right').append(button);
 
-	$(bouton).click(function() {
+	$(button).click(function() {
 
 		var jboxes = $('.boxdiv');
 
@@ -139,18 +174,18 @@ $(document).ready(function() {
 			jboxes.removeClass('flipped_animation');
 			if (layout.front)
 			{
-				back_boutons_bar.hide();
-				bouton_user.removeClass('boutons_caches');
-				front_boutons_bar.removeClass('boutons_caches');
+				back_buttons_bar.hide();
+				button_user.removeClass('buttons_caches');
+				front_buttons_bar.removeClass('buttons_caches');
 
 				// In a setTimeout for event order (dirty but funny)
 				setTimeout(function(){EventBus.send('layout_change');}, 1);
 			}
 			else
 			{
-				front_boutons_bar.hide();
-				bouton_user.hide();
-				back_boutons_bar.removeClass('boutons_caches');
+				front_buttons_bar.hide();
+				button_user.hide();
+				back_buttons_bar.removeClass('buttons_caches');
 			}
 		});
 
@@ -158,74 +193,39 @@ $(document).ready(function() {
 		// If toggle to front mode
 		if (layout.front)
 		{
-			bouton_user.show();
-			front_boutons_bar.show();
-			back_boutons_bar.addClass('boutons_caches');
+			button_user.show();
+			front_buttons_bar.show();
+			back_buttons_bar.addClass('buttons_caches');
 
 			// Select the first type of visualization by default
 			jboxes.each(function() {
 				var box = $(this);
 
-				var releve = box.find('.input_types li.selected_by_default');
+				var statement = box.find('.input_types li.selected_by_default');
 
-				if (releve.length) {
-					releve.removeClass('selected_by_default');
-					releve.click();
+				if (statement.length) {
+					statement.removeClass('selected_by_default');
+					statement.click();
 				}
 
 			});
 
-			// Updating the display
-			/*jboxes.each(function() {
-				var box = $(this);
-				var front = box.find('.front');
-				var releves_selectionnes = box.find('.releves_list input:checked');
-
-				var type = box.find('.input_types li.selected');
-				if (type.length)
-					type = '/type/' + encodeURIComponent(type.attr('name'));
-				else
-					type = '';
-
-				releves_selectionnes.each(function() {
-
-					var value = $(this).val();
-					var id = 'f' + Math.abs(($(this).parent('.boxdiv').attr('id')+url).hashCode());
-
-					var iframe = byId(id);
-					if (!iframe)
-					{
-						iframe = newDom('iframe');
-						iframe.setAttribute('src', url);
-						iframe.id = id;
-						front.append(iframe);
-					}
-
-					iframe.className = 'updated visualization';
-
-					iframe.onload = function() {
-						iframe.style.height = iframe.contentWindow.document.body.offsetHeight + 20 + 'px';
-						//iframe.style.width = iframe.contentWindow.document.body.offsetWidth + 'px';
-					};
-				});
-
-				front.find('iframe:not(.updated)').remove();
-				front.find('iframe:.updated').removeClass('updated');
-			});*/
 		}
 		else
 		{
-			back_boutons_bar.show();
-			front_boutons_bar.addClass('boutons_caches');
-			bouton_user.addClass('boutons_caches');
+			back_buttons_bar.show();
+			front_buttons_bar.addClass('buttons_caches');
+			button_user.addClass('buttons_caches');
 
 		}
 	});
 
-	$(bouton).click();
+	// Show the back side of the inspecteur deryque by default
+	$(button).click();
 
 
-	var boutonsLayouts = {
+	// Creation of layouts buttons
+	var buttonsLayouts = {
 		Vertical: layout.layouts.verticalSplit,
 		Horizontal: layout.layouts.horizontalSplit,
 		Grid: layout.layouts.grid,
@@ -233,30 +233,44 @@ $(document).ready(function() {
 	};
 
 
-	for (var nom in boutonsLayouts)
+	for (var name in buttonsLayouts)
 	{
-		var bouton = create_toolbar_button(nom);
-		bouton.className = 'layout_button';
-		bouton.firstChild.className = 'icon_button '+nom.toLowerCase()+'_text';
-		$(bouton).click(function() {
-			var nom = $(this)[0].firstChild.firstChild.data;
-			layout.changeLayout(boutonsLayouts[nom]);
+		var button = create_toolbar_button(name);
+		button.className = 'layout_button';
+		button.firstChild.className = 'icon_button '+name.toLowerCase()+'_text';
+		$(button).click(function() {
+			var name = $(this)[0].firstChild.firstChild.data;
+			layout.changeLayout(buttonsLayouts[name]);
 		});
 
-		back_boutons_bar.append(bouton);
+		back_buttons_bar.append(button);
 	}
 
+	// Newbox button
+	var new_box_button = $(create_toolbar_button('New box'));
+	new_box_button.find('a').addClass('icon_button newbox_text');
+	back_buttons_bar.append(new_box_button);
 
-	jbouton = $(create_toolbar_button('Nouvelle boite'));
-	jbouton.find('a').addClass('icon_button newbox_text');
-	back_boutons_bar.append(jbouton);
+	new_box_button.mousedown(function(e) {
+		var box = create_perfect_box();
+		manage_close_buttons();
+		fill_statements_list($(box).find('.back .statements_list table'));
+		fill_input_types($(box).find('.back .input_types ul'));
+		box.style.display = 'none';
+		box.className += ' dragged';
+		layout.dragged_box = box;
+		layout.visual_drag.style.display = 'block';
+		layout.visual_drag.style.top = e.clientY-13+'px';
+		layout.visual_drag.style.left = e.clientX-13+'px';
+		layout.visual_drag.style.background = box.style.background;
+	});
 
-	var json_releves_list = null;
-
-	var remplir_releves_list = function(list) {
+	// Statements list management
+	var json_statements_list = null;
+	var fill_statements_list = function(list) {
 
 		list.empty();
-		for (var report in json_releves_list)
+		for (var report in json_statements_list)
 		{
 			var tr = newDom('tr');
 			var td_a = newDom('td');
@@ -270,13 +284,16 @@ $(document).ready(function() {
 
 			tr.appendChild(td_a);
 			tr.appendChild(td_b);
-			//li.onclick = clic_releve;
+			//li.onclick = clic_statement;
 			list.append(tr);
 		}
+
+		// Click on a statement
 		list.find('tr').click(function(e){
 			var checkbox = $(this).find('input');
 
-			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') &&
+			// If the click is on the cell, and not on the checkbox
+			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
 				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT')) {
 				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
 			}
@@ -285,13 +302,15 @@ $(document).ready(function() {
 			var box = $(this).parents('.boxdiv');
 			var box_name = box.find('iframe').attr('id');
 			var statement_name = checkbox.attr('value');
+
 			EventBus.send((checked ? 'add': 'del') +'_statement',
 				{statement_name: statement_name, box_name: box_name});
 
 		});
 	};
 
-	var clic_type_releve = function() {
+	// Click un a visualization
+	var clic_type_statement = function() {
 		var li = $(this);
 		li.parent().find('li').removeClass('selected selected_by_default');
 		li.addClass('selected');
@@ -303,29 +322,37 @@ $(document).ready(function() {
 		var id = 'f' + Math.abs((boxdiv.attr('id')+type).hashCode());
 
 		var iframe = byId(id);
+		// If the iframe have changed
 		if (!iframe)
 		{
+			// Remove the old iframe
 			var other_frames = front.find('iframe');
 			other_frames.remove();
 
+			// Create the new iframe
 			iframe = newDom('iframe');
 			iframe.setAttribute('src', url);
 			iframe.id = id;
 			front.append(iframe);
+
+			// Inform the iframe (and all other elements too) that we have selected some
+			// statements
+			$(iframe).load(function() {
+				boxdiv.find('.back .statements_list input:checked').each(function() {
+					EventBus.send('add_statement',
+						{statement_name: $(this).attr('value'), box_name: id}
+					);
+				});
+			});
 		}
 
 		iframe.className = 'visualization';
 
-		/*iframe.onload = function() {
-			iframe.style.height = iframe.contentWindow.document.body.offsetHeight + 20 + 'px';
-						//iframe.style.width = iframe.contentWindow.document.body.offsetWidth + 'px';
-					};*/
-
 	};
 
+	// Visualization list management
 	var json_input_types = null;
-
-	var remplir_input_types = function(list) {
+	var fill_input_types = function(list) {
 		list.empty();
 		var first = true;
 		for (var key in json_input_types)
@@ -337,10 +364,9 @@ $(document).ready(function() {
 			}
 			layout.disableDrag(li);
 
-			$(li).click(clic_type_releve);
+			$(li).click(clic_type_statement);
 
 			var img = newDom('img');
-			// TODO c'est vraiment trop moche les urls en dur
 			img.setAttribute('src', ROOT_PATH+"/Display/"+key+"/thumbnail.png");
 			li.appendChild(img);
 			var h4 = newDom('h4');
@@ -353,75 +379,62 @@ $(document).ready(function() {
 	};
 
 	EventBus.addListener('statements_list', function(statements) {
-		json_releves_list = statements;
-		$('.releves_list table').each(function(){
+		json_statements_list = statements;
+		$('.statements_list table').each(function(){
 			var list = $(this);
-			remplir_releves_list(list);
+			fill_statements_list(list);
 		});
 	});
 
 	EventBus.send('get_statements_list');
 
-	jbouton.mousedown(function(e) {
-		var boite = create_perfect_box();
-		remplir_releves_list($(boite).find('.back .releves_list table'));
-		remplir_input_types($(boite).find('.back .input_types ul'));
-		boite.style.display = 'none';
-		boite.className += ' dragged';
-		layout.dragged_box = boite;
-		layout.visual_drag.style.display = 'block';
-		layout.visual_drag.style.top = e.clientY-13+'px';
-		layout.visual_drag.style.left = e.clientX-13+'px';
-		layout.visual_drag.style.background = boite.style.background;
-	});
-
-
-
+	// TODO this have nothing to do here
 	$.ajax({
 		url: ROOT_PATH + "/app/RestJson/display_type",
 		success: function(json) {
 			json_input_types = json;
 			$('.input_types ul').each(function(){
-				remplir_input_types($(this));
+				fill_input_types($(this));
 			});
 		},
 		error: function(e) {
 			alert(e.status == 401 ? "Vous devez vous connecter." : e.statusText);
 	}});
 
-	bouton_multiple = $(create_toolbar_button('Test multiple'));
-	back_boutons_bar.append(bouton_multiple);
+	// Temporary hack
+	button_multiple = $(create_toolbar_button('Test multiple'));
+	back_buttons_bar.append(button_multiple);
 
-	bouton_multiple.click(function() {
+	button_multiple.click(function() {
 		// TODO c'est évidemment une version non définitive…
-		var releves = ["Calories", "Position GPS", "RC"];
+		var statements = ["Calories", "Position GPS", "RC"];
 		var boxes = [];
 
 		// Find empty boxes
-		$('.boxdiv .back .releves_list table').each(function(){
+		$('.boxdiv .back .statements_list table').each(function(){
 			var table = $(this);
 			if (table.find('input:checked').length == 0)
 				boxes.push(table);
 		});
 
-		for (var i = boxes.length; i < releves.length; ++i)
+		for (var i = boxes.length; i < statements.length; ++i)
 		{
-			var boite = create_perfect_box();
-		boite.style.display = 'none';
-			var jboite = $(boite);
-			remplir_releves_list(jboite.find('.back .releves_list table'));
-			remplir_input_types(jboite.find('.back .input_types ul'));
-			layout.addBoxInBestPlace(boite);
-			boxes.push(jboite);
+			var box = create_perfect_box();
+			box.style.display = 'none';
+			var jbox = $(box);
+			fill_statements_list(jbox.find('.back .statements_list table'));
+			fill_input_types(jbox.find('.back .input_types ul'));
+			layout.addBoxInBestPlace(box);
+			boxes.push(jbox);
 		}
 
-		for (var i = 0; i < releves.length; ++i)
+		for (var i = 0; i < statements.length; ++i)
 		{
 			var box = boxes[i];
-			var releve = releves[i];
+			var statement = statements[i];
 			box.find('input').each(function() {
 				var input = $(this);
-				if (input.attr('value') == releve)
+				if (input.attr('value') == statement)
 					input.attr('checked', 'checked');
 			});
 		}

@@ -48,13 +48,14 @@ END;
 		$url_data = CNavigation::generateUrlToApp('Data');
 		$url_datamulti = CNavigation::generateUrlToApp('DataMulti');
 		$url_deryque_music = CNavigation::generateUrlToApp('Dashboard','deryque_music');
+		$url_theme = CNavigation::generateUrlToApp('Dashboard','theme');
 		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_datamulti = $CTRL_NAME === 'DataMulti' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_dashboard = $CTRL_NAME === 'Dashboard' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_import = $CTRL_NAME === 'Import' ? ' class="active"' : '';
 
 		echo <<<END
-		<ul class="nav left boutons_inspecteur">
+		<ul class="nav left buttons_inspecteur">
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
 			<li class="dropdown"$c_data$c_datamulti><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Relevés <b class="caret"></b></a>
 				<ul class="dropdown-menu">
@@ -71,6 +72,7 @@ END;
 						<li><a href="$url_help">Aide</a></li>
 						<li><a href="$url_not_found">Une erreur 404</a></li>
 						<li><a href="$url_deryque_music">Écouter la musique</a></li>
+						<li><a href="$url_theme">Changer de thème</a></li>
 						<li class="divider"></li>
 						<li><a href="$url_logout">Déconnexion</a></li>
 					</ul>
