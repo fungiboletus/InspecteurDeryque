@@ -89,12 +89,17 @@ class DataMod extends AbstractMod {
         return R::getAll('select name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id order by name ', array($user_id));
     }
 
+    /**
+     * Get statement with its id created by a given user.
+     * @param $user_id The id of the user
+     * @return array of statements.
+     */
     public static function getStatementsWithId($user_id) {
         return R::getAll('select name, r.id as id, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id order by name ', array($user_id));
     }
 
     /**
-     * Get all statements created by a given user.
+     * Get all multi statements created by a given user with a concatanation of the types of the statements they contain.
      * @param $user_id The id of the user
      * @return array of statements.
      */
@@ -108,7 +113,11 @@ class DataMod extends AbstractMod {
      * @return array of statements.
      */
     public static function getStatementComp($user_id) {
-        return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
+        return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
+    }
+
+    public static function getStatementCompWithId($user_id) {
+        return R::getAll('select c.name, c.id as id, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
     }
 
     /** Get a statement given the name and the user of that statement.
@@ -129,17 +138,37 @@ class DataMod extends AbstractMod {
         return R::getAll('select name from multi_releve r where r.user_id = ? order by name', array($user_id));
     }
 
+    /** Get a multi statement given the name and the user of that statement.
+      * @param $name Name of the statement.
+      * @param $user_id id of the user who created the asked statement.
+      * @return A query request.
+      */
     public static function getMultiStatement($name, $user_id) {
         return R::getAll('select r.name, r.id from multi_releve m, releve r, multi_releve_releve mr where m.user_id=? and m.id=mr.multi_releve_id and  mr.releve_id=r.id and m.name=?', array($user_id, $name));
     }
 
+    /** Get the name and id of a statement given the name and the user of that statement.
+      * @param $name Name of the statement.
+      * @param $user_id id of the user who created the asked statement.
+      * @return A query request.
+      */
     public static function getName($name, $user_id) {
         return R::getAll('select name, id from releve r where user_id=? and name=?', array($user_id, $name));
     }
-
+    /** Get the description of a multi statement given the name and the user of that statement.
+      * @param $name Name of the statement.
+      * @param $user_id id of the user who created the asked statement.
+      * @return A query request.
+      */
 public static function getDescMulti($name, $user_id) {
         return R::getRow('select description from multi_releve m where user_id = ? and name=?', array($user_id, $name));
     }
+
+    /** Get the id of all the multi_releve_releve of a multi statement given the name and the user of that statement.
+      * @param $name Name of the statement.
+      * @param $user_id id of the user who created the asked statement.
+      * @return array of statements id.
+      */
     public static function getMultiRelRel($user_id, $id) {
         return R::getAll('select m.id from multi_releve_releve m, multi_releve r where user_id=? and multi_releve_id=?', array($user_id, $id));
     }

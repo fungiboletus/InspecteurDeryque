@@ -2,12 +2,12 @@
 /**
  * View to see the statements.
  */
-class DataCompoView extends AbstractView {
+class DataMultiView extends AbstractView {
     /**
      * Display the button to add a statement.
      */
     public static function showAddButton() {
-        $url = CNavigation::generateUrlToApp('DataCompo','choose');
+        $url = CNavigation::generateUrlToApp('DataMulti','choose');
         echo '<div class="well">';
         self::showButton($url, 'primary', 'Nouveau relevé', 'plus');
         echo '</div>';
@@ -39,7 +39,7 @@ class DataCompoView extends AbstractView {
         foreach ($data as $type) {
             $hnom = htmlspecialchars($type->name);
             $hdir = htmlspecialchars($type->folder);
-            $url = CNavigation::generateUrlToApp('DataCompo','add', array('type'=>$type->folder));
+            $url = CNavigation::generateUrlToApp('DataMulti','add', array('type'=>$type->folder));
             echo <<<END
             <li class="thumbnail">
             <a href="$url">
@@ -60,14 +60,14 @@ END;
 
         $label_name = _('Nom');
         $label_desc = _('Description');
-        $url_submit = CNavigation::generateUrlToApp('DataCompo', 'add');
+        $url_submit = CNavigation::generateUrlToApp('DataMulti', 'add');
         $text_submit = _('Créer le relevé multiple');
         $hnom = htmlspecialchars($values['nom']);
         $hdesc = htmlspecialchars($values['desc']);
         $statements = DataMod::getStatementsWithId($_SESSION['bd_id']);
 
         echo <<<END
-        <form action="$url_submit" name="data_compo_add_form" method="post" id="data_compo_add_form" class="form-horizontal well">
+        <form action="$url_submit" name="data_multi_add_form" method="post" id="data_multi_add_form" class="form-horizontal well">
                                         <table class="table table-striped">
                                                                  
 END;
@@ -117,7 +117,7 @@ public static function showChangeForm($values) {
 
     $label_name = _('Nom');
     $label_desc = _('Description');
-    $url_submit = CNavigation::generateUrlToApp('DataCompo', 'change');
+    $url_submit = CNavigation::generateUrlToApp('DataMulti', 'change');
     $text_submit = _('Enregistrer les modifications');
     $hnom = htmlspecialchars($values['nom']);
     $hdesc = htmlspecialchars($values['desc']);
@@ -125,7 +125,7 @@ public static function showChangeForm($values) {
     $stat = DataMod::GetMultiStatement($values['nom'], $_SESSION['bd_id']);
 
     echo <<<END
-    <form action="$url_submit" name="data_compo_add_form" method="post" id="data_compo_add_form" class="form-horizontal well">
+    <form action="$url_submit" name="data_multi_add_form" method="post" id="data_multi_add_form" class="form-horizontal well">
                                     <table class="table table-striped">
                                                             
 END;
@@ -206,7 +206,7 @@ public static function showStatementsList($statements) {
                                                                                
 END;
             foreach ($statements as $statement) {
-                $url = CNavigation::generateUrlToApp('DataCompo', 'view', array('nom' => $statement['name']));
+                $url = CNavigation::generateUrlToApp('DataMulti', 'view', array('nom' => $statement['name']));
                 echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
