@@ -55,7 +55,7 @@ END;
 		$c_import = $CTRL_NAME === 'Import' ? ' class="active"' : '';
 
 		echo <<<END
-		<ul class="nav left boutons_inspecteur">
+		<ul class="nav left buttons_inspecteur">
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
 			<li class="dropdown"$c_data$c_datacompo><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Relevés <b class="caret"></b></a>
 				<ul class="dropdown-menu">

@@ -12,11 +12,11 @@ padding-top:55px;
 .navbar .container {
 	position:relative;
 }
-.nav.boutons_inspecteur {
+.nav.buttons_inspecteur {
 	margin-left:25px;
 }
 
-.nav.boutons_back {
+.nav.buttons_back {
 	position:absolute;
 	left:200px;
 }

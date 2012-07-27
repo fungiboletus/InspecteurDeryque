@@ -122,21 +122,21 @@ background:red;
 .topbar .container {
 	position:relative;
 }
-.topbar .nav.boutons_inspecteur, .topbar .nav.boutons_back, .topbar .nav .dropdown, #visual_drag {
+.topbar .nav.buttons_inspecteur, .topbar .nav.buttons_back, .topbar .nav .dropdown, #visual_drag {
 -webkit-transition:opacity 0.6s ease 0s;
 -moz-transition:opacity 0.6s ease 0s;
 transition:opacity 0.6s ease 0s;
 }
-.boutons_caches {
+.buttons_caches {
 	opacity:0.0;
 }
 
-.topbar .nav.boutons_back {
+.topbar .nav.buttons_back {
 position:absolute;
 left:220px;
 }
 
-.boxdiv .back .releves_list {
+.boxdiv .back .statements_list {
 	max-height:100%;
 	width:195px;
 	margin-left:5px;
@@ -153,39 +153,39 @@ left:220px;
 	right:4px;
 }
 
-.boxdiv .back .releves_list table {
+.boxdiv .back .statements_list table {
 	width:184px;
 	cursor:pointer;
 }
 
-.boxdiv .back .releves_list td {
+.boxdiv .back .statements_list td {
 border:0;
 padding:2px 0px 2px 2px;
 margin:2px 0px 2px 0px;
 }
-.boxdiv .back .releves_list tr:nth-child(even) {
+.boxdiv .back .statements_list tr:nth-child(even) {
 background:rgba(51,51,51,0.1);
 }
 
-.boxdiv .back .releves_list .input_filter {
+.boxdiv .back .statements_list .input_filter {
 width:174px;
 background:rgba(51,51,51,0.1);
 color:#333333;
 margin-bottom:3px;
 }
 
-.boxdiv .back .releves_list input::-webkit-input-placeholder {
+.boxdiv .back .statements_list input::-webkit-input-placeholder {
 	color:#7B7B7B;
 }
-.boxdiv .back .releves_list input:-moz-placeholder {
+.boxdiv .back .statements_list input:-moz-placeholder {
 	color:#7B7B7B;
 }
 
-.boxdiv .back .releves_list table {
+.boxdiv .back .statements_list table {
 	margin:0;
 }
 
-.boxdiv .back .releves_list input:checked {
+.boxdiv .back .statements_list input:checked {
 color:blue;
 }
 .box.dragged input:focus {
