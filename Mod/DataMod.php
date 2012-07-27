@@ -111,10 +111,14 @@ class DataMod extends AbstractMod {
      * Get all statements created by a given user.
      * @param $user_id The id of the user
      * @return array of statements.
-     *
+     */
     public static function getStatementComp($user_id) {
-        return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
-    }*/
+        return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
+    }
+
+    public static function getStatementCompWithId($user_id) {
+        return R::getAll('select c.name, c.id as id, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
+    }
 
     /** Get a statement given the name and the user of that statement.
       * @param $name Name of the statement.

@@ -46,20 +46,20 @@ END;
 		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
 		$url_xml = CNavigation::generateUrlToApp('Import');
 		$url_data = CNavigation::generateUrlToApp('Data');
-		$url_datacompo = CNavigation::generateUrlToApp('DataCompo');
+		$url_datamulti = CNavigation::generateUrlToApp('DataMulti');
 		$url_deryque_music = CNavigation::generateUrlToApp('Dashboard','deryque_music');
 		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
-		$c_datacompo = $CTRL_NAME === 'DataCompo' && $ACTION_NAME === 'index' ? ' class="active"' : '';
+		$c_datamulti = $CTRL_NAME === 'DataMulti' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_dashboard = $CTRL_NAME === 'Dashboard' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_import = $CTRL_NAME === 'Import' ? ' class="active"' : '';
 
 		echo <<<END
 		<ul class="nav left boutons_inspecteur">
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
-			<li class="dropdown"$c_data$c_datacompo><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Relevés <b class="caret"></b></a>
+			<li class="dropdown"$c_data$c_datamulti><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Relevés <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="$url_data">Relevés simple</a></li>
-					<li><a href="$url_datacompo">Relevés multiples</a></li>
+					<li><a href="$url_datamulti">Relevés multiples</a></li>
 				</ul>
 			</li>
 			<li$c_import><a href="$url_xml" class="icon_button upload_text">Importer des données</a></li>
