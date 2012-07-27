@@ -334,6 +334,16 @@ $(document).ready(function() {
 			iframe.setAttribute('src', url);
 			iframe.id = id;
 			front.append(iframe);
+
+			// Inform the iframe (and all other elements too) that we have selected some
+			// statements
+			$(iframe).load(function() {
+				boxdiv.find('.back .statements_list input:checked').each(function() {
+					EventBus.send('add_statement',
+						{statement_name: $(this).attr('value'), box_name: id}
+					);
+				});
+			});
 		}
 
 		iframe.className = 'visualization';
