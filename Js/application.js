@@ -167,7 +167,7 @@ EventBus.prefix = 'i15e.';
 EventBus.addListener = function(name, method, caller) {
 	window.top.addEventListener(this.prefix+name, function(e) {
 		// If the page still exist
-		if (self !== null)
+		if (self !== null && document !== null)
 			method(e.detail, caller, e);
 	});
 };

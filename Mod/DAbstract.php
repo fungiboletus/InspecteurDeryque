@@ -4,9 +4,6 @@
  */
 abstract class DAbstract
 {
-	public $data = null; /**< The data to display*/
-	public $structure = null; /** <map of statements */
-
     /** Display graphic.
      * Because this is an abstract class a message error is delivered to the user.
      */
@@ -23,14 +20,14 @@ abstract class DAbstract
 			if (file_exists($path_css))
 				CHead::addCSS($ROOT_PATH.'/'.$path_css);
 
-			/*echo <<<END
+			echo <<<END
 <div id="area"></div>
 <script type="text/javascript">
 $(document).ready(function(){
 new D$name(byId('area'));
 });
 </script>
-END;*/
+END;
 		}
 		else
 			echo <<<END
@@ -38,22 +35,5 @@ END;*/
 <p>Désolé, mais ce type d'affichage n'est pas encore implémenté.</p>
 </div>
 END;
-	}
-
-    /**
-     * Manages situations where there is no data to display.
-     */
-	public function gererVide() {
-		if (count($this->data) === 0)
-		{
-			echo <<<END
-<div class="alert alert-block alert-warning">
-<p>Il n'y a aucune donnée pour l'instant.</p>
-</div>
-END;
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

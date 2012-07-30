@@ -1,7 +1,10 @@
 var DCarte = function(screen)
 {
+	var map = newDom('div');
+	map.id = 'map';
+	screen.appendChild(map);
+
 	if (window['google'] == undefined || google['maps'] == undefined) return alert('Google maps library is required');
-	this.screen = screen;
 
 	// If we have nothing to display, display a heart island
 	this.default_location = new google.maps.LatLng(43.978487,15.383574);
@@ -12,7 +15,7 @@ var DCarte = function(screen)
 		scaleControl: true
 	};
 
-	this.map = new google.maps.Map(screen, options);
+	this.map = new google.maps.Map(map, options);
 
 	EventBus.addListeners(this.listeners, this);
 

@@ -6,11 +6,11 @@ class DTableau extends DAbstract
 {
 	const name = 'Tableau';
 
-	public function show() 
+	/*public function show()
 	{
-		if ($this->gererVide()) return;
-
 		CHead::addJS('jquery.tablesorter.min');
+		DAbstract::show();
+		/*
 		echo <<<END
 		<table class="table table-striped table-bordered display_list">
 			<thead><tr>
@@ -22,7 +22,7 @@ END;
 			$couleur = $couleurs[($i++)%6];
 			echo "<th class=\"header $couleur\">$hv</th>\n";
 		}
-				
+
 		echo <<<END
 			</tr></thead>
 			<tbody>
@@ -32,7 +32,7 @@ END;
 			echo "<tr>";
 			foreach ($this->structure as $k => $v) {
 				if ($k === 'timestamp') {
-					echo "<td>", strftime('%d/%m/%Y %H:%M:%S', $data[$k]), "</td>";	
+					echo "<td>", strftime('%d/%m/%Y %H:%M:%S', $data[$k]), "</td>";
 				} else {
 					echo "<td>", htmlspecialchars($data[$k]), "</td>";
 				}
@@ -40,6 +40,6 @@ END;
 			echo "</tr>\n";
 		}
 		echo "</tbody></table>";
-	}
+	}*/
 }
 ?>

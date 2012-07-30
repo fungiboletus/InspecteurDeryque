@@ -1,0 +1,11 @@
+#area {
+	background:white;
+}
+
+#area .table {
+	font-family:monospace;
+}
+
+td.time_t {
+	width:28em;
+}

@@ -60,9 +60,11 @@ add_statement: function(d, obj) {
 				return tuple;
 			}
 
-			var i = 0;
-			for (; i < json.data.length; ++i)
-			 	_addTuple(i);
+			if (json.data) {
+				var i = 0;
+				for (; i < json.data.length; ++i)
+				 	_addTuple(i);
+			}
 
 			// EventBus.send('new_tuples', {
 			// 	statement_name: statement_name,
