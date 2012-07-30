@@ -10,18 +10,7 @@ $(document).ready(function(){
 
 	var time_info = newDom('div');
 	time_info.className = 'time_info';
-	var time_info_day = newDom('div');
-	time_info_day.className = 'day';
-	time_info_day.appendChild(document.createTextNode('10'));
-	time_info.appendChild(time_info_day);
-	var time_info_month_year = newDom('div');
-	time_info_month_year.className = 'month year';
-	time_info_month_year.appendChild(document.createTextNode('07/90'));
-	time_info.appendChild(time_info_month_year);
-	var time_info_time = newDom('div');
-	time_info_time.className = 'time';
-	time_info_time.appendChild(document.createTextNode('12:45:12.054'));
-	time_info.appendChild(time_info_time);
+	time_info.appendChild(document.createTextNode('12:45:12.054'));
 	time_control.appendChild(time_info);
 	var bti = newDom('button');
 	bti.className = 'btn btn-mini btn-inverse';
@@ -50,42 +39,31 @@ $(document).ready(function(){
 	border_right.className = 'border border_right';
 	area.appendChild(border_right);
 
-	var curseur = newDom('div');
-	curseur.className = 'cursor';
-	zone_slider.appendChild(curseur);
-
-	var left_width = 50;
-	var right_width = 42;
-	var slider_pos = 170;
+	var left_pos = 50;
+	var right_pos = 120;
+	var slider_left = jslider.position().left;
 	var slider_width = jslider.width();
 	var drag_margin = 0;
 
 	var draw = function() {
-		curseur.style.left = slider_pos - 1 + 'px';
+		// curseur.style.left = slider_pos - 1 + 'px';
 
-		var left = slider_pos - left_width;
-		var width = left_width + right_width;
-		if (left < 0) {
-			width += left;
-			left = 0;
-		}
-		if (left + width > slider_width) width = slider_width - left;
-		left += 'px';
-		width += 'px';
+		var left = left_pos + 'px';
+		var right = slider_width - right_pos + 'px';
 		if (area.style.left != left)
 			area.style.left =  left;
-		if (area.style.width != width)
-			area.style.width = width;
+		if (area.style.right != right)
+			area.style.right = right;
 	}
 
 	draw();
 
 	$(window).resize(function() {
+		slider_left = jslider.position().left;
 		var new_width = jslider.width();
 		var ratio = new_width / slider_width;
-		left_width *= ratio;
-		right_width *= ratio;
-		slider_pos *= ratio;
+		left_pos *= ratio;
+		right_pos *= ratio;
 		slider_width = new_width;
 		draw();
 	});
@@ -94,7 +72,6 @@ $(document).ready(function(){
 	var slider_drag = false;
 	var border_left_drag = false;
 	var border_right_drag = false;
-	var slider_left = jslider.position().left;
 
 	var time_min = Number.MAX_VALUE;
 	var time_max = Number.MIN_VALUE;
@@ -110,23 +87,20 @@ $(document).ready(function(){
 	});
 
 	var manage_new_position = function() {
+		var t = time_min * 1;
 		var time_int = time_max - time_min;
-		var time_t = slider_pos / slider_width * time_int + time_min * 1;
-		var start_t = time_t - left_width / slider_width * time_int;
-		var end_t = time_t + right_width / slider_width * time_int;
-		var time_t_date = new Date(time_t);
+		var start_t = t + left_pos / slider_width * time_int;
+		var end_t = t + right_pos / slider_width * time_int;
 		var start_t_date = new Date(start_t);
 		var end_t_date = new Date(end_t);
+
 		EventBus.send('time_sync', {
-			time_t: time_t_date,
 			start_t: start_t_date,
 			end_t: end_t_date
 		});
-
-		date_display =  border_left_drag ? start_t_date :
-			border_right_drag ? end_t_date : time_t_date;
 	};
 
+	var drag_width = 0;
 	var dragdrop = function(e) {
 		if (ondrag)
 		{
@@ -137,17 +111,19 @@ $(document).ready(function(){
 
 			if (slider_drag)
 			{
-				slider_pos = m_x;
+				left_pos = m_x;
+				right_pos = m_x + drag_width;
+				if (right_pos > slider_width) right_pos = slider_width;
 			}
 			else if (border_left_drag)
 			{
-				left_width = slider_pos - m_x;
-				if (left_width < 0) left_width = 0;
+				left_pos = m_x;
+				if (left_pos > right_pos) right_pos = left_pos;
 			}
 			else if (border_right_drag)
 			{
-				right_width = m_x - slider_pos;
-				if (right_width < 0) right_width = 0;
+				right_pos = m_x;
+				if (right_pos < left_pos) left_pos = right_pos;
 			}
 			// draw();
 			manage_new_position();
@@ -158,10 +134,9 @@ $(document).ready(function(){
 		ondrag = true;
 		if (!border_left_drag && !border_right_drag)
 		{
-			var m_x = e.clientX - slider_left;
-			drag_margin = m_x - slider_pos;
-			if ((drag_margin < 0 && drag_margin < -left_width) ||
-				(drag_margin > 0 && drag_margin > right_width)) drag_margin = 0;
+			var m_x = e.clientX - slider_left - left_pos;
+			drag_margin = m_x;
+			drag_width = right_pos - left_pos;
 
 			slider_drag = true;
 			dragdrop(e);
@@ -181,14 +156,14 @@ $(document).ready(function(){
 
 	$(border_left).mousedown(function(e) {
 		ondrag = true; slider_drag = false; border_left_drag = true;
-		drag_margin = e.clientX - slider_left - slider_pos + left_width;
+		drag_margin = e.clientX - slider_left - left_pos;
 		dragdrop(e);
 		iframe_mask.style.display  = 'block';
 	});
 
 	$(border_right).mousedown(function(e) {
 		ondrag = true; slider_drag = false; border_right_drag = true;
-		drag_margin = e.clientX - slider_left - slider_pos - right_width;
+		drag_margin = e.clientX - slider_left - right_pos;
 		dragdrop(e);
 		iframe_mask.style.display  = 'block';
 	});
@@ -198,12 +173,22 @@ $(document).ready(function(){
 		if (bti_icon.className == bti_icon_play_class)
 		{
 			bti_icon.className = bti_icon_pause_class;
-			var time_int = time_max - time_min;
-			var begin_t = slider_pos / slider_width * time_int + time_min * 1;
+			// var time_int = time_max - time_min;
+			// var begin_t = left_pos / slider_width * time_int + time_min * 1;
+			// var
 			play_interval = window.setInterval(function() {
-				begin_t += 5000;
-				time_int = time_max - time_min;
-				slider_pos = (begin_t - time_min) * (slider_width / time_int);
+				// begin_t += 5000;
+				// time_int = time_max - time_min;
+				if (left_pos < slider_width && right_pos < slider_width)
+				{
+					left_pos += 1;
+					right_pos += 1;
+				}
+				else
+				{
+					jbti.click();
+				}
+				// left_pos = (begin_t - time_min) * (slider_width / time_int);
 
 				manage_new_position();
 			}, 128);
@@ -216,22 +201,13 @@ $(document).ready(function(){
 	});
 
 	EventBus.addListener('time_sync', function(d, obj){
-		var time_t = d.time_t * 1;
 		var time_int = time_max - time_min;
-		slider_pos = (time_t - time_min) * (slider_width / time_int);
-
-		if (d.start_t)
-			left_width = (time_t - d.start_t) / time_int * slider_width;
-
-		if (d.end_t)
-			right_width = (d.end_t - time_t) / time_int * slider_width;
+		left_pos = (d.start_t - time_min) * (slider_width / time_int);
+		right_pos = (d.end_t - time_min) * (slider_width / time_int);
 
 		draw();
 
-		var date_display = d.time_t;
-		time_info_day.firstChild.data = date_display.getDate();
-		time_info_month_year.firstChild.data = date_display.getMonth()+'/'
-			+date_display.getFullYear().toString().substring(2);
+		var date_display = d.start_t;
 
 		var hours = date_display.getHours().toString();
 		if (hours.length < 2) hours = '0'+hours;
@@ -242,7 +218,7 @@ $(document).ready(function(){
 		var mili = date_display.getMilliseconds().toString();
 		while(mili.length < 3) mili = '0'+mili;
 
-		time_info_time.firstChild.data =
+		time_info.firstChild.data =
 			hours+':'+ mins + ':' + seconds + '.' + mili;
 	}, this);
 
