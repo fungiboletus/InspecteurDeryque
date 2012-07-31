@@ -8,10 +8,9 @@ $(document).ready(function(){
 	time_control.id = "time_control";
 	document.body.appendChild(time_control);
 
-	var time_info = newDom('div');
-	time_info.className = 'time_info';
-	time_info.appendChild(document.createTextNode('12:45:12.054'));
-	time_control.appendChild(time_info);
+	var time_buttons = newDom('div');
+	time_buttons.className = 'time_buttons btn-group';
+
 	var bti = newDom('button');
 	bti.className = 'btn btn-mini btn-inverse';
 	var bti_icon = newDom('i');
@@ -19,7 +18,15 @@ $(document).ready(function(){
 	var bti_icon_pause_class = 'icon-pause icon-white';
 	bti_icon.className = bti_icon_play_class;
 	bti.appendChild(bti_icon);
-	time_control.appendChild(bti);
+	time_buttons.appendChild(bti);
+
+	var time_info = newDom('button');
+	time_info.className = 'btn btn-mini time_info';
+	time_info.appendChild(document.createTextNode('12:45:12.054'));
+	time_buttons.appendChild(time_info);
+
+	time_control.appendChild(time_buttons);
+
 	var jbti = $(bti);
 
 	var zone_slider = newDom('div');
@@ -39,6 +46,82 @@ $(document).ready(function(){
 	border_right.className = 'border border_right';
 	area.appendChild(border_right);
 
+	var tooltip = newDom('div');
+	tooltip.className = 'tooltip top';
+	var tooltip_arrow = newDom('div');
+	tooltip_arrow.className = 'tooltip-arrow';
+	var tooltip_inner = newDom('div');
+	tooltip_inner.className = 'tooltip-inner';
+	tooltip_inner.appendChild(document.createTextNode('coucou'));
+	tooltip.appendChild(tooltip_arrow);
+	tooltip.appendChild(tooltip_inner);
+	document.body.appendChild(tooltip);
+	var tooltip_visible = false;
+	var tooltip_left = true;
+	var tooltip_hide_timeout = -1;
+
+	var button_width = 10;
+
+	var draw_tooltip = function() {
+		var width_margin = tooltip.offsetWidth;
+		var tpos = slider_left - width_margin * 0.5 + 3;
+		var margin_arrow = -5;
+
+		if (tooltip_left)
+			tpos += left_pos + button_width;
+		else
+		{
+			var right_pos = left_pos + $(area).width() + button_width + button_width + 3;
+			tpos += right_pos - button_width;
+			var max_width = $(document.body).width();
+			if (tpos + width_margin > max_width)
+			{
+				var old_tpos = tpos;
+				tpos = max_width - width_margin;
+
+				var diff = old_tpos - tpos;
+				margin_arrow += diff;
+
+				var max_arrow = width_margin * 0.25 + 5;
+				if (margin_arrow > max_arrow) margin_arrow = max_arrow;
+			}
+		}
+
+		tpos += 'px';
+		margin_arrow += 'px';
+
+		if (tooltip.style.left != tpos)
+			tooltip.style.left = tpos;
+
+		if (tooltip_arrow.style.marginLeft != margin_arrow)
+			tooltip_arrow.style.marginLeft = margin_arrow;
+	};
+
+	var show_tooltip = function(left) {
+		tooltip_visible = true;
+		tooltip_left = left;
+
+		if (tooltip_hide_timeout > 0)
+			window.clearTimeout(tooltip_hide_timeout);
+
+
+		tooltip.style.display  = 'block';
+		window.setTimeout(function() {
+			tooltip.className = 'tooltip fade in top';
+			draw_tooltip();
+		}, 1);
+
+
+	}
+	var hide_tooltip = function() {
+		tooltip_visiple = false;
+		tooltip.className = 'tooltip fade top';
+
+		tooltip_hide_timeout = window.setTimeout(function() {
+			tooltip.style.display = 'none';
+		}, 160);
+	}
+
 	var left_pos = 50;
 	var right_pos = 120;
 	var slider_left = jslider.position().left;
@@ -48,19 +131,22 @@ $(document).ready(function(){
 	var draw = function() {
 		// curseur.style.left = slider_pos - 1 + 'px';
 
-		var left = left_pos + 'px';
-		var right = slider_width - right_pos + 'px';
+		var left = left_pos + button_width + 'px';
+		var right = slider_width - right_pos + button_width + 'px';
 		if (area.style.left != left)
 			area.style.left =  left;
 		if (area.style.right != right)
 			area.style.right = right;
+
+		if (tooltip_visible)
+			draw_tooltip();
 	}
 
 	draw();
 
 	$(window).resize(function() {
 		slider_left = jslider.position().left;
-		var new_width = jslider.width();
+		var new_width = jslider.width() - button_width - button_width;
 		var ratio = new_width / slider_width;
 		left_pos *= ratio;
 		right_pos *= ratio;
@@ -148,6 +234,7 @@ $(document).ready(function(){
 	jdoc.mouseup(function() {
 		ondrag = false; slider_drag = false;
 		border_left_drag = false; border_right_drag = false;
+		if (tooltip_visible) hide_tooltip();
 		iframe_mask.style.display  = 'none';
 	});
 
@@ -157,15 +244,17 @@ $(document).ready(function(){
 	$(border_left).mousedown(function(e) {
 		ondrag = true; slider_drag = false; border_left_drag = true;
 		drag_margin = e.clientX - slider_left - left_pos;
-		dragdrop(e);
+		show_tooltip(true);
 		iframe_mask.style.display  = 'block';
+		dragdrop(e);
 	});
 
 	$(border_right).mousedown(function(e) {
 		ondrag = true; slider_drag = false; border_right_drag = true;
 		drag_margin = e.clientX - slider_left - right_pos;
-		dragdrop(e);
+		show_tooltip(false);
 		iframe_mask.style.display  = 'block';
+		dragdrop(e);
 	});
 
 	var play_interval = -1;
@@ -200,6 +289,19 @@ $(document).ready(function(){
 		}
 	});
 
+	var get_txt_date = function(date) {
+		var hours = date.getHours().toString();
+		if (hours.length < 2) hours = '0'+hours;
+		var mins = date.getMinutes().toString();
+		if (mins.length < 2) mins = '0'+mins;
+		var seconds = date.getSeconds().toString();
+		if (seconds.length < 2) seconds = '0'+seconds;
+		var mili = date.getMilliseconds().toString();
+		while(mili.length < 3) mili = '0'+mili;
+
+		return hours+':'+ mins + ':' + seconds + '.' + mili;
+	};
+
 	EventBus.addListener('time_sync', function(d, obj){
 		var time_int = time_max - time_min;
 		left_pos = (d.start_t - time_min) * (slider_width / time_int);
@@ -207,19 +309,11 @@ $(document).ready(function(){
 
 		draw();
 
-		var date_display = d.start_t;
+		var date_display =  tooltip_left ? d.start_t : d.end_t;
 
-		var hours = date_display.getHours().toString();
-		if (hours.length < 2) hours = '0'+hours;
-		var mins = date_display.getMinutes().toString();
-		if (mins.length < 2) mins = '0'+mins;
-		var seconds = date_display.getSeconds().toString();
-		if (seconds.length < 2) seconds = '0'+seconds;
-		var mili = date_display.getMilliseconds().toString();
-		while(mili.length < 3) mili = '0'+mili;
-
-		time_info.firstChild.data =
-			hours+':'+ mins + ':' + seconds + '.' + mili;
+		var txt = get_txt_date(d.start_t);
+		tooltip_inner.firstChild.data = get_txt_date(date_display);
+		time_info.firstChild.data = get_txt_date(d.start_t);
 	}, this);
 
 });

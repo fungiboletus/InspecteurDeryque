@@ -142,7 +142,7 @@ $(document).ready(function() {
 			layout.equilibrate();
 		});
 
-		box.box.style.background = 'hsl('+color+')';
+		// box.box.style.background = 'hsl('+color+')';
 		box.box.id = "box_"+nb_boxes+++'_'+Math.abs(color.slice(1).hashCode());
 		return box.box;
 	}
