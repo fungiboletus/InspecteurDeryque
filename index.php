@@ -86,6 +86,7 @@ CHead::addJS('application');
 CHead::addJS('Bootstrap/bootstrap-dropdown');
 CHead::addJs('Bootstrap/bootstrap-tabs');
 CHead::addJs('Bootstrap/bootstrap-modal');
+CHead::addJs('Bootstrap/bootstrap-collapse');
 CHead::addJS($CTRL_NAME);
 
 try {

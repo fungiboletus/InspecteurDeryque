@@ -7,8 +7,17 @@ class DataSample {
         CNavigation::setTitle('Gestion des extraits de relevés');
 
         $statements = DataMod::getStatementComp($_SESSION['bd_id']);
-
-        DataSampleView::showStatementsList($statements);
+        $statement = DataMod::getStatementCompMulti($_SESSION['bd_id']);
+	echo <<<END
+		    <b>Extraits de sources simples</b>
+END;
+	$int = 0;
+        DataSampleView::showStatementsList($statements, $int);
+	echo <<<END
+		    <b>Extraits de sources multiples</b>
+END;
+	$int=1;
+        DataSampleView::showStatementsLists($statement);
 
         DataSampleView::showAddButton();
     }
@@ -18,7 +27,7 @@ class DataSample {
         CNavigation::setDescription('Sélectionnez le relevé que vous souhaitez utiliser');
 
         DataSampleView::showAddForm();
-        DataSampleView::showViewButtons(
+        DataSampleView::showBackButtons(
             CNavigation::generateUrlToApp('DataSample'));
     }
 
@@ -29,7 +38,7 @@ class DataSample {
                 new CMessage('Un relevé existe déjà avec le même nom', 'error');
 		CNavigation::redirectToApp('DataSample', 'choose');
             } 
-	    else if(count($_POST['releve']) < 1){
+	    else if(!(isset($POST['releve'])) or count($_POST['releve']) < 1){
 		new CMessage('Vous devez selectionner au moins un relevé', 'error');
 		CNavigation::redirectToApp('DataSample', 'choose');
 
@@ -71,7 +80,7 @@ class DataSample {
                 new CMessage('Un multi extrait existe déjà avec le même nom', 'error');
 		CNavigation::redirectToApp('DataSample', 'choosemulti');
             } 
-	    else if(count($_POST['releve']) < 1){
+	    else if(!(isset($POST['releve'])) and count($_POST['releve']) < 1){
 		new CMessage('Vous devez selectionner au moins un extrait', 'error');
 		CNavigation::redirectToApp('DataSample', 'choosemulti');
 
@@ -90,7 +99,7 @@ class DataSample {
                 foreach($tab_releve as $rel){
                 	$stat = R::dispense('multi_releve_extrait');
                 	$stat->multi_releve_id = $statement['id'];
-                	$stat->releve_id = $rel;
+                	$stat->composition_id = $rel;
 			R::store($stat);
 		}
 
@@ -106,6 +115,33 @@ class DataSample {
         DataSampleView::showStatementsList();
     }
 
+	public function view() {
+	
+	$statements = isset($_REQUEST['nom']) ? DataMod::getCompo($_REQUEST['nom']) : false;
+
+  	if (!$statements) {
+            CTools::hackError();
+        }
+	CNavigation::setTitle('Extrait «'.$_REQUEST['nom'].'»');
+        DataSampleView::showViewButtons(
+            CNavigation::generateUrlToApp('DataSample'),
+	    CNavigation::generateUrlToApp('DataSample', 'remove', array('nom' => $_REQUEST['nom'])));
+	
+	}
+
+	public function viewmu() {
+	
+	$statements = isset($_REQUEST['nom']) ? DataMod::getMultiCompo($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+
+  	if (!$statements) {
+            CTools::hackError();
+        }
+	CNavigation::setTitle('Extrait «'.$_REQUEST['nom'].'»');
+        DataSampleView::showViewButtons(
+            CNavigation::generateUrlToApp('DataSample'),
+	    CNavigation::generateUrlToApp('DataSample', 'removeMulti', array('nom' => $_REQUEST['nom'])));
+	}
+
 	public function choosemulti() {
         CNavigation::setTitle('Nouveau multi relevé extrait');
         CNavigation::setDescription('Sélectionnez les extraits que vous souhaitez composer');
@@ -113,6 +149,8 @@ class DataSample {
         DataSampleView::showMultiForm(array(
                                        'nom' => '',
 					'desc' => ''));
+        DataSampleView::showBackButtons(
+            CNavigation::generateUrlToApp('DataSample'));
 	}
 
 
@@ -180,7 +218,7 @@ class DataSample {
         $data = DisplayMod::getDisplayTypes();
         DataSampleView::showDisplayViewChoiceTitle();
         DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
-        DataSampleView::showViewButtons(
+        DataSampleView::showBackButtons(
             CNavigation::generateUrlToApp('DataSample', 'choose'));
     }
 
@@ -206,30 +244,55 @@ class DataSample {
 		DataSampleView::showDisplayViewChoiceTitle();
 		DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
 
-		DataSampleView::showViewButtons(
+		DataSampleView::showBackButtons(
 				CNavigation::generateUrlToApp('DataSample', 'choose'));
     }
 
-    public function remove() {
-        $statement = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
+    public function removeMulti() {
+        $statement = DataMod::getCompoMulti($_REQUEST['nom'], $_SESSION['bd_id']);
         if (!$statement) {
             CTools::hackError();
         }
-
         if (isset($_REQUEST['confirm'])) {
-            $statement = R::load('multi_releve', $statement['id']);
-            R::exec('delete from multi_releve where id = ?', array($statement['id']));
-            R::trash(R::load('multi_releve', $statement['id']));
+            $stat = R::load('multi_extrait', $statement['id']);
+            R::exec('delete from multi_extrait where id = ?', array($stat['id']));
+            R::trash(R::load('multi_extrait', $stat['id']));
             CNavigation::redirectToApp('DataSample');
         } else {
             CNavigation::setTitle('Suppression du relevé «'.$statement['name'].'»');
             CNavigation::setDescription('Consequences will never be the same!');
 
-            DataSampleView::showRemoveForm(
+           DataSampleView::showRemoveForm(
                 $statement['description'],
+                CNavigation::generateMergedUrl('DataSample', 'removeMulti', array('confirm' => 'yes')),
+                CNavigation::generateMergedUrl('DataSample', 'viewmu'));
+        }
+
+    }
+
+    public function remove() {
+		$statement = DataMod::getStatementCompo($_REQUEST['nom'], $_SESSION['bd_id']);
+		if (!$statement) {
+			CTools::hackError();
+		}
+
+		if (isset($_REQUEST['confirm'])) {
+			$stat = R::load('composition', $statement['id']);
+			R::exec('delete from composition where id = ?', array($stat['id']));
+			R::trash(R::load('composition', $statement['id']));
+			CNavigation::redirectToApp('DataSample');
+		}
+		else
+		{
+			CNavigation::setTitle('Suppression du relevé «'.$_REQUEST['nom'].'»');
+			CNavigation::setDescription('Consequences will never be the same!');
+
+           DataSampleView::showRemoveForm(
+                '',
                 CNavigation::generateMergedUrl('DataSample', 'remove', array('confirm' => 'yes')),
                 CNavigation::generateMergedUrl('DataSample', 'view'));
         }
+
     }
 
     public function choosechange() {

@@ -272,6 +272,19 @@ END;
 END;
     }
 
+   public static function showStatement($name){
+	$visu = CNavigation::generateUrlToApp('DataMulti','view', array('nom' => $name));
+	$info = CNavigation::generateUrlToApp('DataMulti','viewInfo', array('nom' => $name));
+        echo <<<END
+
+	<ul class="nav nav-tabs">
+	  <li><a href="$visu" data-toggle="tab">Visualisations</a></li>
+	  <li><a href="$info" data-toggle="tab">Informations</a></li>
+	</ul>
+END;
+
+    }
+
     /**
      * Displays informations about a statement's data.
      * @param $data The statement's data.

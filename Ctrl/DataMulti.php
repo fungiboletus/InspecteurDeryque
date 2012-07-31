@@ -29,7 +29,7 @@ class DataMulti {
                 new CMessage('Un relevé existe déjà avec le même nom', 'error');
 		CNavigation::redirectToApp('DataMulti', 'choose');
             } 
-	    else if(count($_POST['releve']) < 1){
+	    else if(!(isset($POST['releve'])) and count($_POST['releve']) < 1){
 		new CMessage('Vous devez selectionner au moins un relevé', 'error');
 		CNavigation::redirectToApp('DataMulti', 'choose');
 
@@ -104,6 +104,7 @@ class DataMulti {
 	    DataMultiView::showStatementsList();
 	}
 
+
     public function view() {
         $statements = isset($_REQUEST['nom']) ? DataMod::getMultiStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
   	if (!$statements) {
@@ -112,6 +113,37 @@ class DataMulti {
 	CNavigation::setTitle('Relevé «'.$_REQUEST['nom'].'»');
         //CNavigation::setDescription($statements['description']);
 
+	DataMultiView::showStatement($_REQUEST['nom']);
+        $data = DisplayMod::getDisplayTypes();
+	foreach($statements as $statement){
+	$stat = DataMod::getStatement($statement['name'], $_SESSION['bd_id']);
+      
+        $n_datamod = DataMod::loadDataType($stat['modname']);
+
+        $sql = '';
+        foreach ($n_datamod->getVariables() as $k => $v) {
+            $sql .= "min($k), max($k), avg($k), ";
+        }
+        $stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $stat['id']));
+	}
+        DataMultiView::showDisplayViewChoiceTitle();
+        DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
+
+        DataMultiView::showViewButtons(
+            CNavigation::generateMergedUrl('DataMulti', 'remove'),
+            CNavigation::generateUrlToApp('DataMulti'),
+            CNavigation::generateMergedUrl('DataMulti', 'choosechange'));
+    }
+
+    public function viewInfo() {
+        $statements = isset($_REQUEST['nom']) ? DataMod::getMultiStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+  	if (!$statements) {
+            CTools::hackError();
+        }
+	CNavigation::setTitle('Relevé «'.$_REQUEST['nom'].'»');
+        //CNavigation::setDescription($statements['description']);
+
+	DataMultiView::showStatement($_REQUEST['nom']);
 	foreach($statements as $statement){
 	$stat = DataMod::getStatement($statement['name'], $_SESSION['bd_id']);
       
@@ -125,11 +157,6 @@ class DataMulti {
         DataMultiView::showInformations($stats, $n_datamod, $stat['name']);
 	}
 
-        $data = DisplayMod::getDisplayTypes();
-        DataMultiView::showDisplayViewChoiceTitle();
-        DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
-
-        DataMultiView::showAPIInformations();
 
         DataMultiView::showViewButtons(
             CNavigation::generateMergedUrl('DataMulti', 'remove'),

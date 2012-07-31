@@ -115,9 +115,25 @@ class DataMod extends AbstractMod {
     public static function getStatementComp($user_id) {
         return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
     }
+    public static function getStatementCompo($name, $user_id) {
+        return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id and c.name=? ', array($user_id, $name));
+    }
 
     public static function getStatementCompWithId($user_id) {
         return R::getAll('select c.name, c.id as id, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', array($user_id));
+    }
+
+    public static function getStatementCompMulti($user_id) {
+        return R::getAll('select m.name, m.description, GROUP_CONCAT(modname) as modname from multi_extrait m, composition r, multi_releve_extrait mr, datamod d, releve v where m.user_id = ? and v.id = r.releve_id and m.id = mr.multi_releve_id and mr.composition_id=r.id and v.mod_id = d.id group by m.name', array($user_id));
+    }
+    public static function getMultiCompo($name, $user_id) {
+        return R::getAll('select r.name, r.id from multi_extrait m, composition r, multi_releve_extrait mr where m.user_id=? and m.id=mr.multi_releve_id and  mr.composition_id=r.id and m.name=?', array($user_id, $name));
+    }    
+    public static function getCompo($name) {
+        return R::getAll('select name, id from composition where name=?', array($name));
+    }
+    public static function getCompoMulti($name, $user_id) {
+        return R::getRow('select m.id, m.name, m.description ,modname from multi_extrait m, composition r, releve v, multi_releve_extrait mr, datamod d where m.user_id = ? and v.id = r.releve_id and m.id = mr.multi_releve_id and mr.composition_id=r.id and v.mod_id = d.id and m.name=?', array($user_id, $name));
     }
 
     /** Get a statement given the name and the user of that statement.
