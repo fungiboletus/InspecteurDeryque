@@ -32,9 +32,6 @@ var TimeControl = function() {
 	// The margin is about the click compared to the slider position
 	this.drag_margin = 0;
 
-	// Updates the sizes information when window change
-	$(window).resize(this, this.window_resize);
-
 	// True when the user is dragging the slider
 	this.ondrag = false;
 
@@ -136,6 +133,11 @@ create_interface: function() {
  */
 animate_interface: function() {
 	var obj = this;
+
+	// Updates the sizes information when window change
+	$(window).resize(function() {
+		obj.window_resize();
+	});
 
 	// Click on the slider
 	this.jslider.mousedown(function(e) {
@@ -352,21 +354,21 @@ draw: function() {
  *
  *	Update size informations of the slider, and draw it again
  */
-window_resize: function(obj) {
-	obj.slider_left = obj.jslider.position().left;
+window_resize: function() {
+	this.slider_left = this.jslider.position().left;
 
-	if (obj.slider_width) {
-		var new_width = obj.jslider.width()
-			- obj.button_width - obj.button_width;
-		var ratio = new_width / obj.slider_width;
-		obj.left_pos *= ratio;
-		obj.right_pos *= ratio;
-		obj.slider_width = new_width;
+	if (this.slider_width) {
+		var new_width = this.jslider.width()
+			- this.button_width - this.button_width;
+		var ratio = new_width / this.slider_width;
+		this.left_pos *= ratio;
+		this.right_pos *= ratio;
+		this.slider_width = new_width;
 	}
 	else
 		this.slider_width = this.jslider.width();
 
-	obj.draw();
+	this.draw();
 },
 
 /*
@@ -503,7 +505,7 @@ add_statement: function(e, obj) {
 	if (obj.database_length == 0)
 	{
 		obj.time_control.className = '';
-		obj.window_resize(obj);
+		obj.window_resize();
 	}
 
 	if (!(e.statement_name in obj.database))

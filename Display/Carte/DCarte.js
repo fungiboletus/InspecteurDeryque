@@ -33,6 +33,8 @@ tuples: function(detail, obj) {
 
 	var bounds = new google.maps.LatLngBounds();
 
+	var updated = false;
+
 	for (var statement_name in detail) {
 		if (!(statement_name in obj.database)) continue;
 
@@ -48,6 +50,12 @@ tuples: function(detail, obj) {
 		 	// new google.maps.Point(0,0),
 		 	// new google.maps.Point(10, 34));
 			// Create begin
+
+			// If it's not GPS, we have nothing to do here
+			if (!('lat' in  data[0]) || !('lon' in data[0]))
+				continue;
+
+			updated = true;
 
 			var ll = new google.maps.LatLng(data[0].lat, data[0].lon);
 
@@ -127,8 +135,11 @@ tuples: function(detail, obj) {
 		}
 	}
 
-	obj.map.fitBounds(bounds);
-	obj.map.panToBounds(bounds);
+	if (updated)
+	{
+		obj.map.fitBounds(bounds);
+		obj.map.panToBounds(bounds);
+	}
 	// obj.map.panToBounds(bounds);
 	// google.maps.event.addListenerOnce(obj.map, 'idle', function() {
  //  		obj.map.fitBounds(bounds);
