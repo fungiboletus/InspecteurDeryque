@@ -167,6 +167,11 @@ margin:2px 0px 2px 0px;
 background:rgba(51,51,51,0.1);
 }
 
+.boxdiv .back .statements_list button {
+background:#696969;
+width:130px;
+}
+
 .boxdiv .back .statements_list .input_filter {
 width:174px;
 background:rgba(51,51,51,0.1);

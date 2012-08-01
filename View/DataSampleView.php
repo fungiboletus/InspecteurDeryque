@@ -10,8 +10,8 @@ class DataSampleView extends AbstractView {
         $url = CNavigation::generateUrlToApp('DataSample','choose');
         $url_multi = CNavigation::generateUrlToApp('DataSample','choosemulti');
         echo '<div class="well">';
-        self::showButton($url, 'primary', 'Nouveau relevé', 'plus');
-	self::showButton($url_multi, 'primary', 'Multi relevé extrait', 'plus');
+        self::showButton($url, 'primary', 'Nouvel extrait', 'plus');
+	self::showButton($url_multi, 'primary', 'Nouveau multi extrait', 'plus');
         echo '</div>';
     }
 
@@ -21,7 +21,14 @@ class DataSampleView extends AbstractView {
      * @param $url_back the url to go back to the statement list.
      * @param $url_rand the url to put random data to the statement.
      */
-    public static function showViewButtons($url_back) {
+    public static function showViewButtons($url_back, $url_del) {
+        echo '<div class="well">';
+        self::showButton($url_back, 'info', 'Retour à la liste', 'back');
+        self::showButton($url_del, 'danger', 'Supprimer l\'extrait', 'del');
+        echo '</div>';
+    }
+
+    public static function showBackButtons($url_back) {
         echo '<div class="well">';
         self::showButton($url_back, 'info', 'Retour à la liste', 'back');
         echo '</div>';
@@ -249,13 +256,11 @@ END;
 END;
 
 }
-
-
 /**
  * Displays a list of statements.
  * @param $statements Array of statements to show.
  */
-public static function showStatementsList($statements) {
+public static function showStatementsLists($statements) {
         if ($statements) {
             CHead::addJS('jquery.tablesorter.min');
             echo <<<END
@@ -270,7 +275,7 @@ public static function showStatementsList($statements) {
                                                                                
 END;
             foreach ($statements as $statement) {
-                $url = CNavigation::generateUrlToApp('DataSample', 'show', array('nom' => $statement['name']));
+                $url = CNavigation::generateUrlToApp('DataSample', 'viewmu', array('nom' => $statement['name']));
                 echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
@@ -287,6 +292,39 @@ END;
 END;
         }
     }
+public static function showStatementsList($statements) {
+        if ($statements) {
+            CHead::addJS('jquery.tablesorter.min');
+            echo <<<END
+            <table class="table table-striped table-bordered data_list">
+                                 <thead><tr>
+                                 <th class="header yellow">Nom</th>
+                                               <th class="header green">Description</th>
+                                                             <th class="header blue">Type</th>
+                                                                           </tr></thead>
+                                                                           <tbody>
+
+                                                                               
+END;
+            foreach ($statements as $statement) {
+                $url = CNavigation::generateUrlToApp('DataSample', 'view', array('nom' => $statement['name']));
+                echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
+                "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
+                "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
+            }
+
+            echo "</tbody></table>";
+        } else {
+            echo <<<END
+            <div class="alert  alert-block alert-warning">
+                               <p>Il n'y a aucun relevé pour l'instant.</p>
+                               </div>
+
+                                   
+END;
+        }
+    }
+
 
     /**
      * Shows the form to remove a statement.

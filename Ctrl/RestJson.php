@@ -29,15 +29,22 @@ class RestJson
     */
     public function reports(){
     	$reports = DataMod::getStatements($_SESSION['bd_id']);
-			$rep = DataMod::getStatementsMulti($_SESSION['bd_id']);
+	$rep = DataMod::getStatementsMulti($_SESSION['bd_id']);
+	$sample = DataMod::getStatementComp($_SESSION['bd_id']);
+	$samplemul = DataMod::getStatementCompMulti($_SESSION['bd_id']);
     	$arr = array();
     	foreach($rep as $report){
-    		$arr[$report['name']] = $report['description'];
+    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'multi');
     	}
     	foreach($reports as $report){
-    		$arr[$report['name']] = $report['description'];
+    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'simple');
     	}
-
+    	foreach($sample as $report){
+    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'sample');
+    	}
+    	foreach($samplemul as $report){
+    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'samplemulti');
+    	}
 		$this->sendJson($arr);
     }
 

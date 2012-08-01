@@ -273,26 +273,148 @@ $(document).ready(function() {
 	var fill_statements_list = function(list) {
 
 		list.empty();
+		var buttonSimple = newDom('button');
+		buttonSimple.setAttribute('class', 'btn btn-danger');
+		buttonSimple.setAttribute('data-toggle', 'collapse');
+		buttonSimple.setAttribute('data-target', '#simple');
+		buttonSimple.appendChild(document.createTextNode('Statements'));
+		list.append(buttonSimple);
+		var simple = newDom('div');		
+		simple.setAttribute('id', 'simple');
+		simple.setAttribute('class', 'collapse in');
+
 		for (var report in json_statements_list)
 		{
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'simple') 
+		    {
 			var tr = newDom('tr');
 			var td_a = newDom('td');
 			var input = newDom('input');
 			input.setAttribute('type','checkbox');
 			input.value = report;
-			td_a.appendChild(input);
-
+			td_a.appendChild(input);			
 			var td_b = newDom('td');
 			td_b.appendChild(document.createTextNode(report));
-
 			tr.appendChild(td_a);
 			tr.appendChild(td_b);
 			//li.onclick = clic_statement;
-			list.append(tr);
+			simple.appendChild(tr);
+
+		    }
 		}
 
+		list.append(simple);
+		var buttonMulti = newDom('button');
+		buttonMulti.setAttribute('class', 'btn btn-danger');
+		buttonMulti.setAttribute('data-toggle', 'collapse');
+		buttonMulti.setAttribute('data-target', '#multi');
+		buttonMulti.appendChild(document.createTextNode('Multi statements'));
+		list.append(buttonMulti);
+		var multi = newDom('div');
+		multi.setAttribute('id', 'multi');
+		multi.setAttribute('class', 'collapse in ');
+
+		for (var report in json_statements_list)
+		{
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'multi' ) 
+		    {	
+			var tr = newDom('tr');	
+			var td_a = newDom('td');
+			var input = newDom('input');
+			input.setAttribute('type','checkbox');
+			input.value = report;
+			td_a.appendChild(input);	
+			var td_b = newDom('td');
+			td_b.appendChild(document.createTextNode(report));
+			tr.appendChild(td_a);
+			tr.appendChild(td_b);
+			//li.onclick = clic_statement;
+			multi.appendChild(tr);
+		    }
+		}		
+		list.append(multi);
+
+		var buttonSample = newDom('button');
+		buttonSample.setAttribute('class', 'btn btn-danger');
+		buttonSample.setAttribute('data-toggle', 'collapse');
+		buttonSample.setAttribute('data-target', '#sample');
+		buttonSample.appendChild(document.createTextNode('Samples'));
+		list.append(buttonSample);
+		var sample = newDom('div');
+		sample.setAttribute('id', 'sample');
+		sample.setAttribute('class', 'collapse in ');
+
+		for (var report in json_statements_list)
+		{
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'sample' ) 
+		    {	
+			var tr = newDom('tr');	
+			var td_a = newDom('td');
+			var input = newDom('input');
+			input.setAttribute('type','checkbox');
+			input.value = report;
+			td_a.appendChild(input);	
+			var td_b = newDom('td');
+			td_b.appendChild(document.createTextNode(report));
+			tr.appendChild(td_a);
+			tr.appendChild(td_b);
+			//li.onclick = clic_statement;
+			sample.appendChild(tr);
+		    }
+		}		
+		list.append(sample);
+
+		var buttonSampleMul = newDom('button');
+		buttonSampleMul.setAttribute('class', 'btn btn-danger');
+		buttonSampleMul.setAttribute('data-toggle', 'collapse');
+		buttonSampleMul.setAttribute('data-target', '#samplemulti');
+		buttonSampleMul.appendChild(document.createTextNode('Multi samples'));
+		list.append(buttonSampleMul);
+		var samplemulti = newDom('div');
+		samplemulti.setAttribute('id', 'samplemulti');
+		samplemulti.setAttribute('class', 'collapse in ');
+
+		for (var report in json_statements_list)
+		{
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'samplemulti' ) 
+		    {	
+			var tr = newDom('tr');	
+			var td_a = newDom('td');
+			var input = newDom('input');
+			input.setAttribute('type','checkbox');
+			input.value = report;
+			td_a.appendChild(input);	
+			var td_b = newDom('td');
+			td_b.appendChild(document.createTextNode(report));
+			tr.appendChild(td_a);
+			tr.appendChild(td_b);
+			//li.onclick = clic_statement;
+			samplemulti.appendChild(tr);
+		    }
+		}		
+		list.append(samplemulti);
+
+
 		// Click on a statement
-		list.find('tr').click(function(e){
+		$(multi).find('tr').click(function(e){
+			var checkbox = $(this).find('input');
+
+			// If the click is on the cell, and not on the checkbox
+			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
+				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT')) {
+				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
+			}
+
+			var checked = checkbox.attr('checked') === 'checked';
+			var box = $(this).parents('.boxdiv');
+			var box_name = box.find('iframe').attr('id');
+			var statement_name = checkbox.attr('value');
+
+			EventBus.send((checked ? 'add': 'del') +'_statement',
+				{statement_name: statement_name, box_name: box_name});
+
+		});
+		$(simple).find('tr').click(function(e){
 			var checkbox = $(this).find('input');
 
 			// If the click is on the cell, and not on the checkbox
