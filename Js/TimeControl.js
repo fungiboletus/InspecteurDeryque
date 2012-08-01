@@ -7,11 +7,15 @@ var TimeControl = function() {
 
 	this.create_interface();
 
+	// Database statements, for counting and disabling interface
+	this.database = {};
+	this.database_length = 0;
+
 	// Displaying of tooltip ?
-	var tooltip_visible = false;
+	this.tooltip_visible = false;
 
 	// The tooltip is displayed for the left slider, or the right
-	var tooltip_left = true;
+	this.tooltip_left = true;
 
 	// Timeout for hiding tooltip
 	this.tooltip_hide_timeout = -1;
@@ -24,10 +28,6 @@ var TimeControl = function() {
 
 	// For the right
 	this.right_pos = 120;
-
-	// Where the slider has begun from the left
-	this.slider_left = this.jslider.position().left;
-	this.slider_width = this.jslider.width();
 
 	// The margin is about the click compared to the slider position
 	this.drag_margin = 0;
@@ -76,9 +76,10 @@ create_interface: function() {
 	document.body.appendChild(this.iframe_mask);
 
 	// Time control area
-	var time_control = newDom('div');
-	time_control.id = "time_control";
-	document.body.appendChild(time_control);
+	this.time_control = newDom('div');
+	this.time_control.id = "time_control";
+	this.time_control.className = 'disabled';
+	document.body.appendChild(this.time_control);
 
 	var time_buttons = newDom('div');
 	time_buttons.className = 'time_buttons btn-group';
@@ -97,12 +98,12 @@ create_interface: function() {
 	this.time_info.appendChild(document.createTextNode('12:45:12.054'));
 	time_buttons.appendChild(this.time_info);
 
-	time_control.appendChild(time_buttons);
+	this.time_control.appendChild(time_buttons);
 
 	// Creation of the slider
 	var zone_slider = newDom('div');
 	zone_slider.className = "zone_slider";
-	time_control.appendChild(zone_slider);
+	this.time_control.appendChild(zone_slider);
 	this.jslider = $(zone_slider);
 
 	this.area = newDom('div');
@@ -351,14 +352,21 @@ draw: function() {
  *
  *	Update size informations of the slider, and draw it again
  */
-window_resize: function() {
-	slider_left = jslider.position().left;
-	var new_width = jslider.width() - button_width - button_width;
-	var ratio = new_width / slider_width;
-	left_pos *= ratio;
-	right_pos *= ratio;
-	slider_width = new_width;
-	draw();
+window_resize: function(obj) {
+	obj.slider_left = obj.jslider.position().left;
+
+	if (obj.slider_width) {
+		var new_width = obj.jslider.width()
+			- obj.button_width - obj.button_width;
+		var ratio = new_width / obj.slider_width;
+		obj.left_pos *= ratio;
+		obj.right_pos *= ratio;
+		obj.slider_width = new_width;
+	}
+	else
+		this.slider_width = this.jslider.width();
+
+	obj.draw();
 },
 
 /*
@@ -489,4 +497,34 @@ bounds: function(d, obj) {
 		if (d[statement_name].time_tMax > obj.time_max)
 			obj.time_max = d[statement_name].time_tMax;
 	}
-}}};
+},
+
+add_statement: function(e, obj) {
+	if (obj.database_length == 0)
+	{
+		obj.time_control.className = '';
+		obj.window_resize(obj);
+	}
+
+	if (!(e.statement_name in obj.database))
+	{
+		obj.database[e.statement_name] = true;
+		++obj.database_length;
+	}
+},
+
+del_statement: function(e, obj) {
+	if (e.statement_name in obj.database)
+	{
+		delete obj.database[e.statement_name];
+		--obj.database_length;
+	}
+
+	if (obj.database_length == 0){
+		obj.time_control.className = 'disabled';
+		obj.time_min = Number.MAX_VALUE;
+		obj.time_max = Number.MIN_VALUE;
+	}
+
+}
+}};

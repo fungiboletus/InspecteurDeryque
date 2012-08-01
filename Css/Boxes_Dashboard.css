@@ -343,3 +343,7 @@ min-width:1px;
 .tooltip.top .tooltip-arrow {
 	border-top-color:white;
 }*/
+
+#time_control.disabled > * {
+	display:none;
+}

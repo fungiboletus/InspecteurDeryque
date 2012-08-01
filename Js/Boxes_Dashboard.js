@@ -1,5 +1,5 @@
 /**
- *	Generate random fun colors.
+ *	Generate fun random colors.
  */
 var get_random_color_degrees = [];
 function get_random_color() {
@@ -34,10 +34,10 @@ $(document).ready(function() {
 			Cadreur_DIRECTIONS.VERTICAL);
 
 	// Création of the proxy operator between the REST and the runtime
-	new SuperOperator();
+	superOperatorInstance = new SuperOperator();
 
 	// auiensrt
-	new TimeControl();
+	timeControlInstance = new TimeControl();
 
 	var create_toolbar_button = function(text) {
 		var button = newDom('li');
@@ -279,20 +279,20 @@ $(document).ready(function() {
 		buttonSimple.setAttribute('data-target', '#simple');
 		buttonSimple.appendChild(document.createTextNode('Statements'));
 		list.append(buttonSimple);
-		var simple = newDom('div');		
+		var simple = newDom('div');
 		simple.setAttribute('id', 'simple');
 		simple.setAttribute('class', 'collapse in');
 
 		for (var report in json_statements_list)
 		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'simple') 
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'simple')
 		    {
 			var tr = newDom('tr');
 			var td_a = newDom('td');
 			var input = newDom('input');
 			input.setAttribute('type','checkbox');
 			input.value = report;
-			td_a.appendChild(input);			
+			td_a.appendChild(input);
 			var td_b = newDom('td');
 			td_b.appendChild(document.createTextNode(report));
 			tr.appendChild(td_a);
@@ -316,14 +316,14 @@ $(document).ready(function() {
 
 		for (var report in json_statements_list)
 		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'multi' ) 
-		    {	
-			var tr = newDom('tr');	
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'multi' )
+		    {
+			var tr = newDom('tr');
 			var td_a = newDom('td');
 			var input = newDom('input');
 			input.setAttribute('type','checkbox');
 			input.value = report;
-			td_a.appendChild(input);	
+			td_a.appendChild(input);
 			var td_b = newDom('td');
 			td_b.appendChild(document.createTextNode(report));
 			tr.appendChild(td_a);
@@ -331,7 +331,7 @@ $(document).ready(function() {
 			//li.onclick = clic_statement;
 			multi.appendChild(tr);
 		    }
-		}		
+		}
 		list.append(multi);
 
 		var buttonSample = newDom('button');
@@ -346,14 +346,14 @@ $(document).ready(function() {
 
 		for (var report in json_statements_list)
 		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'sample' ) 
-		    {	
-			var tr = newDom('tr');	
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'sample' )
+		    {
+			var tr = newDom('tr');
 			var td_a = newDom('td');
 			var input = newDom('input');
 			input.setAttribute('type','checkbox');
 			input.value = report;
-			td_a.appendChild(input);	
+			td_a.appendChild(input);
 			var td_b = newDom('td');
 			td_b.appendChild(document.createTextNode(report));
 			tr.appendChild(td_a);
@@ -361,7 +361,7 @@ $(document).ready(function() {
 			//li.onclick = clic_statement;
 			sample.appendChild(tr);
 		    }
-		}		
+		}
 		list.append(sample);
 
 		var buttonSampleMul = newDom('button');
@@ -376,14 +376,14 @@ $(document).ready(function() {
 
 		for (var report in json_statements_list)
 		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'samplemulti' ) 
-		    {	
-			var tr = newDom('tr');	
+		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'samplemulti' )
+		    {
+			var tr = newDom('tr');
 			var td_a = newDom('td');
 			var input = newDom('input');
 			input.setAttribute('type','checkbox');
 			input.value = report;
-			td_a.appendChild(input);	
+			td_a.appendChild(input);
 			var td_b = newDom('td');
 			td_b.appendChild(document.createTextNode(report));
 			tr.appendChild(td_a);
@@ -391,7 +391,7 @@ $(document).ready(function() {
 			//li.onclick = clic_statement;
 			samplemulti.appendChild(tr);
 		    }
-		}		
+		}
 		list.append(samplemulti);
 
 
