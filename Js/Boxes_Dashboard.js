@@ -36,6 +36,9 @@ $(document).ready(function() {
 	// Création of the proxy operator between the REST and the runtime
 	new SuperOperator();
 
+	// auiensrt
+	new TimeControl();
+
 	var create_toolbar_button = function(text) {
 		var button = newDom('li');
 		var a_button = newDom('a');
