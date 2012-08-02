@@ -1,13 +1,13 @@
-var DConsole = function()
+var DConsole = function(area)
 {
-	this.console = byId('console');
+	this.console = newDom('ul');
+	this.console.id = 'console';
+	area.appendChild(this.console);
 
 	var events = ['new_tuples', 'add_statement', 'del_statement',
 		'layout_change', 'log', 'error', 'statements_list',
 		'get_statements_list', 'time_sync', 'tuples_selected',
 		'get_bounds', 'bounds', 'tuples'];
-
-	var canard = {coucou: "salut", plop: 54};
 
 	for (var i = 0; i < events.length; ++i)
 		EventBus.addListener(events[i], this.manageEvent, this);

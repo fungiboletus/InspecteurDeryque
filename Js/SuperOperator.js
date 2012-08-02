@@ -103,6 +103,11 @@ add_statement: function(d, obj) {
 		});
 },
 
+del_statement: function(e, obj) {
+	if (e.statement_name in obj.database)
+		delete obj.database[e.statement_name];
+},
+
 get_bounds: function(d, obj) {
 	var response = {};
 
