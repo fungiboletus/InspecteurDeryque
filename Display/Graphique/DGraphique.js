@@ -121,29 +121,74 @@ paintLine: function(data, keyX, keyY, color)
 
 paintAxes: function()
 {
+	var mili = true;
+
 	var c = this.canvasAxes;
-	c.beginPath();
 	c.strokeStyle = "#505050";
 	c.lineWidth = 1;
 
-	var x_tic = this.quantize_tics(this.size_x) * this.coef_x;
+	var x_val = this.quantize_tics(this.size_x) * this.coef_x;
+	var y_val = this.quantize_tics(this.size_y) * this.coef_y;
+	var x_tic = Math.round(x_val);
+	var y_tic = Math.round(y_val);
 
 	// Vertical lines
 	for(var i = 0.5; i < this.width ; i += x_tic){
+		c.beginPath();
 		c.moveTo(i , this.height);
 		c.lineTo(i, 0);
+		c.stroke();
+		c.closePath();
+
+		if (mili)
+		{
+			c.save();
+			c.beginPath();
+			c.strokeStyle = '#404040';
+
+			var incr = (x_val / 10.0);
+			for (var j = i + x_val / 11.0; j < i + x_val - incr; j += incr)
+			{
+				j_t = Math.round(j) + 0.5;
+				c.moveTo(j_t, this.height);
+				c.lineTo(j_t, 0);
+			}
+
+			c.stroke();
+			c.closePath();
+			c.restore();
+		}
 	}
 
-	var y_tic = this.quantize_tics(this.size_y) * this.coef_y;
 
 	// Horizontal lines
 	for(var i = 0.5; i < this.height ; i += y_tic){
+		c.beginPath();
 		c.moveTo(0, i);
 		c.lineTo(this.width, i);
+		c.stroke();
+		c.closePath();
+
+		if (mili)
+		{
+			c.save();
+			c.beginPath();
+			c.strokeStyle = '#404040';
+
+			var incr = (y_val / 10.0);
+			for (var j = i + y_val / 11.0; j < i + y_val - incr; j += incr)
+			{
+				j_t = Math.round(j) + 0.5;
+				c.moveTo(0, j_t);
+				c.lineTo(this.width, j_t);
+			}
+
+			c.stroke();
+			c.closePath();
+			c.restore();
+		}
 	}
 
-	c.stroke();
-	c.closePath();
 },
 
 clear: function() {
