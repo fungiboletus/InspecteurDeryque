@@ -103,6 +103,28 @@ clear: function() {
 	c.clearRect(0,0, this.width, this.height);
 },
 
+/*
+ *	Number of tics (step in graph)
+ *
+ *	This function is inspired by the gnuplot treatment
+ *	You can find the original algorithm in quantize_normal_tics
+ *	function from gnuplot axis.c file
+ */
+quantize_tics: function(max)
+{
+	var magnitude = Math.pow(10.0, Math.floor(
+		Math.log(max) * 0.43429448190325 )); // log10
+
+	var nb_decades = max / magnitude;
+
+	var keys = [0.5, 1.0, 2.0, 5.0, 10.0, 40.0, Number.MAX_VALUE];
+	var values = [0.05, 0.1, 0.2, 0.5, 1, 2, Math.ceil(nb_decades)];
+
+	for (var i = 0; i < 7; ++i)
+		if (nb_decades < keys[i])
+			return values[i] * magnitude;
+},
+
 listeners: {
 	tuples: function(detail, obj) {
 		obj.clear();
