@@ -24,8 +24,8 @@ var DGraphique = function(screen)
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
 
-	this.size_x = -1;
-	this.size_y = -1;
+	this.tic_x = -1;
+	this.tic_y = -1;
 
 	this.coef_x = 1.0;
 	this.coef_y = 1.0;
@@ -78,19 +78,29 @@ paintLine: function(data, keyX, keyY, color)
 
 	var b = this.findBounds(data, keyX, keyY);
 
-	var tmp_x = b.x_max - b.x_min;
-	if (tmp_x > this.size_x)
-		this.size_x = tmp_x;
+	var margin = 8;
 
-	var tmp_y = b.y_max - b.y_min;
-	if (tmp_y > this.size_y)
-		this.size_y = tmp_y;
+	var size_x = b.x_max - b.x_min;
+	var tmp_x = this.quantize_tics(size_x);
+	if (tmp_x > this.tic_x)
+		this.tic_x = tmp_x;
 
-	// Récupération des valeurs (performances)
-	var marge = 8;
+	var size_y = b.y_max - b.y_min;
+	var tmp_y = this.quantize_tics(size_y) * 1.1;
+	if (tmp_y > this.tic_y)
+		this.tic_y = tmp_y;
 
-	this.coef_x = this.width / (b.x_max - b.x_min);
-	this.coef_y = (this.height - marge - marge) / (b.y_max - b.y_min)
+	// size_x = Math.ceil(size_x / tmp_x) * tmp_x;
+	size_y = Math.ceil(size_y / tmp_y) * tmp_y;
+
+	var new_coef_x = this.width / size_x;
+
+	if (
+		new_coef_x < this.coef_x ||
+		Math.abs((this.coef_x - new_coef_x) /  new_coef_x) > 0.05)
+		this.coef_x = this.width / size_x;
+
+	this.coef_y = this.height / size_y;
 
 	c.beginPath();
 	c.strokeStyle = color;
@@ -101,7 +111,7 @@ paintLine: function(data, keyX, keyY, color)
 	// c.shadowOffsetY = 1;
 
 	var x_i = 0;
-	var	y_i = this.height - marge - (first_point[keyY] - b.y_min) * this.coef_y;
+	var	y_i = this.height - margin - (first_point[keyY] - b.y_min) * this.coef_y;
 	c.moveTo(x_i,y_i);
 
 	// Pour chaque point à afficher
@@ -109,7 +119,7 @@ paintLine: function(data, keyX, keyY, color)
 	{
 
 		x_i = (data[i][keyX] - b.x_min) * this.coef_x;
-		y_i = this.height - marge - (data[i][keyY] - b.y_min) * this.coef_y;
+		y_i = this.height - margin - (data[i][keyY] - b.y_min) * this.coef_y;
 
 		// console.log(x_i);
 		c.lineTo(x_i, y_i);
@@ -127,11 +137,12 @@ paintAxes: function()
 	c.strokeStyle = "#505050";
 	c.lineWidth = 1;
 
-	var x_val = this.quantize_tics(this.size_x) * this.coef_x;
-	var y_val = this.quantize_tics(this.size_y) * this.coef_y;
+	var x_val = this.tic_x * this.coef_x;
+	var y_val = this.tic_y * this.coef_y;
 	var x_tic = Math.round(x_val);
 	var y_tic = Math.round(y_val);
-
+	// console.log(x_tic, y_tic);
+	// return;
 	// Vertical lines
 	for(var i = 0.5; i < this.width ; i += x_tic){
 		c.beginPath();
@@ -147,7 +158,7 @@ paintAxes: function()
 			c.strokeStyle = '#404040';
 
 			var incr = (x_val / 10.0);
-			for (var j = i + x_val / 11.0; j < i + x_val - incr; j += incr)
+			for (var j = i + incr; j <= i + x_val; j += incr)
 			{
 				j_t = Math.round(j) + 0.5;
 				c.moveTo(j_t, this.height);
@@ -176,7 +187,7 @@ paintAxes: function()
 			c.strokeStyle = '#404040';
 
 			var incr = (y_val / 10.0);
-			for (var j = i + y_val / 11.0; j < i + y_val - incr; j += incr)
+			for (var j = i + incr; j <= i + y_val; j += incr)
 			{
 				j_t = Math.round(j) + 0.5;
 				c.moveTo(0, j_t);
@@ -198,6 +209,8 @@ clear: function() {
 
 	// On efface toute l'ancienne zone
 	this.canvasGraph.clearRect(0,0, this.width, this.height);
+
+	// TODO rien à faire là
 	this.canvasAxes.clearRect(0,0, this.width, this.height);
 },
 
@@ -215,12 +228,14 @@ quantize_tics: function(max)
 
 	var nb_decades = max / magnitude;
 
-	var keys = [0.5, 1.0, 2.0, 5.0, 10.0, 40.0, Number.MAX_VALUE];
-	var values = [0.05, 0.1, 0.2, 0.5, 1, 2, Math.ceil(nb_decades)];
+	var keys = [0.5, 1.0, 2.0, 5.0, 10.0, 40.0];
+	var values = [0.05, 0.1, 0.2, 0.5, 1, 2];
 
-	for (var i = 0; i < 7; ++i)
+	for (var i = 0; i < 6; ++i)
 		if (nb_decades < keys[i])
 			return values[i] * magnitude;
+
+	return magnitude * Math.ceil(nb_decades);
 },
 
 listeners: {

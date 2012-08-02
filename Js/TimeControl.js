@@ -448,8 +448,8 @@ play_callback: function(obj) {
 	times.end_t.setSeconds(times.end_t.getSeconds()+plus);
 
 	// The max time is the limit
-	if (times.end_t > this.time_max)
-		times.end_t = time_max;
+	if (times.end_t > obj.time_max)
+		times.end_t = obj.time_max;
 
 	// If the start time is bigger than the end time,
 	// we will have bad time
