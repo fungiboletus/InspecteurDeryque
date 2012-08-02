@@ -1,21 +1,34 @@
 var DGraphique = function(screen)
 {
 
-	// Zonede travail du graphique
+	// Graph area
 	this.screen = screen;
 
-	// Objet Canvas représentant les courbes
+	// Canvas object, for curves
 	this.screenGraph = newDom('canvas');
 	this.screenGraph.id = "screenGraph";
-	this.screen.appendChild(this.screenGraph);
 	this.canvasGraph = this.screenGraph.getContext('2d');
 
-	// Gestion de la taille de la zone
+	// Canvas object, for axes
+	this.screenAxes = newDom('canvas');
+	this.screenAxes.id = "screenAxes";
+	this.canvasAxes = this.screenAxes.getContext('2d');
+
+	this.screen.appendChild(this.screenAxes);
+	this.screen.appendChild(this.screenGraph);
+
+	// Area size management
 	this.manageSize();
 	$(window).resize(this, this.manageSize);
 
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
+
+	this.size_x = -1;
+	this.size_y = -1;
+
+	this.coef_x = 1.0;
+	this.coef_y = 1.0;
 };
 
 DGraphique.prototype =
@@ -29,6 +42,8 @@ manageSize: function(obj)
 
 	obj.screenGraph.width = obj.width;
 	obj.screenGraph.height = obj.height;
+	obj.screenAxes.width = obj.width;
+	obj.screenAxes.height = obj.height;
 },
 
 findBounds: function(data, keyX, keyY) {
@@ -62,11 +77,20 @@ paintLine: function(data, keyX, keyY, color)
 	var first_point = data[0];
 
 	var b = this.findBounds(data, keyX, keyY);
+
+	var tmp_x = b.x_max - b.x_min;
+	if (tmp_x > this.size_x)
+		this.size_x = tmp_x;
+
+	var tmp_y = b.y_max - b.y_min;
+	if (tmp_y > this.size_y)
+		this.size_y = tmp_y;
+
 	// Récupération des valeurs (performances)
 	var marge = 8;
 
-	var coef_x = this.width / (b.x_max - b.x_min);
-	var coef_y = (this.height - marge - marge) / (b.y_max - b.y_min)
+	this.coef_x = this.width / (b.x_max - b.x_min);
+	this.coef_y = (this.height - marge - marge) / (b.y_max - b.y_min)
 
 	c.beginPath();
 	c.strokeStyle = color;
@@ -77,15 +101,15 @@ paintLine: function(data, keyX, keyY, color)
 	// c.shadowOffsetY = 1;
 
 	var x_i = 0;
-	var	y_i = this.height - marge - (first_point[keyY] - b.y_min) * coef_y;
+	var	y_i = this.height - marge - (first_point[keyY] - b.y_min) * this.coef_y;
 	c.moveTo(x_i,y_i);
 
 	// Pour chaque point à afficher
 	for (var i = 0; i < data.length; ++i)
 	{
 
-		x_i = (data[i][keyX] - b.x_min) * coef_x;
-		y_i = this.height - marge - (data[i][keyY] - b.y_min) * coef_y;
+		x_i = (data[i][keyX] - b.x_min) * this.coef_x;
+		y_i = this.height - marge - (data[i][keyY] - b.y_min) * this.coef_y;
 
 		// console.log(x_i);
 		c.lineTo(x_i, y_i);
@@ -95,12 +119,41 @@ paintLine: function(data, keyX, keyY, color)
 	c.closePath();
 },
 
+paintAxes: function()
+{
+	var c = this.canvasAxes;
+	c.beginPath();
+	c.strokeStyle = "#505050";
+	c.lineWidth = 1;
+
+	var x_tic = this.quantize_tics(this.size_x) * this.coef_x;
+
+	// Vertical lines
+	for(var i = 0.5; i < this.width ; i += x_tic){
+		c.moveTo(i , this.height);
+		c.lineTo(i, 0);
+	}
+
+	var y_tic = this.quantize_tics(this.size_y) * this.coef_y;
+
+	// Horizontal lines
+	for(var i = 0.5; i < this.height ; i += y_tic){
+		c.moveTo(0, i);
+		c.lineTo(this.width, i);
+	}
+
+	c.stroke();
+	c.closePath();
+},
+
 clear: function() {
 
-	var c = this.canvasGraph;
+	this.size_x = -1;
+	this.size_y = -1;
 
 	// On efface toute l'ancienne zone
-	c.clearRect(0,0, this.width, this.height);
+	this.canvasGraph.clearRect(0,0, this.width, this.height);
+	this.canvasAxes.clearRect(0,0, this.width, this.height);
 },
 
 /*
@@ -137,6 +190,7 @@ listeners: {
 				if (k != 'time_t')
 					obj.paintLine(data, 'time_t', k, colors.pop());
 		}
+		obj.paintAxes(10, 5);
 	},
 	add_statement: function(e, obj) {
 		if (e.box_name != self.name) return;

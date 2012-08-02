@@ -24,7 +24,7 @@ abstract class DAbstract
 <div id="area"></div>
 <script type="text/javascript">
 $(document).ready(function(){
-new D$name(byId('area'));
+display_instance = new D$name(byId('area'));
 });
 </script>
 END;
