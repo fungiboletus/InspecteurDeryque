@@ -405,27 +405,35 @@ dragdrop: function(e, obj) {
 		var m_x = e.clientX - obj.slider_left - obj.drag_margin;
 
 		// Bounds of the mouse position
-		if (m_x < 0) m_x = 0;
-		else if (m_x > obj.slider_width) m_x = obj.slider_width;
+		if (m_x > obj.slider_width) m_x = obj.slider_width;
 
 		if (obj.slider_drag)
 		{
 			obj.left_pos = m_x;
 			obj.right_pos = m_x + obj.drag_width;
+			if (obj.left_pos < 0)
+			{
+				obj.right_pos += obj.left_pos;
+				obj.left_pos = 0;
+			}
 			if (obj.right_pos > obj.slider_width)
 				obj.right_pos = obj.slider_width;
 		}
-		else if (obj.border_left_drag)
+		else
 		{
-			obj.left_pos = m_x;
-			if (obj.left_pos > obj.right_pos)
-				obj.right_pos = obj.left_pos;
-		}
-		else if (obj.border_right_drag)
-		{
-			obj.right_pos = m_x;
-			if (obj.right_pos < obj.left_pos)
-				obj.left_pos = obj.right_pos;
+			if (m_x < 0) m_x = 0;
+			if (obj.border_left_drag)
+			{
+				obj.left_pos = m_x;
+				if (obj.left_pos > obj.right_pos)
+					obj.right_pos = obj.left_pos;
+			}
+			else if (obj.border_right_drag)
+			{
+				obj.right_pos = m_x;
+				if (obj.right_pos < obj.left_pos)
+					obj.left_pos = obj.right_pos;
+			}
 		}
 
 		// We just sand a time event, we don't draw anything
