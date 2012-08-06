@@ -24,11 +24,13 @@ var DGraphique = function(screen)
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
 
-	this.tic_x = -1;
-	this.tic_y = -1;
+	this.clear(true);
 
 	this.coef_x = 1.0;
 	this.coef_y = 1.0;
+
+	// If the scale have to be repainted
+	this.scale_change = true;
 };
 
 DGraphique.prototype =
@@ -78,29 +80,35 @@ paintLine: function(data, keyX, keyY, color)
 
 	var b = this.findBounds(data, keyX, keyY);
 
-	var margin = 8;
-
 	var size_x = b.x_max - b.x_min;
 	var tmp_x = this.quantize_tics(size_x);
 	if (tmp_x > this.tic_x)
 		this.tic_x = tmp_x;
 
 	var size_y = b.y_max - b.y_min;
-	var tmp_y = this.quantize_tics(size_y) * 1.1;
+	var tmp_y = this.quantize_tics(size_y);
 	if (tmp_y > this.tic_y)
 		this.tic_y = tmp_y;
 
 	// size_x = Math.ceil(size_x / tmp_x) * tmp_x;
 	size_y = Math.ceil(size_y / tmp_y) * tmp_y;
+	if (size_x == 0)
+	    size_x = 1.0;
+	else
+	    var new_coef_x = this.width / size_x;
 
-	var new_coef_x = this.width / size_x;
+	if (size_y == 0)
+	    size_y = 1.0;
+	else
+	    this.coef_y = this.height / size_y;
+
 
 	if (
 		new_coef_x < this.coef_x ||
 		Math.abs((this.coef_x - new_coef_x) /  new_coef_x) > 0.05)
 		this.coef_x = this.width / size_x;
 
-	this.coef_y = this.height / size_y;
+
 
 	c.beginPath();
 	c.strokeStyle = color;
@@ -111,7 +119,7 @@ paintLine: function(data, keyX, keyY, color)
 	// c.shadowOffsetY = 1;
 
 	var x_i = 0;
-	var	y_i = this.height - margin - (first_point[keyY] - b.y_min) * this.coef_y;
+	var	y_i = this.height - (first_point[keyY] - b.y_min) * this.coef_y;
 	c.moveTo(x_i,y_i);
 
 	// Pour chaque point à afficher
@@ -119,7 +127,7 @@ paintLine: function(data, keyX, keyY, color)
 	{
 
 		x_i = (data[i][keyX] - b.x_min) * this.coef_x;
-		y_i = this.height - margin - (data[i][keyY] - b.y_min) * this.coef_y;
+		y_i = this.height - (data[i][keyY] - b.y_min) * this.coef_y;
 
 		// console.log(x_i);
 		c.lineTo(x_i, y_i);
@@ -129,11 +137,16 @@ paintLine: function(data, keyX, keyY, color)
 	c.closePath();
 },
 
-paintAxes: function()
+paintAxes: function(mili, paintForced)
 {
-	var mili = true;
+
+	if (!paintForced &&
+		this.old_tic_x === this.tic_x && this.old_tic_y === this.tic_y)
+		return;
 
 	var c = this.canvasAxes;
+	c.clearRect(0,0, this.width, this.height);
+
 	c.strokeStyle = "#505050";
 	c.lineWidth = 1;
 
@@ -141,8 +154,14 @@ paintAxes: function()
 	var y_val = this.tic_y * this.coef_y;
 	var x_tic = Math.round(x_val);
 	var y_tic = Math.round(y_val);
+
+	if (x_tic <= 0.0) x_tic = 1.0;
+	if (y_tic <= 0.0) y_tic = 1.0;
+
 	// console.log(x_tic, y_tic);
-	// return;
+	if(x_tic === 1 || y_tic == 1)
+		return;
+
 	// Vertical lines
 	for(var i = 0.5; i < this.width ; i += x_tic){
 		c.beginPath();
@@ -169,8 +188,8 @@ paintAxes: function()
 			c.closePath();
 			c.restore();
 		}
-	}
 
+	}
 
 	// Horizontal lines
 	for(var i = 0.5; i < this.height ; i += y_tic){
@@ -202,16 +221,17 @@ paintAxes: function()
 
 },
 
-clear: function() {
+clear: function(noClearCanvas) {
 
-	this.size_x = -1;
-	this.size_y = -1;
+	this.old_tic_x = this.tic_x;
+	this.old_tic_y = this.tic_y;
+	this.tic_x = -1;
+	this.tic_y = -1;
 
 	// On efface toute l'ancienne zone
-	this.canvasGraph.clearRect(0,0, this.width, this.height);
+	if (!noClearCanvas)
+		this.canvasGraph.clearRect(0,0, this.width, this.height);
 
-	// TODO rien à faire là
-	this.canvasAxes.clearRect(0,0, this.width, this.height);
 },
 
 /*
@@ -235,13 +255,15 @@ quantize_tics: function(max)
 		if (nb_decades < keys[i])
 			return values[i] * magnitude;
 
-	return magnitude * Math.ceil(nb_decades);
+	var ret = magnitude * Math.ceil(nb_decades);
+
+	return isNaN(ret) ? 1.0 : ret;
 },
 
 listeners: {
 	tuples: function(detail, obj) {
 		obj.clear();
-		var colors = ['blue', 'purple', 'red', 'yellowgreen'];
+		var colors = ['blue', 'purple', 'red', 'yellowgreen','white'];
 		for (var statement_name in detail) {
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
@@ -250,7 +272,8 @@ listeners: {
 				if (k != 'time_t')
 					obj.paintLine(data, 'time_t', k, colors.pop());
 		}
-		obj.paintAxes(10, 5);
+
+		obj.paintAxes(true, false);
 	},
 	add_statement: function(e, obj) {
 		if (e.box_name != self.name) return;

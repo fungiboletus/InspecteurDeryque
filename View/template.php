@@ -43,7 +43,7 @@ END;
 		$url_user = CNavigation::generateUrlToApp('User');
 		$url_logout = CNavigation::generateUrlToApp('Session', 'logout');
 		$url_help = CNavigation::generateUrlToApp('Help');
-		$url_not_found = CNavigation::generateUrlToApp('PageIntrouvable');
+		$url_not_found = CNavigation::generateUrlToApp('NotFoundPage');
 		$url_xml = CNavigation::generateUrlToApp('Import');
 		$url_data = CNavigation::generateUrlToApp('Data');
 		$url_datamulti = CNavigation::generateUrlToApp('DataMulti');
@@ -58,26 +58,26 @@ END;
 
 		echo <<<END
 		<ul class="nav left buttons_inspecteur">
-			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Tableau de bord</a></li>
-			<li class="dropdown"$c_data$c_datamulti$c_datasample><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Relevés <b class="caret"></b></a>
+			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Dashboard</a></li>
+			<li class="dropdown"$c_data$c_datamulti$c_datasample><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Statements <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="$url_data">Relevés simple</a></li>
 					<li><a href="$url_datamulti">Relevés multiples</a></li>
 					<li><a href="$url_datasample">Extraits de relevés</a></li>
 				</ul>
 			</li>
-			<li$c_import><a href="$url_xml" class="icon_button upload_text">Importer des données</a></li>
+			<li$c_import><a href="$url_xml" class="icon_button upload_text">Import data</a></li>
 		</ul>
 		<ul class="nav right">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle icon_button user_text" data-toggle="dropdown">$user_name <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="$url_help">Aide</a></li>
-						<li><a href="$url_not_found">Une erreur 404</a></li>
-						<li><a href="$url_deryque_music">Écouter la musique</a></li>
-						<li><a href="$url_theme">Changer de thème</a></li>
+						<li><a href="$url_help">Help</a></li>
+						<li><a href="$url_not_found">A 404 error</a></li>
+						<li><a href="$url_deryque_music">Listen a wonderful music</a></li>
+						<li><a href="$url_theme">Changr theme</a></li>
 						<li class="divider"></li>
-						<li><a href="$url_logout">Déconnexion</a></li>
+						<li><a href="$url_logout">Logout</a></li>
 					</ul>
 				</li>
 			</ul>

@@ -412,10 +412,8 @@ dragdrop: function(e, obj) {
 			obj.left_pos = m_x;
 			obj.right_pos = m_x + obj.drag_width;
 			if (obj.left_pos < 0)
-			{
-				obj.right_pos += obj.left_pos;
-				obj.left_pos = 0;
-			}
+			    obj.left_pos = 0;
+			
 			if (obj.right_pos > obj.slider_width)
 				obj.right_pos = obj.slider_width;
 		}
