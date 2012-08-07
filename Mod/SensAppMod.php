@@ -1,6 +1,29 @@
 <?php
 
 class SensAppMod {
+
+	protected $server_address;
+
+	public function __construct($server) {
+		$this->server_address = 'http://'. $server['address'] . '/sensapp/';
+	}
+
+	public function loadJson($path, $params = false) {
+		$url = $this->server_address . $path;
+
+		if (!filter_var($url, FILTER_VALIDATE_URL))
+			throw new exception(_('The server address is incorrect'));
+
+		if ($params)
+			$url .= '?'.http_build_query($params);
+
+		$contents = file_get_contents($url);
+
+		$json = json_decode($contents);
+
+		return $json;
+	}
+
 	public static function uniqueName($name) {
 		return !R::findOne('sensapp_server',
 			'name = ? and user_id = ?',
@@ -19,6 +42,10 @@ class SensAppMod {
 
 	public static function removeServer($server) {
 		R::trash(R::load('sensapp_server', $server['id']));
+	}
+
+	public function sensorList() {
+		return $this->loadJson('registry/sensors?flatten=true');
 	}
 }
 

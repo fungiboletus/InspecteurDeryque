@@ -5,7 +5,7 @@
 abstract class AbstractView
 {
 	protected static $now; /**< time cache for performances. */
-	
+
 	/**
 	 * Display a button.
 	 * @param $url the wanted url.
@@ -19,7 +19,7 @@ abstract class AbstractView
 			<span class="icon_button ${icon}_text">$text</span></a>
 END;
 	}
-	
+
 	/**
 	 * Converts time period to a more human readable format.
 	 * @param $period The time to convert.
@@ -72,11 +72,11 @@ END;
 
 		if ($period < 0 || $period > 8)
 		{
-			$format = _('%A %d %B %Y à %Hh%M');
+			$format = _('%A %d %B %Y at %Hh%M');
 		}
 		elseif ($period >= 7)
 		{
-			$format = _('%A à %Hh%M');
+			$format = _('%A at %Hh%M');
 		}
 		else
 		{
@@ -89,7 +89,7 @@ END;
     /**
      * Analyzes a date.
      * @param $date Date to look at (either a timestamp or a string)
-     * @return $array ($i,$t,$y) : 
+     * @return $array ($i,$t,$y) :
      *          $i : if the date is in the future -1 is given, else a value >0.
      *          $t : The timestamp of the given date.
      *          $y : The year in String, or NULL.
@@ -124,7 +124,7 @@ END;
 			604800,// 8 This week
 			0
 		);
-		
+
 		// If the date is not in the future
 		if ($t <= $n)
 		{
