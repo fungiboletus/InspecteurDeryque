@@ -1,6 +1,6 @@
 <?php
 /** This class manages the file upload for data import view. */
-class Import extends AbstractView {
+class Import {
 
 	/**
 	 * show the file upload webpage.

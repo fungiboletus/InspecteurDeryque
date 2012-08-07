@@ -59,10 +59,10 @@ END;
      */
 	public static function showAddForm($values) {
 
-		$label_name = _('Nom');
+		$label_name = _('Name');
 		$label_desc = _('Description');
 		$url_submit = CNavigation::generateUrlToApp('Data', 'add');
-		$text_submit = _('Créer le relevé');
+		$text_submit = _('Create the statement');
 		$hnom = htmlspecialchars($values['nom']);
 		$hdesc = htmlspecialchars($values['desc']);
 		$hmode = htmlspecialchars($values['mode']);
@@ -80,14 +80,14 @@ END;
 	<div class="control-group">
 		<label for="input_desc" class="control-label">$label_desc</label>
 		<div class="controls">
-			<textarea name="desc" id="input_desc">$hdesc</textarea> 
+			<textarea name="desc" id="input_desc">$hdesc</textarea>
 		</div>
 	</div>
 	<div class="actions">
 		<input type="submit" class="btn btn-large btn-primary" value="$text_submit" />
 	</div>
 </fieldset>
-</form>	
+</form>
 END;
 	}
 
@@ -149,8 +149,8 @@ END;
 		self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
 		echo '</div>';
 	}
-    
-    
+
+
 	public static function showDisplayViewChoiceTitle() {
 		echo <<<END
 <h3>Visualiser ce relevé directement

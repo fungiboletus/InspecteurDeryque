@@ -24,7 +24,7 @@ abstract class AbstractMod
 	public static function secureFolder($folder) {
 		return preg_replace('/(\.\.)|\\\'/', '', $folder);
 	}
-    /** 
+    /**
      * Returns Object pointed by the current AbstractMod class.
      */
 	public function initialize() {
@@ -52,7 +52,7 @@ abstract class AbstractMod
 		}
 
 		$this->cache_variables = $n_vars;
-		return $n_vars; 
+		return $n_vars;
 	}
 }
 ?>

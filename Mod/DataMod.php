@@ -4,6 +4,20 @@
  * @see AbstractMod
  */
 class DataMod extends AbstractMod {
+    public $name; /**< Object, depending on the inherited ObjectMod class */
+    public $folder; /**< folder of that Object. */
+
+    private $cache_variables = null;/**< FIXME */
+
+    /** The constructor.
+     * @param $name The name of the Object
+     * @param $folder The name of the folder containing all necessary
+     *        informations about the Object
+     */
+    public function AbstractMod($name, $folder) {
+        $this->name = $name;
+        $this->folder = $folder;
+    }
     public $display_prefs = null;/**< FIXME */
 
     /**
@@ -128,7 +142,7 @@ class DataMod extends AbstractMod {
     }
     public static function getMultiCompo($name, $user_id) {
         return R::getAll('select r.name, r.id from multi_extrait m, composition r, multi_releve_extrait mr where m.user_id=? and m.id=mr.multi_releve_id and  mr.composition_id=r.id and m.name=?', array($user_id, $name));
-    }    
+    }
     public static function getCompo($name) {
         return R::getAll('select name, id from composition where name=?', array($name));
     }
