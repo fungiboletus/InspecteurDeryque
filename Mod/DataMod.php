@@ -55,7 +55,7 @@ class DataMod extends AbstractMod {
 	 * @return A query request.
 	 */
 	public static function getStatement($name, $user_id) {
-		return R::getRow('select r.id, name, description, modname, PicMinLine, PicMaxLine from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $name));
+		return R::getRow('select r.id, name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $name));
 		/*return R::getRow('select r.id, concat_ws("/", r.name, m.name) as name, description, modname, PicMinLine, PicMaxLine from multi_releve m, releve r, multi_releve_releve mr, datamod d where r.user_id = ? and r.mod_id = d.id and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.name = ?', array($user_id, $name));*/
 	}
 
@@ -142,7 +142,7 @@ class DataMod extends AbstractMod {
 	  * @return A query request.
 	  */
 	public static function getStatementMulti($name, $user_id) {
-		return R::getRow('select m.id, m.name, m.description, modname, PicMinLine, PicMaxLine from multi_releve m, releve r, multi_releve_releve mr, datamod d where m.user_id = ? and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.mod_id = d.id and m.name=?', array($user_id, $name));
+		return R::getRow('select m.id, m.name, m.description, modname  from multi_releve m, releve r, multi_releve_releve mr, datamod d where m.user_id = ? and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.mod_id = d.id and m.name=?', array($user_id, $name));
 	}
 
 	/**
