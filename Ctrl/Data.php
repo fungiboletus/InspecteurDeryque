@@ -16,8 +16,8 @@ class Data
 	}
 
 	public function choose() {
-		CNavigation::setTitle('Nouveau relevé');
-		CNavigation::setDescription('Sélectionnez le type de relevé');
+		CNavigation::setTitle(_('New statement'));
+		CNavigation::setDescription(_('Select the statement type'));
 
 		$data = DataMod::getDataTypes();
 		DataView::showDataTypeList($data);
@@ -40,6 +40,7 @@ class Data
 					if (DataMod::modExist($_REQUEST['mode'])) {
 						$mode = R::dispense('datamod');
 						$mode->modname = $_REQUEST['mode'];
+						$mode->storage = InternalDataMod::storageConstant;
 						R::store($mode);
 					}
 					else
@@ -55,11 +56,6 @@ class Data
 				$statement->user = $user;
 				$statement->name = $_REQUEST['nom'];
 				$statement->description = $_REQUEST['desc'];
-
-				// This has nothing to do here…
-                $statement->PicMinLine = NULL;
-                $statement->PicMaxLine = NULL;
-                $statement->PicEndTime = NULL;
 
 				R::store($statement);
 

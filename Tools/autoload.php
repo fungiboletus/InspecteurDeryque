@@ -3,13 +3,14 @@
 function __autoload($class)
 {
 	$possible_paths = array(
-		'Tools/'.$class.'.php',
-		'Mod/'.$class.'.php',
-		'View/'.$class.'.php',
-		'Ctrl/'.$class.'.php',
-		'Mod/FileTypes/'.$class.'.php'
+		"Tools/$class.php",
+		"Mod/$class.php",
+		"View/$class.php",
+		"Ctrl/$class.php",
+		"Data/$class.php",
+		"Mod/FileTypes/$class.php"
 	);
-	
+
 	foreach($possible_paths as $chemin)
 	{
 		if (file_exists($chemin))
@@ -18,5 +19,9 @@ function __autoload($class)
 			return;
 		}
 	}
+
+	$data_path = 'Data/'.substr($class, 1)."/$class.php";
+	if (file_exists($data_path))
+		require_once($data_path);
 }// __autoload()
 ?>

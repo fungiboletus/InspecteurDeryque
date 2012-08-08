@@ -2,16 +2,10 @@
 /**
  * Infos about the Calorie data.
  */
-class DCalories
+class DCalories extends DPositiveNumerical
 {
 	const name = 'Calories';
-	
-	const n_timestamp = 'Date';
-	public $timestamp;
 
-	const n_calories = 'Nombre de calories';
-	public $calories;
-	
-	const display_prefs = 'Graphique Tableau';
+	const n_numerical = 'Calories count';
 }
 ?>

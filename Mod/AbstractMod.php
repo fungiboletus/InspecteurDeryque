@@ -6,7 +6,7 @@ abstract class AbstractMod
 	public $name; /**< Object, depending on the inherited ObjectMod class */
 	public $folder; /**< folder of that Object. */
 
-	private $cache_variables = null;/**< FIXME */
+	private $cache_variables = null;/**< Cache because introspection is slow */
 
     /** The constructor.
      * @param $name The name of the Object
@@ -31,16 +31,18 @@ abstract class AbstractMod
 		$class = 'D'.$this->folder;
 		return new $class();
 	}
+
     /**
-     * FIXME je sais pas quoi dire.
-     * TODO trouver un truc très intelligent à dire.
+     * Get the internal structure of the data.
+     *
+     * It use introspection, for the beauty and slowness.
      */
 	public function getVariables() {
+		// Cache power !
 		if ($this->cache_variables !== null)
-		{
 			return $this->cache_variables;
-		}
 
+		// PHP power !!
 		$class = 'D'.$this->folder;
 
 		$vars = get_class_vars('D'.$this->folder);
@@ -52,6 +54,8 @@ abstract class AbstractMod
 		}
 
 		$this->cache_variables = $n_vars;
+
+		// Return power !!!
 		return $n_vars;
 	}
 }

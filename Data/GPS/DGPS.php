@@ -2,12 +2,9 @@
 /**
  * Infos about the GPS data.
  */
-class DGPS
+class DGPS extends DefaultData
 {
 	const name = 'GPS';
-
-	const n_timestamp = 'Date';
-	public $timestamp;
 
 	const n_lat = 'Latitude';
 	public $lat;
@@ -15,6 +12,21 @@ class DGPS
 	const n_lon = 'Longitute';
 	public $lon;
 
-	const display_prefs = 'Carte Tableau';
+	const display_prefs = 'map';
+
+	public function filterData() {
+		DefaultData::filterData();
+		$this->lat = floatval($this->lat);
+		while ($this->lat < -180.0)
+			$this->lat += 360.0;
+		while ($this->lat > 180.0)
+			$this->lat -= 360.0;
+
+		$this->lon = floatval($this->lon);
+		while ($this->lon < -180.0)
+			$this->lon += 360.0;
+		while ($this->lon > 180.0)
+			$this->lon -= 360.0;
+	}
 }
 ?>
