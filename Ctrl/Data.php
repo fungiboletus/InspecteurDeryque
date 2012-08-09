@@ -62,7 +62,6 @@ class Data
 		}
 
 		CHead::addJS('Data_add');
-
 		// $data_type = DataMod::loadDataType($_REQUEST['type']);
 
 		CNavigation::setTitle(_('New statement'));

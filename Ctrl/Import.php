@@ -46,7 +46,6 @@ class Import {
 			$file = $_SESSION['fichierXML'];
 			if (file_exists($file)) {
 				CNavigation::setTitle('Selectionnez vos données à importer');
-				CHead::addJS('bootstrap-modal');
 				DataImportView::showDataSelection($file, $_SESSION['extFichierXML']);
 				return;
 			}

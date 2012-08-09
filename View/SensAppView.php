@@ -26,7 +26,7 @@ class SensAppView extends AbstractView
 		$hname = htmlspecialchars($values['name']);
 		$haddress = htmlspecialchars($values['address']);
 
-		echo <<<END
+		echo <<<HTML
 <form action="$url_submit" method="post" class="well form-horizontal">
 <fieldset>
 	<div class="control-group">
@@ -42,11 +42,16 @@ class SensAppView extends AbstractView
 		</div>
 	</div>
 	<div class="actions">
-		<input type="submit" class="btn btn-large btn-primary" value="$text_submit" />
+HTML;
+		self::showButton(CNavigation::generateUrlToApp('SensApp'), 'info', _('Go back to the server list'), 'back');
+		echo <<<HTML
+		<button type="submit" class="btn btn-large btn-primary">
+			<span class="icon_button plus_text">$text_submit</span>
+		</button>
 	</div>
 </fieldset>
 </form>
-END;
+HTML;
 	}
 
 	public static function serverList($servers) {

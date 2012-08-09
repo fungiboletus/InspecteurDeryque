@@ -65,9 +65,12 @@ class DataView extends AbstractView
 						$hname = htmlspecialchars($class::name);
 						$hdir = htmlspecialchars($d->folder);
 						$sum = sha1($class);
+						// TODO management
+						$checked = $class === 'auiensrtauienrst' ? ' checked' : null;
+						$selected = $checked ? ' selected' : '';
 			echo <<<HTML
-	<label class="radio inline thumbnail">
-		<input type="radio" id="type_$sum" name="type" value="$hdir"/>
+	<label class="radio inline thumbnail$selected">
+		<input type="radio" id="type_$sum" name="type" value="$hdir"$checked/>
 		<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
 		<h4>$hname</h4>
 HTML;
@@ -122,8 +125,6 @@ HTML;
 		$hdesc = htmlspecialchars($values['desc']);
 		$hmode = htmlspecialchars($values['mode']);
 
-		$cst_local = InternalDataMod::storageConstant;
-
 		echo <<<HTML
 <form action="$url_submit" name="data_add_form" method="post" id="data_add_form" class="well form-horizontal">
 <!--<input type="hidden" name="mode" value="$hmode" />-->
@@ -146,6 +147,9 @@ HTML;
 <legend>$text_type</legend>
 HTML;
 		DataView::showDataTypeList($data_types);
+		$text_sensapp = _('SensApp settings');
+		$url_sensapp = CNavigation::generateUrlToApp('SensApp');
+		$href = CNavigation::generateUrlToApp('SensApp', null, array('iframe_mode' => true));
 		echo <<<HTML
 </fieldset>
 <fieldset>
@@ -154,21 +158,21 @@ HTML;
 	<label class="radio inline thumbnail selected">
 		<img src="$ROOT_PATH/Img/icons/location/deryque.png"/>
 		<h4>
-			<input type="radio" id="location1" name="location" value="$cst_local" checked />
+			<input type="radio" id="location1" name="location" value="local" checked />
 			$label_local
 		</h4>
 	</label>
 	<label class="radio inline thumbnail">
 		<img src="$ROOT_PATH/Img/icons/location/sensapp.png"/>
 		<h4>
-			<input type="radio" id="location2" name="location" value="2" />
+			<input type="radio" id="location2" name="location" value="sensapp" />
 			SensApp
 		</h4>
 	</label>
 	<label class="radio inline thumbnail">
 		<img src="$ROOT_PATH/Img/icons/location/youtube.png"/>
 		<h4>
-			<input type="radio" id="location3" name="location" value="3" />
+			<input type="radio" id="location3" name="location" value="youtube" />
 			Youtube
 		</h4>
 	</label>
@@ -181,9 +185,23 @@ HTML;
 	</label>-->
 </div>
 </fieldset>
+<div class="modal hide fade in" id="settings_modal_iframe">
+	<button type="button" class="close" data-dismiss="modal">×</button>
+	<iframe src="" ></iframe>
+</div>
+<fieldset class="sensapp_settings">
+<legend>$text_sensapp</legend>
+	<br/>
+	<div class="btn-group">
+		<a href="$href" id="canard" class="btn btn-inverse">Longitude</a>
+		<a href="$href" class="btn">Aucune donnée renseignée</a>
+	</div>
+</fieldset>
 <fieldset>
 	<div class="actions">
-		<input type="submit" class="btn btn-large btn-primary" value="$text_submit" />
+		<button type="submit" class="btn btn-large btn-primary">
+			<span class="icon_button plus_text">$text_submit</span>
+		</button>
 	</div>
 </fieldset>
 </form>

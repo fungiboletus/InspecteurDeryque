@@ -4,6 +4,7 @@
 
 #data_add_form .thumbnails {
 	padding:1em;
+	padding-bottom:0;
 	margin-left:0;
 }
 
@@ -54,4 +55,29 @@
 
 #data_add_form .type_list .sons.show {
 	display:block;
+}
+
+#data_add_form .actions {
+	/*background:white;*/
+	margin-top:1em;
+	float:right;
+}
+
+#settings_modal_iframe {
+width: 1000px;
+margin-left: -500px;
+max-height:570px;
+}
+
+#settings_modal_iframe button.close {
+position: absolute;
+right: 4px;
+top: 2px;
+}
+
+#settings_modal_iframe iframe {
+width:100%;
+height:490px;
+border:none;
+padding-top:10px;
 }
