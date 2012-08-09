@@ -8,23 +8,24 @@ class DataView extends AbstractView
      * Display the button to add a statement.
      */
 	public static function showAddButton() {
-		$url = CNavigation::generateUrlToApp('Data','choose');
+		$url = CNavigation::generateUrlToApp('Data','add');
 		echo '<div class="well">';
-		self::showButton($url, 'primary', 'Nouveau relevé', 'plus');
+		self::showButton($url, 'primary', _('New statement'), 'plus');
 		echo '</div>';
 	}
 
     /**
      * Used when looking at a statement. Show some user buttons.
-     * @param $url_del the url to try to delete a statement.
-     * @param $url_back the url to go back to the statement list.
-     * @param $url_rand the url to put random data to the statement.
      */
-	public static function showViewButtons($url_del, $url_back, $url_rand) {
+	public static function showViewButtons() {
+		$url_del =	CNavigation::generateMergedUrl('Data', 'remove');
+		$url_view =	CNavigation::generateMergedUrl('');
+		$url_back = CNavigation::generateUrlToApp('Data');
+
 		echo '<div class="well">';
-		self::showButton($url_back, 'info', 'Retour à la liste', 'back');
-		self::showButton($url_rand, 'info', 'Données aléatoires', 'rand');
-		self::showButton($url_del, 'danger', 'Supprimer le relevé', 'del');
+		self::showButton($url_back, 'info', _('Return to the list'), 'back');
+		self::showButton($url_view, 'success', _('View the statement'), 'rand');
+		self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
 		echo '</div>';
 	}
 
@@ -38,17 +39,17 @@ class DataView extends AbstractView
 		echo '<ul class="thumbnails">';
 
 		foreach ($data as $type) {
-			$hnom = htmlspecialchars($type->name);
+			$hname = htmlspecialchars($type->name);
 			$hdir = htmlspecialchars($type->folder);
 			$url = CNavigation::generateUrlToApp('Data','add', array('type'=>$type->folder));
-			echo <<<END
+			echo <<<HTML
 	<li class="thumbnail">
 		<a href="$url">
 			<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
-			<h4>$hnom</h4>
+			<h4>$hname</h4>
 		</a>
 	</li>
-END;
+HTML;
 		}
 		echo '</ul>';
 	}
@@ -57,24 +58,27 @@ END;
      * Displays form to create a statement.
      * @param $values Array to resume the future statement's infos.
      */
-	public static function showAddForm($values) {
+	public static function showAddForm($values, $data_types) {
 
 		$label_name = _('Name');
 		$label_desc = _('Description');
 		$url_submit = CNavigation::generateUrlToApp('Data', 'add');
 		$text_submit = _('Create the statement');
-		$hnom = htmlspecialchars($values['nom']);
+		$hname = htmlspecialchars($values['name']);
 		$hdesc = htmlspecialchars($values['desc']);
 		$hmode = htmlspecialchars($values['mode']);
+		$text_general = _('General');
+		$text_type = _('Select the statement type');
 
-		echo <<<END
+		echo <<<HTML
 <form action="$url_submit" name="data_add_form" method="post" id="data_add_form" class="well form-horizontal">
 <input type="hidden" name="mode" value="$hmode" />
 <fieldset>
+<legend>$text_general</legend>
 	<div class="control-group">
-		<label for="input_nom" class="control-label">$label_name</label>
+		<label for="input_name" class="control-label">$label_name</label>
 		<div class="controls">
-			<input name="nom" id="input_nom" type="text" value="$hnom" autofocus required />
+			<input name="name" id="input_name" type="text" value="$hname" autofocus required />
 		</div>
 	</div>
 	<div class="control-group">
@@ -83,12 +87,25 @@ END;
 			<textarea name="desc" id="input_desc">$hdesc</textarea>
 		</div>
 	</div>
+</fieldset>
+<fieldset>
+<legend>$text_type</legend><br/>
+HTML;
+		DataView::showDataTypeList($data_types);
+		echo <<<HTML
+</fieldset>
+<fieldset>
+<legend>$text_type</legend>
+
+canard canard canard
+</fieldset>
+<fieldset>
 	<div class="actions">
 		<input type="submit" class="btn btn-large btn-primary" value="$text_submit" />
 	</div>
 </fieldset>
 </form>
-END;
+HTML;
 	}
 
     /**
@@ -100,17 +117,17 @@ END;
 		if ($statements)
 		{
 			CHead::addJS('jquery.tablesorter.min');
-			echo <<<END
+			echo <<<HTML
 			<table class="table table-striped table-bordered data_list">
 				<thead><tr>
-					<th class="header yellow">Nom</th>
+					<th class="header yellow">Name</th>
 					<th class="header green">Description</th>
 					<th class="header blue">Type</th>
 				</tr></thead>
 				<tbody>
-END;
+HTML;
 			foreach ($statements as $statement) {
-				$url = CNavigation::generateUrlToApp('Data', 'view', array('nom' => $statement['name']));
+				$url = CNavigation::generateUrlToApp('Data', 'view', array('name' => $statement['name']));
 				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
@@ -119,13 +136,8 @@ END;
 			echo "</tbody></table>";
 		}
 		else
-		{
-			echo <<<END
-<div class="alert alert-block alert-warning">
-<p>Il n'y a aucun relevé pour l'instant.</p>
-</div>
-END;
-		}
+			echo '<div class="alert alert-block alert-warning">',
+				_('There are no statements for the moment.'),'</div>';
 	}
 
     /**
@@ -137,29 +149,29 @@ END;
 	public static function showRemoveForm($desc, $url_confirm, $url_back)
 	{
 		$hdesc = htmlspecialchars($desc);
-		echo <<<END
+		echo <<<HTML
 <div class="alert alert-block alert-warning">
 <p>Veuillez confirmer la suppression du relevé. La suppression est définitive.</p>
 <h4>Description du relevé</h4>
 <p><em>$hdesc</em></p>
 </div>
 			<div class="well">
-END;
-		self::showButton($url_back, 'info', 'Annuler', 'back');
-		self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
+HTML;
+		self::showButton($url_back, 'info', 'Cancel', 'back');
+		self::showButton($url_confirm, 'danger float_right', 'Delete', 'del');
 		echo '</div>';
 	}
 
 
 	public static function showDisplayViewChoiceTitle() {
-		echo <<<END
+		echo <<<HTML
 <h3>Visualiser ce relevé directement
 <small>Choisissez le type de visualisation désiré</small></h3>
-END;
+HTML;
 	}
 
 	public static function showAPIInformations() {
-		echo <<<END
+		echo <<<HTML
 <h3>API Web
 <small>Informations nécessaires à la domination du monde</small></h3>
 <div class="well">
@@ -168,7 +180,7 @@ END;
 <p>Le code de retour est «200 OK» si tout fonctionne.</p>
 <em>Cette url est personnelle, et elle ne doit en aucun cas être communiquée.</em>
 </div>
-END;
+HTML;
 	}
 
     /**
@@ -179,7 +191,7 @@ END;
 	public static function showInformations($data, $data_type) {
 		$hdata_type = htmlspecialchars($data_type->name);
 
-		echo <<<END
+		echo <<<HTML
 <h3>Informations</h3>
 <div class="well">
 <dl>
@@ -187,7 +199,7 @@ END;
 	<dd>$hdata_type</dd>
 
 	<dt>Statistiques</dt>
-END;
+HTML;
 		if (empty($data) || $data['count(*)'] == 0)
 		{
 			echo "<dd>Ce relevé est vide.</dd></dl>\n";
@@ -197,11 +209,11 @@ END;
 			echo "<dd>Ce relevé contient ${data['count(*)']} enregistrements.</dd>\n</dl>\n";
 		}
 
-			echo <<<END
+			echo <<<HTML
 <table class="condensed-table">
 <thead>
 	<tr>
-		<th>Nom</th>
+		<th>Name</th>
 		<th>Nom du champ</th>
 		<th>Valeur minimale</th>
 		<th>Valeur maximale</th>
@@ -209,7 +221,7 @@ END;
 	</tr>
 </thead>
 <tbody>
-END;
+HTML;
 		foreach ($data_type->getVariables() as $k => $var)
 		{
 			$hvar = htmlspecialchars($var);
@@ -222,7 +234,7 @@ END;
 				$max = $data["max($k)"];
 				$avg = $data["avg($k)"];
 			}
-			echo <<<END
+			echo <<<HTML
 	<tr>
 		<td>$hvar</td>
 		<td>$hk</td>
@@ -230,7 +242,7 @@ END;
 		<td>$max</td>
 		<td>$avg</td>
 	</tr>
-END;
+HTML;
 		}
 		echo "</tbody>\n</table>\n</div>\n";
 	}

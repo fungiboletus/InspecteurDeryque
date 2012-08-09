@@ -1,4 +1,0 @@
-activer les .htaccess pour l'url forwarding
-sudo a2enmod
-sudo service apache2 restart
-^ active le module url rewriting

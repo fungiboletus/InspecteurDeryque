@@ -5,8 +5,8 @@
 class Data
 {
 	public function index() {
-		CNavigation::setTitle('Gestion des données');
-		CNavigation::setDescription('All your data are belong to us');
+		CNavigation::setTitle(_('Simple statements'));
+		CNavigation::setDescription(_('All your data are belong to us'));
 
 		$statements = DataMod::getStatements($_SESSION['bd_id']);
 
@@ -15,20 +15,12 @@ class Data
 		DataView::showAddButton();
 	}
 
-	public function choose() {
-		CNavigation::setTitle(_('New statement'));
-		CNavigation::setDescription(_('Select the statement type'));
-
-		$data = DataMod::getDataTypes();
-		DataView::showDataTypeList($data);
-	}
-
 	public function add() {
 
-		if (CNavigation::isValidSubmit(array('nom','desc', 'mode'), $_REQUEST))
+		if (CNavigation::isValidSubmit(array('name','desc', 'mode'), $_REQUEST))
 		{
 			$_REQUEST['type'] = $_REQUEST['mode'];
-			if (R::findOne('releve', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id'])))
+			if (R::findOne('releve', 'name = ? and user_id = ?', array($_REQUEST['name'], $_SESSION['bd_id'])))
 			{
 				new CMessage('Un relevé existe déjà avec le même nom', 'error');
 			}
@@ -54,7 +46,7 @@ class Data
 				$statement = R::dispense('releve');
 				$statement->mod = $mode;
 				$statement->user = $user;
-				$statement->name = $_REQUEST['nom'];
+				$statement->name = $_REQUEST['name'];
 				$statement->description = $_REQUEST['desc'];
 
 				R::store($statement);
@@ -67,30 +59,26 @@ class Data
 
 		}
 
-		global $ROOT_PATH;
-		if (!isset($_REQUEST['type']))
-		{
-			CTools::hackError();
-		}
+		// $data_type = DataMod::loadDataType($_REQUEST['type']);
 
-		$data_type = DataMod::loadDataType($_REQUEST['type']);
+		CNavigation::setTitle(_('New statement'));
 
-		CNavigation::setTitle('Nouveau relevé de type «'.$data_type->name.'»');
 
 		DataView::showAddForm(array_merge(array(
-						'nom' => '',
+						'name' => '',
 						'desc' => '',
-						'mode' => $data_type->folder),$_REQUEST));
+						'mode' => ''/*$data_type->folder*/),$_REQUEST),
+			DataMod::getDataTypes());
 	}
 
 	public function view()
 	{
-		$statement = isset($_REQUEST['nom']) ? DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+		$statement = isset($_REQUEST['name']) ? DataMod::getStatement($_REQUEST['name'], $_SESSION['bd_id']) : false;
 
 		if (!$statement)
 			CTools::hackError();
 
-		CNavigation::setTitle('Relevé «'.$statement['name'].'»');
+		CNavigation::setTitle('Statement : '.$statement['name']);
 		CNavigation::setDescription($statement['description']);
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
@@ -101,21 +89,18 @@ class Data
 		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
 		DataView::showInformations($stats, $n_datamod);
 
-		$data = DisplayMod::getDisplayTypes();
+		/*ata = DisplayMod::getDisplayTypes();
 		DataView::showDisplayViewChoiceTitle();
 		DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
 
-		DataView::showAPIInformations();
+		DataView::showAPIInformations();*/
 
-		DataView::showViewButtons(
-				CNavigation::generateMergedUrl('Data', 'remove'),
-				CNavigation::generateUrlToApp('Data'),
-				CNavigation::generateMergedUrl('Data', 'random'));
+		DataView::showViewButtons();
 	}
 
 	public function remove()
 	{
-		$statement = DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']);
+		$statement = DataMod::getStatement($_REQUEST['name'], $_SESSION['bd_id']);
 		if (!$statement) {
 			CTools::hackError();
 		}
@@ -131,7 +116,7 @@ class Data
 		}
 		else
 		{
-			CNavigation::setTitle('Suppression du relevé «'.$statement['name'].'»');
+			CNavigation::setTitle('Deleting statement : '.$statement['name']);
 			CNavigation::setDescription('Consequences will never be the same!');
 
 			DataView::showRemoveForm(
@@ -143,7 +128,7 @@ class Data
 
 	public function random()
 	{
-		$statement = isset($_REQUEST['nom']) ? DataMod::getStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
+		$statement = isset($_REQUEST['name']) ? DataMod::getStatement($_REQUEST['name'], $_SESSION['bd_id']) : false;
 		$b_statement = R::load('releve', $statement['id']);
 
 		if (!$statement) {
@@ -168,7 +153,7 @@ class Data
 		R::commit();
 
 		new CMessage('10 valeurs aléatoires ont étés générées');
-		CNavigation::redirectToApp('Data', 'view', array('nom' => $_REQUEST['nom']));
+		CNavigation::redirectToApp('Data', 'view', array('name' => $_REQUEST['name']));
 	}
 
 	public function composition()
