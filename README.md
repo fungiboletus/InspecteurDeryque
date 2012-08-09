@@ -1,4 +1,4 @@
-== InspecteurDeryque, a data visualization application ==
+## InspecteurDeryque, a data visualization application
 
 The goal is to visualize and study all types of data, like an electrocardiogram, GPS statements of a cyclist, or temperature of a mountain. With volumetries which are very varied, and the possibility to see it in real time, or in delayed time.
 

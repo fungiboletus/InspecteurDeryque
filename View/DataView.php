@@ -36,22 +36,66 @@ class DataView extends AbstractView
      */
 	public static function showDataTypeList($data) {
 		global $ROOT_PATH;
-		echo '<ul class="thumbnails">';
+		echo '<div class="thumbnails type_list span4">';
 
-		foreach ($data as $type) {
-			$hname = htmlspecialchars($type->name);
-			$hdir = htmlspecialchars($type->folder);
-			$url = CNavigation::generateUrlToApp('Data','add', array('type'=>$type->folder));
+		// wonderful and slow recursive function !!
+		$recursive = function($parent, $data, $hidden_branch = false) use (&$recursive, &$ROOT_PATH)
+		{
+			$data_parent = array();
+			$data_not_parent = array();
+
+			foreach ($data as $d)
+				if ($d->parent_class === $parent)
+					array_push($data_parent, $d);
+				else
+					array_push($data_not_parent, $d);
+
+			if (count($data_parent))
+			{
+				if (!$hidden_branch)
+				{
+					$sum = sha1($parent);
+					echo "\n<div class=\"type_$sum sons fade span4\">";
+				}
+				foreach ($data_parent as $d) {
+					$next_branch_hidden = $d->folder === null;
+					if (!$next_branch_hidden)
+					{
+						$class = $d->class;
+						$hname = htmlspecialchars($class::name);
+						$hdir = htmlspecialchars($d->folder);
+						$sum = sha1($class);
 			echo <<<HTML
-	<li class="thumbnail">
-		<a href="$url">
-			<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
-			<h4>$hname</h4>
-		</a>
-	</li>
+	<label class="radio inline thumbnail">
+		<input type="radio" id="type_$sum" name="type" value="$hdir"/>
+		<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
+		<h4>$hname</h4>
 HTML;
-		}
-		echo '</ul>';
+					}
+					if (!$next_branch_hidden) echo '</label>';
+					$recursive($d->class, $data_not_parent,
+						$next_branch_hidden);
+				}
+				if (!$hidden_branch) echo "\n</div>";
+			}
+		};
+
+		$recursive('EmptyData', $data, true);
+
+
+		/*foreach ($data as $type) {
+			$class = $type->class;
+			groaw($type->parent_class);
+			$hname = htmlspecialchars($class::name);
+			$hdir = htmlspecialchars($type->folder);
+			echo <<<HTML
+	<label class="radio inline thumbnail">
+		<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
+		<h4>$hname</h4>
+	</label>
+HTML;
+		}*/
+		echo '</div>';
 	}
 
     /**
@@ -59,20 +103,30 @@ HTML;
      * @param $values Array to resume the future statement's infos.
      */
 	public static function showAddForm($values, $data_types) {
+		global $ROOT_PATH;
+
+		$text_general = _('General');
+		$text_type = _('Select the statement type');
+		$text_location = _('Data location');
 
 		$label_name = _('Name');
 		$label_desc = _('Description');
+
+		$label_local = _('Local');
+		$label_file = _('File');
+
 		$url_submit = CNavigation::generateUrlToApp('Data', 'add');
 		$text_submit = _('Create the statement');
+
 		$hname = htmlspecialchars($values['name']);
 		$hdesc = htmlspecialchars($values['desc']);
 		$hmode = htmlspecialchars($values['mode']);
-		$text_general = _('General');
-		$text_type = _('Select the statement type');
+
+		$cst_local = InternalDataMod::storageConstant;
 
 		echo <<<HTML
 <form action="$url_submit" name="data_add_form" method="post" id="data_add_form" class="well form-horizontal">
-<input type="hidden" name="mode" value="$hmode" />
+<!--<input type="hidden" name="mode" value="$hmode" />-->
 <fieldset>
 <legend>$text_general</legend>
 	<div class="control-group">
@@ -89,15 +143,43 @@ HTML;
 	</div>
 </fieldset>
 <fieldset>
-<legend>$text_type</legend><br/>
+<legend>$text_type</legend>
 HTML;
 		DataView::showDataTypeList($data_types);
 		echo <<<HTML
 </fieldset>
 <fieldset>
-<legend>$text_type</legend>
-
-canard canard canard
+<legend>$text_location</legend>
+<div class="thumbnails location_list">
+	<label class="radio inline thumbnail selected">
+		<img src="$ROOT_PATH/Img/icons/location/deryque.png"/>
+		<h4>
+			<input type="radio" id="location1" name="location" value="$cst_local" checked />
+			$label_local
+		</h4>
+	</label>
+	<label class="radio inline thumbnail">
+		<img src="$ROOT_PATH/Img/icons/location/sensapp.png"/>
+		<h4>
+			<input type="radio" id="location2" name="location" value="2" />
+			SensApp
+		</h4>
+	</label>
+	<label class="radio inline thumbnail">
+		<img src="$ROOT_PATH/Img/icons/location/youtube.png"/>
+		<h4>
+			<input type="radio" id="location3" name="location" value="3" />
+			Youtube
+		</h4>
+	</label>
+	<!--<label class="radio inline thumbnail">
+		<img src="$ROOT_PATH/Img/icons/location/deryque.png"/>
+		<h4>
+			<input type="radio" id="location4" name="location" value="4" />
+			$label_file
+		</h4>
+	</label>-->
+</div>
 </fieldset>
 <fieldset>
 	<div class="actions">

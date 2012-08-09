@@ -11,15 +11,19 @@ class DataMod extends AbstractMod {
 	 * @returns array containing all data types
 	 */
 	public static function getDataTypes() {
-		$data = array();
+		// Add internal and abstract data types
+		$data = array(
+			new DataMod('EmptyData', null),
+			new DataMod('DefaultData', null),
+			new DataMod('DPositiveNumerical', null)
+		);
 
 		foreach (scandir('Data') as $folder) {
 			$folder = self::secureFolder($folder);
 			if (strlen($folder) && $folder[0] !== '.' && is_dir('Data/' . $folder) && file_exists("Data/$folder/D$folder.php")) {
 				require_once ("Data/$folder/D$folder.php");
 				$class = "D$folder";
-				$name = $class::name;
-				$data[] = new DataMod($name, $folder);
+				$data[] = new DataMod($class, $folder);
 			}
 		}
 
@@ -37,8 +41,7 @@ class DataMod extends AbstractMod {
 			return null;
 		require_once ("Data/$folder/D$folder.php");
 		$class = "D$folder";
-		$name = $class::name;
-		$mod = new DataMod($name, $folder);
+		$mod = new DataMod($class, $folder);
 		$mod->display_prefs = explode(' ', $class::display_prefs);
 		return $mod;
 	}

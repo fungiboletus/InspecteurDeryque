@@ -1,3 +1,57 @@
 #data_add_form .thumbnail {
 	background:white;
 }
+
+#data_add_form .thumbnails {
+	padding:1em;
+	margin-left:0;
+}
+
+#data_add_form .thumbnail {
+	cursor:pointer;
+	margin:0 8px 8px 0px;
+}
+#data_add_form .thumbnail.selected {
+	border-color: #0074CC;
+}
+
+#data_add_form .thumbnail:hover {
+	border-color: #00A6FF;
+}
+
+#data_add_form .thumbnails img {
+	max-width:120px;
+}
+
+#data_add_form .thumbnails h4 {
+	text-align:center;
+	margin:3px 0px 0px 0px;
+}
+#data_add_form .thumbnails h4 input {
+	float:none;
+	position:relative;
+	bottom:3px;
+}
+
+#data_add_form .location_list h4 {
+	display:none;
+}
+
+#data_add_form .type_list input {
+	display:none;
+}
+
+#data_add_form .type_list {
+	position:relative;
+}
+#data_add_form .type_list .sons {
+	display:none;
+	position:absolute;
+	left:300px;
+	top:1em;
+	border-left:3px solid gre	y;
+}
+
+#data_add_form .type_list .sons.show {
+	display:block;
+}

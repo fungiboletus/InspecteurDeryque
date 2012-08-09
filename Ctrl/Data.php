@@ -17,8 +17,10 @@ class Data
 
 	public function add() {
 
-		if (CNavigation::isValidSubmit(array('name','desc', 'mode'), $_REQUEST))
+		if (CNavigation::isValidSubmit(array('name','desc', 'location'), $_REQUEST))
 		{
+			groaw($_REQUEST);
+			return;
 			$_REQUEST['type'] = $_REQUEST['mode'];
 			if (R::findOne('releve', 'name = ? and user_id = ?', array($_REQUEST['name'], $_SESSION['bd_id'])))
 			{
@@ -32,7 +34,6 @@ class Data
 					if (DataMod::modExist($_REQUEST['mode'])) {
 						$mode = R::dispense('datamod');
 						$mode->modname = $_REQUEST['mode'];
-						$mode->storage = InternalDataMod::storageConstant;
 						R::store($mode);
 					}
 					else
@@ -48,6 +49,7 @@ class Data
 				$statement->user = $user;
 				$statement->name = $_REQUEST['name'];
 				$statement->description = $_REQUEST['desc'];
+				$statement->storage = InternalDataMod::storageConstant;
 
 				R::store($statement);
 
@@ -58,6 +60,8 @@ class Data
 			}
 
 		}
+
+		CHead::addJS('Data_add');
 
 		// $data_type = DataMod::loadDataType($_REQUEST['type']);
 
