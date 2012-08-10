@@ -27,9 +27,11 @@ $(document).ready(function() {
 
 		var blocks_length = blocks.length;
 		for (var i = 0;blocks_length > data_length; --blocks_length)
-			$(blocks[blocks_length - ++i]).remove();
+		{
+			blocks.last().remove();
+			blocks = $('.sensapp_settings .sensapp_data');
+		}
 
-		blocks = $('.sensapp_settings .sensapp_data');
 		for (var i = blocks.length; i < data_length; ++i)
 			$('.sensapp_settings').append(sensapp_data_block.clone());
 
@@ -37,6 +39,7 @@ $(document).ready(function() {
 
 		var i = 0;
 		for (var key in data_vars) {
+	        if (!data_vars.hasOwnProperty(key)) continue;
 			var b = $(blocks[i++]);
 			var v = data_vars[key];
 			b.find('button').text(v);
