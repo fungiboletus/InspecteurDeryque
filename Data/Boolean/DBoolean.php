@@ -6,7 +6,7 @@ class DBoolean extends DefaultData
 {
 	const name = 'Boolean';
 
-	const n_boolean = 'Value';
+	const n_boolean = 'Boolean';
 	public $boolean;
 
 	const display_prefs = 'boolean';

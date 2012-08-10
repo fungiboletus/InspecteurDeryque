@@ -3,8 +3,11 @@ $(document).ready(function() {
 	if (!form) return;
 
 	var data_vars = [];
+
+	var sensapp_show = $('.sensapp_settings').is(':visible');
 	var sensapp_data_block = $('.sensapp_settings .sensapp_data').first();
 	sensapp_data_block.remove();
+	sensapp_data_block.removeClass('sensapp_default');
 
 	var sensapp_current_button = null;
 	var sensapp_current_input = null;
@@ -20,7 +23,6 @@ $(document).ready(function() {
 	};
 
 	var update_sensapp_settings = function() {
-
 		var data_length = data_vars.size();
 		var blocks = $('.sensapp_settings .sensapp_data');
 
@@ -44,8 +46,7 @@ $(document).ready(function() {
 			var v = data_vars[key];
 			b.find('button').text(v);
 			var input = b.find('input');
-			input.attr('name', 'sensapp_'+key);
-			input.attr('value', v);
+			input.attr('name', 'sensapp['+key+']');
 			var a = b.find('a.btn');
 			a.unbind('click');
 			a.click(sensapp_data_click);
@@ -57,30 +58,42 @@ $(document).ready(function() {
 	thumbnails_location.change(function() {
 		var cthis = this;
 		var jthis = $(this);
-		jthis.addClass('selected');
+		jthis.addClass('checked');
 		thumbnails_location.each(function() {
 			if (cthis != this)
-				$(this).removeClass('selected');
+				$(this).removeClass('checked');
 		});
 
 		var location = jthis.find('input').attr('value');
 
 		if (location === 'sensapp') {
+			$('.youtube_settings').hide();
+			$('.sensapp_settings').show();
+			sensapp_show = true;
 			update_sensapp_settings();
+		}
+		else
+		{
+			$('.sensapp_settings').hide();
+			sensapp_show = false;
+			if (location === 'youtube')
+				$('.youtube_settings').show();
+			else
+				$('.youtube_settings').hide();
 		}
 	});
 
 	var thumbnails_type = $('.type_list .thumbnail');
 
 	thumbnails_type.change(function() {
-
 		data_vars = JSON.parse(this.getAttribute('data_vars'));
 
 		// Timestamp is useless
 		if (data_vars.timestamp)
 			delete data_vars.timestamp;
 
-		update_sensapp_settings();
+		if (sensapp_show)
+			update_sensapp_settings();
 
 		var parents = $(this).parents('.sons');
 		thumbnails_type.each(function() {
@@ -88,7 +101,7 @@ $(document).ready(function() {
 			var input = jthis.children('input');
 			if (input.attr('checked'))
 			{
-				jthis.addClass('selected');
+				jthis.addClass('checked');
 				var e = $(document.getElementsByClassName(input.attr('id')));
 				e.addClass('show');
 				window.setTimeout(function() {
@@ -97,7 +110,7 @@ $(document).ready(function() {
 			}
 			else
 			{
-				jthis.removeClass('selected');
+				jthis.removeClass('checked');
 				var remove = document.getElementsByClassName(input.attr('id'));
 				if (remove.length && parents.index(remove[0]) == -1)
 				{
@@ -113,6 +126,10 @@ $(document).ready(function() {
 
 
 	});
+	var checked = $('.type_list :checked');
+
+	checked.change();
+	checked.parents('.sons').addClass('show in')
 
 	var modal = $('#settings_modal_iframe');
 

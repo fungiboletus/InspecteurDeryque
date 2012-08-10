@@ -58,7 +58,13 @@ class DataMod extends AbstractMod {
 	 * @return A query request.
 	 */
 	public static function getStatement($name, $user_id) {
-		return R::getRow('select r.id, name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id and r.name = ?', array($user_id, $name));
+		return R::getRow(
+<<<SQL
+	select r.id, name, description, modname, storage, additional_data
+	from releve r, datamod d
+	where r.user_id = ? and r.mod_id = d.id and r.name = ?
+SQL
+		, array($user_id, $name));
 		/*return R::getRow('select r.id, concat_ws("/", r.name, m.name) as name, description, modname, PicMinLine, PicMaxLine from multi_releve m, releve r, multi_releve_releve mr, datamod d where r.user_id = ? and r.mod_id = d.id and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.name = ?', array($user_id, $name));*/
 	}
 

@@ -8,24 +8,9 @@ class DataView extends AbstractView
      * Display the button to add a statement.
      */
 	public static function showAddButton() {
-		$url = CNavigation::generateUrlToApp('Data','add');
+		$url = CNavigation::generateUrlToApp('Data','form');
 		echo '<div class="well">';
 		self::showButton($url, 'primary', _('New statement'), 'plus');
-		echo '</div>';
-	}
-
-    /**
-     * Used when looking at a statement. Show some user buttons.
-     */
-	public static function showViewButtons() {
-		$url_del =	CNavigation::generateMergedUrl('Data', 'remove');
-		$url_view =	CNavigation::generateMergedUrl('');
-		$url_back = CNavigation::generateUrlToApp('Data');
-
-		echo '<div class="well">';
-		self::showButton($url_back, 'info', _('Return to the list'), 'back');
-		self::showButton($url_view, 'success', _('View the statement'), 'rand');
-		self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
 		echo '</div>';
 	}
 
@@ -34,12 +19,12 @@ class DataView extends AbstractView
      * @param $data The statement's data.
      * Used to show data's compatibility with existing kind of data.
      */
-	public static function showDataTypeList($data) {
+	public static function showDataTypeList($data, $selected_type) {
 		global $ROOT_PATH;
 		echo '<div class="thumbnails type_list span4">';
 
 		// wonderful and slow recursive function !!
-		$recursive = function($parent, $data, $hidden_branch = false) use (&$recursive, &$ROOT_PATH)
+		$recursive = function($parent, $data, $hidden_branch = false) use (&$recursive, &$ROOT_PATH, &$selected_type)
 		{
 			$data_parent = array();
 			$data_not_parent = array();
@@ -66,8 +51,8 @@ class DataView extends AbstractView
 						$hdir = htmlspecialchars($d->folder);
 						$sum = sha1($class);
 						// TODO management
-						$checked = $class === 'auiensrtauienrst' ? ' checked' : null;
-						$selected = $checked ? ' selected' : '';
+						$checked = $d->folder === $selected_type ? ' checked' : null;
+						$selected = $checked ? ' checked' : '';
 						$data_vars = htmlspecialchars(json_encode($d->getVariables()));
 			echo <<<HTML
 	<label class="radio inline thumbnail$selected" data_vars="$data_vars">
@@ -93,11 +78,11 @@ HTML;
      * Displays form to create a statement.
      * @param $values Array to resume the future statement's infos.
      */
-	public static function showAddForm($values, $data_types) {
+	public static function showAddForm($values, $data_types, $mode = 'add') {
 		global $ROOT_PATH;
 
 		$text_general = _('General');
-		$text_type = _('Select the statement type');
+		$text_type = _('Statement type');
 		$text_location = _('Data location');
 
 		$label_name = _('Name');
@@ -106,16 +91,13 @@ HTML;
 		$label_local = _('Local');
 		$label_file = _('File');
 
-		$url_submit = CNavigation::generateUrlToApp('Data', 'add');
-		$text_submit = _('Create the statement');
+		$url_submit = CNavigation::generateUrlToApp('Data', 'form');
 
 		$hname = htmlspecialchars($values['name']);
 		$hdesc = htmlspecialchars($values['desc']);
-		$hmode = htmlspecialchars($values['mode']);
 
 		echo <<<HTML
 <form action="$url_submit" name="data_add_form" method="post" id="data_add_form" class="well form-horizontal">
-<!--<input type="hidden" name="mode" value="$hmode" />-->
 <fieldset>
 <legend>$text_general</legend>
 	<div class="control-group">
@@ -134,34 +116,53 @@ HTML;
 <fieldset>
 <legend>$text_type</legend>
 HTML;
-		DataView::showDataTypeList($data_types);
+		DataView::showDataTypeList($data_types, $values['type']);
 		$text_sensapp = _('SensApp settings');
 		$url_sensapp = CNavigation::generateUrlToApp('SensApp');
 		$text_no_selection = _('Select the data');
 		$href = CNavigation::generateUrlToApp('SensApp', null, array('iframe_mode' => true));
+		$text_youtube = _('Youtube settings');
+		$label_youtube = _('Video location');
+		$hyoutube = htmlspecialchars($values['youtube_location']);
+
+		$local_checked = $youtube_checked = $sensapp_checked = '';
+		$youtube_hide = $sensapp_hide = 'style="display:none;"';
+		if ($values['location'] === 'sensapp')
+		{
+			$sensapp_checked = 'checked';
+			$sensapp_hide = '';
+		}
+		else if ($values['location'] === 'youtube')
+		{
+			$youtube_checked = 'checked';
+			$youtube_hide = '';
+		}
+		else
+			$local_checked = 'checked';
+
 		echo <<<HTML
 </fieldset>
 <fieldset>
 <legend>$text_location</legend>
 <div class="thumbnails location_list">
-	<label class="radio inline thumbnail selected">
+	<label class="radio inline thumbnail $local_checked">
 		<img src="$ROOT_PATH/Img/icons/location/deryque.png"/>
 		<h4>
-			<input type="radio" id="location1" name="location" value="local" checked />
+			<input type="radio" id="location1" name="location" value="local" $local_checked/>
 			$label_local
 		</h4>
 	</label>
-	<label class="radio inline thumbnail">
+	<label class="radio inline thumbnail $sensapp_checked">
 		<img src="$ROOT_PATH/Img/icons/location/sensapp.png"/>
 		<h4>
-			<input type="radio" id="location2" name="location" value="sensapp" />
+			<input type="radio" id="location2" name="location" value="sensapp" $sensapp_checked/>
 			SensApp
 		</h4>
 	</label>
-	<label class="radio inline thumbnail">
+	<label class="radio inline thumbnail $youtube_checked">
 		<img src="$ROOT_PATH/Img/icons/location/youtube.png"/>
 		<h4>
-			<input type="radio" id="location3" name="location" value="youtube" />
+			<input type="radio" id="location3" name="location" value="youtube" $youtube_checked/>
 			Youtube
 		</h4>
 	</label>
@@ -178,17 +179,59 @@ HTML;
 	<button type="button" class="close" data-dismiss="modal">×</button>
 	<iframe src="" ></iframe>
 </div>
-<fieldset class="sensapp_settings btn-toolbar">
+<fieldset class="sensapp_settings" $sensapp_hide>
 <legend>$text_sensapp</legend>
 <br/>
-	<div class="btn-group sensapp_data">
+	<div class="btn-group sensapp_data sensapp_default">
 		<button class="disable btn btn-inverse" disabled>Value</button>
-		<input type="hidden" name="sensapp_lon" value="" />
+		<input type="hidden" name="" value="" />
 		<a href="$href" class="btn sensapp_value">$text_no_selection</a>
+	</div>
+HTML;
+		foreach ($values['sensapp'] as $key => $value)
+		{
+			$hvalue = htmlspecialchars($value);
+			if (!$hvalue) $hvalue = $text_no_selection;
+			$hkey = htmlspecialchars($key);
+			echo <<<HTML
+	<div class="btn-group sensapp_data">
+		<button class="disable btn btn-inverse" disabled>$hkey</button>
+		<input type="hidden" name="sensapp[$hkey]" value="$hvalue" />
+		<a href="$href" class="btn sensapp_value">$hvalue</a>
+	</div>
+HTML;
+		}
+		echo <<<HTML
+</fieldset>
+<fieldset class="youtube_settings" $youtube_hide>
+<legend>$text_youtube</legend>
+	<div class="control-group">
+		<label for="youtube_location" class="control-label">$label_youtube</label>
+		<div class="controls">
+			<input name="youtube_location" id="youtube_location" type="text" value="$hyoutube" />
+		</div>
 	</div>
 </fieldset>
 <fieldset>
+<hr/>
 	<div class="actions">
+HTML;
+		$url_back = CNavigation::generateUrlToApp('Data');
+		self::showButton($url_back, 'info', _('Return to the list'), 'back');
+
+		if ($mode === 'edit')
+		{
+			$url_view =	CNavigation::generateMergedUrl('');
+			$url_del =	CNavigation::generateMergedUrl('Data', 'remove');
+			self::showButton($url_view, 'success', _('View the statement'), 'rand');
+			self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
+			$text_submit = _('Edit the statement');
+			echo '<input type="hidden" name="form_mode" value="edit" />';
+		}
+		else
+			$text_submit = _('Create the statement');
+
+		echo <<<HTML
 		<button type="submit" class="btn btn-large btn-primary">
 			<span class="icon_button plus_text">$text_submit</span>
 		</button>
@@ -279,7 +322,10 @@ HTML;
      * @param $data_type The type of the data.
      */
 	public static function showInformations($data, $data_type) {
-		$hdata_type = htmlspecialchars($data_type->name);
+		// This variable is just here for prevent the
+		// T_PAAMAYIM_NEKUDOTAYIM lex error...
+		$class = $data_type->class;
+		$hdata_type = htmlspecialchars($class::name);
 
 		echo <<<HTML
 <h3>Informations</h3>

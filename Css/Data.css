@@ -12,7 +12,7 @@
 	cursor:pointer;
 	margin:0 8px 8px 0px;
 }
-#data_add_form .thumbnail.selected {
+#data_add_form .thumbnail.checked {
 	border-color: #0074CC;
 }
 
@@ -58,8 +58,9 @@
 }
 
 #data_add_form .actions {
-	/*background:white;*/
 	margin-top:1em;
+}
+#data_add_form .actions button[type=submit] {
 	float:right;
 }
 
@@ -93,4 +94,7 @@ padding-top:20px;
 }
 .sensapp_settings .sensapp_data button:first-letter {
 	text-transform: uppercase;
+}
+.sensapp_settings .sensapp_default {
+	display:none;
 }

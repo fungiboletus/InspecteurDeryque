@@ -15,28 +15,28 @@ class Error
 	public function index() {
 		$this->page_not_found();
 	}
-    
+
     /** Error 404 */
 	public function page_not_found() {
 		$this->send_header('404 Not found');
 		CNavigation::setTitle('Error 404');
 		ErrorView::showError(404, "La page est introuvable. Ceci est une situation regrettable.", "800px-Peugeot_404_Berlin.JPG");
 	}
-    
+
     /** Error 418 when a suspicious activity seems to be detected. */
 	public function teapot() {
 		$this->send_header('418 I\'m a teapot');
 		CNavigation::setTitle('Error 418');
-		ErrorView::showError(418, "Je suis une théière", "600px-Tetsubin.jpg");
+		ErrorView::showError(418, _('I\'m a teapot'), "600px-Tetsubin.jpg");
 	}
-    
+
     /** Error 500 */
 	public function server($error = 'Erreur interne du serveur') {
 		$this->send_header('500 Internal Server Error');
 		CNavigation::setTitle('Error 500');
 		ErrorView::showError(500, 'Erreur interne du serveur', "669px-The.Matrix.glmatrix.2.png", $error);
 	}
-	
+
 	public function bad_request(){
 		$this->send_header('400 Bad Request');
 		CNavigation::setTitle('Error 400');

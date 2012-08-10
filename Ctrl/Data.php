@@ -15,31 +15,26 @@ class Data
 		DataView::showAddButton();
 	}
 
-	public function add() {
+	public function form() {
 
-		if (CNavigation::isValidSubmit(array('name','desc', 'location'), $_REQUEST))
+		if (CNavigation::isValidSubmit(array('name','desc', 'type', 'location'), $_REQUEST))
 		{
-			groaw($_REQUEST);
-			return;
-			$_REQUEST['type'] = $_REQUEST['mode'];
 			if (R::findOne('releve', 'name = ? and user_id = ?', array($_REQUEST['name'], $_SESSION['bd_id'])))
 			{
-				new CMessage('Un relevé existe déjà avec le même nom', 'error');
+				new CMessage(_('A statement already exist with the same name'), 'error');
 			}
 			else
 			{
-				$mode = R::findOne('datamod', 'modname = ?', array($_REQUEST['mode']));
+				$mode = R::findOne('datamod', 'modname = ?', array($_REQUEST['type']));
 
 				if (!$mode) {
-					if (DataMod::modExist($_REQUEST['mode'])) {
+					if (DataMod::modExist($_REQUEST['type'])) {
 						$mode = R::dispense('datamod');
-						$mode->modname = $_REQUEST['mode'];
+						$mode->modname = $_REQUEST['type'];
 						R::store($mode);
 					}
 					else
-					{
 						CTools::hackError();
-					}
 				}
 
 				$user = $_SESSION['user'];
@@ -49,28 +44,38 @@ class Data
 				$statement->user = $user;
 				$statement->name = $_REQUEST['name'];
 				$statement->description = $_REQUEST['desc'];
-				$statement->storage = InternalDataMod::storageConstant;
+
+				$datamods = array(
+					'youtube' => 'YoutubeDataMod',
+					'sensapp' => 'SensAppDataMod');
+
+				$datamod = in_array($_REQUEST['location'], array_keys($datamods)) ?
+					$datamods[$_REQUEST['location']] : 'InternalDataMod';
+
+				// PHP in her limits
+				$statement->storage = constant($datamod.'::storageConstant');
+				$statement->additional_data = call_user_func($datamod.'::generateAdditionalData');
 
 				R::store($statement);
 
 				new CMessage('Relevé correctement ajouté');
 				CNavigation::redirectToApp('Data');
-
-				return;
 			}
-
 		}
+		else
+			new CMessage(_('Please select a statement type'), 'error');
 
 		CHead::addJS('Data_add');
-		// $data_type = DataMod::loadDataType($_REQUEST['type']);
 
 		CNavigation::setTitle(_('New statement'));
-
 
 		DataView::showAddForm(array_merge(array(
 						'name' => '',
 						'desc' => '',
-						'mode' => ''/*$data_type->folder*/),$_REQUEST),
+						'type' => '',
+						'location' => '',
+						'sensapp' => array(),
+						'youtube_location' => ''),$_REQUEST),
 			DataMod::getDataTypes());
 	}
 
@@ -85,20 +90,29 @@ class Data
 		CNavigation::setDescription($statement['description']);
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
-		$sql = '';
-		foreach ($n_datamod->getVariables() as $k => $v) {
-			$sql .= "min($k), max($k), avg($k), ";
-		}
-		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
-		DataView::showInformations($stats, $n_datamod);
 
-		/*ata = DisplayMod::getDisplayTypes();
-		DataView::showDisplayViewChoiceTitle();
-		DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
+		$storages = array(
+			InternalDataMod::storageConstant => 'internal',
+			YoutubeDataMod::storageConstant => 'youtube',
+			SensAppDataMod::storageConstant => 'sensapp');
 
-		DataView::showAPIInformations();*/
+		$storage = in_array($statement['storage'], array_keys($storages)) ?
+			$storages[$statement['storage']] : $storages[InternalDataMod::storageConstant];
 
-		DataView::showViewButtons();
+		if ($statement['storage'] == SensAppDataMod::storageConstant)
+			$sensapp = SensAppDataMod::decodeAdditionalData($statement['additional_data']);
+		else
+			$sensapp = array();
+
+		CHead::addJS('Data_add');
+		DataView::showAddForm(array_merge(array(
+						'name' => $statement['name'],
+						'desc' => $statement['description'],
+						'type' => $n_datamod->folder,
+						'location' => $storage,
+						'sensapp' => $sensapp,
+						'youtube_location' => ''),$_REQUEST),
+			DataMod::getDataTypes(), 'edit');
 	}
 
 	public function remove()
