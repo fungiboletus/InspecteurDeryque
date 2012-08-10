@@ -7,3 +7,6 @@ padding-top:0px;
 .navbar {
 display:none;
 }
+.page-header {
+	margin-top:0;
+}

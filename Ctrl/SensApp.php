@@ -27,7 +27,7 @@
 
 		try {
 			$sensors = $mod->sensorList();
-			SensAppView::sensorList($sensors);
+			SensAppView::sensorList($server, $sensors);
 		} catch (Exception $e) {
 			SensAppView::fetchError(_('Unable to fetch the sensors list from the server'),
 				$e->getMessage());
@@ -78,5 +78,27 @@
 		CNavigation::redirectToApp('SensApp');
  	}
 
+ 	public function sensor() {
+ 		$descriptor = isset($_REQUEST['descriptor']) ?
+ 			$_REQUEST['descriptor'] : false;
+		$server = isset($_REQUEST['server']) ?
+			SensAppMod::getServer($_REQUEST['server']) : false;
+
+ 		if (!$descriptor || !$server)
+ 			CTools::hackError();
+
+		$mod = new SensAppMod($server);
+		$sensor = $mod->getSensor($descriptor);
+		CNavigation::setTitle(_('SensApp sensor : ').$sensor->sensor);
+		CNavigation::setDescription(_('on server : ').$server['name']);
+
+ 		SensAppView::sensorButtons($server, $sensor);
+
+		echo '<h3>', _('Last records'), '</h3><br/>';
+		$data = $mod->loadSensorData($sensor, 42);
+		groaw($data);
+		SensAppView::recordsList($data->e, $data->bt);
+
+ 	}
  }
  ?>

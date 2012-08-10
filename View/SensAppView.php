@@ -18,6 +18,19 @@ class SensAppView extends AbstractView
 		echo '</div>';
 	}
 
+	public static function sensorButtons($server, $sensor) {
+		$url_back = CNavigation::generateUrlToApp('SensApp', 'server', array(
+			'name' => $server['name']));
+		$url_data = htmlspecialchars($sensor->data_lnk).'?limit=20000';
+		$text_data = _('Raw data');
+		echo '<div class="well">';
+		self::showButton($url_back, 'info', _('Go back to the sensors list'), 'back');
+		echo <<<HTML
+			<a href="$url_data" class="btn btn-large btn-warning">$text_data</a>
+		</div>
+HTML;
+	}
+
 	public static function serverRegisteringForm($values) {
 		$label_name = _('Name');
 		$label_address = _('Address');
@@ -80,13 +93,13 @@ HTML;
 				_('No one server is registered for the moment.'),'</div>';
 	}
 
-	public static function sensorList($sensors) {
+	public static function sensorList($server, $sensors) {
 
 		if ($sensors)
 		{
 			CHead::addJS('jquery.tablesorter.min');
 			?>
-			<table class="table table-striped table-bordered data_list">
+			<table class="table table-striped table-bordered data_list sensor_data_list">
 				<thead><tr>
 					<th class="header yellow"><?php echo _('Name'); ?></th>
 					<th class="header green"><?php echo _('Description'); ?></th>
@@ -95,11 +108,15 @@ HTML;
 				</tr></thead>
 				<tbody>
 			<?php
-			foreach ($sensors as $sensor) {
-				$url = CNavigation::generateUrlToApp('SensApp', 'sensor');
-				$hdate = AbstractView::formateDate($sensor->creation_date);
+			foreach ($sensors as $sensor)
+			{
+				$url = CNavigation::generateUrlToApp('SensApp', 'sensor',
+					array('server' => $server['name'], 'descriptor' => $sensor->backend->descriptor));
+
+				$hdescriptor = htmlspecialchars($sensor->backend->descriptor);
+				$hdate = str_replace(' ', '&nbsp;', AbstractView::formateDate($sensor->creation_date));
 				$hidden_code = intval($sensor->creation_date);
-				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($sensor->id),
+				echo "\t<tr descriptor=\"$hdescriptor\"><td><a href=\"$url\">", htmlspecialchars($sensor->id),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($sensor->descr),
 					 "</a></td><td><span style=\"display:none;\">$hidden_code</span><a href=\"$url\">$hdate",
 					 "</a></td><td><a href=\"$url\">";
@@ -123,6 +140,34 @@ HTML;
 				'<h4 class="alert-heading">',
 				htmlspecialchars($title), '</h4><p>',
 				htmlspecialchars($error), '</p></div>';
+	}
+
+	public static function recordsList($data, $start_time) {
+		if ($data && count($data))
+		{
+			CHead::addJS('jquery.tablesorter.min');
+			?>
+			<table class="table table-striped table-bordered data_list records_data_list">
+				<thead><tr>
+					<th class="header yellow"><?php echo _('Date'); ?></th>
+					<th class="header green"><?php echo htmlspecialchars($data[0]->u); ?></th>
+				</tr></thead>
+				<tbody>
+			<?php
+			foreach ($data as $d)
+			{
+				$hidden_date = intval($start_time + $d->t);
+				$hdate = AbstractView::formateDate($hidden_date);
+				echo "\t<tr><td><span style=\"display:none;\">$hidden_date</span>$hdate",
+					 "</td><td>", htmlspecialchars($d->v),
+				"</td></tr>\n";
+			}
+
+			echo "</tbody></table>";
+		}
+		else
+			echo '<div class="alert alert-block alert-warning">',
+				_('The sensor is empty.'),'</div>';
 	}
 }
 

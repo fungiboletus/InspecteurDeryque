@@ -9,8 +9,13 @@ class SensAppMod {
 	}
 
 	public function loadJson($path, $params = false) {
-		$url = $this->server_address . $path;
+		// If the parth begin with http, it's an absolute path !
+		if (preg_match('/^https?:\/\//', $path))
+			$url = $path;
+		else
+			$url = $this->server_address . $path;
 
+		// Checking the url
 		if (!filter_var($url, FILTER_VALIDATE_URL))
 			throw new exception(_('The server address is incorrect'));
 
@@ -46,6 +51,15 @@ class SensAppMod {
 
 	public function sensorList() {
 		return $this->loadJson('registry/sensors?flatten=true');
+	}
+
+	public function getSensor($descriptor) {
+		return $this->loadJson($descriptor);
+	}
+
+	public function loadSensorData($sensor, $limit = 20000) {
+		return $this->loadJson($sensor->data_lnk, array(
+			'limit' => $limit, 'sorted' => 'asc'));
 	}
 }
 

@@ -68,8 +68,9 @@ class DataView extends AbstractView
 						// TODO management
 						$checked = $class === 'auiensrtauienrst' ? ' checked' : null;
 						$selected = $checked ? ' selected' : '';
+						$data_vars = htmlspecialchars(json_encode($d->getVariables()));
 			echo <<<HTML
-	<label class="radio inline thumbnail$selected">
+	<label class="radio inline thumbnail$selected" data_vars="$data_vars">
 		<input type="radio" id="type_$sum" name="type" value="$hdir"$checked/>
 		<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
 		<h4>$hname</h4>
@@ -85,19 +86,6 @@ HTML;
 
 		$recursive('EmptyData', $data, true);
 
-
-		/*foreach ($data as $type) {
-			$class = $type->class;
-			groaw($type->parent_class);
-			$hname = htmlspecialchars($class::name);
-			$hdir = htmlspecialchars($type->folder);
-			echo <<<HTML
-	<label class="radio inline thumbnail">
-		<img src="$ROOT_PATH/Data/$hdir/thumbnail.png" alt=""/>
-		<h4>$hname</h4>
-	</label>
-HTML;
-		}*/
 		echo '</div>';
 	}
 
@@ -149,6 +137,7 @@ HTML;
 		DataView::showDataTypeList($data_types);
 		$text_sensapp = _('SensApp settings');
 		$url_sensapp = CNavigation::generateUrlToApp('SensApp');
+		$text_no_selection = _('Select the data');
 		$href = CNavigation::generateUrlToApp('SensApp', null, array('iframe_mode' => true));
 		echo <<<HTML
 </fieldset>
@@ -189,12 +178,13 @@ HTML;
 	<button type="button" class="close" data-dismiss="modal">×</button>
 	<iframe src="" ></iframe>
 </div>
-<fieldset class="sensapp_settings">
+<fieldset class="sensapp_settings btn-toolbar">
 <legend>$text_sensapp</legend>
-	<br/>
-	<div class="btn-group">
-		<a href="$href" id="canard" class="btn btn-inverse">Longitude</a>
-		<a href="$href" class="btn">Aucune donnée renseignée</a>
+<br/>
+	<div class="btn-group sensapp_data">
+		<button class="disable btn btn-inverse" disabled>Value</button>
+		<input type="hidden" name="sensapp_lon" value="" />
+		<a href="$href" class="btn sensapp_value">$text_no_selection</a>
 	</div>
 </fieldset>
 <fieldset>

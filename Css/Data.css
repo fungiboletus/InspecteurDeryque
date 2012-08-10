@@ -79,5 +79,18 @@ top: 2px;
 width:100%;
 height:490px;
 border:none;
-padding-top:10px;
+padding-top:20px;
+}
+
+.sensapp_settings .sensapp_data {
+	display:block;
+	margin-bottom:5px;
+	margin-left:0;
+}
+
+.sensapp_settings .sensapp_data button {
+	min-width:50px;
+}
+.sensapp_settings .sensapp_data button:first-letter {
+	text-transform: uppercase;
 }

@@ -97,6 +97,13 @@ Number.prototype.toRadians = function() {
 	return this * (Math.PI/180.0);
 };
 
+Object.prototype.size = function() {
+    var size = 0, key;
+    for (key in this)
+        if (this.hasOwnProperty(key)) size++;
+    return size;
+};
+
 var addEventFunction = function(e, o, f) {
 	if (o.addEventListener) {
 		o.addEventListener(e, f, false);

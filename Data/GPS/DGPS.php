@@ -9,7 +9,7 @@ class DGPS extends DefaultData
 	const n_lat = 'Latitude';
 	public $lat;
 
-	const n_lon = 'Longitute';
+	const n_lon = 'Longitude';
 	public $lon;
 
 	const display_prefs = 'map';
