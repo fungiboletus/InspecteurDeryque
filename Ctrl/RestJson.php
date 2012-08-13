@@ -94,6 +94,13 @@ class RestJson
 			$arr['desc'] = $report['description'];
 			$arr['modname'] = $report['modname'];
 			$arr['storage'] = DataMod::loadStorageType($report['storage']);
+
+			$additional_data = null;
+
+			if ($report['storage'] == SensAppStorage::storageConstant)
+				$additional_data = SensAppStorage::decodeAdditionalData($report['additional_data']);
+
+			$arr['additional_data'] = $additional_data;
 			// $arr['modname'] = constant($datamod->class.'::name');
 			/*
 			$arr['count'] = R::getCell('SELECT COUNT(*) FROM d_'.$datamod->folder.

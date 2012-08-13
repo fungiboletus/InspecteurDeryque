@@ -126,7 +126,7 @@ class DataMulti {
 			R::trash(R::load('multi_releve', $statement['id']));
 			CNavigation::redirectToApp('DataMulti');
 		} else {
-			CNavigation::setTitle('Deleteing multiple statement : '.$statement['name']);
+			CNavigation::setTitle('Deleting multiple statement : '.$statement['name']);
 			CNavigation::setDescription('Consequences will never be the same!');
 
 			DataMultiView::showRemoveForm(
