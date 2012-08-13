@@ -23,7 +23,11 @@ $(document).ready(function() {
 	};
 
 	var update_sensapp_settings = function() {
-		var data_length = data_vars.size();
+		var data_length = 0;
+		for (key in data_vars)
+			if (data_vars.hasOwnProperty(key))
+				++data_length;
+
 		var blocks = $('.sensapp_settings .sensapp_data');
 
 
@@ -147,4 +151,27 @@ $(document).ready(function() {
 			return false;
 		});
 	});
+
+
+	var displayed_submit = false;
+
+	var submit_button = form.find('button[type=submit]');
+	var input_name = form.find('#input_name');
+	var show_submit_button = function() {
+		var to_show = input_name.attr('value').length != 0;
+
+		if (to_show && !displayed_submit)
+		{
+			submit_button.addClass('in');
+			displayed_submit = true;
+		}
+		else if (!to_show && displayed_submit)
+		{
+			submit_button.removeClass('in');
+			displayed_submit = false;
+		}
+	};
+
+	form.find('input[type=text], textarea').keyup(show_submit_button);
+	form.change(show_submit_button);
 });

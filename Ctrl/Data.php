@@ -17,21 +17,42 @@ class Data
 
 	public function form() {
 
-		if (CNavigation::isValidSubmit(array('name','desc', 'type', 'location'), $_REQUEST))
+		$mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'add';
+
+		if (CNavigation::isValidSubmit(array('name','desc', 'type', 'location', 'old_id'), $_REQUEST))
 		{
-			if (R::findOne('releve', 'name = ? and user_id = ?', array($_REQUEST['name'], $_SESSION['bd_id'])))
+
+			if ($mode === 'add' &&
+					R::findOne('releve', 'name = ? and user_id = ?',
+						array($_REQUEST['name'], $_SESSION['bd_id'])))
 			{
 				new CMessage(_('A statement already exist with the same name'), 'error');
 			}
 			else
 			{
-				$mode = R::findOne('datamod', 'modname = ?', array($_REQUEST['type']));
+				$statement = null;
 
-				if (!$mode) {
+				if ($mode === 'add')
+					$statement = R::dispense('releve');
+				else if ($mode === 'edit') {
+					$statement = R::load('releve', intval($_REQUEST['old_id']));
+
+					if (!$statement)
+					{
+						new CMessage(_('You had asked to edit an unknown statement. Creating a new statement.'),
+							'warning');
+						$mode = 'add';
+						$statement = R::dispense('releve');
+					}
+				}
+
+				$datamode = R::findOne('datamod', 'modname = ?', array($_REQUEST['type']));
+
+				if (!$datamode) {
 					if (DataMod::modExist($_REQUEST['type'])) {
-						$mode = R::dispense('datamod');
-						$mode->modname = $_REQUEST['type'];
-						R::store($mode);
+						$datamode = R::dispense('datamod');
+						$datamode->modname = $_REQUEST['type'];
+						R::store($datamode);
 					}
 					else
 						CTools::hackError();
@@ -39,44 +60,52 @@ class Data
 
 				$user = $_SESSION['user'];
 
-				$statement = R::dispense('releve');
-				$statement->mod = $mode;
+				$statement->mod = $datamode;
 				$statement->user = $user;
 				$statement->name = $_REQUEST['name'];
 				$statement->description = $_REQUEST['desc'];
 
-				$datamods = array(
+				$locations = array(
 					'youtube' => 'YoutubeDataMod',
 					'sensapp' => 'SensAppDataMod');
 
-				$datamod = in_array($_REQUEST['location'], array_keys($datamods)) ?
-					$datamods[$_REQUEST['location']] : 'InternalDataMod';
+				$location = in_array($_REQUEST['location'], array_keys($locations)) ?
+					$locations[$_REQUEST['location']] : 'InternalDataMod';
 
 				// PHP in her limits
-				$statement->storage = constant($datamod.'::storageConstant');
-				$statement->additional_data = call_user_func($datamod.'::generateAdditionalData');
+				$statement->storage = constant($location.'::storageConstant');
+				$statement->additional_data = call_user_func($location.'::generateAdditionalData');
 
 				R::store($statement);
 
-				new CMessage('Relevé correctement ajouté');
-				CNavigation::redirectToApp('Data');
+				if ($mode === 'add')
+				{
+					new CMessage(_('Statement : ').$statement->name._(' correctly added'));
+					CNavigation::redirectToApp('Data', 'form');
+				}
+				else
+				{
+					new CMessage(_('Successfull update'));
+					CNavigation::redirectToApp('Data', 'view', array('name' => $statement->name));
+				}
 			}
 		}
-		else
+		else if (CNavigation::isPost())
 			new CMessage(_('Please select a statement type'), 'error');
 
 		CHead::addJS('Data_add');
 
-		CNavigation::setTitle(_('New statement'));
+		CNavigation::setTitle($mode === 'edit' ? _('Editing : '.$_REQUEST['name']) : _('New statement'));
 
 		DataView::showAddForm(array_merge(array(
+						'old_id' => isset($_REQUEST['old_id']) ? intval($_REQUEST['old_id']) : -1,
 						'name' => '',
 						'desc' => '',
 						'type' => '',
 						'location' => '',
 						'sensapp' => array(),
 						'youtube_location' => ''),$_REQUEST),
-			DataMod::getDataTypes());
+			DataMod::getDataTypes(), $mode);
 	}
 
 	public function view()
@@ -106,6 +135,7 @@ class Data
 
 		CHead::addJS('Data_add');
 		DataView::showAddForm(array_merge(array(
+						'old_id' => $statement['id'],
 						'name' => $statement['name'],
 						'desc' => $statement['description'],
 						'type' => $n_datamod->folder,
@@ -141,36 +171,6 @@ class Data
 					CNavigation::generateMergedUrl('Data', 'remove', array('confirm' => 'yes')),
 					CNavigation::generateMergedUrl('Data', 'view'));
 		}
-	}
-
-	public function random()
-	{
-		$statement = isset($_REQUEST['name']) ? DataMod::getStatement($_REQUEST['name'], $_SESSION['bd_id']) : false;
-		$b_statement = R::load('releve', $statement['id']);
-
-		if (!$statement) {
-			CTools::hackError();
-		}
-
-		$n_datamod = DataMod::loadDataType($statement['modname']);
-		$variables = $n_datamod->getVariables();
-
-		R::begin();
-		for ($i = 0; $i < 10; ++$i) {
-			$datamod = $n_datamod->initialize();
-
-			foreach ($variables as $k => $var) {
-				if ($k === 'timestamp') $datamod->timestamp = microtime(true);
-				else
-					$datamod->$k = rand(0,6000)*0.02345;
-			}
-
-			$n_datamod->save($_SESSION['user'], $b_statement, $datamod);
-		}
-		R::commit();
-
-		new CMessage('10 valeurs aléatoires ont étés générées');
-		CNavigation::redirectToApp('Data', 'view', array('name' => $_REQUEST['name']));
 	}
 
 	public function composition()

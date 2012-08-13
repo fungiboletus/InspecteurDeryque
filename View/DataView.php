@@ -96,6 +96,8 @@ HTML;
 		$hname = htmlspecialchars($values['name']);
 		$hdesc = htmlspecialchars($values['desc']);
 
+		$autofocus_name = $mode === 'add' ? 'autofocus' : '';
+
 		echo <<<HTML
 <form action="$url_submit" name="data_add_form" method="post" id="data_add_form" class="well form-horizontal">
 <fieldset>
@@ -103,7 +105,7 @@ HTML;
 	<div class="control-group">
 		<label for="input_name" class="control-label">$label_name</label>
 		<div class="controls">
-			<input name="name" id="input_name" type="text" value="$hname" autofocus required />
+			<input name="name" id="input_name" type="text" value="$hname" $autofocus_name required />
 		</div>
 	</div>
 	<div class="control-group">
@@ -223,17 +225,26 @@ HTML;
 		{
 			$url_view =	CNavigation::generateMergedUrl('');
 			$url_del =	CNavigation::generateMergedUrl('Data', 'remove');
-			self::showButton($url_view, 'success', _('View the statement'), 'rand');
+			self::showButton($url_view, 'success', _('View the statement'), 'magnify');
 			self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
-			$text_submit = _('Edit the statement');
+			$text_submit = _('Save the changes');
 			echo '<input type="hidden" name="form_mode" value="edit" />';
+			$icon_submit = 'pencil';
 		}
 		else
+		{
 			$text_submit = _('Create the statement');
+			$icon_submit = 'plus';
+		}
 
+		// Intval for prevent html injections…
+		$old_id = intval($values['old_id']);
 		echo <<<HTML
-		<button type="submit" class="btn btn-large btn-primary">
-			<span class="icon_button plus_text">$text_submit</span>
+
+		<input type="hidden" name="mode" value="$mode" />
+		<input type="hidden" name="old_id" value="$old_id" />
+		<button type="submit" class="btn btn-large btn-primary fade">
+			<span class="icon_button ${icon_submit}_text">$text_submit</span>
 		</button>
 	</div>
 </fieldset>
@@ -281,12 +292,10 @@ HTML;
      */
 	public static function showRemoveForm($desc, $url_confirm, $url_back)
 	{
-		$hdesc = htmlspecialchars($desc);
+		$hmsg = _('Thanks to confirm your action.');
 		echo <<<HTML
 <div class="alert alert-block alert-warning">
-<p>Veuillez confirmer la suppression du relevé. La suppression est définitive.</p>
-<h4>Description du relevé</h4>
-<p><em>$hdesc</em></p>
+<p>$hmsg</p>
 </div>
 			<div class="well">
 HTML;
