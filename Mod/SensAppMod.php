@@ -5,15 +5,20 @@ class SensAppMod {
 	protected $server_address;
 
 	public function __construct($server) {
-		$this->server_address = 'http://'. $server['address'] . '/sensapp/';
+		$this->server_address = 'http://'. $server['address'];
+	}
+
+	protected function serverPath($path, $append = '') {
+		// If the parth begin with http, it's an absolute path !
+		if (preg_match('/^https?:\/\//', $path))
+			return $path;
+		else
+			return $this->server_address . $append . $path;
 	}
 
 	public function loadJson($path, $params = false) {
-		// If the parth begin with http, it's an absolute path !
-		if (preg_match('/^https?:\/\//', $path))
-			$url = $path;
-		else
-			$url = $this->server_address . $path;
+
+		$url = $this->serverPath($path, '/sensapp/');
 
 		// Checking the url
 		if (!filter_var($url, FILTER_VALIDATE_URL))
@@ -50,7 +55,12 @@ class SensAppMod {
 	}
 
 	public function sensorList() {
-		return $this->loadJson('registry/sensors?flatten=true');
+		$sensors = $this->loadJson('registry/sensors?flatten=true');
+
+		foreach ($sensors as $sensor)
+			$sensor->backend->descriptor = $this->serverPath($sensor->backend->descriptor);
+
+		return $sensors;
 	}
 
 	public function getSensor($descriptor) {
