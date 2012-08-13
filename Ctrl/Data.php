@@ -19,6 +19,9 @@ class Data
 
 		$mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'add';
 
+		if (isset($_REQUEST['return']))
+			$_SESSION['form_return'] = $_REQUEST['return'];
+
 		if (CNavigation::isValidSubmit(array('name','desc', 'type', 'location', 'old_id'), $_REQUEST))
 		{
 
@@ -81,6 +84,15 @@ class Data
 				if ($mode === 'add')
 				{
 					new CMessage(_('Statement : ').$statement->name._(' correctly added'));
+
+					if (isset($_SESSION['form_return']))
+					{
+						$r = $_SESSION['form_return'];
+						unset($_SESSION['form_return']);
+						if ($r === 'list')
+							CNavigation::redirectToApp('Data');
+					}
+
 					CNavigation::redirectToApp('Data', 'form');
 				}
 				else

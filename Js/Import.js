@@ -34,7 +34,7 @@ $('#choiximport table:last a').each(function(e) {
 	$(this).click(click_create_releve);
 });
 
-$('#choiximport').after('<div class="modal hide fade in" id="createnewlapin"><iframe src="" ></iframe></div>');
+$('#choiximport').after('<div class="modal hide fade in" id="createnewlapin"><button type="button" class="close" data-dismiss="modal">×</button><iframe src="" ></iframe></div>');
 
 $('#createnewlapin').modal({
   keyboard: true,
@@ -42,8 +42,7 @@ $('#createnewlapin').modal({
 });
 
 $('#createnewlapin iframe').load(function() {
-	var url = $(this)[0].contentWindow.location.pathname;
-	if (url.search('/Data/add')==-1&&url.search('/Data/choose')==-1) {
+	if ($(this).contents().find('#data_add_form').length !== 1) {
 		$('#createnewlapin').modal('hide');
 		$.ajax({
 		url: window.location.pathname,

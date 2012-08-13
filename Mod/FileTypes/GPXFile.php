@@ -159,7 +159,7 @@ END;
 	private static function displayDataAssociationChoice($nameData) {
 		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
 		$sum = sha1($nameData);
-		$new_url = CNavigation::generateUrlToApp('Data', 'choose', array('iframe_mode' => true));
+		$new_url = CNavigation::generateUrlToApp('Data', 'form', array('iframe_mode' => true, 'return' => 'list'));
 		echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="controls">
@@ -176,7 +176,7 @@ END;
 END;
 		//DataImportView::showNewStatementForm($nameData);
 	}
-	
+
 	/** Store selection into the database.
 	 * @param $data Data from an xml string.
 	 */
@@ -226,7 +226,7 @@ END;
 		new CMessage('Vos relevés ont été ajoutés avec succès ! Vous pouvez en sélectionner d\'autres, ou bien revenir au Tableau de Bord.');
 		CNavigation::redirectToApp('Import', 'dataSelection');
 	}
-    
+
     /** Stores data in a given statement
      * @param $name_statement the statement destination
      * @param $data_type The type of the data
@@ -314,7 +314,7 @@ END;
 			$n_datamod->save($_SESSION['user'], $b_statement, $datamod);
 		}
 	}
-	
+
     /** Check a string's start.
      * @param $str The string to evaluate.
      * @param $start The string that you ask if it is at the start of $str.
