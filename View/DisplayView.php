@@ -11,7 +11,7 @@ class DisplayView extends AbstractView {
 	 * @param $selected OPTIONAL - default to null. Indicated selected kind of data.
 	 * @param $action OPTIONAL - default to 'view'. You should let it like that.
 	 */
-	public static function showGraphicChoiceMenu($data, $well = true, $prefs = array(), $selected = null, $action = 'view') {
+	public static function showGraphicChoiceMenu($data, $well = true, $prefs = [], $selected = null, $action = 'view') {
 
 		global $ROOT_PATH;
 		$cdata = count($data);
@@ -38,7 +38,7 @@ END;
 
 		foreach ($data as $display) {
 			$folder = $display->folder;
-			$url = CNavigation::generateMergedUrl('Display', $action, array('type' => $folder));
+			$url = CNavigation::generateMergedUrl('Display', $action, ['type' => $folder]);
 			$class = in_array($folder, $prefs, true) ? ' display_prefs' : '';
 			$class = $folder === $selected ? ' display_selected' : $class;
 			echo <<<END
@@ -125,7 +125,7 @@ END;
 		$statements = DataMod::getStatements($_SESSION['bd_id']);
 		foreach ($statements as $statement) {
 			$hname = htmlspecialchars($statement['name']);
-			$hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('name' => $statement['name']));
+			$hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', ['name' => $statement['name']]);
 			$hid = sha1($statement['name']);
 			$rname = $statement['name'];
 			echo <<<END
@@ -153,7 +153,7 @@ END;
 
 		foreach ($statements as $statement) {
 			$hname = htmlspecialchars($statement['name']);
-			$hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('name' => $statement['name']));
+			$hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', ['name' => $statement['name']]);
 			$hurl .= "/multireleve/true";
 			$hid = sha1($statement['name']);
 			echo <<<END
@@ -225,7 +225,7 @@ END;
 
 		CHead::delJS('jquery-1.6.2.min');
 
-		$tmp_tab = array();
+		$tmp_tab = [];
 
 		preg_match_all('/<script.*?src=\"(.+)\.js\">/i', $jschrist_file, $m);
 		foreach ($m[1] as $path)

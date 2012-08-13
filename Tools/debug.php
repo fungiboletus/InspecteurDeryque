@@ -9,7 +9,7 @@ function groaw($info)
     if (DEBUG)
     {
 		if (!isset($GLOBALS['groaw_array'])) {
-			$GLOBALS['groaw_array'] = array();
+			$GLOBALS['groaw_array'] = [];
 		}
 
 		$GLOBALS['groaw_array'][] = $info;

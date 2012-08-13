@@ -4,8 +4,8 @@
  */
 class CHead
 {
-	public static $css = array();
-	public static $js = array();
+	public static $css = [];
+	public static $js = [];
 
 	public static function addCSS($n_css)
 	{

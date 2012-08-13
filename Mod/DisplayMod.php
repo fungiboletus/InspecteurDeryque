@@ -7,7 +7,7 @@ class DisplayMod extends AbstractMod
      * @return $data Array of String.
      */
 	public static function getDisplayTypes() {
-		$data = array();
+		$data = [];
 
 		foreach (scandir('Display') as $folder) {
 			$folder = self::secureFolder($folder);

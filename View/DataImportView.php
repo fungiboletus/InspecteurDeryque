@@ -35,7 +35,7 @@ END;
      * Submits to the user a choice of data to select.
      */
 	public static function showDataSelection($file, $extension) {
-		$extensions = array('.tcx', '.gpx', '.xml');
+		$extensions = ['.tcx', '.gpx', '.xml'];
 		//$extension = strrchr($file, '.');
 		if (in_array($extension, $extensions)) {
 			echo "<p>Nous avons reconnu un fichier de type <Strong>$extension</Strong>.</p>";

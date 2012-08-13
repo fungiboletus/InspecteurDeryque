@@ -20,7 +20,7 @@ class HL7File implements FileType {
      * @return $table an array of strings without whitespaces.
      */
     private static function table($digit) {
-        $table = array();
+        $table = [];
         $table = preg_split("/[\s]+/", $digit, NULL, PREG_SPLIT_NO_EMPTY);
         return $table;
     }
@@ -113,7 +113,7 @@ END;
     private static function displayDataAssociationChoice($nameData) {
         $statements_list = DataMod::getStatements($_SESSION['bd_id']);
         $sum = sha1($nameData);
-        $new_url = CNavigation::generateUrlToApp('Data', 'choose', array('iframe_mode' => true));
+        $new_url = CNavigation::generateUrlToApp('Data', 'choose', ['iframe_mode' => true]);
         echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="controls">
@@ -144,7 +144,7 @@ END;
         $startTime = 0;
         $increment = $sequence->getElementsByTagName('increment')->item(0)->getAttribute('value');
         $digits = $sequence->getElementsByTagName('digits');
-        $tableaux = array();
+        $tableaux = [];
         $i = 1;
 
         // Extraction of sequences.
@@ -223,7 +223,7 @@ END;
 
         }
         
-        $rTodelete = R::findOne('releve', 'name = ? and user_id = ?', array($name_statement_prefix, $_SESSION['bd_id']));
+        $rTodelete = R::findOne('releve', 'name = ? and user_id = ?', [$name_statement_prefix, $_SESSION['bd_id']]);
         R::trash($rTodelete);
 
     }
@@ -244,9 +244,9 @@ END;
      * @return $statement The created statement.
      */
     private static function create_statement($name) {
-        if (!R::findOne('releve', 'name = ? and user_id = ?', array($name, $_SESSION['bd_id']))) {
+        if (!R::findOne('releve', 'name = ? and user_id = ?', [$name, $_SESSION['bd_id']])) {
 
-            $mode = R::findOne('datamod', 'modname = ?', array('ElectroCardioGramme'));
+            $mode = R::findOne('datamod', 'modname = ?', ['ElectroCardioGramme']);
 
             $user = $_SESSION['user'];
 

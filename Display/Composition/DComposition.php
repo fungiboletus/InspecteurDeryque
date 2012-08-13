@@ -23,9 +23,9 @@ class DComposition extends DAbstract {
         CHead::addJs('grid');
         
         
-        $dataToAdd = array();
-        $timestamps = array();
-        $rawData = array();
+        $dataToAdd = [];
+        $timestamps = [];
+        $rawData = [];
 
         foreach ($this->data as $data) {
             $timestamps[] = $data['timestamp'];

@@ -18,7 +18,7 @@ class Composition {
      * @param $cName Name of the composition.
      */
     public function __construct($sName, $cName) {
-        $beans = R::find('releve', "name = ?", array($sName));
+        $beans = R::find('releve', "name = ?", [$sName]);
 
         foreach ($beans as $bean) {
             $this->_statementBean = $bean;
@@ -26,7 +26,7 @@ class Composition {
         }
 
         if ($this->_statementBean === NULL) {
-            $beans = R::find('multi_releve', "name = ?", array($sName));
+            $beans = R::find('multi_releve', "name = ?", [$sName]);
 
             foreach ($beans as $bean) {
                 $this->_statementBean = $bean;
@@ -79,9 +79,9 @@ class Composition {
      * FIXME This method could access to another user's statements.
      */
     public static function getCompositions($sName) {
-        $statements = R::find('releve', "name = ?", array($sName));
+        $statements = R::find('releve', "name = ?", [$sName]);
         if ($statements == NULL) {
-            $statements = R::find('multi_releve', "name = ?", array($sName));
+            $statements = R::find('multi_releve', "name = ?", [$sName]);
         }
 
         foreach ($statements as $statement) {
@@ -98,7 +98,7 @@ class Composition {
      * @return $selections An array of Selection.
      */
     public static function getSelections($cName) {
-        $composition = R::findOne('composition', "name = ?", array($cName));
+        $composition = R::findOne('composition', "name = ?", [$cName]);
         $selections = $composition->ownSelection;
         return $selections;
     }

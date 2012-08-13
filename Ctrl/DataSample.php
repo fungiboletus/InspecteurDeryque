@@ -33,8 +33,8 @@ END;
 
     public function add() {
 
-        if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
-            if (R::findOne('multi_releve', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id']))) {
+        if (CNavigation::isValidSubmit(['nom','desc'], $_REQUEST)) {
+            if (R::findOne('multi_releve', 'name = ? and user_id = ?', [$_REQUEST['nom'], $_SESSION['bd_id']])) {
                 new CMessage('Un relevé existe déjà avec le même nom', 'error');
 		CNavigation::redirectToApp('DataSample', 'choose');
             } 
@@ -75,8 +75,8 @@ END;
 
     public function addMulti() {
 
-        if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
-            if (R::findOne('multi_extrait', 'name = ? and user_id = ?', array($_REQUEST['nom'], $_SESSION['bd_id']))) {
+        if (CNavigation::isValidSubmit(['nom','desc'], $_REQUEST)) {
+            if (R::findOne('multi_extrait', 'name = ? and user_id = ?', [$_REQUEST['nom'], $_SESSION['bd_id']])) {
                 new CMessage('Un multi extrait existe déjà avec le même nom', 'error');
 		CNavigation::redirectToApp('DataSample', 'choosemulti');
             } 
@@ -125,7 +125,7 @@ END;
 	CNavigation::setTitle('Extrait «'.$_REQUEST['nom'].'»');
         DataSampleView::showViewButtons(
             CNavigation::generateUrlToApp('DataSample'),
-	    CNavigation::generateUrlToApp('DataSample', 'remove', array('nom' => $_REQUEST['nom'])));
+	    CNavigation::generateUrlToApp('DataSample', 'remove', ['nom' => $_REQUEST['nom']]));
 	
 	}
 
@@ -139,16 +139,16 @@ END;
 	CNavigation::setTitle('Extrait «'.$_REQUEST['nom'].'»');
         DataSampleView::showViewButtons(
             CNavigation::generateUrlToApp('DataSample'),
-	    CNavigation::generateUrlToApp('DataSample', 'removeMulti', array('nom' => $_REQUEST['nom'])));
+	    CNavigation::generateUrlToApp('DataSample', 'removeMulti', ['nom' => $_REQUEST['nom']]));
 	}
 
 	public function choosemulti() {
         CNavigation::setTitle('Nouveau multi relevé extrait');
         CNavigation::setDescription('Sélectionnez les extraits que vous souhaitez composer');
 
-        DataSampleView::showMultiForm(array(
+        DataSampleView::showMultiForm([
                                        'nom' => '',
-					'desc' => ''));
+					'desc' => '']);
         DataSampleView::showBackButtons(
             CNavigation::generateUrlToApp('DataSample'));
 	}
@@ -156,11 +156,11 @@ END;
 
 	public function change() {
 
-	    if (CNavigation::isValidSubmit(array('nom','desc'), $_REQUEST)) {
+	    if (CNavigation::isValidSubmit(['nom','desc'], $_REQUEST)) {
             
 	    if(!isset($_POST['releve']) || count($_POST['releve']) < 1){
 		new CMessage('Vous devez selectionner au moins un relevés', 'error');
-		CNavigation::redirectToApp('DataSample', 'choosechange', array('nom' => $_REQUEST['nom']));
+		CNavigation::redirectToApp('DataSample', 'choosechange', ['nom' => $_REQUEST['nom']]);
 
 	     } else {
 		$state = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
@@ -172,7 +172,7 @@ END;
 		$multi = DataMod::getMultiRelRel($_SESSION['bd_id'], $state['id']);
 		foreach($multi as $mult){
 			$mul = R::load('multi_releve_releve', $mult['id']);
-			R::exec('delete from multi_releve_releve where id = ?', array($mul['id']));
+			R::exec('delete from multi_releve_releve where id = ?', [$mul['id']]);
 			R::trash(R::load('multi_releve_releve', $mul['id']));
 		}
 		$tab_releve = $_POST['releve'];
@@ -211,7 +211,7 @@ END;
         foreach ($n_datamod->getVariables() as $k => $v) {
             $sql .= "min($k), max($k), avg($k), ";
         }
-        $stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $stat['id']));
+        $stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $stat['id']]);
         DataSampleView::showInformations($stats, $n_datamod, $stat['name']);
 	}
 
@@ -237,7 +237,7 @@ END;
 		foreach ($n_datamod->getVariables() as $k => $v) {
 			$sql .= "min($k), max($k), avg($k), ";	
 		}
-		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
+		$stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $statement['id']]);
 		DataView::showInformations($stats, $n_datamod);
 	
 		$data = DisplayMod::getDisplayTypes();
@@ -255,7 +255,7 @@ END;
         }
         if (isset($_REQUEST['confirm'])) {
             $stat = R::load('multi_extrait', $statement['id']);
-            R::exec('delete from multi_extrait where id = ?', array($stat['id']));
+            R::exec('delete from multi_extrait where id = ?', [$stat['id']]);
             R::trash(R::load('multi_extrait', $stat['id']));
             CNavigation::redirectToApp('DataSample');
         } else {
@@ -264,7 +264,7 @@ END;
 
            DataSampleView::showRemoveForm(
                 $statement['description'],
-                CNavigation::generateMergedUrl('DataSample', 'removeMulti', array('confirm' => 'yes')),
+                CNavigation::generateMergedUrl('DataSample', 'removeMulti', ['confirm' => 'yes']),
                 CNavigation::generateMergedUrl('DataSample', 'viewmu'));
         }
 
@@ -278,7 +278,7 @@ END;
 
 		if (isset($_REQUEST['confirm'])) {
 			$stat = R::load('composition', $statement['id']);
-			R::exec('delete from composition where id = ?', array($stat['id']));
+			R::exec('delete from composition where id = ?', [$stat['id']]);
 			R::trash(R::load('composition', $statement['id']));
 			CNavigation::redirectToApp('DataSample');
 		}
@@ -289,7 +289,7 @@ END;
 
            DataSampleView::showRemoveForm(
                 '',
-                CNavigation::generateMergedUrl('DataSample', 'remove', array('confirm' => 'yes')),
+                CNavigation::generateMergedUrl('DataSample', 'remove', ['confirm' => 'yes']),
                 CNavigation::generateMergedUrl('DataSample', 'view'));
         }
 
@@ -299,9 +299,9 @@ END;
         CNavigation::setTitle('Modifier le relevé');
         CNavigation::setDescription('Sélectionnez les relevés que vous souhaitez ajouter');
 	$desc = DataMod::getDescMulti($_REQUEST['nom'], $_SESSION['bd_id']);
-	DataSampleView::showChangeForm(array(
+	DataSampleView::showChangeForm([
                                        'nom' => $_REQUEST['nom'],
-                                       'desc' => $desc["description"]));
+                                       'desc' => $desc["description"]]);
         
     }
 

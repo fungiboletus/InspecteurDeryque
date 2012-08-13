@@ -23,9 +23,9 @@ class DPics extends DAbstract {
         CHead::addJs('grid');
         
         
-        $dataToAdd = array();
-        $timestamps = array();
-        $rawData = array();
+        $dataToAdd = [];
+        $timestamps = [];
+        $rawData = [];
 
         foreach ($this->data as $data) {
             $timestamps[] = $data['timestamp'];
@@ -68,7 +68,7 @@ END;
 
     private function getPics() {
 
-        $statement = R::findOne('releve', 'name = ?', array( $_GET['nom']));
+        $statement = R::findOne('releve', 'name = ?', [ $_GET['nom']]);
         
         if($statement == NULL) {
             $statement = StatementComposition::getStatement($_GET['nom']);

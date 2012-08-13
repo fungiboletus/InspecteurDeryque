@@ -23,9 +23,9 @@ class DGraphiqueTempsReel extends DAbstract {
         CHead::addJs('grid');
         CHead::addJs('css');
 
-        $dataToAdd = array();
-        $timestamps = array();
-        $rawData = array();
+        $dataToAdd = [];
+        $timestamps = [];
+        $rawData = [];
 
         foreach ($this->data as $data) {
             $timestamps[] = $data['timestamp'];
@@ -41,7 +41,7 @@ class DGraphiqueTempsReel extends DAbstract {
 
         foreach ($this->structure as $k => $v) {
 
-            $dataToAdd = array();
+            $dataToAdd = [];
 
             if ($k !== 'timestamp') {
                 for ($i = 0; $i < count($timestamps); $i++) {
@@ -302,10 +302,10 @@ END;
 
             $statementRow = DataMod::getStatement($_GET['nom'], $_SESSION['bd_id']);
 
-            $statement = R::findOne('releve', 'name = ?', array($_GET['nom']));
+            $statement = R::findOne('releve', 'name = ?', [$_GET['nom']]);
 
             if ($statement != NULL) {// si on a un relevé simple
-                $mode = R::findOne('datamod', 'modname = ?', array($statementRow['modname']));
+                $mode = R::findOne('datamod', 'modname = ?', [$statementRow['modname']]);
 
                 $statement->mod = $mode;
 

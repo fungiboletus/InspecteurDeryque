@@ -46,7 +46,7 @@ class DataSampleView extends AbstractView {
         foreach ($data as $type) {
             $hnom = htmlspecialchars($type->name);
             $hdir = htmlspecialchars($type->folder);
-            $url = CNavigation::generateUrlToApp('DataSample','add', array('type'=>$type->folder));
+            $url = CNavigation::generateUrlToApp('DataSample','add', ['type'=>$type->folder]);
             echo <<<END
             <li class="thumbnail">
             <a href="$url">
@@ -79,7 +79,7 @@ END;
                                                                                
 END;
             foreach ($statements as $statement) {
-                $url = CNavigation::generateUrlToApp('DataSample', 'viewSimple', array('nom' => $statement['name']));
+                $url = CNavigation::generateUrlToApp('DataSample', 'viewSimple', ['nom' => $statement['name']]);
                 echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
@@ -111,7 +111,7 @@ END;
                                                                                
 END;
             foreach ($statements as $statement) {
-                $url = CNavigation::generateUrlToApp('DataSample', 'viewMulti', array('nom' => $statement['name']));
+                $url = CNavigation::generateUrlToApp('DataSample', 'viewMulti', ['nom' => $statement['name']]);
                 echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
@@ -145,7 +145,7 @@ public static function showMultiForm($values) {
 END;
         foreach ($statements as $statement) {
             $hname = htmlspecialchars($statement['name']);
-            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('nom' => $statement['name']));
+            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', ['nom' => $statement['name']]);
             $hid = htmlspecialchars($statement['id']);
             echo <<<END
             <tr>
@@ -275,7 +275,7 @@ public static function showStatementsLists($statements) {
                                                                                
 END;
             foreach ($statements as $statement) {
-                $url = CNavigation::generateUrlToApp('DataSample', 'viewmu', array('nom' => $statement['name']));
+                $url = CNavigation::generateUrlToApp('DataSample', 'viewmu', ['nom' => $statement['name']]);
                 echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
@@ -307,7 +307,7 @@ public static function showStatementsList($statements) {
                                                                                
 END;
             foreach ($statements as $statement) {
-                $url = CNavigation::generateUrlToApp('DataSample', 'view', array('nom' => $statement['name']));
+                $url = CNavigation::generateUrlToApp('DataSample', 'view', ['nom' => $statement['name']]);
                 echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";

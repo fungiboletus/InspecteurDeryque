@@ -22,12 +22,12 @@ class Data
 		if (isset($_REQUEST['return']))
 			$_SESSION['form_return'] = $_REQUEST['return'];
 
-		if (CNavigation::isValidSubmit(array('name','desc', 'type', 'location', 'old_id'), $_REQUEST))
+		if (CNavigation::isValidSubmit(['name','desc', 'type', 'location', 'old_id'], $_REQUEST))
 		{
 
 			if ($mode === 'add' &&
 					R::findOne('releve', 'name = ? and user_id = ?',
-						array($_REQUEST['name'], $_SESSION['bd_id'])))
+						[$_REQUEST['name'], $_SESSION['bd_id']]))
 			{
 				new CMessage(_('A statement already exist with the same name'), 'error');
 			}
@@ -49,7 +49,7 @@ class Data
 					}
 				}
 
-				$datamode = R::findOne('datamod', 'modname = ?', array($_REQUEST['type']));
+				$datamode = R::findOne('datamod', 'modname = ?', [$_REQUEST['type']]);
 
 				if (!$datamode) {
 					if (DataMod::modExist($_REQUEST['type'])) {
@@ -68,9 +68,9 @@ class Data
 				$statement->name = $_REQUEST['name'];
 				$statement->description = $_REQUEST['desc'];
 
-				$locations = array(
+				$locations = [
 					'youtube' => 'YoutubeDataMod',
-					'sensapp' => 'SensAppDataMod');
+					'sensapp' => 'SensAppDataMod'];
 
 				$location = in_array($_REQUEST['location'], array_keys($locations)) ?
 					$locations[$_REQUEST['location']] : 'InternalDataMod';
@@ -98,7 +98,7 @@ class Data
 				else
 				{
 					new CMessage(_('Successfull update'));
-					CNavigation::redirectToApp('Data', 'view', array('name' => $statement->name));
+					CNavigation::redirectToApp('Data', 'view', ['name' => $statement->name]);
 				}
 			}
 		}
@@ -109,14 +109,14 @@ class Data
 
 		CNavigation::setTitle($mode === 'edit' ? _('Editing : '.$_REQUEST['name']) : _('New statement'));
 
-		DataView::showAddForm(array_merge(array(
+		DataView::showAddForm(array_merge([
 						'old_id' => isset($_REQUEST['old_id']) ? intval($_REQUEST['old_id']) : -1,
 						'name' => '',
 						'desc' => '',
 						'type' => '',
 						'location' => '',
-						'sensapp' => array(),
-						'youtube_location' => ''),$_REQUEST),
+						'sensapp' => [],
+						'youtube_location' => ''],$_REQUEST),
 			DataMod::getDataTypes(), $mode);
 	}
 
@@ -132,10 +132,10 @@ class Data
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 
-		$storages = array(
+		$storages = [
 			InternalDataMod::storageConstant => 'internal',
 			YoutubeDataMod::storageConstant => 'youtube',
-			SensAppDataMod::storageConstant => 'sensapp');
+			SensAppDataMod::storageConstant => 'sensapp'];
 
 		$storage = in_array($statement['storage'], array_keys($storages)) ?
 			$storages[$statement['storage']] : $storages[InternalDataMod::storageConstant];
@@ -143,17 +143,17 @@ class Data
 		if ($statement['storage'] == SensAppDataMod::storageConstant)
 			$sensapp = SensAppDataMod::decodeAdditionalData($statement['additional_data']);
 		else
-			$sensapp = array();
+			$sensapp = [];
 
 		CHead::addJS('Data_add');
-		DataView::showAddForm(array_merge(array(
+		DataView::showAddForm(array_merge([
 						'old_id' => $statement['id'],
 						'name' => $statement['name'],
 						'desc' => $statement['description'],
 						'type' => $n_datamod->folder,
 						'location' => $storage,
 						'sensapp' => $sensapp,
-						'youtube_location' => ''),$_REQUEST),
+						'youtube_location' => ''],$_REQUEST),
 			DataMod::getDataTypes(), 'edit');
 	}
 
@@ -169,7 +169,7 @@ class Data
 			//$name = $statement['name'];
 			$statement = R::load('releve', $statement['id']);
 			$modname = R::load('datamod', $statement->mod_id)->modname;
-			R::exec('delete from d_'.$modname.' where releve_id = ?', array($statement['id']));
+			R::exec('delete from d_'.$modname.' where releve_id = ?', [$statement['id']]);
 			R::trash(R::load('releve', $statement['id']));
 			CNavigation::redirectToApp('Data');
 		}
@@ -180,7 +180,7 @@ class Data
 
 			DataView::showRemoveForm(
 					$statement['description'],
-					CNavigation::generateMergedUrl('Data', 'remove', array('confirm' => 'yes')),
+					CNavigation::generateMergedUrl('Data', 'remove', ['confirm' => 'yes']),
 					CNavigation::generateMergedUrl('Data', 'view'));
 		}
 	}

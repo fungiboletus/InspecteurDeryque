@@ -39,7 +39,7 @@ class DataMultiView extends AbstractView {
         foreach ($data as $type) {
             $hnom = htmlspecialchars($type->name);
             $hdir = htmlspecialchars($type->folder);
-            $url = CNavigation::generateUrlToApp('DataMulti','add', array('type'=>$type->folder));
+            $url = CNavigation::generateUrlToApp('DataMulti','add', ['type'=>$type->folder]);
             echo <<<END
             <li class="thumbnail">
             <a href="$url">
@@ -73,7 +73,7 @@ END;
 END;
         foreach ($statements as $statement) {
             $hname = htmlspecialchars($statement['name']);
-            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', array('nom' => $statement['name']));
+            $hurl = CNavigation::generateUrlToApp('Display', 'iframe_view', ['nom' => $statement['name']]);
             $hid = htmlspecialchars($statement['id']);
             echo <<<END
             <tr>
@@ -206,7 +206,7 @@ public static function showStatementsList($statements) {
                                                                                
 END;
             foreach ($statements as $statement) {
-                $url = CNavigation::generateUrlToApp('DataMulti', 'view', array('nom' => $statement['name']));
+                $url = CNavigation::generateUrlToApp('DataMulti', 'view', ['nom' => $statement['name']]);
                 echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
                 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
@@ -273,8 +273,8 @@ END;
     }
 
    public static function showStatement($name){
-	$visu = CNavigation::generateUrlToApp('DataMulti','view', array('nom' => $name));
-	$info = CNavigation::generateUrlToApp('DataMulti','viewInfo', array('nom' => $name));
+	$visu = CNavigation::generateUrlToApp('DataMulti','view', ['nom' => $name]);
+	$info = CNavigation::generateUrlToApp('DataMulti','viewInfo', ['nom' => $name]);
         echo <<<END
 
 	<ul class="nav nav-tabs">

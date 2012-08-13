@@ -26,8 +26,8 @@ class DataView extends AbstractView
 		// wonderful and slow recursive function !!
 		$recursive = function($parent, $data, $hidden_branch = false) use (&$recursive, &$ROOT_PATH, &$selected_type)
 		{
-			$data_parent = array();
-			$data_not_parent = array();
+			$data_parent = [];
+			$data_not_parent = [];
 
 			foreach ($data as $d)
 				if ($d->parent_class === $parent)
@@ -122,7 +122,7 @@ HTML;
 		$text_sensapp = _('SensApp settings');
 		$url_sensapp = CNavigation::generateUrlToApp('SensApp');
 		$text_no_selection = _('Select the data');
-		$href = CNavigation::generateUrlToApp('SensApp', null, array('iframe_mode' => true));
+		$href = CNavigation::generateUrlToApp('SensApp', null, ['iframe_mode' => true]);
 		$text_youtube = _('Youtube settings');
 		$label_youtube = _('Video location');
 		$hyoutube = htmlspecialchars($values['youtube_location']);
@@ -273,7 +273,7 @@ HTML;
 				<tbody>
 HTML;
 			foreach ($statements as $statement) {
-				$url = CNavigation::generateUrlToApp('Data', 'view', array('name' => $statement['name']));
+				$url = CNavigation::generateUrlToApp('Data', 'view', ['name' => $statement['name']]);
 				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";

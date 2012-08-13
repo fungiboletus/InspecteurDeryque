@@ -19,8 +19,8 @@ class SensAppView extends AbstractView
 	}
 
 	public static function sensorButtons($server, $sensor) {
-		$url_back = CNavigation::generateUrlToApp('SensApp', 'server', array(
-			'name' => $server['name']));
+		$url_back = CNavigation::generateUrlToApp('SensApp', 'server', [
+			'name' => $server['name']]);
 		$url_data = htmlspecialchars($sensor->data_lnk).'?limit=20000';
 		$text_data = _('Raw data');
 		echo '<div class="well">';
@@ -81,7 +81,7 @@ HTML;
 				<tbody>
 			<?php
 			foreach ($servers as $server) {
-				$url = CNavigation::generateUrlToApp('SensApp', 'server', array('name' => $server['name']));
+				$url = CNavigation::generateUrlToApp('SensApp', 'server', ['name' => $server['name']]);
 				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($server['name']),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($server['address']),"</a></td></tr>\n";
 			}
@@ -111,7 +111,7 @@ HTML;
 			foreach ($sensors as $sensor)
 			{
 				$url = CNavigation::generateUrlToApp('SensApp', 'sensor',
-					array('server' => $server['name'], 'descriptor' => $sensor->backend->descriptor));
+					['server' => $server['name'], 'descriptor' => $sensor->backend->descriptor]);
 
 				$hdescriptor = htmlspecialchars($sensor->backend->descriptor);
 				$hdate = str_replace(' ', '&nbsp;', AbstractView::formateDate($sensor->creation_date));

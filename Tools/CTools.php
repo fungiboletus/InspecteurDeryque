@@ -53,7 +53,7 @@ class CTools
 	/* Fonction qui converti en unit?s standarts la taille d'un fichier */
 	public static function nbBytesToKibis($nb_bytes)
 	{
-		static $unites = array (
+		static $unites = [
 			'octet',
 			'kibi',
 			'mébi',
@@ -63,7 +63,7 @@ class CTools
 			'exbi',
 			'zébi',
 			'yobi'
-		); // On a le temps de voir venir comme ?a
+		]; // On a le temps de voir venir comme ?a
 
 		// On regarde quelle unit? correspond
 		$u = (int)log((double)$nb_bytes, 1024);
@@ -82,7 +82,7 @@ class CTools
 			$tu .= 's';
 		}
 
-		return array($nb_kibis, $tu, $u);
+		return [$nb_kibis, $tu, $u];
 	}
 
 	public static function getDataPath($hash, $createDirs = false) {

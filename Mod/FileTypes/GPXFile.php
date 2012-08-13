@@ -159,7 +159,7 @@ END;
 	private static function displayDataAssociationChoice($nameData) {
 		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
 		$sum = sha1($nameData);
-		$new_url = CNavigation::generateUrlToApp('Data', 'form', array('iframe_mode' => true, 'return' => 'list'));
+		$new_url = CNavigation::generateUrlToApp('Data', 'form', ['iframe_mode' => true, 'return' => 'list']);
 		echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="controls">
@@ -248,7 +248,7 @@ END;
 
 			$datamod = $n_datamod->initialize();
 
-			$vars = array();
+			$vars = [];
 
 			switch($data_type) {
 				case 'PositionGPS' :
@@ -263,8 +263,8 @@ END;
 						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
 						$GLOBALS['ancienne_date'] = $date;
 					} elseif ($date !== $GLOBALS['ancienne_date']) {
-						$lats = array($GLOBALS['ancienne_lat'], floatval($d['lat']));
-						$longs = array($GLOBALS['ancienne_lon'], floatval($d['lon']));
+						$lats = [$GLOBALS['ancienne_lat'], floatval($d['lat'])];
+						$longs = [$GLOBALS['ancienne_lon'], floatval($d['lon'])];
 						/*$lats = array(43.6210081, 43.6209744);
 						 $longs = array(7.0493919, 7.0493517);*/
 						$dt = floatval(abs($date - $GLOBALS['ancienne_date']));
@@ -283,8 +283,8 @@ END;
 						$GLOBALS['ancienne_latcal'] = floatval($d['lat']);
 						$GLOBALS['ancienne_loncal'] = floatval($d['lon']);
 					} else {
-						$lats = array($GLOBALS['ancienne_latcal'], floatval($d['lat']));
-						$longs = array($GLOBALS['ancienne_loncal'], floatval($d['lon']));
+						$lats = [$GLOBALS['ancienne_latcal'], floatval($d['lat'])];
+						$longs = [$GLOBALS['ancienne_loncal'], floatval($d['lon'])];
 						$distance = floatval(self::distanceRunWithGPSinMeters($lats, $longs));
 						$GLOBALS['distance_cumulee'] += $distance;
 						$cals = floatval(floatval($GLOBALS['distance_cumulee']) * 70.0 * 0.001036 / 1000.0);

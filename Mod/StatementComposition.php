@@ -11,7 +11,7 @@ class StatementComposition {
      * Get or store a new multiple statements
      */
     public function __construct($name, $user) {
-        $beans = R::findOrDispense('multi_releve', "name = ?", array($name));
+        $beans = R::findOrDispense('multi_releve', "name = ?", [$name]);
 
         foreach ($beans as $bean) {
             $this->_statementBean = $bean;
@@ -27,7 +27,7 @@ class StatementComposition {
      * Adds a statement to the current list of statements.
      */
     public function addStatement($rname) {
-        $statements = R::find('releve', 'name = ?', array($rname));
+        $statements = R::find('releve', 'name = ?', [$rname]);
         foreach ($statements as $statement) {
             R::associate($this->_statementBean, $statement);
         }
@@ -43,7 +43,7 @@ class StatementComposition {
      *       the owner of that statement.
      */
     public static function getStatement($name) {
-        $statementList = R::find('multi_releve', "name = ?", array($name));
+        $statementList = R::find('multi_releve', "name = ?", [$name]);
         if(count($statementList) === 0) {
             return NULL;
         } else {

@@ -14,7 +14,7 @@ class CMessage
 
 		if (!isset($_SESSION['CMessage_list']))
 		{
-			$_SESSION['CMessage_list'] = array();
+			$_SESSION['CMessage_list'] = [];
 		}
 
 		$_SESSION['CMessage_list'][] = $this;

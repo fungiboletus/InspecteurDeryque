@@ -93,7 +93,7 @@ class CNavigation
 	// Home made pagination
 	public static function pagination($nb_elements = 0, $page = 0, $nb_by_page = 12, $jump = 3)
 	{
-		$directions = array();
+		$directions = [];
 		
 		$nb_pages = ceil($nb_elements / $nb_by_page);
 
@@ -121,7 +121,7 @@ class CNavigation
 			$directions['next'] = false;
 		}
 
-		$pages	= array();
+		$pages	= [];
 
 		$end	= min($jump, $page - $jump + 1);
 		$end	= ($end < 0) ? 0 : $end;		
@@ -143,9 +143,9 @@ class CNavigation
 			$pages[] = $i;	
 		}
 		
-		return array("pages"		=> $pages,
+		return ["pages"		=> $pages,
 					 "directions"	=> $directions
-					);
+					];
 	}
 	
 	public static function isPost() {
@@ -172,7 +172,7 @@ class CNavigation
 
 			if (isset($_REQUEST['iframe_mode']))
 				if (!is_array($params))
-					$params = array('iframe_mode' => true);
+					$params = ['iframe_mode' => true];
 				else 
 					$params['iframe_mode'] = true;
 			
@@ -192,7 +192,7 @@ class CNavigation
 		}
 		else {
 			if (!is_array($params)) {
-				$params = array();
+				$params = [];
 			}
 
 			if (isset($_REQUEST['iframe_mode']) && !isset($params['iframe_mode'])) {
@@ -221,7 +221,7 @@ class CNavigation
 		return $url;
 	}
 
-	public static function generateMergedUrl($ctrl, $action = null, $params = array())
+	public static function generateMergedUrl($ctrl, $action = null, $params = [])
 	{ 
 		$params = array_merge($_GET, $params);
 

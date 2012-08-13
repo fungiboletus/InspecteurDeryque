@@ -24,13 +24,13 @@ class DBoites extends DAbstract
 	}
 	
 	private static function quartiles($entry){
-		$subtab=array();
+		$subtab=[];
 		foreach($entry as $c=>$key){
 			array_push($subtab,self::goAssocArrayNumeric($key,2));
 		}
 		
 		sort($subtab,SORT_NUMERIC);
-		$tab=array($subtab[0],0,0,0,end($subtab));
+		$tab=[$subtab[0],0,0,0,end($subtab)];
 		$i_max=count($subtab);
 		for($i=0;$i<$i_max;$i++){
 			// 1er quartile

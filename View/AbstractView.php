@@ -113,7 +113,7 @@ END;
 		// we start at midnight
 		$hour_c = mktime(23, 59, 59, $an['mon'], $an['mday'], $an['year']);
 
-		$hours = array(
+		$hours = [
 			23400, // 1 From 18h30
 			36000, // 2 From 14h
 			45000, // 3 From 11h30
@@ -123,7 +123,7 @@ END;
 			172800,// 7 Yesterday
 			604800,// 8 This week
 			0
-		);
+		];
 
 		// If the date is not in the future
 		if ($t <= $n)
@@ -135,11 +135,11 @@ END;
 				$hour = $hour_c - $hours[$i];
 			}
 
-			return array($i, $t, ($i === 8) ? strftime('%A', $t) : null);
+			return [$i, $t, ($i === 8) ? strftime('%A', $t) : null];
 		}
 
 		// When the date is in the future…
-		return array(-1, $t, null);
+		return [-1, $t, null];
 	}
 
     /**
@@ -162,7 +162,7 @@ END;
                 return $file;
         }
 
-        $generics = array('image', 'audio', 'text', 'video', 'package', 'message');
+        $generics = ['image', 'audio', 'text', 'video', 'package', 'message'];
 
         foreach($generics as $id => $generic)
 		{

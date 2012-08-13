@@ -13,7 +13,7 @@ class Registration
     /** When the user submits its login data, check them before registering him/her. */
 	public function submit() {
 	    // First validation datas have to be valid
-		if (CNavigation::isValidSubmit(array('nom', 'mail', 'password'), $_POST)) {
+		if (CNavigation::isValidSubmit(['nom', 'mail', 'password'], $_POST)) {
 		    // Check the email address
 			if (!filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) {
 				new CMessage(_('Une adresse mail est demandée'), 'error');
@@ -21,7 +21,7 @@ class Registration
 			}
 			
             // Check if no other user have the same emai address
-			$old_user = R::findOne('user', 'mail = :mail', array('mail' => $_POST['mail']));
+			$old_user = R::findOne('user', 'mail = :mail', ['mail' => $_POST['mail']]);
 			if ($old_user) {
 				new CMessage(_('Un compte existe déjà avec cette adresse mail'), 'error');
 				CNavigation::redirectToApp('Registration');

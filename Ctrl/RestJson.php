@@ -34,18 +34,18 @@ class RestJson
 	$rep = DataMod::getStatementsMulti($_SESSION['bd_id']);
 	$sample = DataMod::getStatementComp($_SESSION['bd_id']);
 	$samplemul = DataMod::getStatementCompMulti($_SESSION['bd_id']);
-    	$arr = array();
+    	$arr = [];
     	foreach($rep as $report){
-    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'multi');
+    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'multi'];
     	}
     	foreach($reports as $report){
-    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'simple');
+    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'simple'];
     	}
     	foreach($sample as $report){
-    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'sample');
+    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'sample'];
     	}
     	foreach($samplemul as $report){
-    		$arr[$report['name']] = array('desc'  => $report['description'], 'releve' => 'samplemulti');
+    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'samplemulti'];
     	}
 		$this->sendJson($arr);
     }
@@ -65,22 +65,22 @@ class RestJson
 			}
             $datamod = DataMod::loadDataType($report['modname']);
 
-			$arr = array();
+			$arr = [];
 			$arr['name'] = $report['name'];
 			$arr['desc'] = $report['description'];
 			$arr['count'] = R::getCell('SELECT COUNT(*) FROM d_'.$datamod->folder.
-				' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+				' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]);
 
 			$arr['start_t'] = date(DateTime::ISO8601, R::getCell('SELECT MIN(timestamp) FROM d_'.$datamod->folder.
-				' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])));
+				' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]));
 
 			$arr['end_t'] = date(DateTime::ISO8601, R::getCell('SELECT MAX(timestamp) FROM d_'.$datamod->folder.
-				' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])));
+				' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]));
 
-			$format = array();
+			$format = [];
 			foreach($datamod->getVariables() as $key => $value){
 				if($key !== "timestamp"){
-					$format_arr = array();
+					$format_arr = [];
 					$format_arr['label'] = $value;
 					$format_arr['unit'] = "undefined"; //TODO
 					$format[$key] = $format_arr;
@@ -117,26 +117,26 @@ class RestJson
             	$start = $_REQUEST['INFOS'][3];
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?',
-					array($_SESSION['bd_id'], $report['id'], $start));
+					[$_SESSION['bd_id'], $report['id'], $start]);
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
 				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?',
-					array($_SESSION['bd_id'], $report['id'], $start, $end));
+					[$_SESSION['bd_id'], $report['id'], $start, $end]);
 			}
 			else{
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
-					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+					' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]);
 			}
 
 			//build the array for Json
-			$arr = array();
-            $data = array();
+			$arr = [];
+            $data = [];
 
 			foreach($report_data as $d){
-				$pieceofdata = array();
+				$pieceofdata = [];
 				foreach($datamod->getVariables() as $datatype => $value){
 					if($datatype === "timestamp"){
 						$pieceofdata['time_t'] = date(DateTime::ISO8601, $d[$datatype]);
@@ -177,27 +177,27 @@ class RestJson
             	$start = $_REQUEST['INFOS'][3];
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?',
-					array($_SESSION['bd_id'], $report['id'], $start));
+					[$_SESSION['bd_id'], $report['id'], $start]);
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
 				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?',
-					array($_SESSION['bd_id'], $report['id'], $start, $end));
+					[$_SESSION['bd_id'], $report['id'], $start, $end]);
 			}
 			else{
-            	$report_data = R::find('d_'.$datamod->folder, 'user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+            	$report_data = R::find('d_'.$datamod->folder, 'user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]);
 			}
 
 			//build the array for Json
-			$arr = array();
-            $data = array();
+			$arr = [];
+            $data = [];
 
 			$first = true;
 
 			foreach($report_data as $d){
-				$pieceofdata = array();
+				$pieceofdata = [];
 
 				foreach($datamod->getVariables() as $datatype => $value){
 					if($datatype === "timestamp"){
@@ -247,27 +247,27 @@ class RestJson
             	$start = $_REQUEST['INFOS'][3];
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?',
-					array($_SESSION['bd_id'], $report['id'], $start));
+					[$_SESSION['bd_id'], $report['id'], $start]);
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
 				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?',
-					array($_SESSION['bd_id'], $report['id'], $start, $end));
+					[$_SESSION['bd_id'], $report['id'], $start, $end]);
 			}
 			else{
-            	$report_data = R::find('d_'.$datamod->folder, 'user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+            	$report_data = R::find('d_'.$datamod->folder, 'user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]);
 			}
 
 			//build the array for Json
-			$arr = array();
-            $data = array();
+			$arr = [];
+            $data = [];
 
 			$first = true;
 
 			foreach($report_data as $d){
-				$pieceofdata = array();
+				$pieceofdata = [];
 
 				foreach($datamod->getVariables() as $datatype => $value){
 					if($datatype === "timestamp"){
@@ -301,7 +301,7 @@ class RestJson
     public function display_type() {
         $data = DisplayMod::getDisplayTypes();
 
-        $json = array();
+        $json = [];
 
         foreach ($data as $d)
         {

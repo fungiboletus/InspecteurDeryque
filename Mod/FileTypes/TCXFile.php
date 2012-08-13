@@ -143,7 +143,7 @@ END;
 	private static function displayDataAssociationChoice($nameData) {
 		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
 		$sum = sha1($nameData);
-		$new_url = CNavigation::generateUrlToApp('Data', 'choose', array('iframe_mode' => true));
+		$new_url = CNavigation::generateUrlToApp('Data', 'choose', ['iframe_mode' => true]);
 		echo <<<END
 		<label for="assoc_$sum">Selectionnez le relevé</label>
 		<div class="controls">

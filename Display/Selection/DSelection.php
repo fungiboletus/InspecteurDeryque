@@ -23,9 +23,9 @@ class DSelection extends DAbstract {
         CHead::addJs('grid');
         
         
-        $dataToAdd = array();
-        $timestamps = array();
-        $rawData = array();
+        $dataToAdd = [];
+        $timestamps = [];
+        $rawData = [];
 
         foreach ($this->data as $data) {
             $timestamps[] = $data['timestamp'];
@@ -41,7 +41,7 @@ class DSelection extends DAbstract {
 
         foreach ($this->structure as $k => $v) {
             
-            $dataToAdd = array();
+            $dataToAdd = [];
             
             if ($k !== 'timestamp') {
                 for ($i = 0; $i < count($timestamps); $i++) {

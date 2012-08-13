@@ -56,7 +56,7 @@ class Display {
 				}
 
 				// Initializes other data values
-				foreach (R::getAll('select * from d_' . $n_datamod->folder . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id'])) as $index => $data) {
+				foreach (R::getAll('select * from d_' . $n_datamod->folder . ' where user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $statement['id']]) as $index => $data) {
 					foreach ($data as $key => $value) {
 						// Deal with statements not relying on a timestamp
 						if($key != 'timestamp') {
@@ -67,7 +67,7 @@ class Display {
 					}
 				}
 			} // end of foreach($associatedStatements);
-			return array($g, $d, $n_datamod, $statements);
+			return [$g, $d, $n_datamod, $statements];
 
 		} else {
 			// For one-statement-at-a-time display.
@@ -87,9 +87,9 @@ class Display {
 			// Get kind of graphic
 			$g = $d->initialize();
 			$g->structure = $n_datamod->getVariables();
-			$g->data = R::getAll('select * from d_' . $n_datamod->folder . ' where user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $statement['id']));
+			$g->data = R::getAll('select * from d_' . $n_datamod->folder . ' where user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $statement['id']]);
 
-			return array($g, $d, $n_datamod, $statement);
+			return [$g, $d, $n_datamod, $statement];
 
 		}
 	}
@@ -100,7 +100,7 @@ class Display {
 		$infos[0]->show();
 		CNavigation::setTitle($infos[0]::name . ' du relevé «' . $_REQUEST['nom'] . '»');
 		CNavigation::setDescription($infos[3]['description']);
-		DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data', 'view', array('nom' => $_REQUEST['nom'])));
+		DisplayView::showBackButtons(CNavigation::generateUrlToApp('Data', 'view', ['nom' => $_REQUEST['nom']]));
 	}
 
 	/** Update view when either a statement or a kind of graphic is selected. */

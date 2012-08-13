@@ -22,9 +22,9 @@ class Session
 	
     /** The user submits its login and password in order to be logged in. */
 	public function submit() {
-		if (CNavigation::isValidSubmit(array('email_deryque', 'password_deryque'), $_POST)) {
+		if (CNavigation::isValidSubmit(['email_deryque', 'password_deryque'], $_POST)) {
 R::debug(true);
-			$user = R::findOne('user', 'mail = :mail AND password = :password', array('mail' => $_POST['email_deryque'], 'password' => sha1($_POST['password_deryque'].'grossel')));
+			$user = R::findOne('user', 'mail = :mail AND password = :password', ['mail' => $_POST['email_deryque'], 'password' => sha1($_POST['password_deryque'].'grossel')]);
 
 			if ($user) {
 				$_SESSION['logged'] = true;

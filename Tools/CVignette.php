@@ -123,7 +123,7 @@ class CVignette
 	 */
 	public static function scaleImage($x,$y,$cx,$cy)
 	{
-		list($nx,$ny)=array($x,$y);
+		list($nx,$ny)=[$x,$y];
 
 		if ($x>=$cx || $y>=$cx) 
 		{
@@ -138,7 +138,7 @@ class CVignette
 			$ny=intval($y*$r);
 		}
 
-		return array($nx,$ny);
+		return [$nx,$ny];
 	}
 }
 ?>

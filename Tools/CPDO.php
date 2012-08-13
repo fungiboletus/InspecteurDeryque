@@ -6,9 +6,9 @@ class CPDO
 {
 
 	protected static $connection = null;
-	protected static $requests = array();
+	protected static $requests = [];
 
-	public static function exec($request, $args = array())
+	public static function exec($request, $args = [])
 	{
 		if (!array_key_exists($request,self::$requests))
 		{
@@ -34,7 +34,7 @@ class CPDO
 		return $values;
 	}
 
-	public static function execOne($request, $args = array()) {
+	public static function execOne($request, $args = []) {
 		$values = self::exec($request, $args);
 		
 		if (count($values)===1)

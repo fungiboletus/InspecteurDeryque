@@ -20,7 +20,7 @@ class Selection {
      * @param $end The timestamp of the last data of the selection
      */
     public function __construct($sName, $graphName, $begin, $end) {
-        $beans = R::find('releve', "name = ?", array($sName));
+        $beans = R::find('releve', "name = ?", [$sName]);
 
         foreach ($beans as $bean) {
             $this->_statementBean = $bean;
@@ -28,7 +28,7 @@ class Selection {
         }
 
         if ($this->_statementBean === NULL) {
-            $beans = R::find('multi_releve', "name = ?", array($sName));
+            $beans = R::find('multi_releve', "name = ?", [$sName]);
 
             foreach ($beans as $bean) {
                 $this->_statementBean = $bean;
@@ -63,9 +63,9 @@ class Selection {
      * FIXME This method could access to another user's statements.
      */
     public static function getSelections($sName) {
-        $statements = R::find('releve', "name = ?", array($sName));
+        $statements = R::find('releve', "name = ?", [$sName]);
         if ($statements == NULL) {
-            $statements = R::find('multi_releve', "name = ?", array($sName));
+            $statements = R::find('multi_releve', "name = ?", [$sName]);
         }
         
         foreach ($statements as $statement) {

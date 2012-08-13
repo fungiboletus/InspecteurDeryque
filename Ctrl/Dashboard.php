@@ -70,7 +70,7 @@ END;
 		echo '<ul>';
 		foreach ($themes as $theme) {
 			$name = basename($theme, '.css');
-			$url = CNavigation::generateUrlToApp('Dashboard', 'theme', array('theme' => $name));
+			$url = CNavigation::generateUrlToApp('Dashboard', 'theme', ['theme' => $name]);
 			echo '<li><a href="', $url, '">', htmlspecialchars(ucfirst($name)), '</a></li>';
 		}
 		echo '</ul>';

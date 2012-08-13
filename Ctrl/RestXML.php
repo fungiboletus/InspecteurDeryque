@@ -47,15 +47,15 @@ class RestXML
     		$message .= "  <desc>".$report['description']."</desc>\n";
     		$message .= "  <count>"
     					.R::getCell('SELECT COUNT(*) FROM d_'.$datamod->folder.
-						' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']))
+						' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']])
 						."</count>\n";
 			$message .= "  <start_t>"
 						.date(DateTime::ISO8601, R::getCell('SELECT MIN(timestamp) FROM d_'.$datamod->folder.
-						' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])))
+						' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]))
 						."</start_t>\n";
 			$message .= "  <end_t>"
 						.date(DateTime::ISO8601, R::getCell('SELECT MAX(timestamp) FROM d_'.$datamod->folder.
-						' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id'])))
+						' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]))
 						."</end_t>\n";
 						
             $message .= "  <format>\n";
@@ -99,18 +99,18 @@ class RestXML
             	$start = $_REQUEST['INFOS'][3];
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
-					array($_SESSION['bd_id'], $report['id'], $start));
+					[$_SESSION['bd_id'], $report['id'], $start]);
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
 				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
-					array($_SESSION['bd_id'], $report['id'], $start, $end));
+					[$_SESSION['bd_id'], $report['id'], $start, $end]);
 			}
 			else{
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
-					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+					' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]);
 			}
 			
 			$message = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
@@ -156,18 +156,18 @@ class RestXML
             	$start = $_REQUEST['INFOS'][3];
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ?', 
-					array($_SESSION['bd_id'], $report['id'], $start));
+					[$_SESSION['bd_id'], $report['id'], $start]);
             }
             else if(isset($_REQUEST['INFOS'][4])){
 				$start = $_REQUEST['INFOS'][3];
 				$end = $_REQUEST['INFOS'][4];
 				$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
 					' WHERE user_id = ? and releve_id = ? and timestamp >= ? and timestamp <= ?', 
-					array($_SESSION['bd_id'], $report['id'], $start, $end));
+					[$_SESSION['bd_id'], $report['id'], $start, $end]);
 			}
 			else{
             	$report_data = R::getAll('SELECT * FROM d_'.$datamod->folder.
-					' WHERE user_id = ? and releve_id = ?', array($_SESSION['bd_id'], $report['id']));
+					' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]);
 			}
 			
 			$message = '<?xml version="1.0" encoding="UTF-8"?>'."\n";

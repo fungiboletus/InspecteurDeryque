@@ -40,7 +40,7 @@
  	{
  		CNavigation::setTitle(_('Register a new SensApp server'));
 
-		if (CNavigation::isValidSubmit(array('name','address'), $_REQUEST))
+		if (CNavigation::isValidSubmit(['name','address'], $_REQUEST))
 		{
 			if (SensAppMod::uniqueName($_REQUEST['name']))
 			{
@@ -61,9 +61,9 @@
 		}
 
  		SensAppView::serverRegisteringForm(
- 				array_merge(array(
+ 				array_merge([
 						'name' => '',
-						'address' => ''),$_REQUEST));
+						'address' => ''],$_REQUEST));
  	}
 
  	public function remove_server() {
