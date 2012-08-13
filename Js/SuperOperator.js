@@ -41,6 +41,12 @@ add_statement: function(d, obj) {
 	if (typeof obj.database[statement_name] !== 'undefined')
 		return;
 
+	obj.ajax('resume/'+encodeURIComponent(statement_name),
+		function(json)
+		{
+			console.log(json);
+		});
+
 	obj.ajax('data_dt/'+encodeURIComponent(statement_name),
 		function(json) {
 			var start_t = Date.parse(json.start_t);
