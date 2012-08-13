@@ -1,4 +1,4 @@
-var DTableau = function(screen)
+var DTable = function(screen)
 {
 
 	this.table = newDom('table');
@@ -21,7 +21,7 @@ var DTableau = function(screen)
 	EventBus.addListeners(this.listeners, this);
 };
 
-DTableau.prototype =
+DTable.prototype =
 {
 add_legend: function(k) {
 	this.legend[k] = true;

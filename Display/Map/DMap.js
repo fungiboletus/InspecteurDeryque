@@ -1,4 +1,4 @@
-var DCarte = function(screen)
+var DMap = function(screen)
 {
 	var map = newDom('div');
 	map.id = 'map';
@@ -23,7 +23,7 @@ var DCarte = function(screen)
 	this.lines = {};
 };
 
-DCarte.prototype =
+DMap.prototype =
 {
 listeners: {
 tuples: function(detail, obj) {
@@ -138,7 +138,7 @@ tuples: function(detail, obj) {
 	if (updated)
 	{
 		obj.map.fitBounds(bounds);
-		obj.map.panToBounds(bounds);
+		// obj.map.panToBounds(bounds);
 	}
 	// obj.map.panToBounds(bounds);
 	// google.maps.event.addListenerOnce(obj.map, 'idle', function() {
@@ -264,7 +264,7 @@ distance: function(latA, lonA, latB, lonB) {
 	// rounding errors could make the argument of asin greater than 1
 	// (This should almost never happen.)
 	if (isNaN(d)) {
-		EventBus.send('log', "Error: NaN in DCarte.distance");
+		EventBus.send('log', "Error: NaN in DMap.distance");
 		d = Math.PI * R;
 	}
 	return d;

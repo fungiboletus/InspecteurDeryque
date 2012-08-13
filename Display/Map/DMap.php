@@ -2,9 +2,9 @@
 /**
  * Displays a map.
  */
-class DCarte extends DAbstract
+class DMap extends DAbstract
 {
-	const name = 'Carte';
+	const name = 'Map';
 
 	public function show()
 	{

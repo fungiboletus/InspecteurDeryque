@@ -2,9 +2,9 @@
 /**
  * Displays a classic table.
  */
-class DTableau extends DAbstract
+class DTable extends DAbstract
 {
-	const name = 'Tableau';
+	const name = 'Table';
 
 	/*public function show()
 	{
