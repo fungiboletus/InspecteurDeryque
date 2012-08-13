@@ -157,7 +157,7 @@ END;
      * Every line of that table corresponds to one use of that method.
      */
 	private static function displayDataAssociationChoice($nameData) {
-		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
+		$statements_list = DataMod::getStatements();
 		$sum = sha1($nameData);
 		$new_url = CNavigation::generateUrlToApp('Data', 'form', ['iframe_mode' => true, 'return' => 'list']);
 		echo <<<END
@@ -233,7 +233,7 @@ END;
      * @param $data An array of data to store.
      */
 	private static function saveData($name_statement, $data_type, $data) {
-		$statement = DataMod::getStatement($name_statement, $_SESSION['bd_id']);
+		$statement = DataMod::getStatement($name_statement);
 		$b_statement = R::load('releve', $statement['id']);
 
 		if (!$statement)

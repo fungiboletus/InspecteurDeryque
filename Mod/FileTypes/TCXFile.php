@@ -141,7 +141,7 @@ END;
      * @param $nameData Name of the kind of data.
      */
 	private static function displayDataAssociationChoice($nameData) {
-		$statements_list = DataMod::getStatements($_SESSION['bd_id']);
+		$statements_list = DataMod::getStatements();
 		$sum = sha1($nameData);
 		$new_url = CNavigation::generateUrlToApp('Data', 'choose', ['iframe_mode' => true]);
 		echo <<<END
@@ -160,7 +160,7 @@ END;
 END;
 		//DataImportView::showNewStatementForm($nameData);
 	}
-    
+
     /** Store selection into the database.
 	 * @param $data Data from an xml string.
 	 * FIXME nothing is parsed, nothing is stored.

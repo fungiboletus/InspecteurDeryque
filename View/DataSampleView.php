@@ -54,7 +54,7 @@ class DataSampleView extends AbstractView {
                                                        <h4>$hnom</h4>
                                                        </a>
                                                        </li>
-                                                           
+
 END;
         }
         echo '</ul>';
@@ -64,7 +64,7 @@ END;
      * Displays form to create a statement.
      */
     public static function showAddForm() {
-	$statements = DataMod::getStatements($_SESSION['bd_id']);
+	$statements = DataMod::getStatements();
            if ($statements) {
             CHead::addJS('jquery.tablesorter.min');
             echo <<<END
@@ -76,7 +76,7 @@ END;
                                                                            </tr></thead>
                                                                            <tbody>
 
-                                                                               
+
 END;
             foreach ($statements as $statement) {
                 $url = CNavigation::generateUrlToApp('DataSample', 'viewSimple', ['nom' => $statement['name']]);
@@ -92,11 +92,11 @@ END;
                                <p>Il n'y a aucun relevé pour l'instant.</p>
                                </div>
 
-                                   
+
 END;
         }
 
-	$statements = DataMod::getStatementsMulti($_SESSION['bd_id']);
+	$statements = DataMod::getStatementsMulti();
            if ($statements) {
             CHead::addJS('jquery.tablesorter.min');
             echo <<<END
@@ -108,7 +108,7 @@ END;
                                                                            </tr></thead>
                                                                            <tbody>
 
-                                                                               
+
 END;
             foreach ($statements as $statement) {
                 $url = CNavigation::generateUrlToApp('DataSample', 'viewMulti', ['nom' => $statement['name']]);
@@ -124,7 +124,7 @@ END;
                                <p>Il n'y a aucun relevé pour l'instant.</p>
                                </div>
 
-                                   
+
 END;
         }
 
@@ -136,12 +136,12 @@ public static function showMultiForm($values) {
         $text_submit = _('Créer le multi relevé extrait');
         $hnom = htmlspecialchars($values['nom']);
         $hdesc = htmlspecialchars($values['desc']);
-        $statements = DataMod::getStatementCompWithId($_SESSION['bd_id']);
+        $statements = DataMod::getStatementCompWithId();
 
         echo <<<END
         <form action="$url_submit" name="data_multi_add_form" method="post" id="data_multi_add_form" class="form-horizontal well">
                                         <table class="table table-striped">
-                                                                 
+
 END;
         foreach ($statements as $statement) {
             $hname = htmlspecialchars($statement['name']);
@@ -152,7 +152,7 @@ END;
             <td><input type="checkbox" name="releve[]" value="$hid"/></td>
                                             <td>$hname</td>
                                             </tr>
-                                            
+
 END;
         }
         echo<<<END
@@ -176,7 +176,7 @@ END;
                                                                                                                                                                                                                  </fieldset>
                                                                                                                                                                                                                  </form>
 
-                                                                                                                                                                                                                     
+
 END;
 
 }
@@ -192,16 +192,16 @@ public static function showChangeForm($values) {
     $text_submit = _('Enregistrer les modifications');
     $hnom = htmlspecialchars($values['nom']);
     $hdesc = htmlspecialchars($values['desc']);
-    $statements = DataMod::getStatementsWithId($_SESSION['bd_id']);
-    $stat = DataMod::GetMultiStatement($values['nom'], $_SESSION['bd_id']);
+    $statements = DataMod::getStatementsWithId();
+    $stat = DataMod::GetMultiStatement($values['nom']);
 
     echo <<<END
     <form action="$url_submit" name="data_multi_add_form" method="post" id="data_multi_add_form" class="form-horizontal well">
                                     <table class="table table-striped">
-                                                            
+
 END;
 	foreach ($statements as $statement) {
-	    $state = DataMod::GetName($statement['name'], $_SESSION['bd_id']);
+	    $state = DataMod::GetName($statement['name']);
 	    $hname = htmlspecialchars($statement['name']);
 	    $n=count($stat);
 	    $in=False;
@@ -216,7 +216,7 @@ END;
 		    <tr>
 		    <td><input type="checkbox" name="releve[]" value="$hid"/></td>
 		                                     <td>$hname</td>
-		                                    </tr>                                            
+		                                    </tr>
 END;
 		}
 		else{
@@ -226,10 +226,10 @@ END;
 		    <tr>
 		    <td><input type="checkbox" name="releve[]" value="$hid" checked/></td>
 		                                    <td>$hname</td>
-		                                    </tr>      
+		                                    </tr>
 END;
 		}
-	    
+
 	}
         echo<<<END
         </table>
@@ -252,7 +252,7 @@ END;
                                                                                                                                                                                                                  </fieldset>
                                                                                                                                                                                                                  </form>
 
-                                                                                                                                                                                                                     
+
 END;
 
 }
@@ -272,7 +272,7 @@ public static function showStatementsLists($statements) {
                                                                            </tr></thead>
                                                                            <tbody>
 
-                                                                               
+
 END;
             foreach ($statements as $statement) {
                 $url = CNavigation::generateUrlToApp('DataSample', 'viewmu', ['nom' => $statement['name']]);
@@ -288,7 +288,7 @@ END;
                                <p>Il n'y a aucun relevé pour l'instant.</p>
                                </div>
 
-                                   
+
 END;
         }
     }
@@ -304,7 +304,7 @@ public static function showStatementsList($statements) {
                                                                            </tr></thead>
                                                                            <tbody>
 
-                                                                               
+
 END;
             foreach ($statements as $statement) {
                 $url = CNavigation::generateUrlToApp('DataSample', 'view', ['nom' => $statement['name']]);
@@ -320,7 +320,7 @@ END;
                                <p>Il n'y a aucun relevé pour l'instant.</p>
                                </div>
 
-                                   
+
 END;
         }
     }
@@ -342,7 +342,7 @@ END;
                            </div>
                            <div class="well">
 
-                                              
+
 END;
         self::showButton($url_back, 'info', 'Annuler', 'back');
         self::showButton($url_confirm, 'danger float_right', 'Supprimer', 'del');
@@ -355,7 +355,7 @@ END;
         <h3>Visualiser ce relevé directement
         <small>Choisissez le type de visualisation désiré</small></h3>
 
-        
+
 END;
     }
 
@@ -370,7 +370,7 @@ END;
                            <em>Cette url est personnelle, et elle ne doit en aucun cas être communiquée.</em>
                            </div>
 
-                               
+
 END;
     }
 
@@ -390,7 +390,7 @@ END;
                            <dd>$hdata_type</dd>
                            <dt>Statistiques</dt>
 
-                              
+
 END;
         if (empty($data) || $data['count(*)'] == 0) {
             echo "<dd>Ce relevé est vide.</dd></dl>\n";
@@ -411,7 +411,7 @@ END;
                              </thead>
                              <tbody>
 
-                                 
+
 END;
         foreach ($data_type->getVariables() as $k => $var) {
             $hvar = htmlspecialchars($var);
@@ -434,7 +434,7 @@ END;
             <td>$avg</td>
             </tr>
 
-            
+
 END;
         }
         echo "</tbody>\n</table>\n</div>\n";

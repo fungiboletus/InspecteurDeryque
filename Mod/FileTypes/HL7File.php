@@ -3,7 +3,7 @@
  * Manage data import from GPX file.
  */
 class HL7File implements FileType {
-    
+
 	/** Check file's data type.
 	 * @param $file The file. NOTE: unused parameter.
 	 * @param $extension The file extension.
@@ -104,14 +104,14 @@ END;
         echo "</table>";
 
     }
-    
+
     /**
      * Used in the form's table to select the kind of data to import.
      * Every line of that table corresponds to one use of that method.
      * @param $nameData Name of the kind of data.
      */
     private static function displayDataAssociationChoice($nameData) {
-        $statements_list = DataMod::getStatements($_SESSION['bd_id']);
+        $statements_list = DataMod::getStatements();
         $sum = sha1($nameData);
         $new_url = CNavigation::generateUrlToApp('Data', 'choose', ['iframe_mode' => true]);
         echo <<<END
@@ -177,16 +177,16 @@ END;
         new CMessage('Vos relevés ont été ajoutés avec succès ! Vous pouvez en sélectionner d\'autres, ou bien revenir au Tableau de Bord.');
         CNavigation::redirectToApp('Import', 'dataSelection');
     }
-    
+
     /** Stores data in a given statement
      * @param $name_statement the statement destination
      * @param $data_type The type of the data
      * @param $data An array of data to store.
      */
     private static function saveData($name_statement_prefix, $data_type, $tableaux) {
-        
+
         $multi_releve = new StatementComposition($name_statement_prefix,$_SESSION['user']);
-        
+
 
         for ($sequence = 1; $sequence < count($tableaux) - 1; $sequence++) {
 
@@ -194,7 +194,7 @@ END;
 
             $r = self::create_statement($name_statement);
 
-            $statement = DataMod::getStatement($name_statement, $_SESSION['bd_id']);
+            $statement = DataMod::getStatement($name_statement);
 
             //echo print_r($statement) . "\n";
 
@@ -218,11 +218,11 @@ END;
 
                 $n_datamod->save($_SESSION['user'], $b_statement, $datamod);
             }
-            
+
             $multi_releve->addStatement($name_statement);
 
         }
-        
+
         $rTodelete = R::findOne('releve', 'name = ? and user_id = ?', [$name_statement_prefix, $_SESSION['bd_id']]);
         R::trash($rTodelete);
 

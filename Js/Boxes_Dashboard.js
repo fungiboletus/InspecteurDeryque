@@ -312,22 +312,21 @@ $(document).ready(function() {
 		multi.setAttribute('id', 'multi');
 		multi.setAttribute('class', 'collapse in ');
 
-		for (var report in json_statements_list)
-		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'multi' )
-		    {
-			var tr = newDom('tr');
-			var td_a = newDom('td');
-			var input = newDom('input');
-			input.setAttribute('type','checkbox');
-			input.value = report;
-			td_a.appendChild(input);
-			var td_b = newDom('td');
-			td_b.appendChild(document.createTextNode(report));
-			tr.appendChild(td_a);
-			tr.appendChild(td_b);
-			//li.onclick = clic_statement;
-			multi.appendChild(tr);
+		if (json_statements_list['multiples']) {
+			for (var report in json_statements_list['multiples'])
+			{
+				var tr = newDom('tr');
+				var td_a = newDom('td');
+				var input = newDom('input');
+				input.setAttribute('type','checkbox');
+				input.value = report;
+				td_a.appendChild(input);
+				var td_b = newDom('td');
+				td_b.appendChild(document.createTextNode(report));
+				tr.appendChild(td_a);
+				tr.appendChild(td_b);
+				//li.onclick = clic_statement;
+				multi.appendChild(tr);
 		    }
 		}
 		list.append(multi);

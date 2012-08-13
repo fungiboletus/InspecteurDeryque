@@ -24,7 +24,7 @@ class DataMultiView extends AbstractView {
 		$text_submit = _('Créer le relevé multiple');
 		$hname = htmlspecialchars($values['name']);
 		$hdesc = htmlspecialchars($values['desc']);
-		$statements = DataMod::getStatementsWithId($_SESSION['bd_id']);
+		$statements = DataMod::getStatementsWithId();
 
 		$autofocus_name = $mode === 'add' ? 'autofocus' : '';
 

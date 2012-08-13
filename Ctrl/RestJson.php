@@ -30,10 +30,10 @@ class RestJson
     * sends a Json message which contains a list of reports
     */
     public function reports(){
-    	$statements_simple = DataMod::getStatements($_SESSION['bd_id']);
-		$statements_multi = DataMod::getStatementsMulti($_SESSION['bd_id']);
-		$statements_comp = DataMod::getStatementComp($_SESSION['bd_id']);
-		$statements_comp_multi = DataMod::getStatementCompMulti($_SESSION['bd_id']);
+    	$statements_simple = DataMod::getStatements();
+		$statements_multi = DataMod::getMultiStatements();
+		$statements_comp = DataMod::getStatementComp();
+		$statements_comp_multi = DataMod::getStatementCompMulti();
 
     	$response = [];
 
@@ -41,10 +41,24 @@ class RestJson
     	{
     		$r = [];
 	    	foreach($statements_simple as $s)
+	    		$r[$s['name']] = $s['description'];
+	    	$response['simples'] = $r;
+	    }
+
+	    if (count($statements_multi))
+	    {
+	    	$r = [];
+	    	foreach($statements_multi as $s)
+	    	{
+	    		$shared = [];
+	    		foreach ($s->sharedReleve as $ss)
+	    			$shared[] = $ss->name;
+
 	    		$r[$s['name']] = [
 	    			'desc'  => $s['description'],
-	    			'releve' => 'multi'];
-	    	$response['simples'] = $r;
+	    			'statements' => $shared];
+			}
+	    	$response['multiples'] = $r;
 	    }
 
     	// foreach($reports as $report){
@@ -64,9 +78,9 @@ class RestJson
     * sends a Json message which contains a resume of a user's report
     */
     public function resume(){
-		$reports = DataMod::getStatements($_SESSION['bd_id']);
+		$reports = DataMod::getStatements();
 		if(isset($_REQUEST['INFOS'][2])){
-			$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+			$report = DataMod::getStatement($_REQUEST['INFOS'][2]);
 
 			if (!$report) {
 				$error = new Error();
@@ -113,7 +127,7 @@ class RestJson
     */
     public function data(){
     	if(isset($_REQUEST['INFOS'][2])){
-    		$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		$report = DataMod::getStatement($_REQUEST['INFOS'][2]);
 
 			if (!$report) {
 				$error = new Error();
@@ -173,7 +187,7 @@ class RestJson
     */
     public function data_dt(){
     	if(isset($_REQUEST['INFOS'][2])){
-    		$report = DataMod::getStatement($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		$report = DataMod::getStatement($_REQUEST['INFOS'][2]);
 
 			if (!$report) {
 				$error = new Error();
@@ -243,7 +257,7 @@ class RestJson
 
  public function data_dtt(){
     	if(isset($_REQUEST['INFOS'][2])){
-    		$report = DataMod::getStatementMulti($_REQUEST['INFOS'][2], $_SESSION['bd_id']);
+    		$report = DataMod::getStatementMulti($_REQUEST['INFOS'][2]);
 
 			if (!$report) {
 				$error = new Error();
