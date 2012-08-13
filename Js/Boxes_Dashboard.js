@@ -283,24 +283,22 @@ $(document).ready(function() {
 		simple.setAttribute('id', 'simple');
 		simple.setAttribute('class', 'collapse in');
 
-		for (var report in json_statements_list)
-		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'simple')
-		    {
-			var tr = newDom('tr');
-			var td_a = newDom('td');
-			var input = newDom('input');
-			input.setAttribute('type','checkbox');
-			input.value = report;
-			td_a.appendChild(input);
-			var td_b = newDom('td');
-			td_b.appendChild(document.createTextNode(report));
-			tr.appendChild(td_a);
-			tr.appendChild(td_b);
-			//li.onclick = clic_statement;
-			simple.appendChild(tr);
-
-		    }
+		if (json_statements_list['simples']) {
+			for (var report in json_statements_list['simples'])
+			{
+				var tr = newDom('tr');
+				var td_a = newDom('td');
+				var input = newDom('input');
+				input.setAttribute('type','checkbox');
+				input.value = report;
+				td_a.appendChild(input);
+				var td_b = newDom('td');
+				td_b.appendChild(document.createTextNode(report));
+				tr.appendChild(td_a);
+				tr.appendChild(td_b);
+				//li.onclick = clic_statement;
+				simple.appendChild(tr);
+			}
 		}
 
 		list.append(simple);
@@ -443,6 +441,7 @@ $(document).ready(function() {
 		var type = encodeURIComponent(li.attr('name'));
 		var boxdiv = li.parents('.boxdiv');
 		var front = boxdiv.children('.front');
+		// TODO ?
 		var url = ROOT_PATH+"/app/Display/load/type/"+type;
 		var id = 'f' + Math.abs((boxdiv.attr('id')+type).hashCode());
 

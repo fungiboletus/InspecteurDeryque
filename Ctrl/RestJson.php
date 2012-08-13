@@ -30,24 +30,34 @@ class RestJson
     * sends a Json message which contains a list of reports
     */
     public function reports(){
-    	$reports = DataMod::getStatements($_SESSION['bd_id']);
-	$rep = DataMod::getStatementsMulti($_SESSION['bd_id']);
-	$sample = DataMod::getStatementComp($_SESSION['bd_id']);
-	$samplemul = DataMod::getStatementCompMulti($_SESSION['bd_id']);
-    	$arr = [];
-    	foreach($rep as $report){
-    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'multi'];
-    	}
-    	foreach($reports as $report){
-    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'simple'];
-    	}
-    	foreach($sample as $report){
-    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'sample'];
-    	}
-    	foreach($samplemul as $report){
-    		$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'samplemulti'];
-    	}
-		$this->sendJson($arr);
+    	$statements_simple = DataMod::getStatements($_SESSION['bd_id']);
+		$statements_multi = DataMod::getStatementsMulti($_SESSION['bd_id']);
+		$statements_comp = DataMod::getStatementComp($_SESSION['bd_id']);
+		$statements_comp_multi = DataMod::getStatementCompMulti($_SESSION['bd_id']);
+
+    	$response = [];
+
+    	if (count($statements_simple))
+    	{
+    		$r = [];
+	    	foreach($statements_simple as $s)
+	    		$r[$s['name']] = [
+	    			'desc'  => $s['description'],
+	    			'releve' => 'multi'];
+	    	$response['simples'] = $r;
+	    }
+
+    	// foreach($reports as $report){
+    	// 	$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'simple'];
+    	// }
+    	// foreach($sample as $report){
+    	// 	$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'sample'];
+    	// }
+    	// foreach($samplemul as $report){
+    	// 	$arr[$report['name']] = ['desc'  => $report['description'], 'releve' => 'samplemulti'];
+    	// }
+
+		$this->sendJson($response);
     }
 
     /**
