@@ -14,14 +14,13 @@ class DisplayMod extends AbstractMod
 			if (strlen($folder) && $folder[0] !== '.' && is_dir('Display/'.$folder) && file_exists("Display/$folder/D$folder.php")) {
 				require_once("Display/$folder/D$folder.php");
 				$class = "D$folder";
-				$name = $class::name;
-				$data[] = new DisplayMod($name, $folder);
+				$data[] = new DisplayMod($class, $folder);
 			}
 		}
 
 		return $data;
 	}
-	
+
 	/**
 	 * Get a DisplayMod pointing on a given kind of display.
 	 * @param $folder the name of the folder containing the files
@@ -33,8 +32,7 @@ class DisplayMod extends AbstractMod
 		if (!file_exists("Display/$folder/D$folder.php")) return null;
 		require_once("Display/$folder/D$folder.php");
 		$class = "D$folder";
-		$name = $class::name;
-		return new DisplayMod($name, $folder);
+		return new DisplayMod($class, $folder);
 	}
 }
 

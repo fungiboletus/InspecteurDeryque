@@ -302,7 +302,11 @@ class RestJson
         $json = array();
 
         foreach ($data as $d)
-        	$json[$d->folder] = $d->name;
+        {
+        	// T_PAAMAYIM_NEKUDOTAYIM, T_PAAMAYIM_NEKUDOTAYIM everywhere
+        	$useless_var_because_php_is_ugly = $d->class;
+        	$json[$d->folder] = $useless_var_because_php_is_ugly::name;
+        }
 
         $this->sendJson($json);
     }

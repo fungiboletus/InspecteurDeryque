@@ -11,13 +11,20 @@
 #data_add_form .thumbnail {
 	cursor:pointer;
 	margin:0 8px 8px 0px;
-}
+	background:#fbfbfb;
+/*	opacity:0.8;
+	-webkit-transition:opacity 0.5s;
+*/}
 #data_add_form .thumbnail.checked {
 	border-color: #0074CC;
+	background:white;
+	/*opacity:1.0;*/
 }
 
 #data_add_form .thumbnail:hover {
 	border-color: #00A6FF;
+	background:white;
+	/*opacity:1.0;*/
 }
 
 #data_add_form .thumbnails img {
