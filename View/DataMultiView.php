@@ -33,9 +33,9 @@ class DataMultiView extends AbstractView {
 		echo <<<HTML
 <form action="$url_submit" name="data_multi_add_form" method="post" id="data_multi_add_form" class="form-horizontal well">
 <fieldset>
-	<table class="table table-striped table-bordered sorted_table">
+	<table class="table table-striped table-bordered table-condensed sorted_table">
 		<thead><tr>
-			<th class="header purple disable-sorter">&#x2611;</th>
+			<th class="header purple">&#x2611;</th>
 			<th class="header yellow">Name</th>
 			<th class="header green">Description</th>
 			<th class="header blue">Type</th>

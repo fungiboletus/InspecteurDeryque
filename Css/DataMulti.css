@@ -2,9 +2,16 @@
 	cursor:pointer;
 }
 
-#data_multi_add_form table td:first-child {
+#data_multi_add_form table td:first-child,
+#data_multi_add_form table th:first-child {
 	width:2em;
+	text-align:center;
 }
+
+#data_multi_add_form table th:first-child::after {
+	display:none;
+}
+
 #data_multi_add_form table td:last-child {
 	width:10em;
 }
@@ -16,9 +23,6 @@
 	float:right;
 }
 
-th.disable-sorter::after, th.disable-sorter:hover::after {
-	visibility:hidden;
-}
 #data_multi_add_form table tr.checked {
 	font-weight:bold;
 }
