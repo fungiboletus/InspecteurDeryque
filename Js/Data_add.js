@@ -57,20 +57,20 @@ $(document).ready(function() {
 		}
 	};
 
-	var thumbnails_location = $('.location_list .thumbnail');
+	var thumbnails_storage = $('.storage_list .thumbnail');
 
-	thumbnails_location.change(function() {
+	thumbnails_storage.change(function() {
 		var cthis = this;
 		var jthis = $(this);
 		jthis.addClass('checked');
-		thumbnails_location.each(function() {
+		thumbnails_storage.each(function() {
 			if (cthis != this)
 				$(this).removeClass('checked');
 		});
 
-		var location = jthis.find('input').attr('value');
+		var storage = jthis.find('input').attr('value');
 
-		if (location === 'sensapp') {
+		if (storage == 2) {
 			$('.youtube_settings').hide();
 			$('.sensapp_settings').show();
 			sensapp_show = true;
@@ -80,7 +80,7 @@ $(document).ready(function() {
 		{
 			$('.sensapp_settings').hide();
 			sensapp_show = false;
-			if (location === 'youtube')
+			if (storage == 3)
 				$('.youtube_settings').show();
 			else
 				$('.youtube_settings').hide();
@@ -148,6 +148,7 @@ $(document).ready(function() {
 			sensapp_current_button.firstChild.data = descriptor;
 			sensapp_current_input.setAttribute('value', descriptor);
 			modal.modal('hide');
+			form.change();
 			return false;
 		});
 	});

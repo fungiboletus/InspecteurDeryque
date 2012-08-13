@@ -8,7 +8,8 @@ function __autoload($class)
 		"View/$class.php",
 		"Ctrl/$class.php",
 		"Data/$class.php",
-		"Mod/FileTypes/$class.php"
+		"Mod/FileTypes/$class.php",
+		"Mod/Storages/$class.php"
 	];
 
 	foreach($possible_paths as $chemin)

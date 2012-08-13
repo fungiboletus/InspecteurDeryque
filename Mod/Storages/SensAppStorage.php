@@ -1,6 +1,6 @@
 <?php
 
-class SensAppDataMod extends AbstractDataMod {
+class SensAppStorage extends AbstractStorage {
 	// Used for identify the class when storage in database
 	// Ideally, this value doesn't have to be changed at anytime
 	const storageConstant = 2;
@@ -15,7 +15,8 @@ class SensAppDataMod extends AbstractDataMod {
 	}
 
 	public static function decodeAdditionalData($data) {
-		return json_decode($data);
+		$json = json_decode($data);
+		return $json !== null ? $json : [];
 	}
 }
 

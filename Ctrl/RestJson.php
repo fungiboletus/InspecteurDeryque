@@ -92,6 +92,10 @@ class RestJson
 			$arr = [];
 			$arr['name'] = $report['name'];
 			$arr['desc'] = $report['description'];
+			$arr['modname'] = $report['modname'];
+			$arr['storage'] = $report['storage'];
+			// $arr['modname'] = constant($datamod->class.'::name');
+			/*
 			$arr['count'] = R::getCell('SELECT COUNT(*) FROM d_'.$datamod->folder.
 				' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]);
 
@@ -99,7 +103,7 @@ class RestJson
 				' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]));
 
 			$arr['end_t'] = date(DateTime::ISO8601, R::getCell('SELECT MAX(timestamp) FROM d_'.$datamod->folder.
-				' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]));
+				' WHERE user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $report['id']]));*/
 
 			$format = [];
 			foreach($datamod->getVariables() as $key => $value){

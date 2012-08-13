@@ -22,7 +22,7 @@ class Data
 		if (isset($_REQUEST['return']))
 			$_SESSION['form_return'] = $_REQUEST['return'];
 
-		if (CNavigation::isValidSubmit(['name','desc', 'type', 'location', 'old_id'], $_REQUEST))
+		if (CNavigation::isValidSubmit(['name','desc', 'type', 'storage', 'old_id'], $_REQUEST))
 		{
 
 			$old_statement = R::findOne('releve', 'name = ? and user_id = ?',
@@ -70,16 +70,11 @@ class Data
 				$statement->name = $_REQUEST['name'];
 				$statement->description = $_REQUEST['desc'];
 
-				$locations = [
-					'youtube' => 'YoutubeDataMod',
-					'sensapp' => 'SensAppDataMod'];
-
-				$location = in_array($_REQUEST['location'], array_keys($locations)) ?
-					$locations[$_REQUEST['location']] : 'InternalDataMod';
+				$storage = DataMod::loadStorageType(intval($_REQUEST['storage']));
 
 				// PHP in her limits
-				$statement->storage = constant($location.'::storageConstant');
-				$statement->additional_data = call_user_func($location.'::generateAdditionalData');
+				$statement->storage = constant($storage.'::storageConstant');
+				$statement->additional_data = call_user_func($storage.'::generateAdditionalData');
 
 				R::store($statement);
 
@@ -116,7 +111,7 @@ class Data
 						'name' => '',
 						'desc' => '',
 						'type' => '',
-						'location' => '',
+						'storage' => '',
 						'sensapp' => [],
 						'youtube_location' => ''],$_REQUEST),
 			DataMod::getDataTypes(), $mode);
@@ -134,16 +129,8 @@ class Data
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 
-		$storages = [
-			InternalDataMod::storageConstant => 'internal',
-			YoutubeDataMod::storageConstant => 'youtube',
-			SensAppDataMod::storageConstant => 'sensapp'];
-
-		$storage = in_array($statement['storage'], array_keys($storages)) ?
-			$storages[$statement['storage']] : $storages[InternalDataMod::storageConstant];
-
-		if ($statement['storage'] == SensAppDataMod::storageConstant)
-			$sensapp = SensAppDataMod::decodeAdditionalData($statement['additional_data']);
+		if ($statement['storage'] == SensAppStorage::storageConstant)
+			$sensapp = SensAppStorage::decodeAdditionalData($statement['additional_data']);
 		else
 			$sensapp = [];
 
@@ -153,7 +140,7 @@ class Data
 						'name' => $statement['name'],
 						'desc' => $statement['description'],
 						'type' => $n_datamod->folder,
-						'location' => $storage,
+						'storage' => intval($statement['storage']),
 						'sensapp' => $sensapp,
 						'youtube_location' => ''],$_REQUEST),
 			DataMod::getDataTypes(), 'edit');

@@ -83,7 +83,7 @@ HTML;
 
 		$text_general = _('General');
 		$text_type = _('Statement type');
-		$text_location = _('Data location');
+		$text_storage = _('Data location');
 
 		$label_name = _('Name');
 		$label_desc = _('Description');
@@ -127,14 +127,17 @@ HTML;
 		$label_youtube = _('Video location');
 		$hyoutube = htmlspecialchars($values['youtube_location']);
 
+		$local_value = InternalStorage::storageConstant;
+		$sensapp_value = SensAppStorage::storageConstant;
+		$youtube_value = YoutubeStorage::storageConstant;
 		$local_checked = $youtube_checked = $sensapp_checked = '';
 		$youtube_hide = $sensapp_hide = 'style="display:none;"';
-		if ($values['location'] === 'sensapp')
+		if ($values['storage'] == $sensapp_value)
 		{
 			$sensapp_checked = 'checked';
 			$sensapp_hide = '';
 		}
-		else if ($values['location'] === 'youtube')
+		else if ($values['storage'] == $youtube_value)
 		{
 			$youtube_checked = 'checked';
 			$youtube_hide = '';
@@ -145,26 +148,26 @@ HTML;
 		echo <<<HTML
 </fieldset>
 <fieldset>
-<legend>$text_location</legend>
-<div class="thumbnails location_list">
+<legend>$text_storage</legend>
+<div class="thumbnails storage_list">
 	<label class="radio inline thumbnail $local_checked">
-		<img src="$ROOT_PATH/Img/icons/location/deryque.png"/>
+		<img src="$ROOT_PATH/Img/icons/storage/deryque.png"/>
 		<h4>
-			<input type="radio" id="location1" name="location" value="local" $local_checked/>
+			<input type="radio" id="storage1" name="storage" value="$local_value" $local_checked/>
 			$label_local
 		</h4>
 	</label>
 	<label class="radio inline thumbnail $sensapp_checked">
-		<img src="$ROOT_PATH/Img/icons/location/sensapp.png"/>
+		<img src="$ROOT_PATH/Img/icons/storage/sensapp.png"/>
 		<h4>
-			<input type="radio" id="location2" name="location" value="sensapp" $sensapp_checked/>
+			<input type="radio" id="storage2" name="storage" value="$sensapp_value" $sensapp_checked/>
 			SensApp
 		</h4>
 	</label>
 	<label class="radio inline thumbnail $youtube_checked">
-		<img src="$ROOT_PATH/Img/icons/location/youtube.png"/>
+		<img src="$ROOT_PATH/Img/icons/storage/youtube.png"/>
 		<h4>
-			<input type="radio" id="location3" name="location" value="youtube" $youtube_checked/>
+			<input type="radio" id="storage3" name="storage" value="$youtube_value" $youtube_checked/>
 			Youtube
 		</h4>
 	</label>

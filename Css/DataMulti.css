@@ -9,6 +9,9 @@
 	width:10em;
 }
 
+#data_multi_add_form table td.name {
+	width:20em;
+}
 #data_multi_add_form .actions button[type=submit] {
 	float:right;
 }

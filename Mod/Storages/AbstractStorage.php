@@ -1,14 +1,18 @@
 <?php
 
-class YoutubeDataMod extends AbstractDataMod {
+abstract class AbstractStorage {
 	// Used for identify the class when storage in database
 	// Ideally, this value doesn't have to be changed at anytime
-	const storageConstant = 3;
+	const storageConstant = -1;
 
 	public static function generateAdditionalData() {
-		return isset($_REQUEST['youtube_location']) ?
-			$_REQUEST['youtube_location'] : '';
+		return '';
 	}
+
+	public static function decodeAdditionalData($data) {
+		return $data;
+	}
+
 }
 
 ?>

@@ -52,6 +52,20 @@ class DataMod extends AbstractMod {
 		return file_exists("Data/$folder/D$folder.php");
 	}
 
+	/** Get the storage type associated with the given constant.
+	 *
+	 *	Actually, the most efficient is to hard code this.
+	 *	In the future, it could be interesting to do some dynamic code.
+	 */
+	public static function loadStorageType($id) {
+		$storages = [
+			YoutubeStorage::storageConstant => 'YoutubeStorage',
+			SensAppStorage::storageConstant => 'SensAppStorage'];
+
+		return in_array($id, array_keys($storages)) ?
+			$storages[$id] : 'InternalStorage';
+	}
+
 	/** Get a statement given the name and the user of that statement.
 	 * @param $name Name of the statement.
 	 * @param $_SESSION['bd_id'] id of the user who created the asked statement.

@@ -35,21 +35,24 @@ class DataMultiView extends AbstractView {
 <fieldset>
 	<table class="table table-striped table-bordered sorted_table">
 		<thead><tr>
-			<th class="header green disable-sorter">&#x2611;</th>
+			<th class="header purple disable-sorter">&#x2611;</th>
 			<th class="header yellow">Name</th>
+			<th class="header green">Description</th>
 			<th class="header blue">Type</th>
 		</tr></thead>
 		<tbody>
 HTML;
 		foreach ($statements as $statement) {
 			$hsname = htmlspecialchars($statement['name']);
+			$hdescr = htmlspecialchars($statement['description']);
 			$hmodname = htmlspecialchars($statement['modname']);
 			$hid = htmlspecialchars($statement['id']);
 			$checked = in_array($statement['id'], $values['releve']) ? 'checked' : '';
 			echo <<<HTML
 		<tr class="$checked">
 			<td><input type="checkbox" name="releve[]" value="$hid" $checked/></td>
-			<td>$hsname</td>
+			<td class="name">$hsname</td>
+			<td>$hdescr</td>
 			<td>$hmodname</td>
 		</tr>
 HTML;
