@@ -153,25 +153,21 @@ $(document).ready(function() {
 	});
 
 
-	var displayed_submit = false;
 
 	var submit_button = form.find('button[type=submit]');
-	var input_name = form.find('#input_name');
-	var show_submit_button = function() {
-		var to_show = input_name.attr('value').length != 0;
 
-		if (to_show && !displayed_submit)
-		{
-			submit_button.addClass('in');
-			displayed_submit = true;
-		}
-		else if (!to_show && displayed_submit)
-		{
-			submit_button.removeClass('in');
-			displayed_submit = false;
-		}
-	};
+	if (submit_button.hasClass('fade'))
+	{
+		var displayed_submit = false;
+		var show_submit_button = function() {
+			if (!displayed_submit)
+			{
+				submit_button.addClass('in');
+				displayed_submit = true;
+			}
+		};
 
-	form.find('input[type=text], textarea').keyup(show_submit_button);
-	form.change(show_submit_button);
+		form.find('input[type=text], textarea').keyup(show_submit_button);
+		form.change(show_submit_button);
+	}
 });

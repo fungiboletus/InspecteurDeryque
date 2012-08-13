@@ -6,7 +6,7 @@ class DString extends DefaultData
 {
 	const name = 'String';
 
-	const n_string = 'Value';
+	const n_string = 'Text';
 	public $string;
 
 	const display_prefs = 'table book';

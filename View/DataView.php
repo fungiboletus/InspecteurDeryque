@@ -230,11 +230,13 @@ HTML;
 			$text_submit = _('Save the changes');
 			echo '<input type="hidden" name="form_mode" value="edit" />';
 			$icon_submit = 'pencil';
+			$fade = 'fade';
 		}
 		else
 		{
 			$text_submit = _('Create the statement');
 			$icon_submit = 'plus';
+			$fade = '';
 		}
 
 		// Intval for prevent html injections…
@@ -243,7 +245,7 @@ HTML;
 
 		<input type="hidden" name="mode" value="$mode" />
 		<input type="hidden" name="old_id" value="$old_id" />
-		<button type="submit" class="btn btn-large btn-primary fade">
+		<button type="submit" class="btn btn-large btn-primary $fade">
 			<span class="icon_button ${icon_submit}_text">$text_submit</span>
 		</button>
 	</div>
