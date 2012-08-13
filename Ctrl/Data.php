@@ -25,19 +25,21 @@ class Data
 		if (CNavigation::isValidSubmit(['name','desc', 'type', 'location', 'old_id'], $_REQUEST))
 		{
 
-			if ($mode === 'add' &&
-					R::findOne('releve', 'name = ? and user_id = ?',
-						[$_REQUEST['name'], $_SESSION['bd_id']]))
+			$old_statement = R::findOne('releve', 'name = ? and user_id = ?',
+						[$_REQUEST['name'], $_SESSION['bd_id']]);
+			if ($old_statement && $old_statement['id'] != $_REQUEST['old_id'])
 			{
 				new CMessage(_('A statement already exist with the same name'), 'error');
 			}
 			else
 			{
 				$statement = null;
+				$user = $_SESSION['user'];
 
 				if ($mode === 'add')
 					$statement = R::dispense('releve');
-				else if ($mode === 'edit') {
+				else if ($mode === 'edit')
+				{
 					$statement = R::load('releve', intval($_REQUEST['old_id']));
 
 					if (!$statement)
@@ -47,6 +49,8 @@ class Data
 						$mode = 'add';
 						$statement = R::dispense('releve');
 					}
+					else if ($statement->user != $user)
+						CTools::hackError();
 				}
 
 				$datamode = R::findOne('datamod', 'modname = ?', [$_REQUEST['type']]);
@@ -60,8 +64,6 @@ class Data
 					else
 						CTools::hackError();
 				}
-
-				$user = $_SESSION['user'];
 
 				$statement->mod = $datamode;
 				$statement->user = $user;
@@ -127,7 +129,7 @@ class Data
 		if (!$statement)
 			CTools::hackError();
 
-		CNavigation::setTitle('Statement : '.$statement['name']);
+		CNavigation::setTitle(_('Statement : ').$statement['name']);
 		CNavigation::setDescription($statement['description']);
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);

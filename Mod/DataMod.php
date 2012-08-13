@@ -95,7 +95,13 @@ SQL
 	 * @return array of statements.
 	 */
 	public static function getStatements($user_id) {
-		return R::getAll('select name, description, modname from releve r, datamod d where r.user_id = ? and r.mod_id = d.id order by name ', [$user_id]);
+		return R::getAll(
+<<<SQL
+	select name, description, modname
+	from releve r, datamod d
+	where r.user_id = ? and r.mod_id = d.id order by name
+SQL
+		, [$user_id]);
 	}
 
 	/**
@@ -113,7 +119,14 @@ SQL
 	 * @return array of statements.
 	 */
 	public static function getStatementsMulti($user_id) {
-		return R::getAll('select m.name, m.description, GROUP_CONCAT(modname) as modname from multi_releve m, releve r, multi_releve_releve mr, datamod d where m.user_id = ? and m.id = mr.multi_releve_id and mr.releve_id=r.id and r.mod_id = d.id group by m.name', [$user_id]);
+		return R::getAll(
+<<<SQL
+	select m.name, m.description, GROUP_CONCAT(modname) as modname
+	from multi_releve m, releve r, multi_releve_releve mr, datamod d
+	where m.user_id = ? and m.id = mr.multi_releve_id
+	and mr.releve_id=r.id and r.mod_id = d.id group by m.name
+SQL
+		, [$user_id]);
 	}
 
 	/**
@@ -169,7 +182,7 @@ SQL
 	  * @return A query request.
 	  */
 	public static function getMultiStatement($name, $user_id) {
-		return R::getAll('select r.name, r.id from multi_releve m, releve r, multi_releve_releve mr where m.user_id=? and m.id=mr.multi_releve_id and  mr.releve_id=r.id and m.name=?', [$user_id, $name]);
+		return R::findOne('multi_releve', 'name = ? and user_id = ?', [$name, $user_id]);
 	}
 
 	/** Get the name and id of a statement given the name and the user of that statement.

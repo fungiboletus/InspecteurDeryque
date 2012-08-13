@@ -1,0 +1,21 @@
+#data_multi_add_form table {
+	cursor:pointer;
+}
+
+#data_multi_add_form table td:first-child {
+	width:2em;
+}
+#data_multi_add_form table td:last-child {
+	width:10em;
+}
+
+#data_multi_add_form .actions button[type=submit] {
+	float:right;
+}
+
+th.disable-sorter::after, th.disable-sorter:hover::after {
+	visibility:hidden;
+}
+#data_multi_add_form table tr.checked {
+	font-weight:bold;
+}

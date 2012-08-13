@@ -3,199 +3,138 @@
  * Manages statements.
  */
 class DataMulti {
-    public function index() {
-        CNavigation::setTitle('Gestion des relevés multiples');
+	public function index() {
+		CNavigation::setTitle('Multiple statements');
 
-        $statements = DataMod::getStatementsMulti($_SESSION['bd_id']);
+		$statements = DataMod::getStatementsMulti($_SESSION['bd_id']);
 
-        DataMultiView::showStatementsList($statements);
+		DataMultiView::showStatementsList($statements);
 
-        DataMultiView::showAddButton();
-    }
+		DataMultiView::showAddButton();
+	}
 
-    public function choose() {
-        CNavigation::setTitle('Nouveau relevé');
-        CNavigation::setDescription('Sélectionnez les relevés que vous souhaitez composer');
+	public function form() {
 
-        DataMultiView::showAddForm([
-                                       'nom' => '',
-                                       'desc' => '']);
-    }
+		$mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'add';
 
-    public function add() {
+		if (CNavigation::isValidSubmit(['name','desc', 'releve', 'old_id'], $_REQUEST))
+		{
+			$old_statement = R::findOne('multi_releve', 'name = ? and user_id = ?',
+						[$_REQUEST['name'], $_SESSION['bd_id']]);
+			if ($old_statement && $old_statement['id'] != $_REQUEST['old_id'])
+			{
+				new CMessage(_('A multiple statement already exist with the same name'), 'error');
+			}
+			else if(count($_REQUEST['releve']) < 1)
+			{
+				new CMessage(_('You have to select one or more statements'), 'error');
+			}
+			else
+			{
+				$statement = null;
+				$user = $_SESSION['user'];
 
-        if (CNavigation::isValidSubmit(['nom','desc'], $_REQUEST)) {
-            if (R::findOne('multi_releve', 'name = ? and user_id = ?', [$_REQUEST['nom'], $_SESSION['bd_id']])) {
-                new CMessage('Un relevé existe déjà avec le même nom', 'error');
-		CNavigation::redirectToApp('DataMulti', 'choose');
-            } 
-	    else if(!(isset($POST['releve'])) and count($_POST['releve']) < 1){
-		new CMessage('Vous devez selectionner au moins un relevé', 'error');
-		CNavigation::redirectToApp('DataMulti', 'choose');
+				if ($mode === 'add')
+					$statement = R::dispense('multi_releve');
+				else if ($mode === 'edit')
+				{
+					$statement = R::load('multi_releve', intval($_REQUEST['old_id']));
 
+					if (!$statement)
+					{
+						new CMessage(_('You had asked to edit an unknown multiple statement. Creating a new multiple statement.'),
+							'warning');
+						$mode = 'add';
+						$statement = R::dispense('multi_releve');
+					}
+					else if ($statement->user != $_SESSION['user'])
+						CTools::hackError();
+					else
+						$statement->sharedReleve = [];
+				}
+
+				$statement->user = $user;
+				$statement->name = $_REQUEST['name'];
+				$statement->description = $_REQUEST['desc'];
+
+				foreach($_REQUEST['releve'] as $id)
+				{
+					$rel = R::load('releve', $id);
+
+					// a few times ago, a horrible security hole was here
+					if ($rel->user != $user)
+						CTools::hackError();
+
+					$statement->sharedReleve[] = $rel;
+				}
+
+				R::store($statement);
+
+				if ($mode === 'add')
+				{
+					new CMessage(_('Multiple statement : ').$statement->name._(' correctly added'));
+					CNavigation::redirectToApp('DataMulti', 'form');
+				}
+				else
+				{
+					new CMessage(_('Successfull update'));
+					CNavigation::redirectToApp('DataMulti', 'view', ['name' => $statement->name]);
+				}
+			}
+		}
+		else if (CNavigation::isPost())
+			new CMessage(_('You have to select one or more statements'), 'error');
+
+		CNavigation::setTitle('New multiple statement');
+		CNavigation::setDescription('Select the statements which you want to compose');
+
+		DataMultiView::showAddForm(array_merge([
+			'old_id' => isset($_REQUEST['old_id']) ? intval($_REQUEST['old_id']) : -1,
+			'name' => '',
+			'releve' => [],
+			'desc' => ''], $_REQUEST), $mode);
+	}
+
+	public function view() {
+		$statement = isset($_REQUEST['name']) ? DataMod::getMultiStatement($_REQUEST['name'], $_SESSION['bd_id']) : false;
+		if (!$statement)
+			CTools::hackError();
+
+		CNavigation::setTitle(_('Multiple statement : ').$_REQUEST['name']);
+
+		$releves = [];
+
+		foreach ($statement->sharedReleve as $r)
+			$releves[] = $r->getId();
+
+		DataMultiView::showAddForm(array_merge([
+			'old_id' => $statement->getId(),
+			'name' => $statement->name,
+			'releve' => $releves,
+			'desc' => $statement->description], $_REQUEST), 'edit');
+	}
+
+
+	public function remove() {
+		$statement = isset($_REQUEST['name']) ? DataMod::getMultiStatement($_REQUEST['name'], $_SESSION['bd_id']) : false;
+		if (!$statement)
+			CTools::hackError();
+
+		if (isset($_REQUEST['confirm'])) {
+			$statement = R::load('multi_releve', $statement['id']);
+			R::exec('delete from multi_releve where id = ?', [$statement['id']]);
+			R::trash(R::load('multi_releve', $statement['id']));
+			CNavigation::redirectToApp('DataMulti');
 		} else {
+			CNavigation::setTitle('Deleteing multiple statement : '.$statement['name']);
+			CNavigation::setDescription('Consequences will never be the same!');
 
-                $user = $_SESSION['user'];
-
-                $statement = R::dispense('multi_releve');
-                $statement->user = $user;
-                $statement->name = $_REQUEST['nom'];
-                $statement->description = $_REQUEST['desc'];
-
-                R::store($statement);
-		
-		$tab_releve = $_POST['releve'];
-                foreach($tab_releve as $rel){
-                	$stat = R::dispense('multi_releve_releve');
-                	$stat->multi_releve_id = $statement['id'];
-                	$stat->releve_id = $rel;
-			R::store($stat);
+			DataMultiView::showRemoveForm(
+				$statement['description'],
+				CNavigation::generateMergedUrl('DataMulti', 'remove', ['confirm' => 'yes']),
+				CNavigation::generateMergedUrl('DataMulti', 'view'));
 		}
-
-                new CMessage('Relevé correctement ajouté');
-
-                CNavigation::redirectToApp('DataMulti');
-
-                return;
-            }
-
-        }
-
-        //DataMultiView::showStatementsList();
-    }
-
-	public function change() {
-
-	    if (CNavigation::isValidSubmit(['nom','desc'], $_REQUEST)) {
-            
-	    if(!isset($_POST['releve']) || count($_POST['releve']) < 1){
-		new CMessage('Vous devez selectionner au moins un relevés', 'error');
-		CNavigation::redirectToApp('DataMulti', 'choosechange', ['nom' => $_REQUEST['nom']]);
-
-	     } else {
-		$state = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
-		$state = R::load('multi_releve', $state['id']);
-		$state->description = $_REQUEST['desc'];
-
-		R::store($state);
-		
-		$multi = DataMod::getMultiRelRel($_SESSION['bd_id'], $state['id']);
-		foreach($multi as $mult){
-			$mul = R::load('multi_releve_releve', $mult['id']);
-			R::exec('delete from multi_releve_releve where id = ?', [$mul['id']]);
-			R::trash(R::load('multi_releve_releve', $mul['id']));
-		}
-		$tab_releve = $_POST['releve'];
-		foreach($tab_releve as $rel) {
-		    $stat = R::dispense('multi_releve_releve');
-		    $stat->multi_releve_id = $state['id'];
-		    $stat->releve_id = $rel;
-		    R::store($stat);
-		}
-
-		new CMessage('Relevé correctement modifié');
-
-		CNavigation::redirectToApp('DataMulti');
-
-		return;
-	    }
-	  }
-
-	    DataMultiView::showStatementsList();
 	}
-
-
-    public function view() {
-        $statements = isset($_REQUEST['nom']) ? DataMod::getMultiStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
-  	if (!$statements) {
-            CTools::hackError();
-        }
-	CNavigation::setTitle('Relevé «'.$_REQUEST['nom'].'»');
-        //CNavigation::setDescription($statements['description']);
-
-	DataMultiView::showStatement($_REQUEST['nom']);
-        $data = DisplayMod::getDisplayTypes();
-	foreach($statements as $statement){
-	$stat = DataMod::getStatement($statement['name'], $_SESSION['bd_id']);
-      
-        $n_datamod = DataMod::loadDataType($stat['modname']);
-
-        $sql = '';
-        foreach ($n_datamod->getVariables() as $k => $v) {
-            $sql .= "min($k), max($k), avg($k), ";
-        }
-        $stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $stat['id']]);
-	}
-        DataMultiView::showDisplayViewChoiceTitle();
-        DisplayView::showGraphicChoiceMenu($data, true, $n_datamod->display_prefs);
-
-        DataMultiView::showViewButtons(
-            CNavigation::generateMergedUrl('DataMulti', 'remove'),
-            CNavigation::generateUrlToApp('DataMulti'),
-            CNavigation::generateMergedUrl('DataMulti', 'choosechange'));
-    }
-
-    public function viewInfo() {
-        $statements = isset($_REQUEST['nom']) ? DataMod::getMultiStatement($_REQUEST['nom'], $_SESSION['bd_id']) : false;
-  	if (!$statements) {
-            CTools::hackError();
-        }
-	CNavigation::setTitle('Relevé «'.$_REQUEST['nom'].'»');
-        //CNavigation::setDescription($statements['description']);
-
-	DataMultiView::showStatement($_REQUEST['nom']);
-	foreach($statements as $statement){
-	$stat = DataMod::getStatement($statement['name'], $_SESSION['bd_id']);
-      
-        $n_datamod = DataMod::loadDataType($stat['modname']);
-
-        $sql = '';
-        foreach ($n_datamod->getVariables() as $k => $v) {
-            $sql .= "min($k), max($k), avg($k), ";
-        }
-        $stats = R::getRow('select '.$sql.'count(*) from d_'.$n_datamod->folder.' where user_id = ? and releve_id = ?', [$_SESSION['bd_id'], $stat['id']]);
-        DataMultiView::showInformations($stats, $n_datamod, $stat['name']);
-	}
-
-
-        DataMultiView::showViewButtons(
-            CNavigation::generateMergedUrl('DataMulti', 'remove'),
-            CNavigation::generateUrlToApp('DataMulti'),
-            CNavigation::generateMergedUrl('DataMulti', 'choosechange'));
-    }
-
-    public function remove() {
-        $statement = DataMod::getStatementMulti($_REQUEST['nom'], $_SESSION['bd_id']);
-        if (!$statement) {
-            CTools::hackError();
-        }
-
-        if (isset($_REQUEST['confirm'])) {
-            $statement = R::load('multi_releve', $statement['id']);
-            R::exec('delete from multi_releve where id = ?', [$statement['id']]);
-            R::trash(R::load('multi_releve', $statement['id']));
-            CNavigation::redirectToApp('DataMulti');
-        } else {
-            CNavigation::setTitle('Suppression du relevé «'.$statement['name'].'»');
-            CNavigation::setDescription('Consequences will never be the same!');
-
-            DataMultiView::showRemoveForm(
-                $statement['description'],
-                CNavigation::generateMergedUrl('DataMulti', 'remove', ['confirm' => 'yes']),
-                CNavigation::generateMergedUrl('DataMulti', 'view'));
-        }
-    }
-
-    public function choosechange() {
-        CNavigation::setTitle('Modifier le relevé');
-        CNavigation::setDescription('Sélectionnez les relevés que vous souhaitez ajouter');
-	$desc = DataMod::getDescMulti($_REQUEST['nom'], $_SESSION['bd_id']);
-	DataMultiView::showChangeForm([
-                                       'nom' => $_REQUEST['nom'],
-                                       'desc' => $desc["description"]]);
-        
-    }
-
 
 }
 ?>

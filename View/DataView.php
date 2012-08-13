@@ -301,8 +301,8 @@ HTML;
 </div>
 			<div class="well">
 HTML;
-		self::showButton($url_back, 'info', 'Cancel', 'back');
-		self::showButton($url_confirm, 'danger float_right', 'Delete', 'del');
+		self::showButton($url_back, 'info', _('Cancel'), 'back');
+		self::showButton($url_confirm, 'danger float_right', _('Delete'), 'del');
 		echo '</div>';
 	}
 

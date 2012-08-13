@@ -41,6 +41,7 @@ END;
 			$url = CNavigation::generateMergedUrl('Display', $action, ['type' => $folder]);
 			$class = in_array($folder, $prefs, true) ? ' display_prefs' : '';
 			$class = $folder === $selected ? ' display_selected' : $class;
+			$name =
 			echo <<<END
 			<li class="thumbnail$class">
 				<a href="$url" class="liengraph">
