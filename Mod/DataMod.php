@@ -62,7 +62,7 @@ class DataMod extends AbstractMod {
 			YoutubeStorage::storageConstant => 'YoutubeStorage',
 			SensAppStorage::storageConstant => 'SensAppStorage'];
 
-		return in_array($id, array_keys($storages)) ?
+		return array_key_exists($id, $storages) ?
 			$storages[$id] : 'InternalStorage';
 	}
 

@@ -2,16 +2,12 @@
 <html>
 <head>
 	<title><?php echo htmlspecialchars(CNavigation::getTitle()); ?> - Inspecteur Deryque</title>
-<?php foreach (CHead::$css as $css)
-{
-	if (strpos($css, 'http://')===false && $css[0] !== '/') $css = "$ROOT_PATH/Css/$css.css";
+<?php
+foreach (CHead::$css as $key => $css)
 	echo "\t<link href=\"$css\" media=\"screen\" rel=\"Stylesheet\" type=\"text/css\" />\n";
-}
-foreach (CHead::$js as $js)
-{
-	if (strpos($js, 'http://')===false && $js[0] !== '/') $js = "$ROOT_PATH/Js/$js.js";
+
+foreach (CHead::$js as $key => $js)
 	echo "\t<script type=\"text/javascript\" src=\"$js\"></script>\n";
-}
 ?>
 </head>
 <body>

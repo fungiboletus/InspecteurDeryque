@@ -79,7 +79,7 @@ if ($default_theme)
 	CHead::addCSS('theme');
 }
 CHead::addCSS('application');
-CHead::addCSS($CTRL_NAME);
+CHead::addCSS($CTRL_NAME, true);
 if (isset($_REQUEST['iframe_mode'])) CHead::addCSS('iframe_mode');
 CHead::addJS('jquery-1.7.2.min');
 CHead::addJS('application');
@@ -87,7 +87,7 @@ CHead::addJS('Bootstrap/bootstrap-dropdown');
 CHead::addJs('Bootstrap/bootstrap-tabs');
 CHead::addJs('Bootstrap/bootstrap-modal');
 CHead::addJs('Bootstrap/bootstrap-collapse');
-CHead::addJS($CTRL_NAME);
+CHead::addJS($CTRL_NAME, true);
 
 try {
 $CTRL->{$ACTION_NAME}();

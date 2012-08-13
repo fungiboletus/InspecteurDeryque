@@ -93,7 +93,7 @@ class RestJson
 			$arr['name'] = $report['name'];
 			$arr['desc'] = $report['description'];
 			$arr['modname'] = $report['modname'];
-			$arr['storage'] = $report['storage'];
+			$arr['storage'] = DataMod::loadStorageType($report['storage']);
 			// $arr['modname'] = constant($datamod->class.'::name');
 			/*
 			$arr['count'] = R::getCell('SELECT COUNT(*) FROM d_'.$datamod->folder.
