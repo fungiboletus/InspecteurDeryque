@@ -11,83 +11,19 @@
 */
 class JsURL
 {
-	const OBJECT_STATE = 1;
-	const STRING_STATE = 2;
-	const ESCAPE_STRING_STATE = 3;
-
-	// This is not thread safe, but it's not important…
-	private static $state = self::OBJECT_STATE;
-
-	private static $string_buffer = '';
-
 	public static function stringify($object)
 	{
 		// Start by taking the json object (yes)
-		$json = json_encode($object, JSON_UNESCAPED_UNICODE);
+		$json = json_encode($object, JSON_UNESCAPED_UNICODE|JSON_HEX_QUOT);
 
-		$new_json = '';
+		$json = preg_replace_callback('/"(.*?)"/', function($m) {
+			return '\''.rawurlencode($m[1]).'\'';
+		},$json);
 
-		$n = strlen($json);
-		for ($i = 0; $i < $n; ++$i)
-			$new_json .= self::process($json[$i]);
+		$json = str_replace('[','!(',$json);
+		$json = strtr($json, '{}]', '())');
 
-		return $new_json;
-	}
-
-	private static function process($char)
-	{
-		// It's ugly, but it's performant
-		switch (self::$state)
-		{
-			case self::OBJECT_STATE:
-				return self::objectProcess($char);
-			case self::STRING_STATE:
-				return self::stringProcess($char);
-			case self::ESCAPE_STRING_STATE:
-				return self::escapeStringProcess($char);
-		}
-	}
-
-	public static function objectProcess($char)
-	{
-		switch ($char)
-		{
-			case '{':
-				return '(';
-			case '[':
-				return '!(';
-			case '}':
-			case ']':
-				return ')';
-			case '"':
-				self::$string_buffer = '';
-				self::$state = self::STRING_STATE;
-				return '\'';
-			default:
-				return $char;
-		}
-	}
-
-	public static function stringProcess($char)
-	{
-		switch ($char)
-		{
-			case '"':
-				self::$state = self::OBJECT_STATE;
-				return rawurlencode(self::$string_buffer).'\'';
-			case '\\':
-				self::$state = self::ESCAPE_STRING_STATE;
-				break;
-			default:
-				self::$string_buffer .= $char;
-
-			return null;
-		}
-	}
-	public static function escapeStringProcess($char)
-	{
-		self::$string_buffer .= $char;
-		self::$state = self::STRING_STATE;
+		return $json;
 	}
 }
  ?>
