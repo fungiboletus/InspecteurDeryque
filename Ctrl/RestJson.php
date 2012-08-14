@@ -15,8 +15,7 @@ class RestJson
 	{
 		header('Content-Type: application/json; charset=utf-8');
     	echo json_encode($json,
-    		(READABLE_JSON ? JSON_PRETTY_PRINT : 0) |
-    		(defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0));
+    		(READABLE_JSON ? JSON_PRETTY_PRINT : 0) | JSON_UNESCAPED_UNICODE);
 		exit();
 	}
 

@@ -23,23 +23,9 @@ class Dashboard
 END;
 	}
 
-	/**
-	 * Show JsCHRIST.
-	 */
-	public function jschrist_index()
+	public function jsurl()
 	{
-		CNavigation::setTitle('JsCHRIST');
-		DisplayView::showJsCHRIST();
-	}
-
-    /**
-     * Displays the old dashboard.
-     */
-	public function old_index() {
-		CNavigation::setTitle('Tableau de bord');
-		DisplayView::showPageWithLayout();
-
-		$this->tadam();
+		JsURL::stringify($_REQUEST);
 	}
 
     /**
