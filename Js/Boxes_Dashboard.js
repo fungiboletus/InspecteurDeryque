@@ -99,7 +99,9 @@ $(document).ready(function() {
 		layout.disableDrag(input_statements);
 
 		statements_list.appendChild(input_statements);
-		var table_statements = newDom('table');
+		var table_statements = newDom('div');
+		table_statements.className = 'table_statements accordion';
+		table_statements.id = 'supertest';
 		statements_list.appendChild(table_statements);
 		layout.disableDrag(table_statements);
 
@@ -257,7 +259,7 @@ $(document).ready(function() {
 	new_box_button.mousedown(function(e) {
 		var box = create_perfect_box();
 		manage_close_buttons();
-		fill_statements_list($(box).find('.back .statements_list table'));
+		fill_statements_list($(box).find('.back .statements_list .table_statements'));
 		fill_input_types($(box).find('.back .input_types ul'));
 		box.style.display = 'none';
 		box.className += ' dragged';
@@ -271,17 +273,21 @@ $(document).ready(function() {
 	// Statements list management
 	var json_statements_list = null;
 	var fill_statements_list = function(list) {
-
 		list.empty();
-		var buttonSimple = newDom('button');
-		buttonSimple.setAttribute('class', 'btn btn-danger');
-		buttonSimple.setAttribute('data-toggle', 'collapse');
-		buttonSimple.setAttribute('data-target', '#simple');
-		buttonSimple.appendChild(document.createTextNode('Statements'));
-		list.append(buttonSimple);
+
 		var simple = newDom('div');
-		simple.setAttribute('id', 'simple');
-		simple.setAttribute('class', 'collapse in');
+		simple.className = 'accordion-group';
+
+		var simpleHeading = newDom('div');
+		simpleHeading.className = 'accordion-heading';
+
+		var simpleBody = newDom('div');
+		simpleBody.className = 'accordion-body collapse in';
+
+		// var simpleDivTable = newDom('div');
+		var simpleTable = newDom('table');
+		simpleBody.appendChild(simpleTable);
+		simpleBody.id = 'simple';
 
 		if (json_statements_list['simples']) {
 			for (var report in json_statements_list['simples'])
@@ -297,18 +303,39 @@ $(document).ready(function() {
 				tr.appendChild(td_a);
 				tr.appendChild(td_b);
 				//li.onclick = clic_statement;
-				simple.appendChild(tr);
+				simpleTable.appendChild(tr);
 			}
 		}
 
+		var buttonSimple = newDom('button');
+		buttonSimple.appendChild(document.createTextNode('Statements'));
+		buttonSimple.setAttribute('class', 'btn');
+		buttonSimple.setAttribute('data-toggle', 'collapse');
+		buttonSimple.setAttribute('data-parent', '#supertest');
+		buttonSimple.setAttribute('data-target', '#simple');
+
+		simpleHeading.appendChild(buttonSimple);
+
+		simple.appendChild(simpleHeading);
+		simple.appendChild(simpleBody);
 		list.append(simple);
+
+		// buttonSimple.setAttribute('data-parent', '.table_statements');
+
+		/*$(buttonSimple).click(function() {
+			console.log("mais euh");
+		$(simple).collapse();
+		/*{
+			parent: ".table_statements"});*});*/
+
 		var buttonMulti = newDom('button');
-		buttonMulti.setAttribute('class', 'btn btn-danger');
+		buttonMulti.setAttribute('class', 'btn');
 		buttonMulti.setAttribute('data-toggle', 'collapse');
 		buttonMulti.setAttribute('data-target', '#multi');
+		buttonMulti.setAttribute('data-parent', '.table_statements');
 		buttonMulti.appendChild(document.createTextNode('Multi statements'));
 		list.append(buttonMulti);
-		var multi = newDom('div');
+		var multi = newDom('table');
 		multi.setAttribute('id', 'multi');
 		multi.setAttribute('class', 'collapse in ');
 
@@ -331,7 +358,7 @@ $(document).ready(function() {
 		}
 		list.append(multi);
 
-		var buttonSample = newDom('button');
+		/*var buttonSample = newDom('button');
 		buttonSample.setAttribute('class', 'btn btn-danger');
 		buttonSample.setAttribute('data-toggle', 'collapse');
 		buttonSample.setAttribute('data-target', '#sample');
@@ -389,7 +416,7 @@ $(document).ready(function() {
 			samplemulti.appendChild(tr);
 		    }
 		}
-		list.append(samplemulti);
+		list.append(samplemulti);*/
 
 
 		// Click on a statement
@@ -503,7 +530,7 @@ $(document).ready(function() {
 
 	EventBus.addListener('statements_list', function(statements) {
 		json_statements_list = statements;
-		$('.statements_list table').each(function(){
+		$('.statements_list .table_statements').each(function(){
 			var list = $(this);
 			fill_statements_list(list);
 		});
@@ -534,7 +561,7 @@ $(document).ready(function() {
 		var boxes = [];
 
 		// Find empty boxes
-		$('.boxdiv .back .statements_list table').each(function(){
+		$('.boxdiv .back .statements_list .table_statements').each(function(){
 			var table = $(this);
 			if (table.find('input:checked').length == 0)
 				boxes.push(table);
@@ -545,7 +572,7 @@ $(document).ready(function() {
 			var box = create_perfect_box();
 			box.style.display = 'none';
 			var jbox = $(box);
-			fill_statements_list(jbox.find('.back .statements_list table'));
+			fill_statements_list(jbox.find('.back .statements_list .table_statements'));
 			fill_input_types(jbox.find('.back .input_types ul'));
 			layout.addBoxInBestPlace(box);
 			boxes.push(jbox);
