@@ -59,8 +59,8 @@ get_bounds: function(d, obj) {
 },
 
 time_sync: function(d, obj) {
-	if (!d.start_t) d.start_t = Number.MIN_VALUE;
-	if (!d.end_t) d.end_t = Number.MAX_VALUE;
+	if (!d.start_t) d.start_t = new Date(0);
+	if (!d.end_t) { d.end_t = new Date(); d.end_t.setDate(d.end_t.getDate()+1);}
 
 	var response = {};
 

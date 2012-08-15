@@ -10,13 +10,34 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 		data: []
 	};
 
-	console.log(resume);
+	// console.log(resume);
 	var obj = this;
 
 	$.ajax({
-		url: additional_data.numerical,
-		success: function(){
+		url: additional_data.numerical+'?limit=20000',
+		success: function(json){
+			console.log(json);
 
+			var time_incremment = (typeof json.bt === 'undefined') ? 0 : json.bt;
+
+			for (var i = 0; i < json.e.length; ++i)
+			{
+				var ei = json.e[i];
+				obj.addTuple({
+					time_t: new Date((ei.t + time_incremment) * 1000),
+					value: ei.v
+				});
+			}
+
+			// Autosend of bounds
+			superOperator.listeners.get_bounds(null, superOperator);
+
+			console.log(obj.data);
+			EventBus.send('time_sync', {
+				start_t: obj.data.time_tMin,
+				time_t: obj.data.time_tMin,
+				end_t: obj.data.time_tMax
+			});
 		},
 		error: function(e) {
 			EventBus.send("error", {status: "SensApp "+e.status, message: e.statusText});
@@ -25,7 +46,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 };
 
-InternalStorage.prototype = {
+SensAppStorage.prototype = {
 
 bounds: function()
 {

@@ -16,6 +16,7 @@ class Dashboard
 		CHead::addJS('SuperOperator');
 		CHead::addJS('TimeControl');
 		CHead::addJS('Boxes_Dashboard');
+		CHead::addJS('JsURL');
 		CHead::addJS($ROOT_PATH.'/Mod/Storages/InternalStorage.js');
 		CHead::addJS($ROOT_PATH.'/Mod/Storages/SensAppStorage.js');
 

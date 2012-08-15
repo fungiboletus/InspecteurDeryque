@@ -72,9 +72,13 @@
 }
 
 #settings_modal_iframe {
-width: 1000px;
-margin-left: -500px;
-max-height:570px;
+width: 1010px;
+margin-left: -505px;
+max-height:650px;
+}
+
+#settings_modal_iframe.fade.in {
+	top:42%;
 }
 
 #settings_modal_iframe button.close {
@@ -85,7 +89,7 @@ top: 2px;
 
 #settings_modal_iframe iframe {
 width:100%;
-height:490px;
+height:600px;
 border:none;
 padding-top:20px;
 }

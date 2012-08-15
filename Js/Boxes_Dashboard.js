@@ -29,9 +29,10 @@ function get_random_color() {
 
 $(document).ready(function() {
 	// Création of the cadreur
-	var layout = new Cadreur(
+	cadreurInstance = new Cadreur(
 			byId('mainContent'),
 			Cadreur_DIRECTIONS.VERTICAL);
+	var layout = cadreurInstance;
 
 	// Création of the proxy operator between the REST and the runtime
 	superOperatorInstance = new SuperOperator();
@@ -147,17 +148,10 @@ $(document).ready(function() {
 			layout.equilibrate();
 		});
 
-		// box.box.style.background = 'hsl('+color+')';
+		box.box.setAttribute('cadreur_color', 'hsl('+color+')');
 		box.box.id = "box_"+nb_boxes+++'_'+Math.abs(color.slice(1).hashCode());
 		return box.box;
 	}
-	// First box
-	var firstBox = create_perfect_box();
-	layout.addBox(firstBox);
-	manage_close_buttons();
-
-	// Equilibrate in setTimeout for trigger CSS3 transitions
-	setTimeout(function(){layout.equilibrate();}, 1);
 
 	// Manage flip button
 	var front_buttons_bar = $('.navbar .nav.left.buttons_inspecteur');
@@ -225,9 +219,46 @@ $(document).ready(function() {
 		}
 	});
 
-	// Show the back side of the inspecteur deryque by default
-	$(button).click();
+	var create_structure_representation = function(box) {
+		if (box instanceof CadreurContainer)
+		{
+			var contents = [];
+			for (var i = 0; i < box.boxes.length; ++i)
+				contents.push(create_structure_representation(box.boxes[i]));
+			var r = {};
+			var key = box.direction === Cadreur_DIRECTIONS.VERTICAL ?
+				'v' : 'h';
+			r[key] = contents;
+			return r;
+		}
+		else
+		{
+			var back = $(box).find('.back');
+			var visualization = back.find('.input_types li.selected').attr('name');
+			var r = {};
+			var contents = [];
 
+			back.find('.statements_list .table_statements input:checked').each(function()
+			{
+				contents.push(this.getAttribute('value'));
+			});
+
+			r[visualization] = contents;
+			return r;
+		}
+
+	};
+
+	var disable_dashboard_structure_management = 0;
+	var dashboard_structure_management = function() {
+		if (!disable_dashboard_structure_management)
+		{
+			var s = create_structure_representation(layout.rootContainer);
+			window.location.hash = JsURL.stringify(s);
+		}
+	};
+
+	layout.draggend_callback = dashboard_structure_management;
 
 	// Creation of layouts buttons
 	var buttonsLayouts = {
@@ -240,15 +271,17 @@ $(document).ready(function() {
 
 	for (var name in buttonsLayouts)
 	{
-		var button = create_toolbar_button(name);
-		button.className = 'layout_button';
-		button.firstChild.className = 'icon_button '+name.toLowerCase()+'_text';
-		$(button).click(function() {
+		var layout_button = create_toolbar_button(name);
+		layout_button.className = 'layout_button';
+		layout_button.firstChild.className = 'icon_button '+name.toLowerCase()+'_text';
+		$(layout_button).click(function() {
 			var name = $(this)[0].firstChild.firstChild.data;
 			layout.changeLayout(buttonsLayouts[name]);
+
+			dashboard_structure_management();
 		});
 
-		back_buttons_bar.append(button);
+		back_buttons_bar.append(layout_button);
 	}
 
 	// Newbox button
@@ -267,7 +300,7 @@ $(document).ready(function() {
 		layout.visual_drag.style.display = 'block';
 		layout.visual_drag.style.top = e.clientY-13+'px';
 		layout.visual_drag.style.left = e.clientX-13+'px';
-		layout.visual_drag.style.background = box.style.background;
+		layout.visual_drag.style.background = box.getAttribute('cadreur_color');
 	});
 
 	// Statements list management
@@ -437,13 +470,16 @@ $(document).ready(function() {
 			EventBus.send((checked ? 'add': 'del') +'_statement',
 				{statement_name: statement_name, box_name: box_name});
 
+
+			dashboard_structure_management();
+
 		});
 		$(simple).find('tr').click(function(e){
 			var checkbox = $(this).find('input');
 
 			// If the click is on the cell, and not on the checkbox
-			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
-				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT')) {
+			if(e && e.originalEvent && ((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
+				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT'))) {
 				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
 			}
 
@@ -455,6 +491,7 @@ $(document).ready(function() {
 			EventBus.send((checked ? 'add': 'del') +'_statement',
 				{statement_name: statement_name, box_name: box_name});
 
+			dashboard_structure_management();
 		});
 	};
 
@@ -498,6 +535,7 @@ $(document).ready(function() {
 
 		iframe.className = 'visualization';
 
+		dashboard_structure_management();
 	};
 
 	// Visualization list management
@@ -593,4 +631,103 @@ $(document).ready(function() {
 	EventBus.addListener('error', function(e) {
 		alert('Error '+e.status+' :\n' +e.message);
 	});
+
+	if (window.location.hash)
+	{
+		// First box
+		var hash_location_object = JsURL.parse(window.location.hash.substr(1));
+	}
+	else
+		var hash_location_object = false;
+
+	var first_step = true;
+	var recursive_layout_creation = function(data, parent) {
+		for (var d in data)
+		{
+			if (d === 'h' || d === 'v')
+			{
+				var d = (typeof data.h !== 'undefined') ? 'h' : 'v';
+
+				var cd = (d === 'h') ?
+					Cadreur_DIRECTIONS.HORIZONTAL : Cadreur_DIRECTIONS.VERTICAL;
+
+				if (first_step)
+				{
+					var container = layout.rootContainer;
+					container.direction = cd;
+					first_step = false;
+				}
+				else
+				{
+					var container = new CadreurContainer(cd);
+					layout.addBox(container, parent);
+				}
+
+				var ni = data[d].length;
+				for (var i = 0; i < ni; ++i)
+					recursive_layout_creation(data[d][i], container);
+			}
+			else
+			{
+				(function() {
+					++disable_dashboard_structure_management;
+					var box = create_perfect_box();
+					layout.addBox(box, parent);
+					var jbox = $(box);
+					var intervalle = window.setInterval(
+						function() {
+							var selected = jbox.find('li.selected');
+							if (selected.length)
+							{
+								window.clearInterval(intervalle);
+								jbox.find('.input_types li').each(function() {
+									if (this.getAttribute('name') == d)
+										$(this).click();
+								});
+
+								var array = data[d];
+								jbox.find('.table_statements input').each(function() {
+									if (array.indexOf(this.getAttribute('value')) !== -1)
+										$(this).click();
+								});
+
+								--disable_dashboard_structure_management;
+							}
+						}, 50);
+				})();
+			}
+		}
+	};
+
+
+	if (hash_location_object)
+	{
+		recursive_layout_creation(hash_location_object);
+		dashboard_structure_management();
+	}
+	else
+	{
+		var firstBox = create_perfect_box();
+		layout.addBox(firstBox);
+		manage_close_buttons();
+
+		// Show the back side of the inspecteur deryque by default
+		$(button).click();
+	}
+
+	// Equilibrate in setTimeout for trigger CSS3 transitions
+	setTimeout(function(){layout.equilibrate();}, 1);
+
+	/*
+		{
+		h: [
+			{graph: [demo, demo2]}
+			{v: [
+				{boite: [a, b]}
+				{table: [b, c]}
+			]
+			}
+		]
+		}
+	*/
 });
