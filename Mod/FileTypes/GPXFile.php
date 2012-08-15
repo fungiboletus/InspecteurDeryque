@@ -271,7 +271,7 @@ END;
 						//$dt = floatval(abs(strtotime("2011-02-05T12:29:47Z") - strtotime("2011-02-05T12:29:49Z")));
 						$distance = floatval(self::distanceRunWithGPSinMeters($lats, $longs));
 						$speed = $distance / floatval($dt);
-						$vars['vitesse'] = floatval($speed);
+						$vars['numerical'] = floatval($speed);
 						// refresh old data
 						$GLOBALS['ancienne_lat'] = floatval($d['lat']);
 						$GLOBALS['ancienne_lon'] = floatval($d['lon']);
@@ -288,7 +288,7 @@ END;
 						$distance = floatval(self::distanceRunWithGPSinMeters($lats, $longs));
 						$GLOBALS['distance_cumulee'] += $distance;
 						$cals = floatval(floatval($GLOBALS['distance_cumulee']) * 70.0 * 0.001036 / 1000.0);
-						$vars['calories'] = $cals;
+						$vars['numerical'] = $cals;
 					}
 					break;
 				default :

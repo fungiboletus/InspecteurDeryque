@@ -113,7 +113,7 @@ HTML;
 				$url = CNavigation::generateUrlToApp('SensApp', 'sensor',
 					['server' => $server['name'], 'descriptor' => $sensor->backend->descriptor]);
 
-				$hdescriptor = htmlspecialchars($sensor->backend->descriptor);
+				$hdescriptor = htmlspecialchars($sensor->backend->dataset);
 				$hdate = str_replace(' ', '&nbsp;', AbstractView::formateDate($sensor->creation_date));
 				$hidden_code = intval($sensor->creation_date);
 				echo "\t<tr descriptor=\"$hdescriptor\"><td><a href=\"$url\">", htmlspecialchars($sensor->id),

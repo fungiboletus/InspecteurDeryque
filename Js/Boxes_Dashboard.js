@@ -590,4 +590,7 @@ $(document).ready(function() {
 		}
 	});
 
+	EventBus.addListener('error', function(e) {
+		alert('Error '+e.status+' :\n' +e.message);
+	});
 });

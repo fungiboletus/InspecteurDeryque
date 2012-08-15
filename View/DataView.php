@@ -226,7 +226,9 @@ HTML;
 
 		if ($mode === 'edit')
 		{
-			$url_view =	CNavigation::generateMergedUrl('');
+			$url_view =	CNavigation::generateUrlToApp('').'#'.JsURL::stringify(
+				[$values['name'] => 'graph']
+				);
 			$url_del =	CNavigation::generateMergedUrl('Data', 'remove');
 			self::showButton($url_view, 'success', _('View the statement'), 'magnify');
 			self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
