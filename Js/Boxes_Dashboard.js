@@ -635,7 +635,10 @@ $(document).ready(function() {
 	if (window.location.hash)
 	{
 		// First box
-		var hash_location_object = JsURL.parse(window.location.hash.substr(1));
+		try{
+			var hash_location_object = JsURL.parse(window.location.hash.substr(1));
+		}
+		catch(e) {}
 	}
 	else
 		var hash_location_object = false;
@@ -705,7 +708,8 @@ $(document).ready(function() {
 		recursive_layout_creation(hash_location_object);
 		dashboard_structure_management();
 	}
-	else
+
+	if ($('.boxdiv').length === 0)
 	{
 		var firstBox = create_perfect_box();
 		layout.addBox(firstBox);
