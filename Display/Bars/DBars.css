@@ -1,0 +1,23 @@
+#area {
+position:absolute;
+top:0;
+bottom:0;
+left:0;
+right:0;
+}
+
+#area div.bar {
+	width:34px;
+	margin:0px 4px 0px 4px;
+	position:absolute;
+	bottom:0;
+	background-color:grey;
+	box-shadow:0px 0px 2px #333 inset;
+-webkit-transition:background-color 0.33s;
+-moz-transition:background-color 0.33s;
+transition:background-color 0.33s;
+}
+
+#area div.bar.activated {
+	background-color:red;
+}
