@@ -96,7 +96,7 @@ $(document).ready(function() {
 		var input_statements = newDom('input');
 		input_statements.className = 'input_filter';
 		input_statements.setAttribute('type', 'text');
-		input_statements.setAttribute('placeholder', 'Filtrer');
+		input_statements.setAttribute('placeholder', 'Filter');
 		layout.disableDrag(input_statements);
 
 		statements_list.appendChild(input_statements);
@@ -146,6 +146,7 @@ $(document).ready(function() {
 			--nb_boxes;
 			manage_close_buttons();
 			layout.equilibrate();
+			dashboard_structure_management();
 		});
 
 		box.box.setAttribute('cadreur_color', 'hsl('+color+')');
@@ -529,6 +530,7 @@ $(document).ready(function() {
 					EventBus.send('add_statement',
 						{statement_name: $(this).attr('value'), box_name: id}
 					);
+					EventBus.send('get_bounds');
 				});
 			});
 		}

@@ -45,9 +45,9 @@ END;
 		$url_datasample = CNavigation::generateUrlToApp('DataSample');
 		$url_deryque_music = CNavigation::generateUrlToApp('Dashboard','deryque_music');
 		$url_theme = CNavigation::generateUrlToApp('Dashboard','theme');
-		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' class="active"' : '';
-		$c_datamulti = $CTRL_NAME === 'DataMulti' && $ACTION_NAME === 'index' ? ' class="active"' : '';
-		$c_datasample = $CTRL_NAME === 'DataSample' && $ACTION_NAME === 'index' ? ' class="active"' : '';
+		$c_data = $CTRL_NAME === 'Data' && $ACTION_NAME === 'index' ? ' active' : '';
+		$c_datamulti = $CTRL_NAME === 'DataMulti' && $ACTION_NAME === 'index' ? ' active' : '';
+		$c_datasample = $CTRL_NAME === 'DataSample' && $ACTION_NAME === 'index' ? ' active' : '';
 		$c_dashboard = $CTRL_NAME === 'Dashboard' && $ACTION_NAME === 'index' ? ' class="active"' : '';
 		$c_import = $CTRL_NAME === 'Import' ? ' class="active"' : '';
 
@@ -62,7 +62,7 @@ END;
 		echo <<<END
 		<ul class="nav left buttons_inspecteur">
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Dashboard</a></li>
-			<li class="dropdown"$c_data$c_datamulti$c_datasample><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Statements <b class="caret"></b></a>
+			<li class="dropdown$c_data$c_datamulti$c_datasample"><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Statements <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="$url_data">$text_data</a></li>
 					<li><a href="$url_datamulti">$text_datamulti</a></li>

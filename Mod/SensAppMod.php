@@ -8,7 +8,7 @@ class SensAppMod {
 		$this->server_address = 'http://'. $server['address'];
 	}
 
-	protected function serverPath($path, $append = '') {
+	public function serverPath($path, $append = '') {
 		// If the parth begin with http, it's an absolute path !
 		if (preg_match('/^https?:\/\//', $path))
 			return $path;

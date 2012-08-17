@@ -40,6 +40,7 @@ var InternalStorage = function(superOperator, statement_name)
 				end_t: obj.data.time_tMax
 			});
 
+			EventBus.send('get_bounds');
 		});
 };
 

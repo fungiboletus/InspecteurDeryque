@@ -6,11 +6,11 @@ define('NO_HEADER_BAR', true);
 /** Manages user sessions. */
 class Session
 {
-	
+
 	public function index() {
 		$this->login();
 	}
-	
+
     /** When not logged, the view doesn't need libraries like bootstrap. */
 	public function login() {
 		CHead::addJs('sha1');
@@ -19,7 +19,7 @@ class Session
 		CNavigation::setTitle(_('Login'));
 		new SessionView();
 	}
-	
+
     /** The user submits its login and password in order to be logged in. */
 	public function submit() {
 		if (CNavigation::isValidSubmit(['email_deryque', 'password_deryque'], $_POST)) {
@@ -33,14 +33,14 @@ R::debug(true);
 				$_SESSION['bd_id'] = $user->getID();
 				$_SESSION['user'] = $user;
 				$_SESSION['tadam'] = true;
-				CNavigation::redirectToApp('Dashboard');
+				CNavigation::redirectToApp('Data');
 			}
 		}
 
 		new CMessage(_('Impossible de se connecter !!!'));
 		CNavigation::redirectToApp('Session');
 	}
-	
+
     /** When the user wants to log out, he should be redirected to the login. */
 	public function logout() {
 		session_destroy();

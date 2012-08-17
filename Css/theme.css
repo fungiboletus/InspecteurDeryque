@@ -59,7 +59,9 @@ padding-left:40px;
 .newbox_text:before { content:url(../Img/icons/newbox_t.png);}
 .flip_text:before { content:url(../Img/icons/flip_t.png);}
 
-.navbar .nav .active > a, .navbar .nav .active > a:hover {
+.navbar .nav .active > a, .navbar .nav .active > a:hover,
+.navbar .nav li.dropdown.open > .dropdown-toggle, .navbar .nav li.dropdown.active > .dropdown-toggle, .navbar .nav li.dropdown.open.active > .dropdown-toggle
+{
 	background:rgba(128,128,128,0.12);
 }
 

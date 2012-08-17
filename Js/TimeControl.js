@@ -46,7 +46,7 @@ var TimeControl = function() {
 
 	// The slider area (in times)
 	this.time_min = Number.MAX_VALUE;
-	this.time_max = Number.MIN_VALUE;
+	this.time_max = -Number.MAX_VALUE;
 
 	// The slider width when dragging
 	var drag_width = 0;
@@ -531,7 +531,7 @@ del_statement: function(e, obj) {
 	if (obj.database_length == 0){
 		obj.time_control.className = 'disabled';
 		obj.time_min = Number.MAX_VALUE;
-		obj.time_max = Number.MIN_VALUE;
+		obj.time_max = -Number.MAX_VALUE;
 	}
 
 }

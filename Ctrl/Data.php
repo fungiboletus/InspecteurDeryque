@@ -49,8 +49,13 @@ class Data
 						$mode = 'add';
 						$statement = R::dispense('releve');
 					}
-					else if ($statement->user != $user)
+					else if ($statement->user->getID() != $user->getID())
+					{
+						groaw('oops');
+						groaw($user);
+						groaw($statement->user);
 						CTools::hackError();
+					}
 				}
 
 				$datamode = R::findOne('datamod', 'modname = ?', [$_REQUEST['type']]);

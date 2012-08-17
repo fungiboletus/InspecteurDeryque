@@ -50,9 +50,9 @@ manageSize: function(obj)
 
 findBounds: function(data, keyX, keyY) {
 	var x_min = Number.MAX_VALUE;
-	var x_max = Number.MIN_VALUE;
+	var x_max = -Number.MAX_VALUE;
 	var y_min = Number.MAX_VALUE;
-	var y_max = Number.MIN_VALUE;
+	var y_max = -Number.MAX_VALUE;
 
 	for (var i = 0; i < data.length; ++i) {
 		var t = data[i];
@@ -109,6 +109,7 @@ paintLine: function(data, keyX, keyY, color)
 		this.coef_x = this.width / size_x;
 
 
+	var max_x_by_point = (this.width / data.length) * 10.0;
 
 	c.beginPath();
 	c.strokeStyle = color;
@@ -125,12 +126,18 @@ paintLine: function(data, keyX, keyY, color)
 	// Pour chaque point à afficher
 	for (var i = 0; i < data.length; ++i)
 	{
-
+		var old_x_i = x_i;
 		x_i = (data[i][keyX] - b.x_min) * this.coef_x;
+
+		var diff = x_i - old_x_i;
+
 		y_i = this.height - (data[i][keyY] - b.y_min) * this.coef_y;
 
+		if (diff > max_x_by_point)
+			c.moveTo(x_i,y_i);
+		else
+			c.lineTo(x_i, y_i);
 		// console.log(x_i);
-		c.lineTo(x_i, y_i);
 	}
 
 	c.stroke();
@@ -261,12 +268,30 @@ quantize_tics: function(max)
 },
 
 listeners: {
+	/*bounds: function(d, obj) {
+		var min_time = Number.MAX_VALUE;
+		var max_time = -Number.MAX_VALUE;
+
+		for (var local_statement in obj.database)
+			if (local_statement in d)
+			{
+				if (d[local_statement].time_tMax > max_time)
+					max_time = d[local_statement].time_tMax;
+				if (d[local_statement].time_tMin < min_time)
+					min_time = d[local_statement].time_tMin;
+			}
+
+		obj.intervalle = max_time - min_time;
+	},*/
+
 	tuples: function(detail, obj) {
 		obj.clear();
 		var colors = ['blue', 'purple', 'red', 'yellowgreen','white'];
-		for (var statement_name in detail) {
+		for (var statement_name in detail)
+		{
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
+			if (data.length === 0) continue;
 
 			for (var k in data[0])
 				if (k != 'time_t')

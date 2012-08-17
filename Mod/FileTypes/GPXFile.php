@@ -242,6 +242,8 @@ END;
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 		$variables = $n_datamod->getVariables();
 
+		$first_row = true;
+		R::freeze(false);
 		foreach ($data as $d) {
 			if ($d->getName() !== 'trkpt')
 				continue;
@@ -312,7 +314,16 @@ END;
 			}
 
 			$n_datamod->save($_SESSION['user'], $b_statement, $datamod);
+
+			if ($first_row)
+			{
+				$first_row = false;
+				R::freeze(true);
+			}
+
 		}
+
+		R::freeze(DB_FREEZE);
 	}
 
     /** Check a string's start.

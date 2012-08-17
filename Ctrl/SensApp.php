@@ -27,7 +27,7 @@
 
 		try {
 			$sensors = $mod->sensorList();
-			SensAppView::sensorList($server, $sensors);
+			SensAppView::sensorList($server, $sensors, $mod);
 		} catch (Exception $e) {
 			SensAppView::fetchError(_('Unable to fetch the sensors list from the server'),
 				$e->getMessage());
