@@ -79,7 +79,7 @@ manageSize: function(obj)
 	obj.infoMediumMax.style.webkitTransformOriginX = px_height;
 	obj.infoMax.style.webkitTransformOriginX = px_height;
 
-
+	obj.screen.style.left = width - height * 2 - 30 + 'px';
 },
 
 listeners: {
