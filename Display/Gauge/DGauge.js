@@ -54,6 +54,7 @@ manageSize: function(obj)
 	var obj = obj == null ? this : obj.data;
 	var width = $(obj.screen).width();
 	var height = $(obj.screen).height();
+	var screen_height = height;
 
 	if (height * 2 > width) height = width * 0.5;
 
@@ -79,7 +80,10 @@ manageSize: function(obj)
 	obj.infoMediumMax.style.webkitTransformOriginX = px_height;
 	obj.infoMax.style.webkitTransformOriginX = px_height;
 
-	obj.screen.style.left = width - height * 2 - 30 + 'px';
+	var marge = (width - 2 * height + 150) / 2;
+	obj.screen.style.left = marge + 'px';
+	marge = (screen_height - height + 30) / 2;
+	obj.screen.style.bottom = marge + 'px';
 },
 
 listeners: {
@@ -138,7 +142,8 @@ listeners: {
 						obj.screen.appendChild(box);
 						obj.needles.push(box);
 					}
-					var value = data[k].length > 0 ? data[k][0] : 0.0;
+					// If no values, min values
+					var value = data[k].length > 0 ? data[k][0] : obj.min_value;
 
 					var ratio = (value - obj.min_value) / (obj.max_value - obj.min_value);
 

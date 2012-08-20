@@ -1,3 +1,8 @@
+@font-face {
+font-family: DigitFont;
+src: url("../../Img/digit.otf");
+}
+
 #area {
 position:absolute;
 top:0;
@@ -19,8 +24,8 @@ margin-left:45px;
 #area .info div {
 /*background:grey;*/
 font-size:1.3em;
-	font-weight:bold;
-	font-family:monospace;
+	/*font-weight:bold;*/
+	font-family:DigitFont, monospace;
 }
 
 #info_min { -webkit-transform:rotate(-2deg);}
