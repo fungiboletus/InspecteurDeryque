@@ -97,6 +97,13 @@ create_interface: function() {
 	this.reduce_button.appendChild(reduce_button_icon);
 	time_buttons.appendChild(this.reduce_button);
 
+	this.expand_button = newDom('button');
+	this.expand_button.className = 'btn btn-mini btn-inverse';
+	var expand_button_icon = newDom('i');
+	expand_button_icon.className = 'icon-resize-full icon-white';
+	this.expand_button.appendChild(expand_button_icon);
+	time_buttons.appendChild(this.expand_button);
+
 	this.time_info = newDom('button');
 	this.time_info.className = 'btn btn-mini time_info';
 	this.time_info.appendChild(document.createTextNode('12:45:12.054'));
@@ -218,9 +225,12 @@ animate_interface: function() {
 		}
 	});
 
-	// Manage the reduce button
+	// Manage the reduce and expand buttons
 	$(this.reduce_button).click(function() {
 		obj.reduce_interval();
+	});
+	$(this.expand_button).click(function() {
+		obj.expand_interval();
 	});
 },
 
@@ -492,6 +502,16 @@ reduce_interval: function() {
 	EventBus.send('time_sync', t);
 },
 
+expand_interval: function() {
+	this.time_min = this.initial_time_min;
+	this.time_max = this.initial_time_max;
+
+	EventBus.send('time_sync', {
+		start_t: this.time_min,
+		end_t: this.time_max
+	});
+},
+
 listeners: {
 /*
  *	Updating the slider position from the time event.
@@ -522,10 +542,16 @@ time_sync: function(d, obj) {
 bounds: function(d, obj) {
 	for (var statement_name in d) {
 		if (d[statement_name].time_tMin < obj.time_min)
+		{
 			obj.time_min = d[statement_name].time_tMin;
+			obj.initial_time_min = obj.time_min;
+		}
 
 		if (d[statement_name].time_tMax > obj.time_max)
+		{
 			obj.time_max = d[statement_name].time_tMax;
+			obj.initial_time_max = obj.time_max;
+		}
 	}
 },
 
