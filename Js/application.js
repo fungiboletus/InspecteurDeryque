@@ -170,6 +170,9 @@ HTMLElement.prototype.allOffset = function()
 	return o;
 };
 
+// debulked onresize handler
+function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
+
 var EventBus = new Object();
 EventBus.prefix = 'i15e.';
 EventBus.addListener = function(name, method, caller) {
@@ -196,11 +199,11 @@ $(document).ready(function(){
 	var table = $('table.data_list, table.sorted_table');
 	if (table.length && table.tablesorter) table.tablesorter({sortList: [[0,0]]});
 
-	/*on_resize(function()
+	on_resize(function()
 	{
 		if (window.innerWidth == window.screen.width && window.innerHeight == window.screen.height)
 			$(document.body).addClass('fullscreen');
 		else
 			$(document.body).removeClass('fullscreen');
-	});*/
+	});
 });

@@ -4,7 +4,7 @@ var InternalStorage = function(superOperator, statement_name)
 	this.statement_name = statement_name;
 
 	this.data = {
-		data: []
+		data: {}
 	};
 
 	var obj = this;
@@ -12,22 +12,31 @@ var InternalStorage = function(superOperator, statement_name)
 	superOperator.ajax('data_dt/'+encodeURIComponent(statement_name),
 		function(json) {
 			var start_t = Date.parse(json.start_t);
-			var date = new Date(start_t);
 
 			var _addTuple = function(i)
 			{
 				var tuple =json.data[i];
-				start_t += tuple.dt;
-				tuple.time_t = new Date(start_t);
+				start_t += tuple.dt / 1000;
+				tuple.time_t = start_t;
 				delete tuple.dt;
 
-				obj.addTuple(tuple);
-				return tuple;
+				obj.addTuple(tuple, i);
 			}
 
-			if (json.data) {
-				var i = 0;
-				for (; i < json.data.length; ++i)
+			if (json.data && json.data.length > 0) {
+
+				var nb_data = json.data.length;
+
+				// 64 bits !
+				var size = nb_data * 8;
+				for (var key in json.data[0])
+				{
+					if (key === 'dt') key = 'time_t';
+					var buffer = new ArrayBuffer(size);
+					obj.data.data[key] = new Float64Array(buffer);
+				}
+
+				for (var i = 0; i < nb_data; ++i)
 				 	_addTuple(i);
 			}
 
@@ -56,17 +65,48 @@ bounds: function()
 time_sync: function(start_t, end_t)
 {
 	var data = this.data.data;
-	var filtered_data = [];
-	for (var i = 0; i < data.length; ++i) {
-		var t = data[i];
-		if (t.time_t >= start_t && t.time_t <= end_t)
-			filtered_data.push(t);
-	}
+	// Wonderful dichotomical research oh yeah
+	var begin = 0, end = data.time_t.length, old_m = -1, m = -1;
 
-	return filtered_data;
+	do {
+		m = parseInt(begin + (end-begin)/2);
+		var t = data.time_t[m];
+		if (old_m === m || t == start_t)
+			break;
+		else if (t < start_t)
+			begin = m + 1;
+		else
+			end = m -1;
+		old_m = m;
+	} while (begin < end);
+
+	var begin_filtered_data = m;
+
+	begin = 0; end = data.time_t.length; old_m = -1; m = -1;
+
+	do {
+		m = parseInt(begin + (end-begin)/2);
+		var t = data.time_t[m];
+		if (old_m === m || t == end_t)
+			break;
+		else if (t < end_t)
+			begin = m + 1;
+		else
+			end = m -1;
+		old_m = m;
+	} while (begin < end);
+
+	var end_filtered_data = m;
+
+	var r = {};
+
+	for (key in data)
+		r[key] = data[key].subarray(begin_filtered_data, end_filtered_data);
+
+	return r;
 },
 
-addTuple: function(tuple)
+addTuple: function(tuple, i)
 {
 	for (var key in tuple)
 	{
@@ -77,7 +117,8 @@ addTuple: function(tuple)
 
 		if (!(keyMax in this.data) || tuple[key] > this.data[keyMax])
 			this.data[keyMax] = tuple[key];
+
+		this.data.data[key][i] = tuple[key];
 	}
-	this.data.data.push(tuple);
 }
 };

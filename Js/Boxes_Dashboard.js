@@ -532,8 +532,8 @@ $(document).ready(function() {
 					EventBus.send('add_statement',
 						{statement_name: $(this).attr('value'), box_name: id}
 					);
-					// EventBus.send('size_change');
-					// EventBus.send('get_bounds');
+					EventBus.send('size_change');
+					EventBus.send('get_bounds');
 				});
 			});
 		}

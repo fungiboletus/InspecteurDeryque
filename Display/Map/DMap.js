@@ -42,8 +42,9 @@ tuples: function(detail, obj) {
 		// For each new tuple
 		var data = detail[statement_name];
 
+		var nb_data = data.time_t.length;
 
-		if (data.length > 0) {
+		if (nb_data > 0) {
 			// var pinColor = "FFFFFF";
 			// var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
 		 	// new google.maps.Size(21, 34),
@@ -52,12 +53,17 @@ tuples: function(detail, obj) {
 			// Create begin
 
 			// If it's not GPS, we have nothing to do here
-			if (!('lat' in  data[0]) || !('lon' in data[0]))
+			if (!('lat' in  data) || !('lon' in data))
+			{
+				EventBus.send('error', {
+					status: 'Bad statement type',
+					message: 'The map can only show GPS statements'});
 				continue;
+			}
 
 			updated = true;
 
-			var ll = new google.maps.LatLng(data[0].lat, data[0].lon);
+			var ll = new google.maps.LatLng(data.lat[0], data.lon[0]);
 
 			if (base.marker) {
 				base.marker.setPosition(ll);
@@ -74,12 +80,12 @@ tuples: function(detail, obj) {
 			bounds.extend(ll);
 		}
 
-		for (var i = 1; i < data.length; ++i) {
+		for (var i = 1; i < nb_data; ++i) {
 
-			var last_point = data[i-1];
-			var point = data[i];
-			var ll = new google.maps.LatLng(point.lat, point.lon);
-			var ll2 = new google.maps.LatLng(last_point.lat, last_point.lon);
+			// var last_point = data[i-1];
+			// var point = data[i];
+			var ll = new google.maps.LatLng(data.lat[i], data.lon[i]);
+			var ll2 = new google.maps.LatLng(data.lat[i-1], data.lon[i-1]);
 
 			var key = ll+":"+ll2;
 
@@ -88,9 +94,9 @@ tuples: function(detail, obj) {
 			}
 			else
 			{
-				var distance = obj.distance(last_point.lat, last_point.lng,
-						 point.lat, point.lng);
-				var diff_t = point.time_t - last_point.time_t;
+				var distance = obj.distance(ll2.lat(), ll2.lng(),
+						 ll.lat(), ll.lng());
+				var diff_t = data.time_t[i] - data.time_t[i-1];
 				var speed = distance/diff_t * 36.0;
 
 				// TODO véritable gestion des couleurs, avec légende
