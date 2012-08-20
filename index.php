@@ -48,7 +48,8 @@ if (!defined('NO_LOGIN_REQUIRED')) {
 		if (isset($_SESSION['redirection_url'])) {
 			$t = $_SESSION['redirection_url'];
 			unset($_SESSION['redirection_url']);
-			CNavigation::redirectToURL($t);
+			if ($t !== CNavigation::generateUrlToApp(''))
+				CNavigation::redirectToURL($t);
 		}
     }
     else if (!defined('NO_LOGIN_REDIRECTION')) {

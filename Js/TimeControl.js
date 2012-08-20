@@ -413,7 +413,7 @@ dragdrop: function(e, obj) {
 			obj.right_pos = m_x + obj.drag_width;
 			if (obj.left_pos < 0)
 			    obj.left_pos = 0;
-			
+
 			if (obj.right_pos > obj.slider_width)
 				obj.right_pos = obj.slider_width;
 		}
@@ -468,6 +468,18 @@ play_callback: function(obj) {
 	}
 
 	EventBus.send('time_sync', times);
+},
+
+/*
+ *	Reduce the timeline interval to teh selected interval.
+ */
+reduce_interval: function() {
+	var t = this.get_times_by_pos();
+
+	this.time_min = t.start_t;
+	this.time_max = t.end_t;
+
+	EventBus.send('time_sync', t);
 },
 
 listeners: {

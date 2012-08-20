@@ -31,6 +31,9 @@ var DGraphique = function(screen)
 
 	// If the scale have to be repainted
 	this.scale_change = true;
+
+	// Sampling the data ?
+	this.sampling = true;
 };
 
 DGraphique.prototype =
@@ -114,7 +117,7 @@ paintLine: function(data, keyX, keyY, color)
 
 	// We draw the lines in a second time, for the sampling
 	var lines_to_draw = [];
-	var last_x_i = 0.0;
+	var n_lines = 0;
 
 	c.beginPath();
 	c.strokeStyle = color;
@@ -131,28 +134,27 @@ paintLine: function(data, keyX, keyY, color)
 	// Pour chaque point à afficher
 	for (var i = 0; i < data_length; ++i)
 	{
+		var old_x_i = x_i;
 		x_i = (data[i][keyX] - b.x_min) * this.coef_x;
 		y_i = this.height - (data[i][keyY] - b.y_min) * this.coef_y;
 
-		var diff = x_i - last_x_i;
+		var diff = x_i - old_x_i;
 
-		if (diff < 1)
+		if (diff < 1 && this.sampling && n_lines > 0)
 		{
-			var last = lines_to_draw.pop();
+			var last = lines_to_draw[n_lines-1];
 
-			if (last)
-			{
-				x_i = (x_i + last[0]) / 2;
-				y_i = (y_i + last[1]) / 2;
-			}
+			x_i = old_x_i;
+			lines_to_draw[n_lines-1][1] = (y_i + last[1]) / 2;
 		}
 		else
-			last_x_i = x_i;
+		{
+			++n_lines;
+			lines_to_draw.push([x_i, y_i]);
+		}
 
-		lines_to_draw.push([x_i, y_i]);
 	}
 
-	var n_lines = lines_to_draw.length;
 	// console.log(n_lines);
 	x_i = 0;
 	for (var i = 0; i < n_lines; ++i)

@@ -20,7 +20,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 			var time_incremment = (typeof json.bt === 'undefined') ? 0 : json.bt;
 
-			for (var i = 0; i < json.e.length && i < 20000; ++i)
+			for (var i = 0; i < json.e.length && i < 200000; ++i)
 			{
 				var ei = json.e[i];
 				obj.addTuple({
