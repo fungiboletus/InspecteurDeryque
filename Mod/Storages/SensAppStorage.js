@@ -12,7 +12,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 	$.ajax({
 		url: additional_data.numerical,//+'?limit=20000',
 		success: function(json){
-			console.log(json);
+			// console.log(json);
 
 			var nb_e = json.e.length;
 
@@ -60,7 +60,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 			// Autosend of bounds
 			superOperator.listeners.get_bounds(null, superOperator);
 
-			console.log(obj.data);
+			// console.log(obj.data);
 			EventBus.send('time_sync', {
 				start_t: obj.data.time_tMin,
 				time_t: obj.data.time_tMin,

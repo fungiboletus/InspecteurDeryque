@@ -51,75 +51,119 @@ manageSize: function(obj)
 	obj.screenAxes.height = obj.height;
 },
 
-findBounds: function(data, keyX, keyY) {
-	var x_min = Number.MAX_VALUE;
-	var x_max = -Number.MAX_VALUE;
-	var y_min = Number.MAX_VALUE;
-	var y_max = -Number.MAX_VALUE;
-
-	for (var i = 0; i < data.length; ++i) {
-		var t = data[i];
-		if (t[keyX] < x_min) x_min = t[keyX];
-		if (t[keyX] > x_max) x_max = t[keyX];
-		if (t[keyY] < y_min) y_min = t[keyY];
-		if (t[keyY] > y_max) y_max = t[keyY];
-	}
-
-	return {
-		x_min: x_min,
-		x_max: x_max,
-		y_min: y_min,
-		y_max: y_max
-	};
-},
-
-paintLine: function(data, keyX, keyY, color)
+manageXScale: function()
 {
-
-	var c = this.canvasGraph;
-	var data_length = data.length;
-
-	if (data_length == 0) return;
-	var first_point = data[0];
-
-	var b = this.findBounds(data, keyX, keyY);
-	b.x_min = this.start_t;
-	b.x_max = this.end_t;
-
-	var size_x = b.x_max - b.x_min;
+	// Lot of calculations for find a good scale
+	var size_x = this.x_max - this.x_min;
 	var tmp_x = this.quantize_tics(size_x);
 	if (tmp_x > this.tic_x)
 		this.tic_x = tmp_x;
 
-	var size_y = b.y_max - b.y_min;
-	var tmp_y = this.quantize_tics(size_y);
-	if (tmp_y > this.tic_y)
-		this.tic_y = tmp_y;
-
-	// size_x = Math.ceil(size_x / tmp_x) * tmp_x;
-	size_y = Math.ceil(size_y / tmp_y) * tmp_y;
 	if (size_x == 0)
 	    size_x = 1.0;
 	else
 	    var new_coef_x = this.width / size_x;
 
+	if (new_coef_x < this.coef_x ||
+		Math.abs((this.coef_x - new_coef_x) /  new_coef_x) > 0.05)
+		this.coef_x = this.width / size_x;
+
+},
+
+resetYScale: function()
+{
+	// Min Max for the y scale
+	this.y_min = Number.MAX_VALUE;
+	this.y_max = -Number.MAX_VALUE;
+},
+
+manageYScale: function()
+{
+	// The same than XScale, but for the Y axis
+	var size_y = this.y_max - this.y_min;
+	var tmp_y = this.quantize_tics(size_y);
+	if (tmp_y > this.tic_y)
+		this.tic_y = tmp_y;
+
+	size_y = Math.ceil(size_y / tmp_y) * tmp_y;
+
 	if (size_y == 0)
 	    size_y = 1.0;
 	else
 	    this.coef_y = this.height / size_y;
+},
 
+includeLine: function(data, key)
+{
+	var c = this.canvasGraph;
+	var data_length = data.time_t.length;
 
-	if (
-		new_coef_x < this.coef_x ||
-		Math.abs((this.coef_x - new_coef_x) /  new_coef_x) > 0.05)
-		this.coef_x = this.width / size_x;
-
-
-	var max_x_by_point = (this.width / data_length) * 10.0;
+	// Nothing to do here
+	if (data_length == 0) return [];
 
 	// We draw the lines in a second time, for the sampling
-	var lines_to_draw = [];
+	var points_to_draw = [];
 	var n_lines = 0;
+
+	var current_x_pos = -1;
+	var current_value = 0.0;
+	var nb_current_points = 0;
+
+	// For each point
+	for (var i = 0; i < data_length; ++i)
+	{
+		var time = data.time_t[i];
+		var value = data[key][i];
+
+		// Min max on the normal values
+		if (value > this.y_max) this.y_max = value;
+		if (value < this.y_min) this.y_min = value;
+
+		// Position
+		var x_pos = parseInt((time - this.x_min) * this.coef_x);
+
+		// If the position is the same, sampling it !
+		if (x_pos === current_x_pos)
+		{
+			current_value += value;
+			++nb_current_points;
+		}
+		else
+		{
+			var sampled_value = current_value / nb_current_points;
+
+			// Add the line at the good place, with the average value
+			points_to_draw.push([current_x_pos, sampled_value]);
+
+			// If the current point is just the next pixel
+			// the average is applied
+			if ((x_pos-1) === current_x_pos)
+			{
+				nb_current_points = nb_current_points / 3 + 1;
+				current_value = current_value / 3 + value;
+			}
+			else
+			{
+				current_value = value;
+				nb_current_points = 1;
+			}
+
+			// Set to the new values
+			current_x_pos = x_pos;
+
+		}
+	}
+
+	// Add the list line
+	sampled_value = current_value / nb_current_points;
+	points_to_draw.push([current_x_pos, sampled_value]);
+
+	return points_to_draw;
+},
+
+drawLine: function(points, color)
+{
+	var c = this.canvasGraph;
 
 	c.beginPath();
 	c.strokeStyle = color;
@@ -129,47 +173,38 @@ paintLine: function(data, keyX, keyY, color)
 	// c.shadowOffsetX = 1;
 	// c.shadowOffsetY = 1;
 
-	var x_i = 0;
-	var	y_i = this.height - (first_point[keyY] - b.y_min) * this.coef_y;
-	c.moveTo(x_i,y_i);
 
-	// Pour chaque point à afficher
-	for (var i = 0; i < data_length; ++i)
+	var points_length = points.length;
+
+	// var x_i = 0;
+	// var	y_i = this.height - (first_point[keyY] - b.y_min) * this.coef_y;
+	// c.moveTo(x_i,y_i);
+
+	var max_x_by_point = ( this.width / points_length) * 10.0;
+	var old_x_pos = -max_x_by_point;
+
+	for (var i = 0; i < points_length; ++i)
 	{
-		var old_x_i = x_i;
-		x_i = (data[i][keyX] - b.x_min) * this.coef_x;
-		y_i = this.height - (data[i][keyY] - b.y_min) * this.coef_y;
+		var x_pos = points[i][0];
+		var y_pos = this.height - (points[i][1] - this.y_min) * this.coef_y;
 
-		var diff = x_i - old_x_i;
 
-		if (diff < 1 && this.sampling && n_lines > 0)
-		{
-			var last = lines_to_draw[n_lines-1];
+		// var old_x_i = x_i;
+		// x_i = points_to_draw[i][0];
+		// y_i = points_to_draw[i][1];
+		// var diff = x_i - old_x_i;
 
-			x_i = old_x_i;
-			lines_to_draw[n_lines-1][1] = (y_i + last[1]) / 2;
-		}
+		if (x_pos - old_x_pos > max_x_by_point)
+			c.moveTo(x_pos, y_pos);
 		else
-		{
-			++n_lines;
-			lines_to_draw.push([x_i, y_i]);
-		}
+			c.lineTo(x_pos, y_pos);
 
-	}
+		old_x_pos = x_pos;
 
-	// console.log(n_lines);
-	x_i = 0;
-	for (var i = 0; i < n_lines; ++i)
-	{
-		var old_x_i = x_i;
-		x_i = lines_to_draw[i][0];
-		y_i = lines_to_draw[i][1];
-		var diff = x_i - old_x_i;
-
-		if (diff > max_x_by_point)
-			c.moveTo(x_i,y_i);
-		else
-			c.lineTo(x_i, y_i);
+		// if (diff > max_x_by_point)
+			// c.moveTo(x_i,y_i);
+		// else
+			// c.lineTo(x_i, y_i);
 	}
 
 	c.stroke();
@@ -302,42 +337,34 @@ quantize_tics: function(max)
 listeners: {
 	time_sync: function(d, obj)
 	{
-		obj.start_t = d.start_t;
-		obj.end_t = d.end_t;
+		obj.x_min = d.start_t;
+		obj.x_max = d.end_t;
 	},
 
-	/*bounds: function(d, obj) {
-		var min_time = Number.MAX_VALUE;
-		var max_time = -Number.MAX_VALUE;
-
-		for (var local_statement in obj.database)
-			if (local_statement in d)
-			{
-				if (d[local_statement].time_tMax > max_time)
-					max_time = d[local_statement].time_tMax;
-				if (d[local_statement].time_tMin < min_time)
-					min_time = d[local_statement].time_tMin;
-			}
-
-		obj.min_time = min_time;
-		obj.max_time = max_time;
-	},*/
-
 	tuples: function(detail, obj) {
+		var lines_to_draw = [];
+
 		obj.clear();
-		var colors = ['blue', 'purple', 'red', 'yellowgreen','white'];
+		obj.resetYScale();
+		obj.manageXScale();
+
+		var colors = ['white', 'red', 'blue', 'purple', 'yellowgreen'];
 		for (var statement_name in detail)
 		{
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
-			if (data.length === 0) continue;
 
-			for (var k in data[0])
+			for (var k in data)
 				if (k != 'time_t')
-					obj.paintLine(data, 'time_t', k, colors.pop());
+					lines_to_draw.push(obj.includeLine(data, k));
 		}
 
+		obj.manageYScale();
 		obj.paintAxes(true, false);
+
+		for (var i = 0; i < lines_to_draw.length; ++i)
+			obj.drawLine(lines_to_draw[i], colors[i%colors.length]);
+
 	},
 	add_statement: function(e, obj) {
 		if (e.box_name != self.name) return;

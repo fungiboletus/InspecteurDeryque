@@ -72,6 +72,7 @@ time_sync: function(d, obj) {
 		response[statement_name] =
 			obj.database[statement_name].time_sync(d.start_t, d.end_t);
 
-	EventBus.send('tuples', response);
+	// Hack with the setTimeout for send the tuples event after the time_sync event
+	window.setTimeout(function(){EventBus.send('tuples', response);}, 1);
 }
 }};

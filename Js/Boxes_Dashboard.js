@@ -31,7 +31,7 @@ $(document).ready(function() {
 	// Création of the cadreur
 	cadreurInstance = new Cadreur(
 			byId('mainContent'),
-			Cadreur_DIRECTIONS.VERTICAL);
+			Cadreur_DIRECTIONS.HORIZONTAL);
 	var layout = cadreurInstance;
 
 	// Création of the proxy operator between the REST and the runtime
