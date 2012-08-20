@@ -84,14 +84,13 @@ listeners: {
 		for (var statement_name in detail) {
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
-			if (data.length === 0) continue;
 
-			for (var k in data[0])
-				if (k != 'time_t')
+			for (var k in data)
+				if (k != 'time_t' && data[k].length > 0)
 				{
 					// première valeur pour l'instant, car bon voila quoi,
 					// faut faire d'autres évènements
-					value += data[0][k];
+					value += data[k][0];
 					++n;
 				}
 
@@ -100,6 +99,7 @@ listeners: {
 		if (n > 0) value /= n;
 
 		var ratio = (value - obj.min_value) / (obj.max_value - obj.min_value);
+		if (n === 0) ratio = 0;
 
 		var nb_bars = obj.lines.length;
 		var nb_actived_bars = Math.ceil(ratio * nb_bars);

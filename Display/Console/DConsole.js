@@ -7,10 +7,12 @@ var DConsole = function(area)
 	var events = ['new_tuples', 'add_statement', 'del_statement',
 		'layout_change', 'log', 'error', 'statements_list',
 		'get_statements_list', 'time_sync', 'tuples_selected',
-		'get_bounds', 'bounds', 'tuples'];
+		'get_bounds', 'bounds'];
 
 	for (var i = 0; i < events.length; ++i)
 		EventBus.addListener(events[i], this.manageEvent, this);
+
+	EventBus.addListener('tuples', this.tuples, this);
 
 	this.max_capacity = false;
 }
@@ -28,7 +30,7 @@ DConsole.prototype.manageEvent = function(detail, obj, e)
 		json.className = 'json rainbow';
 		li.appendChild(json);
 
-		var text = JSON.stringify(e.detail, null, 2);
+		var text = JSON.stringify(detail, null, 2);
 
 		var rainbow_a_fonctionne = false;
 		if (text.length < 512)
@@ -58,3 +60,12 @@ DConsole.prototype.manageEvent = function(detail, obj, e)
 	console.scrollTop = console.scrollHeight;
 };
 
+DConsole.prototype.tuples = function(d, obj, e)
+{
+	var r = {};
+
+	for (var key in d)
+		r[key] = d[key].time_t.length;
+
+	obj.manageEvent(r, obj, e)
+};

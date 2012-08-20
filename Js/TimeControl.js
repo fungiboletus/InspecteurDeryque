@@ -90,6 +90,13 @@ create_interface: function() {
 	this.bti.appendChild(this.bti_icon);
 	time_buttons.appendChild(this.bti);
 
+	this.reduce_button = newDom('button');
+	this.reduce_button.className = 'btn btn-mini btn-inverse';
+	var reduce_button_icon = newDom('i');
+	reduce_button_icon.className = 'icon-resize-small icon-white';
+	this.reduce_button.appendChild(reduce_button_icon);
+	time_buttons.appendChild(this.reduce_button);
+
 	this.time_info = newDom('button');
 	this.time_info.className = 'btn btn-mini time_info';
 	this.time_info.appendChild(document.createTextNode('12:45:12.054'));
@@ -210,6 +217,11 @@ animate_interface: function() {
 			obj.bti_icon.className = obj.bti_icon_play_class;
 		}
 	});
+
+	// Manage the reduce button
+	$(this.reduce_button).click(function() {
+		obj.reduce_interval();
+	});
 },
 
 /*
@@ -270,6 +282,7 @@ draw_tooltip: function() {
  */
 get_txt_date: function(date)
 {
+	date = new Date(date);
 	var hours = date.getHours().toString();
 	if (hours.length < 2) hours = '0'+hours;
 	var mins = date.getMinutes().toString();
@@ -381,12 +394,9 @@ get_times_by_pos: function() {
 	var start_t = t + this.left_pos / this.slider_width * time_int;
 	var end_t = t + this.right_pos / this.slider_width * time_int;
 
-	var start_t_date = new Date(start_t);
-	var end_t_date = new Date(end_t);
-
 	return {
-		start_t: start_t_date,
-		end_t: end_t_date
+		start_t: start_t,
+		end_t: end_t
 	};
 },
 
@@ -450,8 +460,8 @@ play_callback: function(obj) {
 	var times = obj.get_times_by_pos();
 
 	// Update the time
-	times.start_t.setSeconds(times.start_t.getSeconds()+plus);
-	times.end_t.setSeconds(times.end_t.getSeconds()+plus);
+	times.start_t += plus;
+	times.end_t += plus;
 
 	// The max time is the limit
 	if (times.end_t > obj.time_max)

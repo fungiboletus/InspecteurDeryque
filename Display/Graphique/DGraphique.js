@@ -83,6 +83,8 @@ paintLine: function(data, keyX, keyY, color)
 	var first_point = data[0];
 
 	var b = this.findBounds(data, keyX, keyY);
+	b.x_min = this.start_t;
+	b.x_max = this.end_t;
 
 	var size_x = b.x_max - b.x_min;
 	var tmp_x = this.quantize_tics(size_x);
@@ -298,6 +300,12 @@ quantize_tics: function(max)
 },
 
 listeners: {
+	time_sync: function(d, obj)
+	{
+		obj.start_t = d.start_t;
+		obj.end_t = d.end_t;
+	},
+
 	/*bounds: function(d, obj) {
 		var min_time = Number.MAX_VALUE;
 		var max_time = -Number.MAX_VALUE;
@@ -311,7 +319,8 @@ listeners: {
 					min_time = d[local_statement].time_tMin;
 			}
 
-		obj.intervalle = max_time - min_time;
+		obj.min_time = min_time;
+		obj.max_time = max_time;
 	},*/
 
 	tuples: function(detail, obj) {

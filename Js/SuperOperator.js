@@ -3,7 +3,8 @@ var SuperOperator = function() {
 
 	EventBus.addListeners(this.listeners, this);
 
-	this.database = new Object();
+	this.database = {};
+	this.loading_database = {};
 };
 
 SuperOperator.prototype = {
@@ -26,8 +27,10 @@ get_statements_list: function(d, obj) {
 add_statement: function(d, obj) {
 	var statement_name = d.statement_name;
 
-	if (typeof obj.database[statement_name] !== 'undefined')
+	if (statement_name in obj.loading_database)
 		return;
+
+	obj.loading_database[statement_name] = true;
 
 	obj.ajax('resume/'+encodeURIComponent(statement_name),
 	function(json)

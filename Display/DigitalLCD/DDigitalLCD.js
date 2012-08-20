@@ -22,7 +22,7 @@ listeners: {
 			var data = detail[statement_name];
 			if (data.length === 0) continue;
 
-			for (var k in data[0])
+			for (var k in data)
 				if (k != 'time_t')
 				{
 					// première valeur pour l'instant, car bon voila quoi,
@@ -37,7 +37,7 @@ listeners: {
 						box.appendChild(document.createTextNode(''));
 						obj.screen.appendChild(box);
 					}
-					var value = data[0][k];
+					var value = data[k].length > 0 ? data[k][0] : 0.0;
 					box.firstChild.data = value;
 					updated_lcd.push(box);
 				}

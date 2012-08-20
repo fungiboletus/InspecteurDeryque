@@ -120,9 +120,8 @@ listeners: {
 		for (var statement_name in detail) {
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
-			if (data.length === 0) continue;
 
-			for (var k in data[0])
+			for (var k in data)
 				if (k != 'time_t')
 				{
 					// première valeur pour l'instant, car bon voila quoi,
@@ -139,7 +138,7 @@ listeners: {
 						obj.screen.appendChild(box);
 						obj.needles.push(box);
 					}
-					var value = data[0][k];
+					var value = data[k].length > 0 ? data[k][0] : 0.0;
 
 					var ratio = (value - obj.min_value) / (obj.max_value - obj.min_value);
 

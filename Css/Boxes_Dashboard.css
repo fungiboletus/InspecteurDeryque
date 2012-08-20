@@ -266,6 +266,8 @@ font-family: monospace;
 /*line-height: 25px;*/
 font-weight: bolder;
 text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.45);
+border-top:1px solid white;
+border-left:0px;
 }
 
 
@@ -284,7 +286,7 @@ user-select: none;
 cursor:pointer;
 overflow:hidden;
 position:absolute;
-left:142px;
+left:165px;
 top:0;
 right:0;
 bottom:0;

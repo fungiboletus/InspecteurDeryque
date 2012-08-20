@@ -549,9 +549,11 @@ $(document).ready(function() {
 		{
 			var li = newDom('li');
 			if (first) {
-				li.className = 'selected selected_by_default';
+				li.className = 'btn selected selected_by_default';
 				first = false;
 			}
+			else
+				li.className = 'btn';
 			layout.disableDrag(li);
 
 			$(li).click(clic_type_statement);

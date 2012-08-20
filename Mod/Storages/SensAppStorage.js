@@ -6,10 +6,6 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 	var additional_data = resume.additional_data;
 
-	this.data = {
-		data: []
-	};
-
 	// console.log(resume);
 	var obj = this;
 
@@ -18,16 +14,48 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 		success: function(json){
 			console.log(json);
 
+			var nb_e = json.e.length;
+
+			if (nb_e === 0)
+				alert('todo');
+
+			// 64 bits baby !
+			var size = nb_e * 8;
+
+			var time_buffer = new ArrayBuffer(size);
+			var time_array = new Float64Array(time_buffer);
+			var value_buffer = new ArrayBuffer(size);
+			var value_array = new Float64Array(value_buffer);
+
 			var time_incremment = (typeof json.bt === 'undefined') ? 0 : json.bt;
 
-			for (var i = 0; i < json.e.length && i < 200000; ++i)
+			var min = Number.MAX_VALUE;
+			var max = -Number.MAX_VALUE;
+
+			for (var i = 0; i < nb_e; ++i)
 			{
 				var ei = json.e[i];
-				obj.addTuple({
-					time_t: new Date((ei.t + time_incremment) * 1000),
-					value: ei.v
-				});
+				time_array[i] = (ei.t + time_incremment);// * 1000.0;
+				value_array[i] = ei.v;
+				if (ei.v > max)
+					max = ei.v;
+				if (ei.v < min)
+					min = ei.v;
 			}
+
+			obj.data = {
+				data: {
+					time_t: time_array,
+					value: value_array
+				},
+
+				// The data need to be sorted
+				time_tMin: json.e[0].t + time_incremment,
+				time_tMax: json.e[nb_e-1].t + time_incremment,
+
+				valueMin: min,
+				valueMax: max
+			};
 
 			// Autosend of bounds
 			superOperator.listeners.get_bounds(null, superOperator);
@@ -60,13 +88,12 @@ bounds: function()
 time_sync: function(start_t, end_t)
 {
 	var data = this.data.data;
-
 	// Wonderful dichotomical research oh yeah
-	var begin = 0, end = data.length, old_m = -1, m = -1;
+	var begin = 0, end = data.time_t.length, old_m = -1, m = -1;
 
 	do {
 		m = parseInt(begin + (end-begin)/2);
-		var t = data[m].time_t;
+		var t = data.time_t[m];
 		if (old_m === m || t == start_t)
 			break;
 		else if (t < start_t)
@@ -78,11 +105,11 @@ time_sync: function(start_t, end_t)
 
 	var begin_filtered_data = m;
 
-	begin = 0; end = data.length; old_m = -1; m = -1;
+	begin = 0; end = data.time_t.length; old_m = -1; m = -1;
 
 	do {
 		m = parseInt(begin + (end-begin)/2);
-		var t = data[m].time_t;
+		var t = data.time_t[m];
 		if (old_m === m || t == end_t)
 			break;
 		else if (t < end_t)
@@ -94,22 +121,10 @@ time_sync: function(start_t, end_t)
 
 	var end_filtered_data = m;
 
-	// Expecting that the native slice function is fast
-	return data.slice(begin_filtered_data, end_filtered_data + 1);
-},
-
-addTuple: function(tuple)
-{
-	for (var key in tuple)
-	{
-		var keyMin = key+'Min';
-		var keyMax = key+'Max';
-		if (!(keyMin in this.data) || tuple[key] < this.data[keyMin])
-			this.data[keyMin] = tuple[key];
-
-		if (!(keyMax in this.data) || tuple[key] > this.data[keyMax])
-			this.data[keyMax] = tuple[key];
-	}
-	this.data.data.push(tuple);
+	// Create a new view of the array data
+	return {
+		time_t: data.time_t.subarray(begin_filtered_data, end_filtered_data),
+		value: data.value.subarray(begin_filtered_data, end_filtered_data)
+	};
 }
 };
