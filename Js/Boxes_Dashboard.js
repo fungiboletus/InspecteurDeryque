@@ -179,7 +179,9 @@ $(document).ready(function() {
 				front_buttons_bar.removeClass('buttons_caches');
 
 				// In a setTimeout for event order (dirty but funny)
-				setTimeout(function(){EventBus.send('layout_change');}, 1);
+				setTimeout(function(){
+					EventBus.send('size_change');
+				}, 1);
 			}
 			else
 			{
@@ -530,7 +532,8 @@ $(document).ready(function() {
 					EventBus.send('add_statement',
 						{statement_name: $(this).attr('value'), box_name: id}
 					);
-					EventBus.send('get_bounds');
+					// EventBus.send('size_change');
+					// EventBus.send('get_bounds');
 				});
 			});
 		}
@@ -726,16 +729,12 @@ $(document).ready(function() {
 	// Equilibrate in setTimeout for trigger CSS3 transitions
 	setTimeout(function(){layout.equilibrate();}, 1);
 
-	/*
-		{
-		h: [
-			{graph: [demo, demo2]}
-			{v: [
-				{boite: [a, b]}
-				{table: [b, c]}
-			]
-			}
-		]
-		}
-	*/
+	// 600 is the duration of the layout's transitions
+	$.event.special.debouncedresize.threshold = 600;
+	$(window).on('debouncedresize',function()
+	{
+		EventBus.send('size_change');
+	});
+
+	setTimeout(function(){EventBus.send('size_change');}, 600);
 });

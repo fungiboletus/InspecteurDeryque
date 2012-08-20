@@ -196,12 +196,11 @@ $(document).ready(function(){
 	var table = $('table.data_list, table.sorted_table');
 	if (table.length && table.tablesorter) table.tablesorter({sortList: [[0,0]]});
 
-	$(window).resize(function()
+	/*on_resize(function()
 	{
 		if (window.innerWidth == window.screen.width && window.innerHeight == window.screen.height)
 			$(document.body).addClass('fullscreen');
 		else
 			$(document.body).removeClass('fullscreen');
-	});
-
+	});*/
 });

@@ -38,55 +38,11 @@ var DGauge = function(screen)
 		this.lines.push(line);
 	}
 
-	// Area size management
-	this.manageSize();
-	$(window).resize(this, this.manageSize);
-
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
 };
 
-DGauge.prototype =
-{
-// Gestion de la taille du graphe
-manageSize: function(obj)
-{
-	var obj = obj == null ? this : obj.data;
-	var width = $(obj.screen).width();
-	var height = $(obj.screen).height();
-	var screen_height = height;
-
-	if (height * 2 > width) height = width * 0.5;
-
-	var px_height = height - 30 + 'px';
-
-	var ni = obj.lines.length;
-	for (var i = 0; i < ni; ++i)
-		obj.lines[i].style.webkitTransformOriginX = px_height;
-
-	var ni = obj.needles.length;
-	for (var i = 0; i < ni; ++i)
-	{
-		obj.needles[i].style.webkitTransformOriginX = px_height;
-		obj.needles[i].style.width = px_height;
-	}
-
-	obj.px_height = px_height;
-
-	var px_height = height - 75 + 'px';
-	obj.infoMin.style.webkitTransformOriginX = px_height;
-	obj.infoMinMedium.style.webkitTransformOriginX = px_height;
-	obj.infoMedium.style.webkitTransformOriginX = px_height;
-	obj.infoMediumMax.style.webkitTransformOriginX = px_height;
-	obj.infoMax.style.webkitTransformOriginX = px_height;
-
-	var marge = (width - 2 * height + 150) / 2;
-	obj.screen.style.left = marge + 'px';
-	marge = (screen_height - height + 30) / 2;
-	obj.screen.style.bottom = marge + 'px';
-},
-
-listeners: {
+DGauge.prototype.listeners = {
 	bounds: function(d, obj) {
 		obj.min_value = Number.MAX_VALUE;
 		obj.max_value = -Number.MAX_VALUE;
@@ -175,5 +131,40 @@ listeners: {
 
 		if (e.statement_name in obj.database)
 			delete obj.database[e.statement_name];
+	},
+	size_change: function(e, obj)
+	{
+		var width = $(obj.screen).width();
+		var height = $(obj.screen).height();
+		var screen_height = height;
+
+		if (height * 2 > width) height = width * 0.5;
+
+		var px_height = height - 30 + 'px';
+
+		var ni = obj.lines.length;
+		for (var i = 0; i < ni; ++i)
+			obj.lines[i].style.webkitTransformOriginX = px_height;
+
+		var ni = obj.needles.length;
+		for (var i = 0; i < ni; ++i)
+		{
+			obj.needles[i].style.webkitTransformOriginX = px_height;
+			obj.needles[i].style.width = px_height;
+		}
+
+		obj.px_height = px_height;
+
+		var px_height = height - 75 + 'px';
+		obj.infoMin.style.webkitTransformOriginX = px_height;
+		obj.infoMinMedium.style.webkitTransformOriginX = px_height;
+		obj.infoMedium.style.webkitTransformOriginX = px_height;
+		obj.infoMediumMax.style.webkitTransformOriginX = px_height;
+		obj.infoMax.style.webkitTransformOriginX = px_height;
+
+		var marge = (width - 2 * height + 150) / 2;
+		obj.screen.style.left = marge + 'px';
+		marge = (screen_height - height + 30) / 2;
+		obj.screen.style.bottom = marge + 'px';
 	}
-}};
+};

@@ -7,57 +7,11 @@ var DBars = function(screen)
 	// Lines
 	this.lines = [];
 
-	// Area size management
-	this.manageSize();
-	$(window).resize(this, this.manageSize);
-
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
 };
 
-DBars.prototype =
-{
-// Gestion de la taille du graphe
-manageSize: function(obj)
-{
-	var obj = obj == null ? this : obj.data;
-	var width = $(obj.screen).width();
-	var height = $(obj.screen).height();
-
-	var line_width = 42;
-
-	var nb_lines = parseInt(width / line_width);
-
-	var old_nb_lines = obj.lines.length;
-	if (nb_lines > old_nb_lines)
-	{
-		for (var i = old_nb_lines; i < nb_lines; ++i)
-		{
-			var line = newDom('div');
-			line.className = 'bar';
-			obj.lines.push(line);
-			obj.screen.appendChild(line);
-		}
-	}
-	else if (nb_lines < old_nb_lines)
-		for (var i = nb_lines; i < old_nb_lines; ++i)
-			obj.screen.removeChild(obj.lines.pop());
-
-	var height_increment = height/nb_lines;
-
-	var left = 0;
-
-	for (var i = 0; i < nb_lines; ++i)
-	{
-		height -= height_increment;
-		obj.lines[i].style.top = height+'px';
-		obj.lines[i].style.left = left+'px';
-		left += line_width;
-	}
-
-},
-
-listeners: {
+DBars.prototype.listeners = {
 	bounds: function(d, obj) {
 		obj.min_value = Number.MAX_VALUE;
 		obj.max_value = -Number.MAX_VALUE;
@@ -122,5 +76,42 @@ listeners: {
 
 		if (e.statement_name in obj.database)
 			delete obj.database[e.statement_name];
+	},
+	size_change: function(e, obj)
+	{
+		var width = $(obj.screen).width();
+		var height = $(obj.screen).height();
+
+		var line_width = 42;
+
+		var nb_lines = parseInt(width / line_width);
+
+		var old_nb_lines = obj.lines.length;
+		if (nb_lines > old_nb_lines)
+		{
+			for (var i = old_nb_lines; i < nb_lines; ++i)
+			{
+				var line = newDom('div');
+				line.className = 'bar';
+				obj.lines.push(line);
+				obj.screen.appendChild(line);
+			}
+		}
+		else if (nb_lines < old_nb_lines)
+			for (var i = nb_lines; i < old_nb_lines; ++i)
+				obj.screen.removeChild(obj.lines.pop());
+
+		var height_increment = height/nb_lines;
+
+		var left = 0;
+
+		for (var i = 0; i < nb_lines; ++i)
+		{
+			height -= height_increment;
+			obj.lines[i].style.top = height+'px';
+			obj.lines[i].style.left = left+'px';
+			left += line_width;
+		}
+
 	}
-}};
+};

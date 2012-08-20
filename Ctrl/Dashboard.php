@@ -13,6 +13,7 @@ class Dashboard
 		CHead::addCSS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.css');
 		CHead::addJS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.js');
 		CHead::addCSS('Boxes_Dashboard');
+		CHead::addJS('jquery.debouncedresize');
 		CHead::addJS('SuperOperator');
 		CHead::addJS('TimeControl');
 		CHead::addJS('Boxes_Dashboard');

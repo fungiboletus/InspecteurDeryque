@@ -5,7 +5,7 @@ var DConsole = function(area)
 	area.appendChild(this.console);
 
 	var events = ['new_tuples', 'add_statement', 'del_statement',
-		'layout_change', 'log', 'error', 'statements_list',
+		'size_change', 'log', 'error', 'statements_list',
 		'get_statements_list', 'time_sync', 'tuples_selected',
 		'get_bounds', 'bounds'];
 

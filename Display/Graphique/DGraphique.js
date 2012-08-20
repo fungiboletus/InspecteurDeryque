@@ -17,10 +17,6 @@ var DGraphique = function(screen)
 	this.screen.appendChild(this.screenAxes);
 	this.screen.appendChild(this.screenGraph);
 
-	// Area size management
-	this.manageSize();
-	$(window).resize(this, this.manageSize);
-
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
 
@@ -38,19 +34,6 @@ var DGraphique = function(screen)
 
 DGraphique.prototype =
 {
-// Gestion de la taille du graphe
-manageSize: function(obj)
-{
-	var obj = obj == null ? this : obj.data;
-	obj.width = $(obj.screen).width();
-	obj.height = $(obj.screen).height();
-
-	obj.screenGraph.width = obj.width;
-	obj.screenGraph.height = obj.height;
-	obj.screenAxes.width = obj.width;
-	obj.screenAxes.height = obj.height;
-},
-
 manageXScale: function()
 {
 	// Lot of calculations for find a good scale
@@ -377,5 +360,30 @@ listeners: {
 
 		if (e.statement_name in obj.database)
 			delete obj.database[e.statement_name];
-	}
+	},
+
+	// Gestion de la taille du graphe
+	size_change: function(e, obj)
+	{
+		obj.width = $(obj.screen).width();
+		obj.height = $(obj.screen).height();
+
+		// console.log(obj.width, obj.height);
+
+		if (obj.screenGraph.width !== obj.width)
+		{
+			obj.screenGraph.width = obj.width;
+			obj.screenAxes.width = obj.width;
+		}
+
+		if (obj.screenGraph.height !== obj.height)
+		{
+			obj.screenGraph.height = obj.height;
+			obj.screenAxes.height = obj.height;
+		}
+
+		// Reset the scale
+		obj.clear(true);
+	},
+
 }};

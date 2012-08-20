@@ -162,7 +162,7 @@ del_statement: function(e, obj) {
 	if (e.statement_name in obj.database)
 		delete obj.database[e.statement_name];
 },
-layout_change: function(d, obj) {
+size_change: function(d, obj) {
 	if (obj.database.length == 0)
 		obj.map.setCenter(obj.default_location);
 },
