@@ -21,6 +21,9 @@ var DMap = function(screen)
 
 	this.database = {};
 	this.lines = {};
+
+	// TODO MOAR POINTS
+	this.max_nb_points = 64;
 };
 
 DMap.prototype =
@@ -40,11 +43,12 @@ tuples: function(detail, obj) {
 
 
 		var base = obj.database[statement_name];
-		console.log(base);
 		// For each new tuple
 		var data = detail[statement_name];
 
 		var nb_data = data.time_t.length;
+
+		var sampling = Math.ceil(nb_data / obj.max_nb_points);
 
 		if (nb_data > 0) {
 			// var pinColor = "FFFFFF";
@@ -82,12 +86,12 @@ tuples: function(detail, obj) {
 			bounds.extend(ll);
 		}
 
-		for (var i = 1; i < nb_data; ++i) {
+		var i = nb_data % sampling - 1;
+		if (i < 1) i += 2;
 
-			// var last_point = data[i-1];
-			// var point = data[i];
+		for (; i < nb_data; i+=sampling) {
 			var ll = new google.maps.LatLng(data.lat[i], data.lon[i]);
-			var ll2 = new google.maps.LatLng(data.lat[i-1], data.lon[i-1]);
+			var ll2 = new google.maps.LatLng(data.lat[i-sampling], data.lon[i-sampling]);
 
 			var key = ll+":"+ll2;
 
@@ -98,7 +102,7 @@ tuples: function(detail, obj) {
 			{
 				var distance = obj.distance(ll2.lat(), ll2.lng(),
 						 ll.lat(), ll.lng());
-				var diff_t = data.time_t[i] - data.time_t[i-1];
+				var diff_t = data.time_t[i] - data.time_t[i-sampling];
 				var speed = distance/diff_t * 36.0;
 
 				// TODO véritable gestion des couleurs, avec légende
