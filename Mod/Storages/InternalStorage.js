@@ -2,6 +2,7 @@ var InternalStorage = function(superOperator, statement_name)
 {
 	this.superOperator = superOperator;
 	this.statement_name = statement_name;
+	this.load_finished = false;
 
 	this.data = {
 		data: {}
@@ -40,16 +41,9 @@ var InternalStorage = function(superOperator, statement_name)
 				 	_addTuple(i);
 			}
 
-			// Autosend of bounds
-			superOperator.listeners.get_bounds(null, superOperator);
+			obj.load_finished = true;
+			obj.finished_events();
 
-			EventBus.send('time_sync', {
-				start_t: obj.data.time_tMin,
-				time_t: obj.data.time_tMin,
-				end_t: obj.data.time_tMax
-			});
-
-			EventBus.send('get_bounds');
 		});
 };
 
@@ -57,6 +51,7 @@ InternalStorage.prototype =
 {
 bounds: SuperOperator.prototype.super_bounds,
 time_sync: SuperOperator.prototype.super_time_sync,
+finished_events: SuperOperator.prototype.super_finished_events,
 
 addTuple: function(tuple, i)
 {

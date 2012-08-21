@@ -5,6 +5,7 @@ var SuperOperator = function() {
 
 	this.database = {};
 	this.loading_database = {};
+
 };
 
 SuperOperator.prototype = {
@@ -17,8 +18,19 @@ ajax: function(path, callback) {
 		}});
 },
 
+super_finished_events: function()
+{
+	// Autosend of bounds
+	this.superOperator.listeners.get_bounds(null, this.superOperator);
+
+	EventBus.send('time_sync', {
+		start_t: this.data.time_tMin,
+		end_t: this.data.time_tMax
+	});
+},
+
 super_bounds: function() {
-	if (typeof this.data.data.time_t === 'undefined') return false;
+	if (this.data && (typeof this.data.data.time_t === 'undefined')) return false;
 
 	var r = $.extend({}, this.data);
 	delete r.data;
@@ -32,8 +44,6 @@ super_time_sync: function(start_t, end_t)
 			return false;
 
 	var data = this.data.data;
-
-	// console.log(data, data.time_t);
 
 	// Wonderful dichotomical research oh yeah
 	var begin = 0, end = data.time_t.length, old_m = -1, m = -1;
@@ -88,22 +98,35 @@ add_statement: function(d, obj) {
 	var statement_name = d.statement_name;
 
 	if (statement_name in obj.loading_database)
-		return;
-
-	obj.loading_database[statement_name] = true;
-
-	obj.ajax('resume/'+encodeURIComponent(statement_name),
-	function(json)
 	{
-		var storage = json.storage;
+		var s = obj.loading_database[statement_name];
+		if (s !== null && s.load_finished)
+		{
+			if (!(statement_name in obj.database))
+				obj.database[statement_name] = s;
+			s.finished_events();
+		}
+	}
+	else
+	{
 
-		if (typeof window[storage] !== 'undefined')
-			obj.database[statement_name] = new window[storage](obj, statement_name, json);
-		else
-			alert('Unknow storage type : '+storage);
-	});
+		obj.loading_database[statement_name] = null;
 
+		obj.ajax('resume/'+encodeURIComponent(statement_name),
+		function(json)
+		{
+			var storage = json.storage;
 
+			if (typeof window[storage] !== 'undefined')
+			{
+				var storageInstance = new window[storage](obj, statement_name, json);
+				obj.database[statement_name] = storageInstance;
+				obj.loading_database[statement_name] = storageInstance;
+			}
+			else
+				alert('Unknow storage type : '+storage);
+		});
+	}
 },
 
 del_statement: function(e, obj) {
@@ -132,8 +155,8 @@ get_bounds: function(d, obj) {
 },
 
 time_sync: function(d, obj) {
-	if (!d.start_t) d.start_t = new Date(0);
-	if (!d.end_t) { d.end_t = new Date(); d.end_t.setDate(d.end_t.getDate()+1);}
+	if (typeof d.start_t === 'undefined' || d.start_t == null) d.start_t = 0;
+	if (typeof d.end_t === 'undefined' || d.end_t == null) d.end_t = (new Date()) * 1 + 3600 * 24;
 
 	var response = {};
 

@@ -3,6 +3,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 	this.superOperator = superOperator;
 	this.statement_name = statement_name;
 	this.resume = resume;
+	this.load_finished = false;
 
 	var additional_data = resume.additional_data;
 
@@ -91,15 +92,8 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 					data.time_tMax = data.data.time_t[data.data.time_t.length -1];
 					obj.data = data;
 
-					// Autosend of bounds
-					superOperator.listeners.get_bounds(null, superOperator);
-
-					EventBus.send('time_sync', {
-						start_t: data.time_tMin,
-						end_t: data.time_tMax
-					});
-
-					EventBus.send('get_bounds');
+					obj.load_finished = true;
+					obj.finished_events();
 				}
 
 			},
@@ -116,6 +110,7 @@ SensAppStorage.prototype =
 {
 bounds: SuperOperator.prototype.super_bounds,
 time_sync: SuperOperator.prototype.super_time_sync,
+finished_events: SuperOperator.prototype.super_finished_events,
 
 extract_v: function(e)
 {
