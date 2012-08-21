@@ -586,7 +586,7 @@ del_statement: function(e, obj) {
 
 size_change: function(e, obj) {
 	// In a timeout in order to wait the size managment of other elements
-	window.setTimeout(function(){EventBus.send('time_sync', obj.get_times_by_pos());}, 1);
+	EventBus.sendDelayed('time_sync', obj.get_times_by_pos());
 }
 
 }};

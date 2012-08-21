@@ -47,13 +47,18 @@ DGauge.prototype.listeners = {
 		obj.min_value = Number.MAX_VALUE;
 		obj.max_value = -Number.MAX_VALUE;
 
+		var updated = false;
+
 		for (var local_statement in obj.database)
+		{
 			if (local_statement in d)
+			{
 				for (var type in d[local_statement])
 				{
 					var name = type.slice(0, -3);
 					if (name !== 'time_t')
 					{
+						updated = true;
 						var side = type.slice(-3);
 						if (side === 'Max' && obj.max_value < d[local_statement][type])
 							obj.max_value = d[local_statement][type];
@@ -61,6 +66,14 @@ DGauge.prototype.listeners = {
 							obj.min_value = d[local_statement][type];
 					}
 				}
+			}
+		}
+
+		if (!updated)
+		{
+			obj.min_value = 0.0;
+			obj.max_value = 256.0;
+		}
 
 		var medium = (obj.max_value - obj.min_value) * 0.5 + obj.min_value;
 		var minMedium = (medium - obj.min_value) * 0.5 + obj.min_value;
@@ -112,11 +125,14 @@ DGauge.prototype.listeners = {
 
 		var ni = obj.needles.length;
 		for (var i = 0; i < ni; ++i)
-			if (updated_needle.indexOf(obj.needles[i]) === -1)
+		{
+			var needle = obj.needles[i];
+			if (updated_needle.indexOf(needle) === -1)
 			{
 				obj.needles.splice(i, 1);
-				obj.screen.removeChild(obj.needles[i]);
+				obj.screen.removeChild(needle);
 			}
+		}
 
 	},
 

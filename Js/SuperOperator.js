@@ -4,7 +4,7 @@ var SuperOperator = function() {
 	EventBus.addListeners(this.listeners, this);
 
 	this.database = {};
-	this.loading_database = {};
+	this.count_database = {};
 
 };
 
@@ -20,13 +20,13 @@ ajax: function(path, callback) {
 
 super_finished_events: function()
 {
-	// Autosend of bounds
 	this.superOperator.listeners.get_bounds(null, this.superOperator);
-
 	EventBus.send('time_sync', {
 		start_t: this.data.time_tMin,
 		end_t: this.data.time_tMax
 	});
+
+	EventBus.sendDelayed('get_bounds');
 },
 
 super_bounds: function() {
@@ -97,20 +97,18 @@ get_statements_list: function(d, obj) {
 add_statement: function(d, obj) {
 	var statement_name = d.statement_name;
 
-	if (statement_name in obj.loading_database)
+	if (statement_name in obj.count_database)
 	{
-		var s = obj.loading_database[statement_name];
-		if (s !== null && s.load_finished)
-		{
-			if (!(statement_name in obj.database))
-				obj.database[statement_name] = s;
-			s.finished_events();
-		}
+		obj.count_database[statement_name] = obj.count_database[statement_name] + 1;
+
+		if ((statement_name in obj.database) &&
+			obj.database[statement_name].load_finished)
+			obj.database[statement_name].finished_events();
 	}
 	else
 	{
 
-		obj.loading_database[statement_name] = null;
+		obj.count_database[statement_name] = 0;
 
 		obj.ajax('resume/'+encodeURIComponent(statement_name),
 		function(json)
@@ -121,7 +119,7 @@ add_statement: function(d, obj) {
 			{
 				var storageInstance = new window[storage](obj, statement_name, json);
 				obj.database[statement_name] = storageInstance;
-				obj.loading_database[statement_name] = storageInstance;
+				obj.count_database[statement_name] = obj.count_database[statement_name] + 1;
 			}
 			else
 				alert('Unknow storage type : '+storage);
@@ -130,10 +128,23 @@ add_statement: function(d, obj) {
 },
 
 del_statement: function(e, obj) {
-	if (e.statement_name in obj.database)
-		delete obj.database[e.statement_name];
+	var statement_name = e.statement_name;
+	// Delete if the last
+	if (statement_name in obj.count_database)
+	{
+		obj.count_database[statement_name] = obj.count_database[statement_name] - 1;
 
-	obj.listeners.get_bounds(null, obj);
+	if (
+		(obj.count_database[statement_name] === 0) &&
+		(statement_name in obj.database))
+	{
+		delete obj.database[statement_name];
+		delete obj.count_database[statement_name];
+	}
+
+	}
+
+	EventBus.sendDelayed('get_bounds');
 },
 
 get_bounds: function(d, obj) {
@@ -173,7 +184,7 @@ time_sync: function(d, obj) {
 
 	// Hack with the setTimeout for send the tuples event after the time_sync event
 	if (send_time_sync)
-		window.setTimeout(function(){EventBus.send('tuples', response);}, 1);
+		EventBus.sendDelayed('tuples', response);
 }
 
 }};

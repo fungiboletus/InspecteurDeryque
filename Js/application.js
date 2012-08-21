@@ -189,6 +189,11 @@ EventBus.send = function(name, data) {
 	var e = new CustomEvent(this.prefix+name, {detail: data});
 	window.top.dispatchEvent(e);
 };
+EventBus.sendDelayed = function(name, data) {
+	window.setTimeout(function(){
+		EventBus.send(name, data);
+	}, 1);
+};
 EventBus.addListeners = function(listeners, caller) {
 	for (var key in listeners)
 		this.addListener(key, listeners[key], caller);
