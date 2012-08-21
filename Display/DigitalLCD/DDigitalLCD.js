@@ -6,12 +6,26 @@ var DDigitalLCD = function(screen)
 
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
+
+	this.max_letters = 10;
 };
 
 DDigitalLCD.prototype =
 {
 
+format_number: function(number)
+{
+	var st = number.toString();
+
+	return st.length > this.max_letters ? number.toPrecision(this.max_letters) : st;
+},
+
 listeners: {
+
+	size_change: function(d, obj)
+	{
+		obj.max_letters = parseInt(($(obj.screen).width()-64)/ 30) - 1;
+	},
 
 	tuples: function(detail, obj) {
 
@@ -34,11 +48,21 @@ listeners: {
 						box = newDom('div');
 						box.id = id;
 						box.className = 'lcd_box';
-						box.appendChild(document.createTextNode(''));
+						var value = newDom('span');
+						value.appendChild(document.createTextNode(''));
+						var div_name = newDom('div');
+						div_name.className = 'name';
+						div_name.appendChild(document.createTextNode(statement_name));
+						var div_key = newDom('div');
+						div_key.className = 'key';
+						div_key.appendChild(document.createTextNode(k));
+						box.appendChild(value);
+						box.appendChild(div_name);
+						box.appendChild(div_key);
 						obj.screen.appendChild(box);
 					}
 					var value = data[k].length > 0 ? data[k][0] : 0.0;
-					box.firstChild.data = value;
+					box.firstChild.firstChild.data = obj.format_number(value);
 					updated_lcd.push(box);
 				}
 		}

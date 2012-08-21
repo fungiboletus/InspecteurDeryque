@@ -330,7 +330,6 @@ listeners: {
 		{
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
-
 			for (var k in data)
 				if (k != 'time_t')
 					lines_to_draw.push(obj.includeLine(data, k));

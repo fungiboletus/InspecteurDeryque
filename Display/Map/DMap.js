@@ -38,7 +38,9 @@ tuples: function(detail, obj) {
 	for (var statement_name in detail) {
 		if (!(statement_name in obj.database)) continue;
 
+
 		var base = obj.database[statement_name];
+		console.log(base);
 		// For each new tuple
 		var data = detail[statement_name];
 

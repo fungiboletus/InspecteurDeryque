@@ -17,9 +17,8 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 		data.data[key] = null;
 		$.ajax({
 			url: additional_data[key]+'?sorted=asc',
+			dataType: 'json',
 			success: function(json){
-				console.log(key);
-				// console.log(json);
 
 				var nb_e = json.e.length;
 
@@ -64,7 +63,6 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 							time_array[i] = (ei.t + time_incremment);
 
 						var value = method(ei, obj);//42.0+i;//ei[senml_key];
-						// console.log(ei);
 						value_array[i] = value;
 
 						if (value > max)
@@ -106,7 +104,8 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 			},
 			error: function(e) {
-				EventBus.send("error", {status: "SensApp "+e.status, message: e.statusText});
+				if (e.status)
+					EventBus.send("error", {status: "SensApp "+e.status, message: e.statusText});
 			}});
 	})(dynamic_key);
 

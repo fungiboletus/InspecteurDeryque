@@ -18,6 +18,8 @@ ajax: function(path, callback) {
 },
 
 super_bounds: function() {
+	if (typeof this.data.data.time_t === 'undefined') return false;
+
 	var r = $.extend({}, this.data);
 	delete r.data;
 	return r;
@@ -27,7 +29,7 @@ super_time_sync: function(start_t, end_t)
 {
 	if (typeof this.data === 'undefined' ||
 		typeof this.data.data.time_t === 'undefined')
-			return {};
+			return false;
 
 	var data = this.data.data;
 
@@ -114,10 +116,19 @@ del_statement: function(e, obj) {
 get_bounds: function(d, obj) {
 	var response = {};
 
+	var send_bounds = false;
 	for (var statement_name in obj.database)
-		response[statement_name] = obj.database[statement_name].bounds();
+	{
+		var bounds = obj.database[statement_name].bounds();
+		if (bounds)
+		{
+			send_bounds = true;
+			response[statement_name] = bounds;
+		}
+	}
 
-	EventBus.send('bounds', response);
+	if (send_bounds)
+		EventBus.send('bounds', response);
 },
 
 time_sync: function(d, obj) {
@@ -126,12 +137,20 @@ time_sync: function(d, obj) {
 
 	var response = {};
 
+	var send_time_sync = false;
 	for (var statement_name in obj.database)
-		response[statement_name] =
-			obj.database[statement_name].time_sync(d.start_t, d.end_t);
+	{
+		var time_sync = obj.database[statement_name].time_sync(d.start_t, d.end_t);
+		if (time_sync)
+		{
+			send_time_sync = true;
+			response[statement_name] = time_sync;
+		}
+	}
 
 	// Hack with the setTimeout for send the tuples event after the time_sync event
-	window.setTimeout(function(){EventBus.send('tuples', response);}, 1);
+	if (send_time_sync)
+		window.setTimeout(function(){EventBus.send('tuples', response);}, 1);
 }
 
 }};

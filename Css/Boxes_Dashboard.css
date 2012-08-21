@@ -251,6 +251,7 @@ overflow-y:hidden;
 }
 
 #time_control {
+background-image:url(../Img/carbon.png);
 background-image:-webkit-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0, 1) 100%), url(../Img/carbon.png);
 	height:25px;
 	position:absolute;

@@ -523,6 +523,7 @@ $(document).ready(function() {
 			iframe = newDom('iframe');
 			iframe.setAttribute('src', url);
 			iframe.id = id;
+			iframe.setAttribute('name', id);
 			front.append(iframe);
 
 			// Inform the iframe (and all other elements too) that we have selected some

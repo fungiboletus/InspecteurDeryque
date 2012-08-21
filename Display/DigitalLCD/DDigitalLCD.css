@@ -13,13 +13,36 @@ right:0;
 
 #area .lcd_box {
 	color:white;
-	font-size:5em;
-	font-family:DigitFont, monospace;
-	line-height: 1em;
+	font-size:60px;
+	line-height: 60px;
 	box-shadow:0px 0px 2px #333 inset;
 
 padding: 8px;
+/*padding-bottom: 0;*/
 margin: 8px;
 text-align: center;
 background: grey;
+position:relative;
+}
+
+#area .lcd_box span
+{
+	font-family:DigitFont, monospace;
+}
+
+#area .lcd_box div {
+position: absolute;
+bottom: 0.3em;
+font-size: 12px;
+line-height: 12px;
+font-family: monospace;
+font-weight: bold;
+color:#333;
+}
+
+#area .lcd_box div.name {
+	left:0.4em;
+}
+#area .lcd_box div.key {
+	right:0.4em;
 }
