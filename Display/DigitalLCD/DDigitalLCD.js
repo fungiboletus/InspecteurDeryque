@@ -34,7 +34,6 @@ listeners: {
 		for (var statement_name in detail) {
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
-			if (data.length === 0) continue;
 
 			for (var k in data)
 				if (k != 'time_t')

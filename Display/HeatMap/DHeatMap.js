@@ -34,9 +34,6 @@ DHeatMap.prototype =
 listeners: {
 tuples: function(detail, obj) {
 
-	for (var key in obj.lines)
-		obj.lines[key].updated = false;
-
 	var bounds = new google.maps.LatLngBounds();
 
 	var mvcarray = new google.maps.MVCArray();
