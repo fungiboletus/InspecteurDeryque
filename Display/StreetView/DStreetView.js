@@ -29,13 +29,22 @@ tuples: function(detail, obj) {
 			// If it's not GPS, we have nothing to do here
 			if (!('lat' in  data) || !('lon' in data))
 			{
-				EventBus.send('error', {
-					status: 'Bad statement type',
-					message: 'The map can only show GPS statements'});
+				if ('heading' in data)
+				{
+					obj.panorama.setPov({
+						heading: data.heading[0] * 180.0 / Math.PI,
+						zoom:1,
+						pitch:0
+					});
+				}
+				else
+				{
+					EventBus.send('error', {
+						status: 'Bad statement type',
+						message: 'The map can only show GPS statements'});
+				}
 				continue;
 			}
-
-			updated = true;
 
 			var ll = new google.maps.LatLng(data.lat[0], data.lon[0]);
 			obj.panorama.setPosition(ll);

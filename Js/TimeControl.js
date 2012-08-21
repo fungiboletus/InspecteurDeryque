@@ -464,7 +464,7 @@ dragdrop: function(e, obj) {
  *	The callback excuted by a setInterval, for playing.
  */
 play_callback: function(obj) {
-	var plus = 5;
+	var plus = 0.5;
 
 	// Get the current time
 	var times = obj.get_times_by_pos();

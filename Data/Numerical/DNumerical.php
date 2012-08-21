@@ -13,7 +13,7 @@ class DNumerical extends DefaultData
 
 	public function filterData() {
 		DefaultData::filterData();
-		$this->value = floatval($this->value);
+		$this->numerical = floatval($this->numerical);
 	}
 }
 ?>
