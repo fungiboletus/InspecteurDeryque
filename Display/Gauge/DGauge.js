@@ -74,6 +74,13 @@ DGauge.prototype.listeners = {
 			obj.min_value = 0.0;
 			obj.max_value = 256.0;
 		}
+		else
+		{
+			var tic = quantizeTics(obj.max_value - obj.min_value);
+
+			obj.min_value = Math.floor(obj.min_value / tic) * tic;
+			obj.max_value = Math.ceil(obj.max_value / tic) * tic;
+		}
 
 		var medium = (obj.max_value - obj.min_value) * 0.5 + obj.min_value;
 		var minMedium = (medium - obj.min_value) * 0.5 + obj.min_value;

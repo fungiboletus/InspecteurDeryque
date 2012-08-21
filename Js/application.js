@@ -170,6 +170,33 @@ HTMLElement.prototype.allOffset = function()
 	return o;
 };
 
+
+/*
+ *	Number of tics
+ *
+ *	This function is inspired by the gnuplot treatment
+ *	You can find the original algorithm in quantize_normal_tics
+ *	function from gnuplot axis.c file
+ */
+function quantizeTics(max)
+{
+	var magnitude = Math.pow(10.0, Math.floor(
+		Math.log(max) * 0.43429448190325 )); // log10
+
+	var nb_decades = max / magnitude;
+
+	var keys = [0.5, 1.0, 2.0, 5.0, 10.0, 40.0];
+	var values = [0.05, 0.1, 0.2, 0.5, 1, 2];
+
+	for (var i = 0; i < 6; ++i)
+		if (nb_decades < keys[i])
+			return values[i] * magnitude;
+
+	var ret = magnitude * Math.ceil(nb_decades);
+
+	return isNaN(ret) ? 1.0 : ret;
+};
+
 // debulked onresize handler
 function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
 

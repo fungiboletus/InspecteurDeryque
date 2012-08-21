@@ -38,7 +38,7 @@ manageXScale: function()
 {
 	// Lot of calculations for find a good scale
 	var size_x = this.x_max - this.x_min;
-	var tmp_x = this.quantize_tics(size_x);
+	var tmp_x = quantizeTics(size_x);
 	if (tmp_x > this.tic_x)
 		this.tic_x = tmp_x;
 
@@ -57,7 +57,7 @@ manageYScale: function(y_min, y_max)
 {
 	// The same than XScale, but for the Y axis
 	var size_y = y_max - y_min;
-	var tmp_y = this.quantize_tics(size_y);
+	var tmp_y = quantizeTics(size_y);
 	if (tmp_y > this.tic_y)
 		this.tic_y = tmp_y;
 
@@ -284,32 +284,6 @@ clear: function(noClearCanvas) {
 	if (!noClearCanvas)
 		this.canvasGraph.clearRect(0,0, this.width, this.height);
 
-},
-
-/*
- *	Number of tics (step in graph)
- *
- *	This function is inspired by the gnuplot treatment
- *	You can find the original algorithm in quantize_normal_tics
- *	function from gnuplot axis.c file
- */
-quantize_tics: function(max)
-{
-	var magnitude = Math.pow(10.0, Math.floor(
-		Math.log(max) * 0.43429448190325 )); // log10
-
-	var nb_decades = max / magnitude;
-
-	var keys = [0.5, 1.0, 2.0, 5.0, 10.0, 40.0];
-	var values = [0.05, 0.1, 0.2, 0.5, 1, 2];
-
-	for (var i = 0; i < 6; ++i)
-		if (nb_decades < keys[i])
-			return values[i] * magnitude;
-
-	var ret = magnitude * Math.ceil(nb_decades);
-
-	return isNaN(ret) ? 1.0 : ret;
 },
 
 listeners: {
