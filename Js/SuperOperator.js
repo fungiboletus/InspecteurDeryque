@@ -17,6 +17,64 @@ ajax: function(path, callback) {
 		}});
 },
 
+super_bounds: function() {
+	var r = $.extend({}, this.data);
+	delete r.data;
+	return r;
+},
+
+super_time_sync: function(start_t, end_t)
+{
+	if (typeof this.data === 'undefined' ||
+		typeof this.data.data.time_t === 'undefined')
+			return {};
+
+	var data = this.data.data;
+
+	// console.log(data, data.time_t);
+
+	// Wonderful dichotomical research oh yeah
+	var begin = 0, end = data.time_t.length, old_m = -1, m = -1;
+
+	do {
+		m = parseInt(begin + (end-begin)/2);
+		var t = data.time_t[m];
+		if (old_m === m || t == start_t)
+			break;
+		else if (t < start_t)
+			begin = m + 1;
+		else
+			end = m -1;
+		old_m = m;
+	} while (begin < end);
+
+	var begin_filtered_data = m;
+
+	begin = 0; end = data.time_t.length; old_m = -1; m = -1;
+
+	do {
+		m = parseInt(begin + (end-begin)/2);
+		var t = data.time_t[m];
+		if (old_m === m || t == end_t)
+			break;
+		else if (t < end_t)
+			begin = m + 1;
+		else
+			end = m -1;
+		old_m = m;
+	} while (begin < end);
+
+	var end_filtered_data = m;
+
+	// Create a new view of the array data
+	var r = {};
+
+	for (key in data)
+		r[key] = data[key].subarray(begin_filtered_data, end_filtered_data);
+
+	return r;
+},
+
 listeners: {
 get_statements_list: function(d, obj) {
 	obj.ajax('reports', function(json) {
@@ -75,4 +133,5 @@ time_sync: function(d, obj) {
 	// Hack with the setTimeout for send the tuples event after the time_sync event
 	window.setTimeout(function(){EventBus.send('tuples', response);}, 1);
 }
+
 }};

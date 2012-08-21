@@ -76,7 +76,7 @@ includeLine: function(data, key)
 	var data_length = data.time_t.length;
 
 	// Nothing to do here
-	if (data_length == 0) return [];
+	if (data_length == 0) return [[], 0, 0];
 
 	// We draw the lines in a second time, for the sampling
 	var points_to_draw = [];
