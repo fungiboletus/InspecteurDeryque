@@ -53,17 +53,10 @@ manageXScale: function()
 
 },
 
-resetYScale: function()
-{
-	// Min Max for the y scale
-	this.y_min = Number.MAX_VALUE;
-	this.y_max = -Number.MAX_VALUE;
-},
-
-manageYScale: function()
+manageYScale: function(y_min, y_max)
 {
 	// The same than XScale, but for the Y axis
-	var size_y = this.y_max - this.y_min;
+	var size_y = y_max - y_min;
 	var tmp_y = this.quantize_tics(size_y);
 	if (tmp_y > this.tic_y)
 		this.tic_y = tmp_y;
@@ -74,6 +67,7 @@ manageYScale: function()
 	    size_y = 1.0;
 	else
 	    this.coef_y = this.height / size_y;
+
 },
 
 includeLine: function(data, key)
@@ -92,6 +86,9 @@ includeLine: function(data, key)
 	var current_value = 0.0;
 	var nb_current_points = 0;
 
+	var y_min = Number.MAX_VALUE;
+	var y_max = -Number.MAX_VALUE;
+
 	// For each point
 	for (var i = 0; i < data_length; ++i)
 	{
@@ -99,8 +96,8 @@ includeLine: function(data, key)
 		var value = data[key][i];
 
 		// Min max on the normal values
-		if (value > this.y_max) this.y_max = value;
-		if (value < this.y_min) this.y_min = value;
+		if (value < y_min) y_min = value;
+		if (value > y_max) y_max = value;
 
 		// Position
 		var x_pos = parseInt((time - this.x_min) * this.coef_x);
@@ -141,10 +138,10 @@ includeLine: function(data, key)
 	sampled_value = current_value / nb_current_points;
 	points_to_draw.push([current_x_pos, sampled_value]);
 
-	return points_to_draw;
+	return [points_to_draw, y_min, y_max];
 },
 
-drawLine: function(points, color)
+drawLine: function(points, color, y_min)
 {
 	var c = this.canvasGraph;
 
@@ -169,8 +166,7 @@ drawLine: function(points, color)
 	for (var i = 0; i < points_length; ++i)
 	{
 		var x_pos = points[i][0];
-		var y_pos = this.height - (points[i][1] - this.y_min) * this.coef_y;
-
+		var y_pos = this.height - (points[i][1] - y_min) * this.coef_y;
 
 		// var old_x_i = x_i;
 		// x_i = points_to_draw[i][0];
@@ -215,7 +211,6 @@ paintAxes: function(mili, paintForced)
 	if (x_tic <= 0.0) x_tic = 1.0;
 	if (y_tic <= 0.0) y_tic = 1.0;
 
-	// console.log(x_tic, y_tic);
 	if(x_tic === 1 || y_tic == 1)
 		return;
 
@@ -328,10 +323,9 @@ listeners: {
 		var lines_to_draw = [];
 
 		obj.clear();
-		obj.resetYScale();
 		obj.manageXScale();
 
-		var colors = ['white', 'red', 'blue', 'purple', 'yellowgreen'];
+		var colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
 		for (var statement_name in detail)
 		{
 			if (!(statement_name in obj.database)) continue;
@@ -342,12 +336,25 @@ listeners: {
 					lines_to_draw.push(obj.includeLine(data, k));
 		}
 
-		obj.manageYScale();
-		obj.paintAxes(true, false);
+		var min_tic_y = Number.MAX_VALUE;
+		var associated_coef_y = 0.0;
 
 		for (var i = 0; i < lines_to_draw.length; ++i)
-			obj.drawLine(lines_to_draw[i], colors[i%colors.length]);
+		{
+			var line = lines_to_draw[i];
+			obj.manageYScale(line[1], line[2]);
+			if (obj.tic_y < min_tic_y)
+			{
+				min_tic_y = obj.tic_y;
+				associated_coef_y = obj.coef_y;
+			}
+			obj.drawLine(line[0], colors[i%colors.length], line[1]);
+		}
 
+		obj.tic_y = min_tic_y;
+		obj.coef_y = associated_coef_y;
+
+		obj.paintAxes(true, false);
 	},
 	add_statement: function(e, obj) {
 		if (e.box_name != self.name) return;
@@ -367,8 +374,6 @@ listeners: {
 	{
 		obj.width = $(obj.screen).width();
 		obj.height = $(obj.screen).height();
-
-		// console.log(obj.width, obj.height);
 
 		if (obj.screenGraph.width !== obj.width)
 		{
