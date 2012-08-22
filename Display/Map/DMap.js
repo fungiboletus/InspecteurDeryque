@@ -23,7 +23,7 @@ var DMap = function(screen)
 	this.lines = {};
 
 	// TODO MOAR POINTS
-	this.max_nb_points = 64;
+	this.max_nb_points = 512;
 };
 
 DMap.prototype =
@@ -33,10 +33,6 @@ tuples: function(detail, obj) {
 
 	for (var key in obj.lines)
 		obj.lines[key].updated = false;
-
-	var bounds = new google.maps.LatLngBounds();
-
-	var updated = false;
 
 	for (var statement_name in detail) {
 		if (!(statement_name in obj.database)) continue;
@@ -67,8 +63,6 @@ tuples: function(detail, obj) {
 				continue;
 			}
 
-			updated = true;
-
 			var ll = new google.maps.LatLng(data.lat[0], data.lon[0]);
 
 			if (base.marker) {
@@ -82,14 +76,12 @@ tuples: function(detail, obj) {
 					map: obj.map,
 					title: "begin"});
 			}
-
-			bounds.extend(ll);
 		}
 
 		var i = nb_data % sampling - 1;
 		if (i < 1) i += 2;
 
-		for (; i < nb_data; i+=sampling) {
+		for (; i < nb_data && i < 5000; i+=sampling) {
 			var ll = new google.maps.LatLng(data.lat[i], data.lon[i]);
 			var ll2 = new google.maps.LatLng(data.lat[i-sampling], data.lon[i-sampling]);
 
@@ -132,7 +124,6 @@ tuples: function(detail, obj) {
 				// 	})(point));
 			}
 
-			bounds.extend(ll);
 			// line.setMap(obj.map);
 			// base.marker.setPosition(ll);
 		}
@@ -146,16 +137,6 @@ tuples: function(detail, obj) {
 			delete obj.lines[key];
 		}
 	}
-
-	if (updated)
-	{
-		obj.map.fitBounds(bounds);
-		// obj.map.panToBounds(bounds);
-	}
-	// obj.map.panToBounds(bounds);
-	// google.maps.event.addListenerOnce(obj.map, 'idle', function() {
- //  		obj.map.fitBounds(bounds);
-	// });
 },
 add_statement: function(e, obj) {
 	if (e.box_name != self.name) return;
@@ -177,6 +158,33 @@ del_statement: function(e, obj) {
 size_change: function(d, obj) {
 	if (obj.database.length == 0)
 		obj.map.setCenter(obj.default_location);
+},
+bounds: function(d, obj)
+{
+	var updated = false;
+	var bounds = new google.maps.LatLngBounds();
+
+	for (var local_statement in obj.database)
+	{
+		if (local_statement in d)
+		{
+			var v = d[local_statement];
+			// If it's about gps bounds
+			if ('latMin' in v && 'latMax' in v && 'lonMin' in v && 'lonMax' in v)
+			{
+				updated = true;
+				bounds.extend(new google.maps.LatLng(v.latMin, v.lonMax));
+				bounds.extend(new google.maps.LatLng(v.latMax, v.lonMin));
+			}
+		}
+	}
+
+	if (updated)
+	{
+		obj.map.fitBounds(bounds);
+		// obj.map.panToBounds(bounds);
+	}
+
 },
 /*time_sync: function(d, obj) {
 	var time = d.time_t;

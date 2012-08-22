@@ -27,6 +27,9 @@ var DHeatMap = function(screen)
 		opacity: 0.8,
 		radius: 10
 	});
+
+	// Heavy limit
+	this.max_nb_points = 131072;
 };
 
 DHeatMap.prototype =
@@ -34,12 +37,9 @@ DHeatMap.prototype =
 listeners: {
 tuples: function(detail, obj) {
 
-	var bounds = new google.maps.LatLngBounds();
-
 	var mvcarray = new google.maps.MVCArray();
-	var updated = false;
 
-		// For each new tuple
+	// For each new tuple
 	for (var statement_name in detail) {
 		if (!(statement_name in obj.database)) continue;
 
@@ -57,24 +57,15 @@ tuples: function(detail, obj) {
 					message: 'The map can only show GPS statements'});
 				continue;
 			}
-
-			updated = true;
 		}
 
-		for (var i = 0; i < nb_data; ++i)
-		{
-			var ll = new google.maps.LatLng(data.lat[i], data.lon[i]);
-			mvcarray.push(ll);
-			bounds.extend(ll);
-		}
+		var sampling = Math.ceil(nb_data / obj.max_nb_points);
+
+		for (var i = 0; i < nb_data; i+=sampling)
+			mvcarray.push(new google.maps.LatLng(data.lat[i], data.lon[i]));
 	}
 
-	if (updated)
-	{
-		obj.heatmap_layer.setData(mvcarray);
-		obj.map.fitBounds(bounds);
-		// obj.map.panToBounds(bounds);
-	}
+	obj.heatmap_layer.setData(mvcarray);
 },
 add_statement: function(e, obj) {
 	if (e.box_name != self.name) return;
@@ -87,6 +78,33 @@ del_statement: function(e, obj) {
 
 	if (e.statement_name in obj.database)
 		delete obj.database[e.statement_name];
+},
+bounds: function(d, obj)
+{
+	var updated = false;
+	var bounds = new google.maps.LatLngBounds();
+
+	for (var local_statement in obj.database)
+	{
+		if (local_statement in d)
+		{
+			var v = d[local_statement];
+			// If it's about gps bounds
+			if ('latMin' in v && 'latMax' in v && 'lonMin' in v && 'lonMax' in v)
+			{
+				updated = true;
+				bounds.extend(new google.maps.LatLng(v.latMin, v.lonMax));
+				bounds.extend(new google.maps.LatLng(v.latMax, v.lonMin));
+			}
+		}
+	}
+
+	if (updated)
+	{
+		obj.map.fitBounds(bounds);
+		// obj.map.panToBounds(bounds);
+	}
+
 },
 size_change: function(d, obj) {
 	if (obj.database.length == 0)

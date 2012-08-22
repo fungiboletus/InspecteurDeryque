@@ -322,7 +322,7 @@ listeners: {
 				min_tic_y = obj.tic_y;
 				associated_coef_y = obj.coef_y;
 			}
-			obj.drawLine(line[0], this.colors[i%this.colors.length], line[1]);
+			obj.drawLine(line[0], obj.colors[i%obj.colors.length], line[1]);
 		}
 
 		obj.tic_y = min_tic_y;
