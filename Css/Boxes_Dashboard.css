@@ -358,3 +358,46 @@ min-width:1px;
 	border-radius:0;
 	border:none;
 }
+
+.alert-area
+{
+	position:absolute;
+	padding:60px 40px 0px 40px;
+	background:rgba(0,0,0,0.6);
+	z-index:5;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	overflow-y:auto;
+}
+
+.alert
+{
+	width:600px;
+	margin:0px auto 10px auto;
+	box-shadow:1px 2px 25px rgba(0, 0, 0, 0.42);
+	background: -webkit-radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
+	background: -moz-radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
+	background: radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
+	text-shadow: none;
+	border-color: red;
+	color: red;
+}
+
+.alert p
+{
+margin:5px 0 0 3px;
+}
+
+.alert .close
+{
+	opacity: 1;
+	color:red;
+	text-shadow:none;
+}
+
+.alert span.mono
+{
+	font-family:monospace;
+}

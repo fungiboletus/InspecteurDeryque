@@ -594,7 +594,10 @@ $(document).ready(function() {
 			});
 		},
 		error: function(e) {
-			alert(e.status == 401 ? "Vous devez vous connecter." : e.statusText);
+			EventBus.send('error', {
+				status: e.status,
+				message: "Unable to fetch the display type list : "+e.statusText
+			});
 	}});
 
 	// Temporary hack
@@ -636,8 +639,46 @@ $(document).ready(function() {
 		}
 	});
 
+	var alert_area = newDom('div');
+	alert_area.className = 'alert-area fade';
+	alert_area.style.display = 'none';
+	document.body.appendChild(alert_area);
+
 	EventBus.addListener('error', function(e) {
-		alert('Error '+e.status+' :\n' +e.message);
+		alert_area.style.display = 'block';
+		var alert_div = newDom('div');
+		alert_div.className = 'alert alert-error fade';
+		var alert_close = newDom('a');
+		alert_close.className = 'close';
+		alert_close.setAttribute('data-dismiss', 'alert');
+		alert_close.appendChild(document.createTextNode('\u00d7'));
+		alert_div.appendChild(alert_close);
+		var alert_h4 = newDom('h4');
+		alert_h4.className = 'alert-heading';
+		alert_h4.appendChild(document.createTextNode('Error '+e.status));
+		alert_div.appendChild(alert_h4);
+		var alert_p = newDom('p');
+		alert_p.innerHTML = e.message;
+		//alert_p.appendChild(document.createTextNode(e.message));
+		alert_div.appendChild(alert_p);
+
+		alert_area.appendChild(alert_div);
+
+		window.setTimeout(function() {
+			alert_area.className = 'alert-area fade in';
+			alert_div.className = 'alert alert-error fade in';
+		}, 1);
+
+		$(alert_area).bind('close', function() {
+			if (alert_area.children.length === 1)
+			{
+				alert_area.className = 'alert-area fade';
+				window.setTimeout(function() {
+					alert_area.style.display = 'none';
+				}, 150);
+			}
+		});
+		// alert('Error '+e.status+' :\n' +e.message);
 	});
 
 	if (window.location.hash)
