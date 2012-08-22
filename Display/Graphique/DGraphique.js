@@ -30,6 +30,8 @@ var DGraphique = function(screen)
 
 	// Sampling the data ?
 	this.sampling = true;
+
+	this.colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
 };
 
 DGraphique.prototype =
@@ -299,7 +301,6 @@ listeners: {
 		obj.clear();
 		obj.manageXScale();
 
-		var colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
 		for (var statement_name in detail)
 		{
 			if (!(statement_name in obj.database)) continue;
@@ -321,7 +322,7 @@ listeners: {
 				min_tic_y = obj.tic_y;
 				associated_coef_y = obj.coef_y;
 			}
-			obj.drawLine(line[0], colors[i%colors.length], line[1]);
+			obj.drawLine(line[0], this.colors[i%this.colors.length], line[1]);
 		}
 
 		obj.tic_y = min_tic_y;

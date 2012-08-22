@@ -1,7 +1,7 @@
 /**
 * Generate a text representation of an object in an url.
 *
-* Similar to Rison ou JsURL, but more simpler.
+* Similar to Rison or JsURL, but more simple.
 */
 var JsURL = {
 	stringify: function(text)

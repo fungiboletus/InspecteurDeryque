@@ -98,8 +98,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 			},
 			error: function(e) {
-				if (e.status)
-					EventBus.send("error", {status: "SensApp "+e.status, message: e.statusText});
+				EventBus.send("error", {status: "SensApp "+e.status, message: e.statusText});
 			}});
 	})(dynamic_key);
 

@@ -8,6 +8,8 @@ var DGauge = function(screen)
 	this.lines = [];
 	this.needles = [];
 
+	this.colors = ['orangered', 'dodgerblue', 'limegreen', 'yellowgreen', 'salmon', 'cyan'];
+
 	// Creation of the structure
 	var createInfo = function(id)
 	{
@@ -33,10 +35,17 @@ var DGauge = function(screen)
 		var line = newDom('div');
 		var classname = i < 125 ? 'line' : 'line last';
 		line.className = (n++ % 5 === 0) ? classname + ' big' : classname;
-		line.style.webkitTransform = 'rotate('+i+'deg)';
+		var transform = 'rotate('+i+'deg)';
+		line.style.webkitTransform = transform;
+		line.style.mozTransform = transform;
+		line.style.transform = transform;
 		screen.appendChild(line);
 		this.lines.push(line);
 	}
+
+	this.legend_area = newDom('ul');
+	this.legend_area.className = 'legend';
+	this.screen.appendChild(this.legend_area);
 
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
@@ -114,7 +123,8 @@ DGauge.prototype.listeners = {
 						box.id = id;
 						box.style.webkitTransformOriginX = obj.px_height;
 						box.style.width = obj.px_height;
-						box.appendChild(document.createTextNode(''));
+						box.style.background = obj.colors[obj.needles.length%obj.colors.length];
+						// box.appendChild(document.createTextNode(''));
 						obj.screen.appendChild(box);
 						obj.needles.push(box);
 					}
@@ -125,8 +135,21 @@ DGauge.prototype.listeners = {
 
 					var angle = -2 + 160 * ratio;
 
-					box.style.webkitTransform = 'rotate('+angle+'deg)';
+					var transform = 'rotate('+angle+'deg)';
+					box.style.webkitTransform = transform;
+					box.style.mozTransform = transform;
+					box.style.transform = transform;
 					updated_needle.push(box);
+
+					var id_legend = id+'_legend';
+					if (!byId(id_legend))
+					{
+						var legend = newDom('li');
+						legend.id = id_legend;
+						legend.style.color = obj.colors[(obj.needles.length-1)%obj.colors.length];
+						legend.appendChild(document.createTextNode(statement_name + ' : ' + k));
+						obj.legend_area.appendChild(legend);
+					}
 				}
 		}
 
@@ -138,6 +161,7 @@ DGauge.prototype.listeners = {
 			{
 				obj.needles.splice(i, 1);
 				obj.screen.removeChild(needle);
+				obj.legend_area.removeChild(byId(needle.id + '_legend'));
 			}
 		}
 
