@@ -139,7 +139,8 @@ $(document).ready(function() {
 
 	modal.modal({
 		keyboard: true,
-		backdrop: true
+		backdrop: true,
+		show: false
 	});
 
 	$('#settings_modal_iframe iframe').load(function() {

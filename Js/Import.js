@@ -38,7 +38,8 @@ $('#choiximport').after('<div class="modal hide fade in" id="createnewlapin"><bu
 
 $('#createnewlapin').modal({
   keyboard: true,
-  backdrop: true
+  backdrop: true,
+  show: false
 });
 
 $('#createnewlapin iframe').load(function() {

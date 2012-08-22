@@ -28,7 +28,7 @@ if (!defined('NO_HEADER_BAR'))
 	$c_user = $CTRL_NAME === 'User' ? ' class="active"' : '';
 
 	echo <<<END
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-fixed-top navbar-inverse">
 	<div class="navbar-inner">
 		<nav class="container">
 			<a href="$url_root" class="brand">Inspecteur Deryque</a>
