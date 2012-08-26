@@ -28,18 +28,18 @@ if (!defined('NO_HEADER_BAR'))
 	$url_root = CNavigation::generateUrlToApp(null);
 	$c_user = $CTRL_NAME === 'User' ? ' class="active"' : '';
 
-	echo <<<END
+	echo <<<HTML
 <div class="navbar navbar-fixed-top navbar-inverse">
 	<div class="navbar-inner">
 		<nav class="container">
 			<a href="$url_root" class="brand">Inspecteur Deryque</a>
-END;
+HTML;
 
 	if (isset($_SESSION['logged'])) {
 		$user_name = htmlspecialchars($_SESSION['name']);
 		$url_user = CNavigation::generateUrlToApp('User');
 		$url_logout = CNavigation::generateUrlToApp('Session', 'logout');
-		$url_help = CNavigation::generateUrlToApp('Help');
+		$url_doc = CNavigation::generateUrlToApp('Documentation');
 		$url_import = CNavigation::generateUrlToApp('Import');
 		$url_data = CNavigation::generateUrlToApp('Data');
 		$url_datamulti = CNavigation::generateUrlToApp('DataMulti');
@@ -56,11 +56,11 @@ END;
 		$text_datamulti = _('Multiple statements');
 		$text_datasample = _('Statements samples');
 		$text_import = _('Import');
-		$text_help = _('Help');
+		$text_doc = _('Documentation');
 		$text_theme = _('Change theme');
 		$text_logout = _('Logout');
 
-		echo <<<END
+		echo <<<HTML
 		<ul class="nav left buttons_inspecteur">
 			<li$c_dashboard><a href="$url_root" class="icon_button line_text">Dashboard</a></li>
 			<li class="dropdown$c_data$c_datamulti$c_datasample"><a href="#" class="icon_button shoebox_text dropdown-toggle" data-toggle="dropdown">Statements <b class="caret"></b></a>
@@ -76,7 +76,7 @@ END;
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle icon_button user_text" data-toggle="dropdown">$user_name <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="$url_help">$text_help</a></li>
+						<li><a href="$url_doc">$text_doc</a></li>
 						<li><a href="$url_deryque_music">Listen a wonderful music</a></li>
 						<li><a href="$url_theme">$text_theme</a></li>
 						<li class="divider"></li>
@@ -84,9 +84,9 @@ END;
 					</ul>
 				</li>
 			</ul>
-END;
+HTML;
 	}
-	echo <<<END
+	echo <<<HTML
 		</nav>
 	</div>
 </div>
@@ -95,7 +95,7 @@ END;
 <div class="page-header">
 	<h1>$title</h1>
 </div>
-END;
+HTML;
 } else
 {
 echo '<div class="container" id="mainContent">';

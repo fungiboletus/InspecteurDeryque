@@ -1,9 +1,17 @@
 <?php
 
-class HelpView{
-	public static function showHelpMenu() {
+class DocumentationView
+{
+	public static function title() {
 		?>
-<div class="help-menu well well-small">
+		<div class="page-header">
+			<h1>Documentation</h1>
+		</div>
+		<?php
+	}
+	public static function menu() {
+		?>
+<div class="doc-menu well well-small">
         <ul class="nav nav-list">
           <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
           <li><a href="#menus"><i class="icon-chevron-right"></i> Menus</a></li>
@@ -14,7 +22,7 @@ class HelpView{
 		<?php
 	}
 
-	public static function showHelp(){
+	public static function doc(){
 		?>
 		<section class="alert alert-block alert-info" id="overview">
 			<h2>Bienvenue sur l'aide du site Inspecteur Deryque !<h2>

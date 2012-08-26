@@ -1,11 +1,14 @@
-.help-menu {
+body {
+	padding-top:0;
+}
+
+.doc-menu {
 	position:fixed;
 	left:1em;
-	top:133px;
+	top:78px;
+	width:10;
 	width:180px;
 	padding-left:0;
 	padding-right:0;
 }
 
-.help-menu .nav-list {
-}
