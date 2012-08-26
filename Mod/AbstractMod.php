@@ -46,11 +46,18 @@ abstract class AbstractMod
 		$class = $this->class;
 
 		$vars = get_class_vars($class);
-		$n_vars = $vars;
+
+		// Array with activated vars and her names only
+		$n_vars = [];
 
 		foreach ($vars as $var => $value) {
 			$var_name = 'n_'.$var;
-			$n_vars[$var] = constant($class.'::'.$var_name);
+			$constant = constant($class.'::'.$var_name);
+
+			// Only add activated vars (we can disable a
+			// var with a constant set to false
+			if ($constant)
+				$n_vars[$var] = $constant;
 		}
 
 		$this->cache_variables = $n_vars;

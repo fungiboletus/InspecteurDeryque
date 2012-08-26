@@ -61,7 +61,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 						var ei = json.e[i];
 
 						if (time_t_creation)
-							time_array[i] = (ei.t + time_incremment);
+							time_array[i] = (ei.t + time_incremment);// * 1000.0;
 
 						var value = method(ei, obj);//42.0+i;//ei[senml_key];
 						value_array[i] = value;

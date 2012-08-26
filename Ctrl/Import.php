@@ -18,6 +18,7 @@ class Import {
 		$folder = 'Uploaded/';
 		$file = $folder . sha1($_FILES['fichierXML']['name']);
 		$extension = strrchr($_FILES['fichierXML']['name'], '.');
+		// oh lol, c'est epic ce code
 		$taille_max = 3000000;
 		$taille = filesize($_FILES['fichierXML']['tmp_name']);
 		if ($taille > $taille_max) {

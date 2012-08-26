@@ -1,0 +1,30 @@
+#area {
+position:absolute;
+top:0;
+bottom:0;
+left:0;
+right:0;
+background:black;
+}
+
+#area video
+{
+	width:100%;
+	height:100%;
+	display:block;
+	margin:auto;
+}
+
+#area .progress-area
+{
+	position:absolute;
+	left:4px;
+	right:4px;
+	bottom:4px;
+}
+#area .progress-area .progress
+{
+	margin-bottom:0;
+	height:11px;
+	background:rgba(0,0,0,0.3);
+}

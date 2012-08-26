@@ -167,7 +167,7 @@ get_bounds: function(d, obj) {
 
 time_sync: function(d, obj) {
 	if (typeof d.start_t === 'undefined' || d.start_t == null) d.start_t = 0;
-	if (typeof d.end_t === 'undefined' || d.end_t == null) d.end_t = (new Date()) * 1 + 3600 * 24;
+	if (typeof d.end_t === 'undefined' || d.end_t == null) d.end_t = Date.now() + 3600 * 24;
 
 	var response = {};
 

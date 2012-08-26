@@ -1,0 +1,141 @@
+var DVideo = function(screen)
+{
+	var obj = this;
+
+	// Graph area
+	this.screen = screen;
+
+	this.video = newDom('video');
+	this.video.setAttribute('src', '/InspecteurDeryque/sample.mov');
+	// this.video.setAttribute('src', 'https://s3-eu-west-1.amazonaws.com/sensapp-sintef-9012/videoplayback');
+	// this.video.setAttribute('controls', 'true');
+	this.video.setAttribute('preload', 'auto');
+	this.screen.appendChild(this.video);
+
+	this.progressArea = newDom('div');
+	this.progressArea.className = 'progress progress-striped active';
+	this.progressBar = newDom('div');
+	this.progressBar.className = 'bar';
+	this.progressBar.style.width = '0%';
+	this.progressArea.appendChild(this.progressBar);
+	var divProgressArea = newDom('div');
+	divProgressArea.className = 'progress-area fade in';
+	divProgressArea.appendChild(this.progressArea);
+	this.screen.appendChild(divProgressArea);
+
+	// Hide the progressbar when no updates
+	this.progressBarHideTimeout = 0;
+	var hideProgressBarCallback = function()
+	{
+		divProgressArea.className = 'progress-area fade';
+	};
+
+	this.canplay = false;
+	this.time_synchro = -10;
+
+	this.database = {};
+	EventBus.addListeners(this.listeners, this);
+
+	var jvideo = $(this.video);
+	jvideo.bind('canplay', function() {
+		obj.canplay = true;
+		// obj.progressArea.className = 'progress';
+		jvideo.trigger('progress');
+	});
+	jvideo.bind('progress', function() {
+		if (obj.canplay)
+		{
+			window.clearTimeout(obj.progressBarHideTimeout);
+			divProgressArea.className = 'progress-area fade in';
+
+			var ratio = obj.video.buffered.end(0) / obj.video.duration;
+
+			// If the video is loaded, we doen't need to update the progression anymore
+			// (progress events are sended even after the load was completed)
+			if (ratio == 1.0)
+			{
+				jvideo.unbind('progress');
+				obj.progressArea.className = 'progress progress-striped active progress-success';
+				var hideTimeout = 2000;
+			}
+			else
+				var hideTimeout = 10000;
+
+			obj.progressBarHideTimeout =
+				window.setTimeout(hideProgressBarCallback, hideTimeout);
+
+			obj.progressBar.style.width = ratio * 100 + '%';
+		}
+		// console.log(
+	});
+};
+
+DVideo.prototype.listeners = {
+	bounds: function(d, obj) {
+		obj.min_time = Number.MAX_VALUE;
+		// obj.max_time = -Number.MAX_VALUE;
+
+		for (var type in d)
+		{
+			if (d[type].time_tMin < obj.min_time)
+				obj.min_time = d[type].time_tMin;
+
+			// if (d[type].time_tMax > obj.max_time)
+				// obj.max_time = d[type].time_tMax;
+		}
+	},
+
+	time_sync: function(d, obj) {
+		if (obj.canplay)
+		{
+			var time = d.start_t - obj.min_time + obj.time_synchro;
+
+			var set_time = obj.video.paused;
+
+			// If the video is playing
+			if (!set_time)
+			{
+				// Detect if the difference between the video and the time is
+				// too high
+				var diff = obj.video.currentTime - time;
+				if (diff > 0.5 || diff < -0.5)
+					set_time = true;
+			}
+
+			if (set_time && !isNaN(time) && time >= 0.0 && time <= obj.video.duration)
+			{
+				obj.video.currentTime = time;
+				if (time > obj.video.buffered.end(0))
+					EventBus.send('pause');
+			}
+		}
+	},
+
+	add_statement: function(e, obj) {
+		if (e.box_name != self.name) return;
+
+		if (!(e.statement_name in obj.database))
+			obj.database[e.statement_name] = true;
+	},
+	del_statement: function(e, obj) {
+		if (e.box_name != self.name) return;
+
+		if (e.statement_name in obj.database)
+			delete obj.database[e.statement_name];
+	},
+	size_change: function(e, obj)
+	{
+		var width = $(obj.screen).width();
+		var height = $(obj.screen).height();
+	},
+	play: function(e, obj)
+	{
+		if (obj.canplay && obj.video.paused)
+			obj.video.play();
+	},
+	pause: function(e, obj)
+	{
+		if (obj.canplay && !obj.video.paused)
+			obj.video.pause();
+	}
+};

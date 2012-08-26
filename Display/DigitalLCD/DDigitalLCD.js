@@ -25,8 +25,8 @@ listeners: {
 	size_change: function(d, obj)
 	{
 		obj.max_letters = parseInt(($(obj.screen).width()-64)/ 30) - 1;
-		if (obj.max_letters > 21)
-			obj.max_letters = 21;
+		if (obj.max_letters > 20)
+			obj.max_letters = 20;
 	},
 
 	tuples: function(detail, obj) {

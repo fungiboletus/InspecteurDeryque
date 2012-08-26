@@ -3,7 +3,7 @@ font-family: FuturaPerso;
 src: url("../Img/futura.otf");
 }
 
-h1,h2,h3,h4,h5,h6, .btn, .brand {
+h1,h2,h3,h4,h5,h6, .btn, .brand, .navbar {
 font-family:FuturaPerso, "Helvetica Neue",Helvetica,Arial,sans-serif;
 font-weight:normal;
 }
@@ -19,6 +19,7 @@ background: -moz-radial-gradient(top, ellipse cover, transparent 0%,rgba(0, 0, 0
 }
 .navbar .brand, .navbar .brand:hover {
 	color:transparent;
+  text-shadow:none;
 	min-width:200px;
 	background:url(../Img/brand.png) no-repeat 0px 8px;
 }

@@ -8,10 +8,11 @@ foreach (CHead::$css as $key => $css)
 
 foreach (CHead::$js as $key => $js)
 	echo "\t<script type=\"text/javascript\" src=\"$js\"></script>\n";
-?>
-</head>
-<body>
-<?php
+
+echo "\n</head>\n<body";
+if (isset($body_attributes))
+	echo $body_attributes;
+echo ">\n";
 
 if (!defined('NO_HEADER_BAR'))
 {

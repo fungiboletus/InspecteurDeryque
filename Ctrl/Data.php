@@ -134,10 +134,18 @@ class Data
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 
+		$youtube_location = '';
 		if ($statement['storage'] == SensAppStorage::storageConstant)
 			$sensapp = SensAppStorage::decodeAdditionalData($statement['additional_data']);
 		else
+		{
 			$sensapp = [];
+			if ($statement['storage'] == YoutubeStorage::storageConstant)
+				$youtube_location = YoutubeStorage::decodeAdditionalData($statement['additional_data']);
+
+		}
+
+
 
 		CHead::addJS('Data_add');
 		DataView::showAddForm(array_merge([
@@ -147,8 +155,8 @@ class Data
 						'type' => $n_datamod->folder,
 						'storage' => intval($statement['storage']),
 						'sensapp' => $sensapp,
-						'youtube_location' => ''],$_REQUEST),
-			DataMod::getDataTypes(), 'edit');
+						'youtube_location' => $youtube_location]
+			,$_REQUEST), DataMod::getDataTypes(), 'edit');
 	}
 
 	public function remove()

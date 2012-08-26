@@ -55,6 +55,8 @@ var TimeControl = function() {
 
 	EventBus.addListeners(this.listeners, this);
 
+	this.is_playing = false;
+
 };
 
 TimeControl.prototype = {
@@ -210,19 +212,8 @@ animate_interface: function() {
 	// Manage the play button
 	var play_interval = -1;
 	$(this.bti).click(function() {
-		if (obj.bti_icon.className == obj.bti_icon_play_class)
-		{
-			obj.bti_icon.className = obj.bti_icon_pause_class;
-			play_interval = window.setInterval(
-				function() {
-					obj.play_callback(obj);
-				}, 128);
-		}
-		else
-		{
-			window.clearInterval(play_interval);
-			obj.bti_icon.className = obj.bti_icon_play_class;
-		}
+		EventBus.send(obj.bti_icon.className == obj.bti_icon_play_class ?
+			'play' : 'pause');
 	});
 
 	// Manage the reduce and expand buttons
@@ -292,7 +283,12 @@ draw_tooltip: function() {
  */
 get_txt_date: function(date)
 {
-	date = new Date(date);
+	date = new Date(date * 1000);
+
+	// current date if bad date (initial state for example)
+	if (isNaN(date * 1))
+		date = new Date();
+
 	var hours = date.getHours().toString();
 	if (hours.length < 2) hours = '0'+hours;
 	var mins = date.getMinutes().toString();
@@ -463,19 +459,25 @@ dragdrop: function(e, obj) {
 /*
  *	The callback excuted by a setInterval, for playing.
  */
-play_callback: function(obj) {
-	var plus = 0.5;
+play_callback: function(t) {
+
+	var plus = (t - this.play_start)/1000;
+
+	this.play_start = t;
+	// console.log(t, plus);
 
 	// Get the current time
-	var times = obj.get_times_by_pos();
+	var times = this.get_times_by_pos();
+	// console.log(new Date().getSeconds(), plus, times.start_t);
 
 	// Update the time
 	times.start_t += plus;
 	times.end_t += plus;
 
+
 	// The max time is the limit
-	if (times.end_t > obj.time_max)
-		times.end_t = obj.time_max;
+	if (times.end_t > this.time_max)
+		times.end_t = this.time_max;
 
 	// If the start time is bigger than the end time,
 	// we will have bad time
@@ -484,10 +486,14 @@ play_callback: function(obj) {
 		times.start_t = times.end_t;
 
 		// Simulate a click on pause button
-		$(obj.bti).click();
+		$(this.bti).click();
 	}
 
 	EventBus.send('time_sync', times);
+
+	var obj = this;
+	if (this.is_playing)
+		window.requestAnimationFrame(function(t){ obj.play_callback(t); });
 },
 
 /*
@@ -587,6 +593,22 @@ del_statement: function(e, obj) {
 size_change: function(e, obj) {
 	// In a timeout in order to wait the size managment of other elements
 	EventBus.sendDelayed('time_sync', obj.get_times_by_pos());
-}
+},
+
+play: function(e, obj) {
+	obj.bti_icon.className = obj.bti_icon_pause_class;
+	if (!obj.is_playing)
+	{
+		obj.is_playing = true;
+		obj.play_start = Date.now();
+		obj.play_callback(obj.play_start);
+	}
+},
+
+pause: function(e, obj) {
+	obj.bti_icon.className = obj.bti_icon_play_class;
+	if (obj.is_playing)
+		obj.is_playing = false;
+},
 
 }};
