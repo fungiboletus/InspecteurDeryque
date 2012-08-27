@@ -150,7 +150,7 @@ HTML;
 			<table class="table table-striped table-bordered data_list records_data_list">
 				<thead><tr>
 					<th class="header yellow"><?php echo _('Date'); ?></th>
-					<th class="header green"><?php echo htmlspecialchars($data[0]->u); ?></th>
+					<th class="header green"><?php echo isset($data[0]->u) ? htmlspecialchars($data[0]->u) : '?'; ?></th>
 				</tr></thead>
 				<tbody>
 			<?php
@@ -159,8 +159,13 @@ HTML;
 				$hidden_date = intval($start_time + $d->t);
 				$hdate = AbstractView::formateDate($hidden_date);
 				echo "\t<tr><td><span style=\"display:none;\">$hidden_date</span>$hdate",
-					 "</td><td>", htmlspecialchars($d->v),
-				"</td></tr>\n";
+					 "</td><td>";
+
+				foreach ($d as $k=>$v)
+					if ($k !== 't' && $k !== 'u')
+						echo htmlspecialchars($v);
+
+				echo "</td></tr>\n";
 			}
 
 			echo "</tbody></table>";

@@ -37,12 +37,14 @@ class Error
 		ErrorView::showError(500, 'Erreur interne du serveur', "669px-The.Matrix.glmatrix.2.png", $error);
 	}
 
+	/** Eror 400 */
 	public function bad_request(){
 		$this->send_header('400 Bad Request');
 		CNavigation::setTitle('Error 400');
 		ErrorView::showError(400, 'Bad Request', "invalid_argument.jpg");
 	}
 
+	/** Error 401 **/
 	public function unauthorized() {
 		$this->send_header('401 Unauthorized');
 		CNavigation::setTitle('Error 401');

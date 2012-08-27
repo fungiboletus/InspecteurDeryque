@@ -98,8 +98,8 @@ class RestJson
 
 			if ($report['storage'] == SensAppStorage::storageConstant)
 				$additional_data = SensAppStorage::decodeAdditionalData($report['additional_data']);
-			elseif ($report['storage'] == YoutubeStorage::storageConstant)
-				$additional_data = YoutubeStorage::decodeAdditionalData($report['additional_data']);
+			elseif ($report['storage'] == VideoStorage::storageConstant)
+				$additional_data = VideoStorage::decodeAdditionalData($report['additional_data']);
 
 			$arr['additional_data'] = $additional_data;
 			// $arr['modname'] = constant($datamod->class.'::name');

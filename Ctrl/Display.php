@@ -6,7 +6,7 @@ class Display {
 	 *	Load is the default function.
 	 */
 	public function index() {
-		this->load();
+		$this->load();
 	}
 
 	/**

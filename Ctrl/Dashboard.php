@@ -23,7 +23,7 @@ class Dashboard
 		CHead::addJS('JsURL');
 		CHead::addJS($ROOT_PATH.'/Mod/Storages/InternalStorage.js');
 		CHead::addJS($ROOT_PATH.'/Mod/Storages/SensAppStorage.js');
-		CHead::addJS($ROOT_PATH.'/Mod/Storages/YoutubeStorage.js');
+		CHead::addJS($ROOT_PATH.'/Mod/Storages/VideoStorage.js');
 
 		// The rootpath variable is used in the app
 		// TODO : declare more path variables here,
