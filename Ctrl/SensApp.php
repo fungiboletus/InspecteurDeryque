@@ -106,7 +106,7 @@
  	/**
  	 *	Show the content of a sensor in the server in a table.
  	 *
- 	 *	It could be useful for debug.
+ 	 *	It could be useful for debugging.
  	 */
  	public function sensor() {
  		// Load the descriptor information

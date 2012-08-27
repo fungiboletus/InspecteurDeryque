@@ -43,7 +43,8 @@ $('#createnewlapin').modal({
 });
 
 $('#createnewlapin iframe').load(function() {
-	if ($(this).contents().find('#data_add_form').length !== 1) {
+	var contents = $(this).contents();
+	if (contents.find('#data_add_form').length !== 1) {
 		$('#createnewlapin').modal('hide');
 		$.ajax({
 		url: window.location.pathname,
@@ -90,6 +91,12 @@ $('#createnewlapin iframe').load(function() {
 			}
 		}
 		});
+	}
+	else
+	{
+		// Hide uncessery form elements
+		$(contents).find('.storage_list_fieldset').hide();
+		$(contents).find('input[name=type][value=Video]').parent().hide();
 	}
 });
 });

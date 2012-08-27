@@ -52,6 +52,7 @@
 
 #data_add_form .type_list {
 	position:relative;
+	min-height:365px;
 }
 #data_add_form .type_list .sons {
 	display:none;
