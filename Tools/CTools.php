@@ -24,7 +24,7 @@ class CTools
 			}
 		}
 	}
-	
+
 	public static function mimeToUtf8($input)
 	{
 		$output = '';
@@ -36,7 +36,7 @@ class CTools
 		{
 			$charset = $elements[$i]->charset;
 			$text = $elements[$i]->text;
-			
+
 			if ($charset !== 'default')
 			{
 				$output .= CTools::toUtf8($charset, $text);
@@ -46,7 +46,7 @@ class CTools
 				$output .= $text;
 			}
 		}
-	
+
 		return $output;
 	}
 
@@ -100,10 +100,10 @@ class CTools
 		return $dataPath;
 	}
 
-	public static function hackError()
+	public static function hackError($method = 'teapot')
 	{
 		$error = new Error();
-		$error->teapot();
+		$error->$method();
 		throw new Exception('hack');
 	}
 }

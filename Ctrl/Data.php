@@ -8,7 +8,7 @@ class Data
 		CNavigation::setTitle(_('Simple statements'));
 		CNavigation::setDescription(_('All your data are belong to us'));
 
-		$statements = DataMod::getStatements($_SESSION['bd_id']);
+		$statements = DataMod::getStatements();
 
 		DataView::showStatementsList($statements);
 
@@ -155,18 +155,24 @@ class Data
 			DataMod::getDataTypes(), $mode);
 	}
 
+	/**
+	 *	View a statement.
+	 */
 	public function view()
 	{
-		$statement = isset($_REQUEST['name']) ? DataMod::getStatement($_REQUEST['name'], $_SESSION['bd_id']) : false;
+		// Load the statement
+		$statement = isset($_REQUEST['name']) ? DataMod::getStatement($_REQUEST['name']) : false;
 
+		// If the statement is not present, show a 404 error
 		if (!$statement)
-			CTools::hackError();
+			CTools::hackError('page_not_found');
 
 		CNavigation::setTitle(_('Statement : ').$statement['name']);
 		CNavigation::setDescription($statement['description']);
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 
+		// Wonderful and very well concepted storage load
 		$video_location = '';
 		if ($statement['storage'] == SensAppStorage::storageConstant)
 			$sensapp = SensAppStorage::decodeAdditionalData($statement['additional_data']);
@@ -178,34 +184,45 @@ class Data
 
 		}
 
-
-
+		// Show the form with the statement's values
 		CHead::addJS('Data_add');
-		DataView::showAddForm(array_merge([
+		DataView::showAddForm([
 						'old_id' => $statement['id'],
 						'name' => $statement['name'],
 						'desc' => $statement['description'],
 						'type' => $n_datamod->folder,
 						'storage' => intval($statement['storage']),
 						'sensapp' => $sensapp,
-						'video_location' => $video_location]
-			,$_REQUEST), DataMod::getDataTypes(), 'edit');
+						'video_location' => $video_location], DataMod::getDataTypes(), 'edit'); // edit mode
 	}
 
+	/**
+	 *	Remove a statement.
+	 */
 	public function remove()
 	{
-		$statement = DataMod::getStatement($_REQUEST['name'], $_SESSION['bd_id']);
-		if (!$statement) {
-			CTools::hackError();
-		}
+		// Load the statement
+		$statement = isset($_REQUEST['name']) ? DataMod::getStatement($_REQUEST['name']) : false;
 
+		// Hack error
+		if (!$statement)
+			CTools::hackError();
+
+		// If the user has confirmed
 		if (isset($_REQUEST['confirm'])) {
-			//TODO check uselessness of :
-			//$name = $statement['name'];
+			// load the statement in a redbean object
 			$statement = R::load('releve', $statement['id']);
+
+			// load the datamod
 			$modname = R::load('datamod', $statement->mod_id)->modname;
+
+			// delete data in the internal storage (can be empty)
 			R::exec('delete from d_'.$modname.' where releve_id = ?', [$statement['id']]);
-			R::trash(R::load('releve', $statement['id']));
+
+			// Remove the  statement
+			R::trash($statement);
+
+			new CMessage(_('The statement has been correctly deleted.'),'warning');
 			CNavigation::redirectToApp('Data');
 		}
 		else
