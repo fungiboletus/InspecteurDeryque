@@ -47,7 +47,7 @@ class Data
 				$statement = null;
 				$user = $_SESSION['user'];
 
-				// Create a new statement
+				// Create a new statement in add mode
 				if ($mode === 'add')
 					$statement = R::dispense('releve');
 
@@ -204,7 +204,6 @@ class Data
 		// Load the statement
 		$statement = isset($_REQUEST['name']) ? DataMod::getStatement($_REQUEST['name']) : false;
 
-		// Hack error
 		if (!$statement)
 			CTools::hackError();
 
