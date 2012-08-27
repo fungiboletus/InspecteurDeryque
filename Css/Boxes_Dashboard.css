@@ -212,15 +212,19 @@ color:blue;
 	margin:2px;
 	padding:3px;
 	display:inline-block;
-	background:rgba(51,51,51,0.1);
 	cursor:pointer;
+	box-shadow:0.5px 0.5px 2px rgba(0,0,0,0.26);
 }
 :not(.dragged) .boxdiv .back .input_types li:hover {
-	background:rgba(51,51,51,0.25);
+	/*background:rgba(51,51,51,0.25);*/
 }
 
-.boxdiv .back .input_types li.selected {
+.boxdiv .back .input_types li:not(.selected) {
+	/*background:rgba(51,51,51,0.1);*/
 	background:rgba(51,51,51,0.25);
+}
+.boxdiv .back .input_types li.selected {
+	/*background:rgba(51,51,51,0.25);*/
 }
 
 .boxdiv .back .input_types li h4 {

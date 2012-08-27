@@ -501,8 +501,8 @@ $(document).ready(function() {
 	// Click un a visualization
 	var clic_type_statement = function() {
 		var li = $(this);
-		li.parent().find('li').removeClass('selected selected_by_default');
-		li.addClass('selected');
+		li.parent().find('li').removeClass('selected selected_by_default btn-inverse');
+		li.addClass('selected btn-inverse');
 
 		var type = encodeURIComponent(li.attr('name'));
 		var boxdiv = li.parents('.boxdiv');
@@ -553,7 +553,7 @@ $(document).ready(function() {
 		{
 			var li = newDom('li');
 			if (first) {
-				li.className = 'btn selected selected_by_default';
+				li.className = 'btn btn-inverse selected selected_by_default';
 				first = false;
 			}
 			else

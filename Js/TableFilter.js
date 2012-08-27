@@ -13,7 +13,7 @@ $(document).ready(function() {
 		</div>\
 	</form>');
 
-	// Object (hash table) for the list words
+	// Object (hash table) for the words list
 	var words = {};
 
 	// Find the words in the list
