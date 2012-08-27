@@ -2,12 +2,9 @@
 /**
  * Infos about the Speed data.
  */
-class DHeading /*extends DefaultData*/ extends DNumerical
+class DHeading extends DENumerical
 {
 	const name = 'Heading';
-
-	// Dheading doesn't need numerical data
-	const n_numerical = false;
 
 	const n_heading = 'Heading';
 	public $heading;

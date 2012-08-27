@@ -51,9 +51,6 @@ class Data
 					}
 					else if ($statement->user->getID() != $user->getID())
 					{
-						groaw('oops');
-						groaw($user);
-						groaw($statement->user);
 						CTools::hackError();
 					}
 				}
@@ -118,7 +115,7 @@ class Data
 						'type' => '',
 						'storage' => '',
 						'sensapp' => [],
-						'youtube_location' => ''],$_REQUEST),
+						'video_location' => ''],$_REQUEST),
 			DataMod::getDataTypes(), $mode);
 	}
 
@@ -134,14 +131,14 @@ class Data
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 
-		$youtube_location = '';
+		$video_location = '';
 		if ($statement['storage'] == SensAppStorage::storageConstant)
 			$sensapp = SensAppStorage::decodeAdditionalData($statement['additional_data']);
 		else
 		{
 			$sensapp = [];
-			if ($statement['storage'] == YoutubeStorage::storageConstant)
-				$youtube_location = YoutubeStorage::decodeAdditionalData($statement['additional_data']);
+			if ($statement['storage'] == VideoStorage::storageConstant)
+				$video_location = VideoStorage::decodeAdditionalData($statement['additional_data']);
 
 		}
 
@@ -155,7 +152,7 @@ class Data
 						'type' => $n_datamod->folder,
 						'storage' => intval($statement['storage']),
 						'sensapp' => $sensapp,
-						'youtube_location' => $youtube_location]
+						'video_location' => $video_location]
 			,$_REQUEST), DataMod::getDataTypes(), 'edit');
 	}
 

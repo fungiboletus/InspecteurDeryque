@@ -15,7 +15,8 @@ class DataMod extends AbstractMod {
 		$data = [
 			new DataMod('EmptyData', null),
 			new DataMod('DefaultData', null),
-			new DataMod('DPositiveNumerical', null)
+			new DataMod('DPositiveNumerical', null),
+			new DataMod('DENumerical', null)
 		];
 
 		foreach (scandir('Data') as $folder) {
@@ -59,7 +60,7 @@ class DataMod extends AbstractMod {
 	 */
 	public static function loadStorageType($id) {
 		$storages = [
-			YoutubeStorage::storageConstant => 'YoutubeStorage',
+			VideoStorage::storageConstant => 'VideoStorage',
 			SensAppStorage::storageConstant => 'SensAppStorage'];
 
 		return array_key_exists($id, $storages) ?

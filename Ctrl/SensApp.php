@@ -96,7 +96,7 @@
 
 		echo '<h3>', _('Last records'), '</h3><br/>';
 		$data = $mod->loadSensorData($sensor, 42);
-		groaw($data);
+		// groaw($data);
 		SensAppView::recordsList($data->e, $data->bt);
 
  	}

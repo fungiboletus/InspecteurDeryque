@@ -123,31 +123,31 @@ HTML;
 		$url_sensapp = CNavigation::generateUrlToApp('SensApp');
 		$text_no_selection = _('Select the data');
 		$href = CNavigation::generateUrlToApp('SensApp', null, ['iframe_mode' => true]);
-		$text_youtube = _('Youtube settings');
-		$label_youtube = _('Video location');
-		$hyoutube = htmlspecialchars($values['youtube_location']);
+		$text_video = _('Video settings');
+		$label_video = _('Video location');
+		$hvideo = htmlspecialchars($values['video_location']);
 
 		$local_value = InternalStorage::storageConstant;
 		$sensapp_value = SensAppStorage::storageConstant;
-		$youtube_value = YoutubeStorage::storageConstant;
-		$local_checked = $youtube_checked = $sensapp_checked = '';
-		$youtube_hide = $sensapp_hide = 'style="display:none;"';
+		$video_value = VideoStorage::storageConstant;
+		$local_checked = $video_checked = $sensapp_checked = '';
+		$video_hide = $sensapp_hide = 'style="display:none;"';
 		if ($values['storage'] == $sensapp_value)
 		{
 			$sensapp_checked = 'checked';
 			$sensapp_hide = '';
 		}
-		else if ($values['storage'] == $youtube_value)
+		else if ($values['storage'] == $video_value)
 		{
-			$youtube_checked = 'checked';
-			$youtube_hide = '';
+			$video_checked = 'checked';
+			$video_hide = '';
 		}
 		else
 			$local_checked = 'checked';
 
 		echo <<<HTML
 </fieldset>
-<fieldset>
+<fieldset class="storage_list_fieldset">
 <legend>$text_storage</legend>
 <div class="thumbnails storage_list">
 	<label class="radio inline thumbnail $local_checked">
@@ -164,16 +164,10 @@ HTML;
 			SensApp
 		</h4>
 	</label>
-	<label class="radio inline thumbnail $youtube_checked">
-		<img src="$ROOT_PATH/Img/icons/storage/youtube.png"/>
-		<h4>
-			<input type="radio" id="storage3" name="storage" value="$youtube_value" $youtube_checked/>
-			Youtube
-		</h4>
+	<label class="radio inline thumbnail" style="display:none">
+		<input type="radio" id="storage3" name="storage" value="3" />
 	</label>
 	<!--<label class="radio inline thumbnail">
-		<img src="$ROOT_PATH/Img/icons/location/deryque.png"/>
-		<h4>
 			<input type="radio" id="location4" name="location" value="4" />
 			$label_file
 		</h4>
@@ -208,12 +202,12 @@ HTML;
 		}
 		echo <<<HTML
 </fieldset>
-<fieldset class="youtube_settings" $youtube_hide>
-<legend>$text_youtube</legend>
+<fieldset class="video_settings" $video_hide>
+<legend>$text_video</legend>
 	<div class="control-group">
-		<label for="youtube_location" class="control-label">$label_youtube</label>
+		<label for="video_location" class="control-label">$label_video</label>
 		<div class="controls">
-			<input name="youtube_location" id="youtube_location" type="text" value="$hyoutube" />
+			<input name="video_location" id="video_location" type="text" value="$hvideo" />
 		</div>
 	</div>
 </fieldset>
