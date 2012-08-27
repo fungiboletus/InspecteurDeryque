@@ -19,14 +19,14 @@ class Registration
 				new CMessage(_('Une adresse mail est demandée'), 'error');
 				CNavigation::redirectToApp('Registration');
 			}
-			
+
             // Check if no other user have the same emai address
 			$old_user = R::findOne('user', 'mail = :mail', ['mail' => $_POST['mail']]);
 			if ($old_user) {
 				new CMessage(_('Un compte existe déjà avec cette adresse mail'), 'error');
 				CNavigation::redirectToApp('Registration');
 			}
-            
+
             // If both checks are successful, let the registration begin!
 			$user = R::dispense('user');
 			$user->name = $_POST['nom'];
@@ -34,7 +34,7 @@ class Registration
 			$user->password = sha1($_POST['password'].'grossel');
 
 			R::store($user);
-			
+
 			// Registering successful, the user is automatically logged in.
 			new CMessage('Inscription réussie');
 			$_SESSION['logged'] = true;
@@ -42,8 +42,7 @@ class Registration
 			$_SESSION['mail'] = $user->mail;
 			$_SESSION['bd_id'] = $user->getID();
 			$_SESSION['user'] = $user;
-			$_SESSION['tadam'] = true;
-			CNavigation::redirectToApp('Dashboard');
+			CNavigation::redirectToApp('Data');
 		}
 		else { // Case invalid POST data.
 			CTools::hackError();

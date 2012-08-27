@@ -138,3 +138,8 @@ table .headerSortUp:after {
   -moz-opacity: 0.6;
   opacity: 0.6;
 }
+
+.thumbnail h4
+{
+  color:#333;
+}
