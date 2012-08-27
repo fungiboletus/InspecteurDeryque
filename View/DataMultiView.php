@@ -29,11 +29,12 @@ class DataMultiView extends AbstractView {
 		$autofocus_name = $mode === 'add' ? 'autofocus' : '';
 
 		CHead::addJS('jquery.tablesorter.min');
+		CHead::addJS('TableFilter');
 
 		echo <<<HTML
 <form action="$url_submit" name="data_multi_add_form" method="post" id="data_multi_add_form" class="form-horizontal well">
 <fieldset>
-	<table class="table table-striped table-bordered table-condensed sorted_table">
+	<table class="table table-striped table-bordered table-condensed sorted_table data_list">
 		<thead><tr>
 			<th class="header purple">&#x2611;</th>
 			<th class="header yellow">Name</th>
@@ -125,6 +126,7 @@ HTML;
 public static function showStatementsList($statements) {
 		if ($statements) {
 			CHead::addJS('jquery.tablesorter.min');
+			CHead::addJS('TableFilter');
 			echo <<<HTML
 <table class="table table-striped table-bordered data_list">
 	<thead><tr>

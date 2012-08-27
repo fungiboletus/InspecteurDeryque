@@ -72,6 +72,7 @@ HTML;
 		if ($servers)
 		{
 			CHead::addJS('jquery.tablesorter.min');
+			CHead::addJS('TableFilter');
 			?>
 			<table class="table table-striped table-bordered data_list">
 				<thead><tr>
@@ -98,6 +99,7 @@ HTML;
 		if ($sensors)
 		{
 			CHead::addJS('jquery.tablesorter.min');
+			CHead::addJS('TableFilter');
 			?>
 			<table class="table table-striped table-bordered data_list sensor_data_list">
 				<thead><tr>

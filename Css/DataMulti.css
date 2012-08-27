@@ -26,3 +26,11 @@
 #data_multi_add_form table tr.checked {
 	font-weight:bold;
 }
+
+#data_multi_add_form .data_list td {
+	padding:4px 5px;
+}
+
+#data_multi_add_form .filter-area {
+	margin-top:0;
+}

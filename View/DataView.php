@@ -262,6 +262,7 @@ HTML;
 		if ($statements)
 		{
 			CHead::addJS('jquery.tablesorter.min');
+			CHead::addJS('TableFilter');
 			echo <<<HTML
 			<table class="table table-striped table-bordered data_list">
 				<thead><tr>

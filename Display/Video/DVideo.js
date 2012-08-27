@@ -6,8 +6,8 @@ var DVideo = function(screen)
 	this.screen = screen;
 
 	this.video = newDom('video');
-	this.video.setAttribute('src', '/InspecteurDeryque/sample.mov');
-	// this.video.setAttribute('src', 'https://s3-eu-west-1.amazonaws.com/sensapp-sintef-9012/videoplayback');
+	// this.video.setAttribute('src', '/InspecteurDeryque/sample.mov');
+	this.video.setAttribute('src', 'https://s3-eu-west-1.amazonaws.com/sensapp-sintef-9012/videoplayback');
 	// this.video.setAttribute('controls', 'true');
 	this.video.setAttribute('preload', 'auto');
 	this.screen.appendChild(this.video);
