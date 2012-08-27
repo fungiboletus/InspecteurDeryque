@@ -917,3 +917,11 @@ label{color:#ece9d7;line-height:15px;}
 .show{display:block;}
 .invisible{visibility:hidden;}
 .affix{position:fixed;}
+
+body {
+	padding-top:70px!important;
+}
+
+#mainContent {
+	top:70px !important;
+}

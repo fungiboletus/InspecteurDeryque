@@ -906,3 +906,8 @@ legend{border-bottom:2px solid #ffffff;}
 .show{display:block;}
 .invisible{visibility:hidden;}
 .affix{position:fixed;}
+
+.data_list a
+{
+	color:#333;
+}

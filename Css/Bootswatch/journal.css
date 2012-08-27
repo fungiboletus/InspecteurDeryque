@@ -846,3 +846,15 @@ legend{border-bottom:2px solid #eeeeee;font-family:"News Cycle","Arial Narrow Bo
 .show{display:block;}
 .invisible{visibility:hidden;}
 .affix{position:fixed;}
+
+body {
+	padding-top:65px !important;
+}
+
+#mainContent {
+	top:65px !important;
+}
+
+.btn-inverse h4 {
+	color:white;
+}

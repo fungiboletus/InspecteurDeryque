@@ -836,3 +836,11 @@ i[class^="icon-"]{opacity:0.8;}
 .show{display:block;}
 .invisible{visibility:hidden;}
 .affix{position:fixed;}
+
+body {
+	padding-top:53px !important;
+}
+
+#mainContent {
+	top:53px !important;
+}
