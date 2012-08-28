@@ -42,6 +42,34 @@ var DGraphique = function(screen)
 	// Print values on y axes ?
 	// This is only activated when multi_scale is disabled
 	this.show_x_values = true;
+
+	// Just a line or a fill ?
+	this.fill_lines = false;
+
+	// TODO ne pas mettre ça là
+	var buttons_area = newDom('div');
+	buttons_area.className = 'btn-group';
+	var obj = this;
+	var btn = newDom('a');
+	btn.className = 'btn btn-mini';
+	btn.appendChild(document.createTextNode('Multi scale'));
+	btn.onclick = function(){
+		obj.multi_scale = !obj.multi_scale;
+		this.className = obj.multi_scale ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
+		EventBus.send('size_change');
+	};
+	buttons_area.appendChild(btn);
+	btn = newDom('a');
+	btn.className = 'btn btn-mini';
+	btn.appendChild(document.createTextNode('Fill'));
+	btn.onclick = function(){
+		obj.fill_lines = !obj.fill_lines;
+		this.className = obj.fill_lines ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
+		EventBus.send('size_change');
+	};
+	buttons_area.appendChild(btn);
+	this.screen.appendChild(buttons_area);
+
 };
 
 DGraphique.prototype =
@@ -198,7 +226,20 @@ drawLine: function(points, color, y_min)
 			// c.lineTo(x_i, y_i);
 	}
 
-	c.stroke();
+	if (this.fill_lines)
+	{
+		// var gradient = c.createLinearGradient(0,0,0, this.height);
+		// gradient.addColorStop(0, color);
+		// gradient.addColorStop(1, 'transparent');
+		// c.fillStyle = gradient;
+		c.fillStyle = color;
+		c.lineTo(x_pos, this.height);
+		c.lineTo(points[0][0],this.height);
+		c.fill();
+	}
+	else
+		c.stroke();
+
 	c.closePath();
 },
 
@@ -292,8 +333,8 @@ paintAxes: function(mili, paintForced, y_min)
 		// console.log(min_y_value);
 		for(var i = 0.5; i <= this.height+0.5 ; i += y_tic)
 		{
-			var x_pos = this.height - (i < this.height - 5 ? i+5 : i);
-			if (x_pos < 5) x_pos = 5;
+			var x_pos = this.height - i - 11;
+			if (x_pos < 0) x_pos = 0;
 			if (x_pos > this.height - 10) x_pos = this.height - 10;
 			// console.log(i, this.height, y_tic);
 			c.fillText(parseInt((i-0.5) / this.coef_y + min_y_value + 0.5),
