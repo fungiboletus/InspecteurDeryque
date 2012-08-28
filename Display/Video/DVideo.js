@@ -6,8 +6,6 @@ var DVideo = function(screen)
 	this.screen = screen;
 
 	this.video = newDom('video');
-	// this.video.setAttribute('src', '/InspecteurDeryque/sample.mov');
-	this.video.setAttribute('src', 'https://s3-eu-west-1.amazonaws.com/sensapp-sintef-9012/videoplayback');
 	// this.video.setAttribute('controls', 'true');
 	this.video.setAttribute('preload', 'auto');
 	this.screen.appendChild(this.video);
@@ -31,7 +29,7 @@ var DVideo = function(screen)
 	};
 
 	this.canplay = false;
-	this.time_synchro = -10;
+	this.min_time = 0;
 
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
@@ -71,6 +69,12 @@ var DVideo = function(screen)
 };
 
 DVideo.prototype.listeners = {
+	video: function(d, obj) {
+		obj.canplay = false;
+		obj.time_synchro = obj.min_time - d.start_t;
+		obj.video.setAttribute('src', d.location);
+	},
+
 	bounds: function(d, obj) {
 		obj.min_time = Number.MAX_VALUE;
 		// obj.max_time = -Number.MAX_VALUE;

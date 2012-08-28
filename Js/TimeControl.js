@@ -590,9 +590,8 @@ del_statement: function(e, obj) {
 
 },
 
-size_change: function(e, obj) {
-	// In a timeout in order to wait the size managment of other elements
-	EventBus.sendDelayed('time_sync', obj.get_times_by_pos());
+get_tuples: function(e, obj) {
+	EventBus.send('time_sync', obj.get_times_by_pos());
 },
 
 play: function(e, obj) {

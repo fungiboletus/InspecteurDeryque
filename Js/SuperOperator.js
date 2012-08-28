@@ -122,7 +122,7 @@ add_statement: function(d, obj) {
 				obj.count_database[statement_name] = obj.count_database[statement_name] + 1;
 			}
 			else
-				alert('Unknow storage type : '+storage);
+				EventBus.send('error', {status: 'Unknow storage type', message: storage});
 		});
 	}
 },
@@ -163,6 +163,11 @@ get_bounds: function(d, obj) {
 
 	if (send_bounds)
 		EventBus.send('bounds', response);
+},
+
+size_change: function() {
+	// Delayed sending in order to wait the size managment of other elements
+	EventBus.sendDelayed('get_tuples');
 },
 
 time_sync: function(d, obj) {

@@ -32,7 +32,8 @@ var DGraphique = function(screen)
 	// If the scale have to be repainted
 	this.scale_change = true;
 
-	this.colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
+	// this.colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
+	this.colors = ['orange', 'dodgerblue', 'limegreen', 'yellowgreen', 'salmon', 'cyan'];
 
 	// Multiscale or unique scale ?
 	// with the multiscale, each statement's scale is adapted to the window
@@ -46,6 +47,9 @@ var DGraphique = function(screen)
 	// Just a line or a fill ?
 	this.fill_lines = false;
 
+	// Just points ?
+	this.points = false;
+
 	// TODO ne pas mettre ça là
 	var buttons_area = newDom('div');
 	buttons_area.className = 'btn-group';
@@ -56,7 +60,7 @@ var DGraphique = function(screen)
 	btn.onclick = function(){
 		obj.multi_scale = !obj.multi_scale;
 		this.className = obj.multi_scale ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
-		EventBus.send('size_change');
+		EventBus.send('get_tuples');
 	};
 	buttons_area.appendChild(btn);
 	btn = newDom('a');
@@ -65,7 +69,16 @@ var DGraphique = function(screen)
 	btn.onclick = function(){
 		obj.fill_lines = !obj.fill_lines;
 		this.className = obj.fill_lines ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
-		EventBus.send('size_change');
+		EventBus.send('get_tuples');
+	};
+	buttons_area.appendChild(btn);
+	btn = newDom('a');
+	btn.className = 'btn btn-mini';
+	btn.appendChild(document.createTextNode('Points'));
+	btn.onclick = function(){
+		obj.points = !obj.points;
+		this.className = obj.points ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
+		EventBus.send('get_tuples');
 	};
 	buttons_area.appendChild(btn);
 	this.screen.appendChild(buttons_area);
@@ -213,7 +226,9 @@ drawLine: function(points, color, y_min)
 		// y_i = points_to_draw[i][1];
 		// var diff = x_i - old_x_i;
 
-		if (x_pos - old_x_pos > max_x_by_point)
+		if (this.points)
+			c.arc(x_pos, y_pos, 3.2, 0, Math.PI*2);
+		else if (x_pos - old_x_pos > max_x_by_point)
 			c.moveTo(x_pos, y_pos);
 		else
 			c.lineTo(x_pos, y_pos);
@@ -226,6 +241,7 @@ drawLine: function(points, color, y_min)
 			// c.lineTo(x_i, y_i);
 	}
 
+
 	if (this.fill_lines)
 	{
 		// var gradient = c.createLinearGradient(0,0,0, this.height);
@@ -233,8 +249,11 @@ drawLine: function(points, color, y_min)
 		// gradient.addColorStop(1, 'transparent');
 		// c.fillStyle = gradient;
 		c.fillStyle = color;
-		c.lineTo(x_pos, this.height);
-		c.lineTo(points[0][0],this.height);
+		if (!this.points)
+		{
+			c.lineTo(x_pos, this.height);
+			c.lineTo(points[0][0],this.height);
+		}
 		c.fill();
 	}
 	else
