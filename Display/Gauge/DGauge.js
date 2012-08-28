@@ -48,6 +48,7 @@ var DGauge = function(screen)
 	this.screen.appendChild(this.legend_area);
 
 	this.database = {};
+	this.size_database = 0;
 	EventBus.addListeners(this.listeners, this);
 };
 

@@ -17,6 +17,10 @@ var DGraphique = function(screen)
 	this.screen.appendChild(this.screenAxes);
 	this.screen.appendChild(this.screenGraph);
 
+	this.legend_area = newDom('ul');
+	this.legend_area.className = 'legend';
+	this.screen.appendChild(this.legend_area);
+
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
 
@@ -28,10 +32,16 @@ var DGraphique = function(screen)
 	// If the scale have to be repainted
 	this.scale_change = true;
 
-	// Sampling the data ?
-	this.sampling = true;
-
 	this.colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
+
+	// Multiscale or unique scale ?
+	// with the multiscale, each statement's scale is adapted to the window
+	// but values between 0 and 0.1 could looking similar to values between 1000 and 1000000
+	this.multi_scale = false;
+
+	// Print values on y axes ?
+	// This is only activated when multi_scale is disabled
+	this.show_x_values = true;
 };
 
 DGraphique.prototype =
@@ -192,7 +202,7 @@ drawLine: function(points, color, y_min)
 	c.closePath();
 },
 
-paintAxes: function(mili, paintForced)
+paintAxes: function(mili, paintForced, y_min)
 {
 
 	if (!paintForced &&
@@ -204,6 +214,9 @@ paintAxes: function(mili, paintForced)
 
 	c.strokeStyle = "#505050";
 	c.lineWidth = 1;
+	c.fillStyle = 'white';
+	c.font = "10px monospace";
+	c.textBaseline = 'top';
 
 	var x_val = this.tic_x * this.coef_x;
 	var y_val = this.tic_y * this.coef_y;
@@ -217,7 +230,7 @@ paintAxes: function(mili, paintForced)
 		return;
 
 	// Vertical lines
-	for(var i = 0.5; i < this.width ; i += x_tic){
+	for(var i = 0.5; i < this.width + 0.5 ; i += x_tic){
 		c.beginPath();
 		c.moveTo(i , this.height);
 		c.lineTo(i, 0);
@@ -246,7 +259,7 @@ paintAxes: function(mili, paintForced)
 	}
 
 	// Horizontal lines
-	for(var i = 0.5; i < this.height ; i += y_tic){
+	for(var i = 0.5; i < this.height + 0.5 ; i += y_tic){
 		c.beginPath();
 		c.moveTo(0, i);
 		c.lineTo(this.width, i);
@@ -270,6 +283,21 @@ paintAxes: function(mili, paintForced)
 			c.stroke();
 			c.closePath();
 			c.restore();
+		}
+	}
+
+	if (this.show_x_values && !this.multi_scale)
+	{
+		var min_y_value = Math.floor(y_min / this.tic_y) * this.tic_y;
+		// console.log(min_y_value);
+		for(var i = 0.5; i <= this.height+0.5 ; i += y_tic)
+		{
+			var x_pos = this.height - (i < this.height - 5 ? i+5 : i);
+			if (x_pos < 5) x_pos = 5;
+			if (x_pos > this.height - 10) x_pos = this.height - 10;
+			// console.log(i, this.height, y_tic);
+			c.fillText(parseInt((i-0.5) / this.coef_y + min_y_value + 0.5),
+				0.5, x_pos);
 		}
 	}
 
@@ -301,35 +329,64 @@ listeners: {
 		obj.clear();
 		obj.manageXScale();
 
+		var y_min = Number.MAX_VALUE;
+		var y_max = -Number.MAX_VALUE;
+
 		for (var statement_name in detail)
 		{
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
 			for (var k in data)
 				if (k != 'time_t')
-					lines_to_draw.push(obj.includeLine(data, k));
+				{
+					var line = obj.includeLine(data, k);
+					if (line[1] < y_min) y_min = line[1];
+					if (line[2] > y_max) y_max = line[2];
+					lines_to_draw.push(line);
+
+					var id_legend = "legend_"+(statement_name+k).hashCode();
+					if (!byId(id_legend))
+					{
+						var legend = newDom('li');
+						legend.id = id_legend;
+						legend.style.color = obj.colors[(lines_to_draw.length-1)%obj.colors.length];
+						legend.appendChild(document.createTextNode(statement_name + ' : ' + k));
+						obj.legend_area.appendChild(legend);
+					}
+				}
 		}
 
-		var min_tic_y = Number.MAX_VALUE;
-		var associated_coef_y = 0.0;
-
-		for (var i = 0; i < lines_to_draw.length; ++i)
+		if (obj.multi_scale)
 		{
-			var line = lines_to_draw[i];
-			obj.manageYScale(line[1], line[2]);
-			if (obj.tic_y < min_tic_y)
+			var min_tic_y = Number.MAX_VALUE;
+			var associated_coef_y = 0.0;
+
+			for (var i = 0; i < lines_to_draw.length; ++i)
 			{
-				min_tic_y = obj.tic_y;
-				associated_coef_y = obj.coef_y;
+				var line = lines_to_draw[i];
+				obj.manageYScale(line[1], line[2]);
+				if (obj.tic_y < min_tic_y)
+				{
+					min_tic_y = obj.tic_y;
+					associated_coef_y = obj.coef_y;
+				}
+				obj.drawLine(line[0], obj.colors[i%obj.colors.length], line[1]);
 			}
-			obj.drawLine(line[0], obj.colors[i%obj.colors.length], line[1]);
+
+			obj.tic_y = min_tic_y;
+			obj.coef_y = associated_coef_y;
+		}
+		else
+		{
+			obj.manageYScale(y_min, y_max);
+			for (var i = 0; i < lines_to_draw.length; ++i)
+				obj.drawLine(lines_to_draw[i][0],
+					obj.colors[i%obj.colors.length], y_min);
 		}
 
-		obj.tic_y = min_tic_y;
-		obj.coef_y = associated_coef_y;
-
-		obj.paintAxes(true, false);
+		obj.paintAxes(true, false, y_min);
 	},
+
 	add_statement: function(e, obj) {
 		if (e.box_name != self.name) return;
 

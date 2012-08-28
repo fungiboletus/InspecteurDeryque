@@ -19,7 +19,7 @@ $(document).ready(function() {
 	// Find the words in the list
 	list.find('td').each(function() {
 		// Split with spaces and special chars
-		var data = $(this).text().split(/[\s\W]+/);
+		var data = $(this).text().split(/[\s:.\/$|\-_+\[\]#~,;]+/);
 
 		// For each words not too small
 		var n_data = data.length;

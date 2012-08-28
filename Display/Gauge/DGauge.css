@@ -120,3 +120,17 @@ transition:transform 0.33s;
 	font-weight:bold;
 	list-style-type: none;
 }
+
+@media (max-height: 220px) {
+	#area .line:not(.big) {
+		display:none;
+	}
+	#area .line.big {
+		width:20px;
+	}
+	#info_min_medium,
+	#info_medium,
+	#info_medium_max {
+		display:none;
+	}
+}
