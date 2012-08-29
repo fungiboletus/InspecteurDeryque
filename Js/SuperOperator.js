@@ -58,7 +58,7 @@ super_time_sync: function(start_t, end_t)
 		else
 			end = m -1;
 		old_m = m;
-	} while (begin < end);
+	} while (begin <= end);
 
 	var begin_filtered_data = m;
 
@@ -82,7 +82,7 @@ super_time_sync: function(start_t, end_t)
 	var r = {};
 
 	for (key in data)
-		r[key] = data[key].subarray(begin_filtered_data, end_filtered_data);
+		r[key] = data[key].subarray(begin_filtered_data, end_filtered_data+1);
 
 	return r;
 },

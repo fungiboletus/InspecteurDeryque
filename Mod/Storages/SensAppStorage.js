@@ -21,10 +21,11 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 			dataType: 'json',
 			success: function(json){
 
-				var nb_e = json.e.length;
 
-				if (nb_e === 0)
-					alert('todo');
+				if (typeof json.e === 'undefined' || json.e.length === 0)
+					return;
+					// alert('todo');
+				var nb_e = json.e.length;
 
 				// 64 bits baby !
 				var size = nb_e * 8;
@@ -131,6 +132,7 @@ extract_default: function(e)
 
 extract_sv: function(e, obj)
 {
+	// TODO prendre en compte les autres méthodes ?
 	return obj.degreeToDouble(e.sv);
 },
 

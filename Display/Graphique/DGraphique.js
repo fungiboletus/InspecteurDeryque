@@ -252,7 +252,7 @@ drawLine: function(points, color, y_min)
 		if (!this.points)
 		{
 			c.lineTo(x_pos, this.height);
-			c.lineTo(points[0][0],this.height);
+			c.lineTo(points_length > 0 ? points[0][0] : 0,this.height);
 		}
 		c.fill();
 	}
@@ -356,7 +356,8 @@ paintAxes: function(mili, paintForced, y_min)
 			if (x_pos < 0) x_pos = 0;
 			if (x_pos > this.height - 10) x_pos = this.height - 10;
 			// console.log(i, this.height, y_tic);
-			c.fillText(parseInt((i-0.5) / this.coef_y + min_y_value + 0.5),
+			c.fillText(
+				parseInt(((i-0.5) / this.coef_y + min_y_value + 0.5)/this.tic_y) * this.tic_y,
 				0.5, x_pos);
 		}
 	}
