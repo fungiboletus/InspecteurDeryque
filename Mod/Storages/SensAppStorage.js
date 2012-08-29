@@ -24,7 +24,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 				if (typeof json.e === 'undefined' || json.e.length === 0)
 					return;
-					// alert('todo');
+
 				var nb_e = json.e.length;
 
 				// 64 bits baby !
@@ -114,6 +114,7 @@ SensAppStorage.prototype =
 bounds: SuperOperator.prototype.super_bounds,
 time_sync: SuperOperator.prototype.super_time_sync,
 finished_events: SuperOperator.prototype.super_finished_events,
+rt_clock: SuperOperator.prototype.super_rt_clock,
 
 extract_v: function(e)
 {

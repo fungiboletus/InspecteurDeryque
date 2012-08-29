@@ -35,30 +35,6 @@ var delChar = function(chaine, caractere)
 	return chaine.substr(0,index)+chaine.substr(index+1);
 };
 
-var createImage = function(src, alt)
-{
-	var image = newDom("img");
-	image.setAttribute("src",src);
-	image.setAttribute("alt",_(alt));
-	return image;
-};
-
-var createButton = function(id, titre,rappel)
-{
-	var bouton = newDom("input");
-
-	if (rappel)
-	{
-		bouton.onclick = rappel;
-	};
-
-	bouton.setAttribute("type","button");
-	bouton.setAttribute("name",id);
-	bouton.setAttribute("value",_(titre));
-
-	return bouton;
-};
-
 var randInt = function(min, max)
 {
     return Math.floor(Math.random()*(max-min))+min;
@@ -97,14 +73,6 @@ Number.prototype.toRadians = function() {
 	return this * (Math.PI/180.0);
 };
 
-// Bad idea
-/*Object.prototype.size = function() {
-    var size = 0, key;
-    for (key in this)
-        if (this.hasOwnProperty(key)) size++;
-    return size;
-};*/
-
 var addEventFunction = function(e, o, f) {
 	if (o.addEventListener) {
 		o.addEventListener(e, f, false);
@@ -127,11 +95,12 @@ var removeEventFunction = function(e, o, f) {
 
 if (!window.console)
 {
-	window.console = {};
-	window.console.info = alert;
-	window.console.log = alert;
-	window.console.warn = alert;
-	window.console.error = alert;
+	window.console = {
+		info: alert,
+		log: alert,
+		warn: alert,
+		error: alert
+	};
 };
 
 var	log = function(element)
@@ -200,39 +169,49 @@ function quantizeTics(max)
 // debulked onresize handler
 function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
 
-var EventBus = new Object();
-EventBus.prefix = 'i15e.';
-EventBus.addListener = function(name, method, caller) {
-	window.top.addEventListener(this.prefix+name, function(e) {
-		// If the page still exist
-		if (self !== null && document !== null)
-			method(e.detail, caller, e);
-	});
-};
-EventBus.delListener = function(name) {
-	alert('todo');
-};
-EventBus.send = function(name, data) {
-	var e = new CustomEvent(this.prefix+name, {detail: data});
-	window.top.dispatchEvent(e);
-};
-EventBus.sendDelayed = function(name, data) {
-	window.setTimeout(function(){
-		EventBus.send(name, data);
-	}, 1);
-};
-EventBus.addListeners = function(listeners, caller) {
-	for (var key in listeners)
-		this.addListener(key, listeners[key], caller);
-};
+/**
+ *	Light event bus
+ *
+ *	It use recents Dom CustomEvents
+ */
+var EventBus = {
+	prefix: 'i15e.',
+	addListener: function(name, method, caller) {
+		window.top.addEventListener(this.prefix+name, function(e) {
+			// If the page still exist
+			if (self !== null && document !== null)
+				method(e.detail, caller, e);
+		});
+	},
+	delListener: function(name) {
+		alert('dellListener: todo');
+	},
+	send: function(name, data) {
+		var e = new CustomEvent(this.prefix+name, {detail: data});
+		window.top.dispatchEvent(e);
+	},
+	sendDelayed: function(name, data) {
+		window.setTimeout(function(){
+			EventBus.send(name, data);
+		}, 1);
+	},
+	addListeners: function(listeners, caller) {
+		for (var key in listeners)
+			this.addListener(key, listeners[key], caller);
+	}
+}
 
 $(document).ready(function(){
-	//$('.topbar').dropdown();
+
+	// Autotable sorter when the function is present,
+	// and the table too :-)
 	var table = $('table.data_list, table.sorted_table');
 	if (table.length && table.tablesorter) table.tablesorter({sortList: [[0,0]]});
 
+	// Manage fullscreen
 	on_resize(function()
 	{
+		// If the window size and the screen size are the same
 		if (window.innerWidth == window.screen.width && window.innerHeight == window.screen.height)
 			$(document.body).addClass('fullscreen');
 		else

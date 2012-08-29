@@ -1,3 +1,6 @@
+/**
+ *	Video storage (a specific case)
+ */
 var VideoStorage = function(superOperator, statement_name, resume)
 {
 	this.superOperator = superOperator;
@@ -6,9 +9,13 @@ var VideoStorage = function(superOperator, statement_name, resume)
 
 	var additional_data = resume.additional_data;
 
-	console.log(resume);
+	// console.log(resume);
 
+	// The resume is enough for sending the values
 	var obj = this;
+
+	// Specific event for this use (a video is very different
+	// than a list of tuples with time
 	EventBus.send('video', {
 		statement_name: statement_name,
 		location: additional_data,
@@ -20,6 +27,10 @@ var VideoStorage = function(superOperator, statement_name, resume)
 
 VideoStorage.prototype =
 {
+// This functions are present because they are called by the SuperOperator
+// but they do nothing…
 bounds: function() {},
+rt_clock: function() {},
+finished_event: function() {},
 time_sync: function() {}
 };

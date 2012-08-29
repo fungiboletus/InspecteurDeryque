@@ -1,0 +1,3 @@
+[submodule "Libs/LeCadreur"]
+	path = Libs/LeCadreur
+	url = git://github.com/yellowiscool/LeCadreur.git
