@@ -205,6 +205,10 @@ get_bounds: function(d, obj) {
 
 	// Construct the response for each statement
 	var send_bounds = false;
+	var time_tMin = Number.MAX_VALUE;
+	var time_tMax = -Number.MAX_VALUE;
+	var communMin = Number.MAX_VALUE;
+	var communMax = -Number.MAX_VALUE;
 	for (var statement_name in obj.database)
 	{
 		var bounds = obj.database[statement_name].bounds();
@@ -215,12 +219,31 @@ get_bounds: function(d, obj) {
 		{
 			send_bounds = true;
 			response[statement_name] = bounds;
+
+			// Global bounds management
+			if (bounds.time_tMin < time_tMin) time_tMin = bounds.time_tMin;
+			if (bounds.time_tMax > time_tMax) time_tMax = bounds.time_tMax;
+			for (var key in bounds)
+			{
+				if (key !== 'time_tMin' && key !== 'time_tMax')
+				{
+					var v = bounds[key];
+					if (v < communMin) communMin = v;
+					if (v > communMax) communMax = v;
+				}
+			}
 		}
 	}
 
 	// It's useless to send empty bounds (many visualizations could have bugs)
 	if (send_bounds)
 	{
+		response.__global__ = {
+			time_tMin: time_tMin,
+			time_tMax: time_tMax,
+			communMin: communMin,
+			communMax: communMax
+		};
 		EventBus.send('bounds', response);
 		obj.current_bounds = response;
 	}
@@ -257,13 +280,11 @@ time_sync: function(d, obj) {
 },
 
 rt_clock: function(d, obj) {
-	// Number of values to fetch (100 by default)
+	// Time interval (1 hour by default)
 	var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
 
-	console.log(interval, d);
-	var max_date = obj.current_bounds.time_tMax;
+	var max_date = obj.current_bounds.__global__.time_tMax;
 	var min_date = max_date - interval;
-	console.log(max_date, min_date);
 
 	EventBus.send('time_sync', {
 		start_t: min_date,

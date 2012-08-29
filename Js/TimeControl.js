@@ -548,19 +548,10 @@ time_sync: function(d, obj) {
  *	Updating the bounds of the time control
  */
 bounds: function(d, obj) {
-	for (var statement_name in d) {
-		if (d[statement_name].time_tMin < obj.time_min)
-		{
-			obj.time_min = d[statement_name].time_tMin;
-			obj.initial_time_min = obj.time_min;
-		}
-
-		if (d[statement_name].time_tMax > obj.time_max)
-		{
-			obj.time_max = d[statement_name].time_tMax;
-			obj.initial_time_max = obj.time_max;
-		}
-	}
+	obj.time_min = d.__global__.time_tMin;
+	obj.time_max = d.__global__.time_tMax;
+	obj.initial_time_min = obj.time_min;
+	obj.initial_time_max = obj.time_max;
 },
 
 add_statement: function(e, obj) {
