@@ -1,3 +1,5 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
 var SensAppStorage = function(superOperator, statement_name, resume)
 {
 	this.superOperator = superOperator;

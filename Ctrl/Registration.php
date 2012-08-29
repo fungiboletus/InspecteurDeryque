@@ -1,4 +1,6 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
+
 define('NO_LOGIN_REQUIRED', true);
 
 /** Manages the user Registration. */

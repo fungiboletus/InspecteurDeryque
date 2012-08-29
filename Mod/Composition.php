@@ -1,4 +1,5 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
 
 /**
  * A composition is a group of selections associated to a statement.

@@ -1,4 +1,6 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
+
 // Autoloading of class (PHP5)
 function __autoload($class)
 {

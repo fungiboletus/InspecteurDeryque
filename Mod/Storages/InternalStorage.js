@@ -1,3 +1,5 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
 /**
  *	Connector for the internal storage of InspecteurDeryque.
  */

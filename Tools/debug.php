@@ -1,4 +1,5 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
 
 /**
  * print the information with print_r in a special html part.

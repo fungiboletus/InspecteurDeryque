@@ -1,4 +1,6 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
+
 /** This class manages the file upload for data import view. */
 class Import {
 

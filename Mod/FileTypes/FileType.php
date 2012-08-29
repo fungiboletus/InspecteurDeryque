@@ -1,4 +1,6 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
+
 /**
  * Interface to manage different file sources when loading datas.
  */

@@ -1,4 +1,6 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
+
 /**
  * Manages navigation - pages infos, url rewriting, etc.
  */

@@ -1,3 +1,5 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
 $(document).ready(function() {
 	var form = $('#data_multi_add_form');
 	if (!form) return;

@@ -1,4 +1,5 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
 
 CNavigation::setTitle('RestXML');
 CNavigation::setDescription('REST interface');

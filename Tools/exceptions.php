@@ -1,4 +1,6 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
+
 // PHP errors are transformed to exceptions
 $exception_error_handler_mutex = true;
 function exception_error_handler($errno, $errstr, $errfile, $errline)

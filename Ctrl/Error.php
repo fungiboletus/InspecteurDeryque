@@ -1,4 +1,5 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
 
 if (!defined('NO_HEADER_BAR')) define('NO_HEADER_BAR', true);
 if (!defined('NO_LOGIN_REQUIRED')) define('NO_LOGIN_REQUIRED', true);

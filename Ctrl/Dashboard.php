@@ -1,4 +1,6 @@
 <?php
+/* This file is released under the CeCILL-B V1 licence.*/
+
 /** Manages the Dashboard - the index when the user is logged in. */
 class Dashboard
 {

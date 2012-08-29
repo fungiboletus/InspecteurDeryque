@@ -1,3 +1,5 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
 /**
  *	TimeControl control the displayed tuples and the time (yeah).
  *

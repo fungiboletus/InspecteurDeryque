@@ -1,3 +1,5 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
 var DConsole = function(area)
 {
 	this.console = newDom('ul');
