@@ -256,25 +256,17 @@ time_sync: function(d, obj) {
 
 rt_clock: function(d, obj) {
 	// Number of values to fetch (100 by default)
-	var count = (d && typeof d.count !== 'undefined') ? d.count : 100;
+	var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
 
-	var min_date = Number.MAX_VALUE;
-	var send_tuples = false;
+	console.log(interval, d);
+	var max_date = obj.current_bounds.time_tMax;
+	var min_date = max_date - interval;
+	console.log(max_date, min_date);
 
-	// Construct the response for each statement
-	for (var statement_name in obj.database)
-	{
-		var rt_clock = obj.database[statement_name].rt_clock(count);
-		if (rt_clock && rt_clock < min_date)
-		{
-			send_tuples = true;
-			min_date = rt_clock;
-		}
-	}
-
-	// Hack with the setTimeout for send the tuples event after the time_sync event
-	if (send_tuples)
-		EventBus.sendDelayed('tuples', response);
+	EventBus.send('time_sync', {
+		start_t: min_date,
+		end_t: max_date
+	});
 },
 
 }};

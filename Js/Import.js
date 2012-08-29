@@ -44,7 +44,7 @@ $('#createnewlapin').modal({
 
 $('#createnewlapin iframe').load(function() {
 	var contents = $(this).contents();
-	if (contents.find('#data_add_form').length !== 1) {
+	if (contents.find('.data_list').length > 0) {
 		$('#createnewlapin').modal('hide');
 		$.ajax({
 		url: window.location.pathname,
