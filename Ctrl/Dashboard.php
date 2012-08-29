@@ -11,27 +11,47 @@ class Dashboard
 		global $ROOT_PATH;
 		CNavigation::setTitle(_('Dashboard'));
 
-		// Add all the libs !
+		// The CSS stylesheet for the dashboard
 		CHead::addCSS('Boxes_Dashboard');
+
+		// Load the layout manager library
 		CHead::addCSS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.css');
 		CHead::addJS($ROOT_PATH.'/Libs/LeCadreur/Cadreur.js');
-		CHead::addJS('jquery.debouncedresize');
-		CHead::addJS('requestAnimationFrame.gist');
-		CHead::addJS('SuperOperator');
+
+		// Load dependency tools
+		CHead::addJS('jquery.debouncedresize'); // better resize events
+		CHead::addJS('requestAnimationFrame.gist'); // crossPlatform requestAnimationFrame
+		CHead::addJS('JsURL'); // apdapted json for urls
+
+		// Load the time controler
 		CHead::addJS('TimeControl');
-		CHead::addJS('Boxes_Dashboard');
-		CHead::addJS('JsURL');
+
+		// Load the general operator
+		CHead::addJS('SuperOperator');
+
+		// Load all the operators (we can't known which operator will be used)
 		CHead::addJS($ROOT_PATH.'/Mod/Storages/InternalStorage.js');
 		CHead::addJS($ROOT_PATH.'/Mod/Storages/SensAppStorage.js');
 		CHead::addJS($ROOT_PATH.'/Mod/Storages/VideoStorage.js');
 
+		// Load the main javascript
+		CHead::addJS('Boxes_Dashboard');
+
 		// The rootpath variable is used in the app
-		// TODO : declare more path variables here,
-		// in order to be less attached to the current url rewriting
-		// implementation
-		echo <<<END
-	<script type="text/javascript">var ROOT_PATH = "$ROOT_PATH";</script>
-END;
+		$rest_json = CNavigation::generateUrlToApp('RestJson');
+		$display_load = CNavigation::generateUrlToApp('Display', 'load',
+			array('type' => '__TYPE__'));
+		$display_type = CNavigation::generateUrlToApp('RestJson', 'display_type');
+		echo <<<HTML
+<script type="text/javascript">
+var URLS_DICTIONNARY = {
+	ROOT_PATH: "$ROOT_PATH",
+	rest_json: "$rest_json/",
+	display_load: "$display_load",
+	display_type: "$display_type"
+};
+</script>
+HTML;
 
 		// $this->tadam(); too annoying
 	}

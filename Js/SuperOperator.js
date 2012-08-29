@@ -1,5 +1,5 @@
 var SuperOperator = function() {
-	this.rest_location = ROOT_PATH + "/app/RestJson/";
+	this.rest_location = URLS_DICTIONNARY.rest_json;
 
 	EventBus.addListeners(this.listeners, this);
 

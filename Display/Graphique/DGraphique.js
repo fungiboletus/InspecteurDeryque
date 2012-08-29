@@ -355,10 +355,16 @@ paintAxes: function(mili, paintForced, y_min)
 			var x_pos = this.height - i - 11;
 			if (x_pos < 0) x_pos = 0;
 			if (x_pos > this.height - 10) x_pos = this.height - 10;
+
+			var v = parseInt(
+					((i-0.5) / this.coef_y + min_y_value + 0.5)/this.tic_y)
+						* this.tic_y;
+
+			var sv =v.toString();
+			if (sv.length > 5)
+				sv = v.toPrecision(5);
 			// console.log(i, this.height, y_tic);
-			c.fillText(
-				parseInt(((i-0.5) / this.coef_y + min_y_value + 0.5)/this.tic_y) * this.tic_y,
-				0.5, x_pos);
+			c.fillText(sv, 0.5, x_pos);
 		}
 	}
 

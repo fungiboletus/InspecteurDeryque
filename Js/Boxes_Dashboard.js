@@ -508,7 +508,7 @@ $(document).ready(function() {
 		var boxdiv = li.parents('.boxdiv');
 		var front = boxdiv.children('.front');
 		// TODO ?
-		var url = ROOT_PATH+"/app/Display/load/type/"+type;
+		var url = URLS_DICTIONNARY.display_load.replace('__TYPE__', type);
 		var id = 'f' + Math.abs((boxdiv.attr('id')+type).hashCode());
 
 		var iframe = byId(id);
@@ -563,7 +563,7 @@ $(document).ready(function() {
 			$(li).click(clic_type_statement);
 
 			var img = newDom('img');
-			img.setAttribute('src', ROOT_PATH+"/Display/"+key+"/thumbnail.png");
+			img.setAttribute('src', URLS_DICTIONNARY.ROOT_PATH+"/Display/"+key+"/thumbnail.png");
 			li.appendChild(img);
 			var h4 = newDom('h4');
 			li.setAttribute('name', key);
@@ -586,7 +586,7 @@ $(document).ready(function() {
 
 	// TODO this have nothing to do here
 	$.ajax({
-		url: ROOT_PATH + "/app/RestJson/display_type",
+		url: URLS_DICTIONNARY.display_type,
 		success: function(json) {
 			json_input_types = json;
 			$('.input_types ul').each(function(){
