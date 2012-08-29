@@ -5,3 +5,7 @@ The goal is to visualize and study all types of data, like an electrocardiogram,
 It's possible to combine different data, different graphical representations, and to study it with a timeline.
 
 It's a web application working in a client/server environnemnt.
+
+## Licence
+
+InspecteurDeryque is released under the [CeCILL-B V1 licence](http://www.cecill.info/index.en.html).
