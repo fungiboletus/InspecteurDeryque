@@ -16,6 +16,9 @@ var SuperOperator = function() {
 	// The number of uses for each statement
 	this.count_database = {};
 
+	// The bounds are used in internal
+	this.current_bounds = {};
+
 };
 
 SuperOperator.prototype = {
@@ -116,11 +119,7 @@ super_rt_clock: function(count)
 	if (count > data_length)
 		count = data_length;
 
-	var r = {};
-	for (key in data)
-		r[key] = data[key].subarray(data_length - count, data_length);
-
-	return r;
+	return data.time_t[data_length - count];
 },
 
 listeners: {
@@ -219,7 +218,10 @@ get_bounds: function(d, obj) {
 
 	// It's useless to send empty bounds (many visualizations could have bugs)
 	if (send_bounds)
+	{
 		EventBus.send('bounds', response);
+		obj.current_bounds = response;
+	}
 },
 
 size_change: function() {
@@ -256,18 +258,17 @@ rt_clock: function(d, obj) {
 	// Number of values to fetch (100 by default)
 	var count = (d && typeof d.count !== 'undefined') ? d.count : 100;
 
-	var response = {};
+	var min_date = Number.MAX_VALUE;
 	var send_tuples = false;
 
 	// Construct the response for each statement
 	for (var statement_name in obj.database)
 	{
 		var rt_clock = obj.database[statement_name].rt_clock(count);
-		console.log(statement_name, rt_clock);
-		if (rt_clock)
+		if (rt_clock && rt_clock < min_date)
 		{
 			send_tuples = true;
-			response[statement_name] = rt_clock;
+			min_date = rt_clock;
 		}
 	}
 
