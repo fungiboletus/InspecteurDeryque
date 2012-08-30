@@ -143,5 +143,10 @@ DVideo.prototype.listeners = {
 	{
 		if (obj.canplay && !obj.video.paused)
 			obj.video.pause();
+	},
+
+	play_speed: function(d, obj)
+	{
+		obj.video.playbackRate = d.speed;
 	}
 };

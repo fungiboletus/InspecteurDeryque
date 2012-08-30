@@ -59,6 +59,9 @@ var TimeControl = function() {
 
 	this.is_playing = false;
 
+	this.current_play_speed = 1.0;
+	this.play_speeds = [0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0, 40.0];
+
 };
 
 TimeControl.prototype = {
@@ -107,6 +110,11 @@ create_interface: function() {
 	expand_button_icon.className = 'icon-resize-full icon-white';
 	this.expand_button.appendChild(expand_button_icon);
 	time_buttons.appendChild(this.expand_button);
+
+	this.speed_button = newDom('button');
+	this.speed_button.className = 'btn btn-mini btn-inverse';
+	this.speed_button.appendChild(document.createTextNode('x1'));
+	time_buttons.appendChild(this.speed_button);
 
 	this.time_info = newDom('button');
 	this.time_info.className = 'btn btn-mini time_info';
@@ -224,6 +232,18 @@ animate_interface: function() {
 	});
 	$(this.expand_button).click(function() {
 		obj.expand_interval();
+	});
+
+	// Speed button
+	$(this.speed_button).click(function() {
+		var speedIndex = obj.play_speeds.indexOf(obj.current_play_speed);
+
+		if (speedIndex === -1)
+			speedIndex = obj.play_speeds.indexOf(1.0);
+
+		EventBus.send('play_speed', {
+			speed: obj.play_speeds[(speedIndex+1)%obj.play_speeds.length]
+		});
 	});
 },
 
@@ -463,7 +483,7 @@ dragdrop: function(e, obj) {
  */
 play_callback: function(t) {
 
-	var plus = (t - this.play_start)/1000;
+	var plus = ((t - this.play_start)/1000.0) * this.current_play_speed;
 
 	this.play_start = t;
 	// console.log(t, plus);
@@ -602,5 +622,10 @@ pause: function(e, obj) {
 	if (obj.is_playing)
 		obj.is_playing = false;
 },
+
+play_speed: function(d, obj) {
+	obj.current_play_speed = d.speed;
+	obj.speed_button.firstChild.data = 'x'+d.speed;
+}
 
 }};

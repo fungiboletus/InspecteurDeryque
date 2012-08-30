@@ -9,7 +9,8 @@ var DConsole = function(area)
 	var events = ['new_tuples', 'add_statement', 'del_statement',
 		'size_change', 'log', 'error', 'statements_list',
 		'get_statements_list', 'time_sync', 'tuples_selected',
-		'get_bounds', 'bounds', 'rt_clock', 'video'];
+		'get_bounds', 'bounds', 'rt_clock',
+		'video', 'play_speed', 'play', 'pause'];
 
 	for (var i = 0; i < events.length; ++i)
 		EventBus.addListener(events[i], this.manageEvent, this);

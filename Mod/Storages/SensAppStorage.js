@@ -23,8 +23,6 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 			dataType: 'json',
 			success: function(json){
 
-				console.log(json);
-
 				if (typeof json.e === 'undefined' || json.e.length === 0)
 					return;
 

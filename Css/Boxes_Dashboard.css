@@ -268,7 +268,19 @@ background-image:-webkit-radial-gradient(top, ellipse cover, transparent 0%,rgba
 box-shadow:inset 0px 2px 3px rgba(0,0,0,0.75);
 }
 
-#time_control .time_info {
+
+#time_control .time_buttons {
+position:absolute;
+top:2px;
+left: 2px;
+padding-bottom:1px 6px;
+position: absolute;
+}
+#time_control .time_buttons .btn {
+font-weight: bold;
+font-family: inherit;
+}
+#time_control .time_buttons .time_info {
 /*color: white;*/
 font-family: monospace;
 /*line-height: 25px;*/
@@ -278,14 +290,6 @@ border-top:1px solid white;
 border-left:0px;
 }
 
-
-#time_control .time_buttons {
-	position:absolute;
-	top:2px;
-left: 2px;
-	padding-bottom:1px 6px;
-position: absolute;
-}
 #time_control .zone_slider {
 /*background:url(../Img/slidebar.png);*/
 -webkit-user-select: none;
@@ -294,7 +298,7 @@ user-select: none;
 cursor:pointer;
 overflow:hidden;
 position:absolute;
-left:182px;
+left:210px;
 top:0;
 right:0;
 bottom:0;
