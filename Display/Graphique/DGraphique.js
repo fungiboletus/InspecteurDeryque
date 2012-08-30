@@ -91,6 +91,13 @@ DGraphique.prototype =
 {
 manageXScale: function()
 {
+	//	Minimal interval
+	if (this.x_min === this.x_max)
+	{
+		--this.x_min;
+		++this.x_max;
+	}
+
 	// Lot of calculations for find a good scale
 	var size_x = this.x_max - this.x_min;
 	var tmp_x = quantizeTics(size_x);
@@ -105,7 +112,6 @@ manageXScale: function()
 	if (new_coef_x < this.coef_x ||
 		Math.abs((this.coef_x - new_coef_x) /  new_coef_x) > 0.05)
 		this.coef_x = this.width / size_x;
-
 },
 
 manageYScale: function(y_min, y_max)
@@ -122,7 +128,6 @@ manageYScale: function(y_min, y_max)
 	    size_y = 1.0;
 	else
 	    this.coef_y = this.height / size_y;
-
 },
 
 includeLine: function(data, key)
@@ -192,6 +197,13 @@ includeLine: function(data, key)
 	// Add the list line
 	sampled_value = current_value / nb_current_points;
 	points_to_draw.push([current_x_pos, sampled_value]);
+
+	//	Minimal interval
+	if (y_min === y_max)
+	{
+		--y_min;
+		++y_max;
+	}
 
 	return [points_to_draw, y_min, y_max];
 },

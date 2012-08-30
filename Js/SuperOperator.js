@@ -108,22 +108,6 @@ super_time_sync: function(start_t, end_t)
 	return r;
 },
 
-// Send the last values of the database
-super_rt_clock: function(count)
-{
-	if (typeof this.data === 'undefined' ||
-		typeof this.data.data.time_t === 'undefined')
-			return false;
-
-	var data = this.data.data;
-	var data_length = data.time_t.length;
-
-	if (count > data_length)
-		count = data_length;
-
-	return data.time_t[data_length - count];
-},
-
 listeners: {
 
 // Send the statements list
@@ -290,6 +274,8 @@ rt_clock: function(d, obj) {
 		start_t: min_date,
 		end_t: max_date
 	});
+
+	// TODO time cursor to the last tuple
 },
 
 }};

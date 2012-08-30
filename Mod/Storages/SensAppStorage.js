@@ -7,7 +7,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 	this.resume = resume;
 	this.load_finished = false;
 
-	var additional_data = resume.additional_data;
+	this.additional_data = resume.additional_data;
 
 	// console.log(resume);
 	var obj = this;
@@ -15,14 +15,15 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 	// Create the structure of the data object
 	var data = {data: {time_t: null}};
 
-	for (var dynamic_key in additional_data)
+	for (var dynamic_key in this.additional_data)
 	(function(key) {
 		data.data[key] = null;
 		$.ajax({
-			url: additional_data[key]+'?sorted=asc',
+			url: obj.additional_data[key]+'?sorted=asc',
 			dataType: 'json',
 			success: function(json){
 
+				console.log(json);
 
 				if (typeof json.e === 'undefined' || json.e.length === 0)
 					return;
@@ -97,6 +98,9 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 					obj.load_finished = true;
 					obj.finished_events();
+
+					// Real time when the first load is finished
+					EventBus.addListener('rt_clock', obj.rt_clock, obj);
 				}
 
 			},
@@ -116,8 +120,6 @@ SensAppStorage.prototype =
 bounds: SuperOperator.prototype.super_bounds,
 time_sync: SuperOperator.prototype.super_time_sync,
 finished_events: SuperOperator.prototype.super_finished_events,
-rt_clock: SuperOperator.prototype.super_rt_clock,
-
 extract_v: function(e)
 {
 	return e.v;
@@ -157,5 +159,22 @@ degreeToDouble: function(degree) {
 		doubleValue = -doubleValue;
 	}
 	return doubleValue;
+},
+
+rt_clock: function(d, obj)
+{
+	for (var dynamic_key in obj.additional_data)
+	(function(key) {
+		// Get the timestamp to the last data, +1 because the from argument is inclusive
+		var timestamp = obj.data.time_tMax+1;
+		console.log(timestamp);
+		$.ajax({
+			url: obj.additional_data[key]+'?sorted=asc&from='+timestamp,
+			dataType: 'json',
+			success: function(json){
+				console.log(json);
+			}});
+	})(dynamic_key);
 }
+
 };
