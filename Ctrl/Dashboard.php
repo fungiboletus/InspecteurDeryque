@@ -24,6 +24,7 @@ class Dashboard
 		CHead::addJS('jquery.debouncedresize'); // better resize events
 		CHead::addJS('requestAnimationFrame.gist'); // crossPlatform requestAnimationFrame
 		CHead::addJS('JsURL'); // apdapted json for urls
+		CHead::addJS('EventBus'); // simple event bus using DOM CustomEvents
 
 		// Load the time controler
 		CHead::addJS('TimeControl');

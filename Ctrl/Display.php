@@ -21,6 +21,9 @@ class Display {
 		// It's an iframe view
 		CHead::addCss('iframe_view');
 
+		// And we use the event bus
+		CHead::addJS('EventBus');
+
 		// Load the request type and load a console by default
 		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'Console';
 

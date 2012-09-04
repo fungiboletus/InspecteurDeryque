@@ -171,38 +171,6 @@ function quantizeTics(max)
 // debulked onresize handler
 function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
 
-/**
- *	Light event bus
- *
- *	It use recents Dom CustomEvents
- */
-var EventBus = {
-	prefix: 'i15e.',
-	addListener: function(name, method, caller) {
-		window.top.addEventListener(this.prefix+name, function(e) {
-			// If the page still exist
-			if (self !== null && document !== null)
-				method(e.detail, caller, e);
-		});
-	},
-	delListener: function(name) {
-		alert('dellListener: todo');
-	},
-	send: function(name, data) {
-		var e = new CustomEvent(this.prefix+name, {detail: data});
-		window.top.dispatchEvent(e);
-	},
-	sendDelayed: function(name, data) {
-		window.setTimeout(function(){
-			EventBus.send(name, data);
-		}, 1);
-	},
-	addListeners: function(listeners, caller) {
-		for (var key in listeners)
-			this.addListener(key, listeners[key], caller);
-	}
-}
-
 $(document).ready(function(){
 
 	// Autotable sorter when the function is present,
