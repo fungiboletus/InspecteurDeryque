@@ -265,15 +265,15 @@ time_sync: function(d, obj) {
 
 rt_clock: function(d, obj) {
 	// Time interval (1 hour by default)
-	var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
+	// var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
 
-	var max_date = obj.current_bounds.__global__.time_tMax;
-	var min_date = max_date - interval;
+	// var max_date = obj.current_bounds.__global__.time_tMax;
+	// var min_date = max_date - interval;
 
-	EventBus.send('time_sync', {
-		start_t: min_date,
-		end_t: max_date
-	});
+	// EventBus.send('time_sync', {
+	// 	start_t: min_date,
+	// 	end_t: max_date
+	// });
 
 	// TODO time cursor to the last tuple
 },
