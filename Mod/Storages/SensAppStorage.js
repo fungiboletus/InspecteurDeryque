@@ -40,7 +40,7 @@ load_json: function(end_callback, from)
 	(function(key) {
 		data.data[key] = null;
 
-		var url = obj.additional_data[key]+'?sorted=asc&limit=500';
+		var url = obj.additional_data[key]+'?sorted=asc&limit=100';
 		if (typeof from !== 'undefined') url += '&from='+from;
 
 		$.ajax({
@@ -50,10 +50,33 @@ load_json: function(end_callback, from)
 
 				var r = obj.interpret_json(json, data);
 
-				data.data[key] = r.data;
-				data[key+'Min'] = r.min;
-				data[key+'Max'] = r.max;
-				data.count = data.data.time_t.length;
+				if (r)
+				{
+					data.data[key] = r.data;
+					var min = r.min;
+					var max = r.max;
+					var count = data.data.time_t.length;
+				}
+				else
+				{
+					data.data[key] = new Float64Array(new ArrayBuffer(0));
+					var min = 0;
+					var max = 0;
+					var count = 0;
+				}
+
+				if (typeof data.count !== 'undefined')
+					data.count = Math.min(count, data.count);
+				else
+					data.count = count;
+
+				var keyMin = key+'Min';
+				if ((typeof data[keyMin] === 'undefined') || min < data[keyMin])
+					data[keyMin] = min;
+
+				var keyMax = key+'Max';
+				if ((typeof data[keyMax] === 'undefined') || max > data[keyMax])
+					data[keyMax] = max;
 
 				// If this is the last statement to be loaded
 				var last = true;
@@ -66,8 +89,16 @@ load_json: function(end_callback, from)
 				if (last)
 				{
 					// Define time bounds
-					data.time_tMin = data.data.time_t[0];
-					data.time_tMax = data.data.time_t[data.data.time_t.length -1];
+					if (data.count > 0)
+					{
+						data.time_tMin = data.data.time_t[0];
+						data.time_tMax = data.data.time_t[data.count -1];
+					}
+					else
+					{
+						data.time_tMin = 0;
+						data.time_tMax = 0;
+					}
 
 					// Call callback
 					end_callback(data);
@@ -86,7 +117,7 @@ load_json: function(end_callback, from)
 interpret_json: function(json, data)
 {
 	if (typeof json.e === 'undefined' || json.e.length === 0)
-		return;
+		return false;
 
 	var nb_e = json.e.length;
 
