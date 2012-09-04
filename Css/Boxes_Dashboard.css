@@ -387,12 +387,13 @@ min-width:1px;
 	width:600px;
 	margin:0px auto 10px auto;
 	box-shadow:1px 2px 25px rgba(0, 0, 0, 0.42);
-	background: -webkit-radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
-	background: -moz-radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
-	background: radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
+	background: url(../Img/sad_bunny.gif) no-repeat 566px, -webkit-radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
+	background: url(../Img/sad_bunny.gif) no-repeat 566px, -moz-radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
+	background: url(../Img/sad_bunny.gif) no-repeat 566px, radial-gradient(top, cover, transparent 0%, black 100%), url(../Img/carbon.png);
 	text-shadow: none;
 	border-color: red;
 	color: red;
+	background-size:contain, auto, auto;
 }
 
 .alert p
@@ -410,4 +411,8 @@ margin:5px 0 0 3px;
 .alert span.mono
 {
 	font-family:monospace;
+}
+
+.alert h4:before{
+/*content:url(../Img/sad_bunny.gif);*/
 }
