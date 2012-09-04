@@ -15,15 +15,15 @@ var EventBus = {
 	 *
 	 *	@method addListener
 	 *	@param {String}	name The event name
-	 *	@param {Function}	method The function to execute
-	 *	@param {Object}	caller	An instance reference, given in parameter to method
+	 *	@param {Function}	method The method to execute
+	 *	@param {Object}	data Data passed as second argument to the method
 	 *	@return {Function} The generated callback method (to use with removeListener)
 	 */
-	addListener: function(name, method, caller) {
+	addListener: function(name, method, data) {
 		var callback = function(e) {
 			// If the page still exist
 			if (self !== null && document !== null)
-				method(e.detail, caller, e);
+				method(e.detail, data, e);
 		};
 		window.top.addEventListener(this.prefix+name, callback);
 		return callback;

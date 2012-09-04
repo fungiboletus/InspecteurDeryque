@@ -10,9 +10,11 @@ class Documentation {
 		CNavigation::setTitle(_('Documentation'));
 
 		$GLOBALS['body_attributes'] = ' data-spy="scroll" data-target=".doc-menu"';
+		CHead::addJS('rainbow.min');
 		DocumentationView::menu();
 		DocumentationView::title();
-		DocumentationView::doc();
+		DocumentationView::overview();
+		DocumentationView::eventbus();
 	}
 }
 ?>
