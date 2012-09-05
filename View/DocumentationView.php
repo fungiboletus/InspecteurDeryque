@@ -62,7 +62,7 @@ class DocumentationView
 			<p>Voici l'API de base du bus d'évènements. N'hésitez pas à consulter le code source pour plus de détails. Les évènements sont communiqués entre toutes les iframes de la page, et bien évidemment la page principale.</p>
 			<br/>
 			<h4>EventBus.addListener <small>(name, method, data)</small></h4>
-			<dl>
+			<dl class="dl-horizontal">
 				<dt>name</dt><dd>The event name</dd>
 				<dt>method</dt><dd>The method to execute, his first argument is the data of the event</dd>
 				<dt>data</dt><dd>Data passed as second argument to the method</dd>
@@ -73,7 +73,7 @@ class DocumentationView
 }, ' world!');</code></pre>
 
 			<h4>EventBus.send <small>(name, data)</small></h4>
-			<dl>
+			<dl class="dl-horizontal">
 				<dt>name</dt><dd>The event name</dd>
 				<dt>data</dt><dd>Data to send with the event</dd>
 			</dl>

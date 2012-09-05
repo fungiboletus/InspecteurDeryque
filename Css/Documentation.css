@@ -103,18 +103,6 @@ pre .regexp {
     color: #009926;
 }
 
-dt,dd {
-	display:inline-block;
-}
-
-dt {
-	width:100px;
-}
-
-dd {
-	width:850px;
-}
-
 section {
 	margin-bottom:2em;
 }
