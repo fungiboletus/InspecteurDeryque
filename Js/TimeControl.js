@@ -49,6 +49,9 @@ var TimeControl = function() {
 	// right slider
 	this.border_right_drag = false;
 
+	// cursor drag'n'drop
+	this.cursor_drag = false;
+
 	// The slider area (in times)
 	this.time_min = Number.MAX_VALUE;
 	this.time_max = -Number.MAX_VALUE;
@@ -179,7 +182,8 @@ animate_interface: function() {
 	// Click on the slider
 	this.jslider.mousedown(function(e) {
 		obj.ondrag = true;
-		if (!obj.border_left_drag && !obj.border_right_drag)
+		if (!obj.border_left_drag && !obj.border_right_drag &&
+			!obj.cursor_drag)
 		{
 			var m_x = e.clientX - obj.slider_left - obj.left_pos;
 			obj.drag_margin = m_x;
@@ -191,19 +195,41 @@ animate_interface: function() {
 		obj.iframe_mask.style.display  = 'block';
 	});
 
+	var mouse_has_moved = false;
+
 	// Capture the end of drag (mouseup)
 	var jdoc = $(document);
-	jdoc.mouseup(function() {
+	jdoc.mouseup(function(e) {
 		obj.ondrag = false;
 		obj.slider_drag = false;
 		obj.border_left_drag = false;
 		obj.border_right_drag = false;
+		obj.cursor_drag = false;
 		if (obj.tooltip_visible) obj.hide_tooltip();
 		obj.iframe_mask.style.display  = 'none';
+
+		if (mouse_has_moved)
+		{
+			mouse_has_moved = false;
+		}
+		else
+		{
+			var pos = e.clientX - obj.slider_left - obj.button_width - 4;
+
+			var time_t = obj.time_min * 1 + pos / obj.slider_width
+				* (obj.time_max - obj.time_min);
+
+			EventBus.send('cursor', {time_t: time_t});
+
+		}
 	});
 
 	// Capture the drag mouvements
-	jdoc.mousemove(function(e) {obj.dragdrop(e, obj);});
+	jdoc.mousemove(function(e) {
+		if (obj.ondrag)
+			mouse_has_moved = true;
+		obj.dragdrop(e, obj);
+	});
 
 	// Disable text selection when dragging
 	document.onselectstart = function(){ return !obj.ondrag;};
@@ -211,22 +237,27 @@ animate_interface: function() {
 	// Drag the left slider
 	$(this.border_left).mousedown(function(e) {
 		obj.ondrag = true;
-		obj.slider_drag = false;
 		obj.border_left_drag = true;
 		obj.drag_margin = e.clientX - obj.slider_left - obj.left_pos;
 		obj.show_tooltip(true);
-		obj.iframe_mask.style.display  = 'block';
 		obj.dragdrop(e);
 	});
 
 	// Drag the right slider
 	$(this.border_right).mousedown(function(e) {
 		obj.ondrag = true;
-		obj.slider_drag = false;
 		obj.border_right_drag = true;
 		obj.drag_margin = e.clientX - obj.slider_left - obj.right_pos;
 		obj.show_tooltip(false);
-		obj.iframe_mask.style.display  = 'block';
+		obj.dragdrop(e);
+	});
+
+	// Drag the slider
+	$(this.time_cursor).mousedown(function(e) {
+		obj.ondrag = true;
+		obj.slider_drag = false;
+		obj.cursor_drag = true;
+		obj.drag_margin = obj.button_width * 2 - e.offsetX;
 		obj.dragdrop(e);
 	});
 
@@ -255,19 +286,6 @@ animate_interface: function() {
 		EventBus.send('play_speed', {
 			speed: obj.play_speeds[(speedIndex+1)%obj.play_speeds.length]
 		});
-	});
-
-	// Time cursor
-	this.jslider.mousemove(function(e) {
-		if (!obj.ondrag)
-		{
-			var pos = e.clientX - obj.slider_left - obj.button_width;
-
-			var time_t = obj.time_min * 1 + pos / obj.slider_width
-				* (obj.time_max - obj.time_min);
-
-			EventBus.send('cursor', {time_t: time_t});
-		}
 	});
 },
 
@@ -502,6 +520,15 @@ dragdrop: function(e, obj) {
 				obj.right_pos = m_x;
 				if (obj.right_pos < obj.left_pos)
 					obj.left_pos = obj.right_pos;
+			}
+			else if (obj.cursor_drag)
+			{
+				var time_t = obj.time_min * 1 + m_x / obj.slider_width
+					* (obj.time_max - obj.time_min);
+
+				EventBus.send('cursor', {time_t: time_t});
+
+				return;
 			}
 		}
 
