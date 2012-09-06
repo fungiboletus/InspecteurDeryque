@@ -256,6 +256,19 @@ animate_interface: function() {
 			speed: obj.play_speeds[(speedIndex+1)%obj.play_speeds.length]
 		});
 	});
+
+	// Time cursor
+	this.jslider.mousemove(function(e) {
+		if (!obj.ondrag)
+		{
+			var pos = e.clientX - obj.slider_left - obj.button_width;
+
+			var time_t = obj.time_min * 1 + pos / obj.slider_width
+				* (obj.time_max - obj.time_min);
+
+			EventBus.send('cursor', {time_t: time_t});
+		}
+	});
 },
 
 /*

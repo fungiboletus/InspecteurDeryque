@@ -167,6 +167,8 @@ super_time_sync: function(start_t, end_t)
 
 super_cursor: function(time)
 {
+	if (!this.data) return false;
+
 	// TODO marche mal
 	var data = this.data.data;
 	var begin = 0, end = data.time_t.length, old_m = -1, m = -1;
