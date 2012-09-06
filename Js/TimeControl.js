@@ -577,6 +577,15 @@ listeners: {
  */
 time_sync: function(d, obj) {
 
+	if (obj.cursor_time < d.start_t || obj.cursor_time > d.end_t)
+	{
+		if (obj.cursor_time < d.start_t)
+			obj.cursor_time = d.start_t;
+		else if (obj.cursor_time > d.end_t)
+			obj.cursor_time = d.end_t;
+		EventBus.send('cursor', {time_t: obj.cursor_time});
+	}
+
 	// Simple maths, simple maths everywhere
 	var time_int = obj.time_max - obj.time_min;
 	obj.left_pos = (d.start_t - obj.time_min) * (obj.slider_width / time_int);
