@@ -183,10 +183,35 @@ bounds: function(d, obj)
 	}
 
 	if (updated)
-	{
 		obj.map.fitBounds(bounds);
-		// obj.map.panToBounds(bounds);
+
+},
+values: function(d, obj)
+{
+	var bounds = new google.maps.LatLngBounds();
+	var need_to_fit = false;
+
+	for (var statement_name in d) {
+		if (!(statement_name in obj.database)) continue;
+
+		var base = obj.database[statement_name];
+		var data = d[statement_name];
+
+		if (('lat' in  data) && ('lon' in data))
+		{
+			var ll = new google.maps.LatLng(data.lat, data.lon);
+			base.marker.setPosition(ll);
+			bounds.extend(ll);
+
+			// Center the map if the markers is not in the map
+			if (!obj.map.getBounds().contains(ll))
+				need_to_fit = true;
+
+		}
 	}
+
+	if (need_to_fit)
+		obj.map.panToBounds(bounds);
 
 },
 /*time_sync: function(d, obj) {
