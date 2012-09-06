@@ -165,6 +165,29 @@ super_time_sync: function(start_t, end_t)
 	return r;
 },
 
+super_cursor: function(time)
+{
+	var data = this.data.data;
+	var begin = 0, end = data.time_t.length, old_m = -1, m = -1;
+	do {
+		m = parseInt(begin + (end-begin)/2);
+		var t = data.time_t[m];
+		if (old_m === m || t == time)
+			break;
+		else if (t < time)
+			begin = m + 1;
+		else
+			end = m -1;
+		old_m = m;
+	} while (begin < end);
+
+	var r = {};
+	for (key in data)
+		r[key] = data[key][m];
+
+	return r;
+},
+
 listeners: {
 
 // Send the statements list
@@ -336,5 +359,27 @@ rt_clock: function(d, obj) {
 
 	// TODO time cursor to the last tuple
 },
+
+cursor: function(d, obj) {
+	var time = (typeof d.time_t === 'undefined') ? Date.now() : d.time_t;
+
+	var response = {};
+	var send_values = false;
+	// Construct the response for each statement
+	for (var statement_name in obj.database)
+	{
+		var value = obj.database[statement_name].cursor(time);
+		if (value)
+		{
+			send_values = true;
+			response[statement_name] = value;
+		}
+	}
+
+	// Hack with the setTimeout for send the tuples event after the time_sync event
+	if (send_values)
+		EventBus.sendDelayed('values', response);
+
+}
 
 }};

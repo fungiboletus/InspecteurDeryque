@@ -26,10 +26,13 @@ var TimeControl = function() {
 	this.button_width = 10;
 
 	// The position of the left slider, in pixels
-	this.left_pos = 50;
+	this.left_pos = 0;
 
 	// For the right
-	this.right_pos = 120;
+	this.right_pos = 0;
+
+	// The position of the cursor
+	this.cursor_pos = 0;
 
 	// The margin is about the click compared to the slider position
 	this.drag_margin = 0;
@@ -49,6 +52,9 @@ var TimeControl = function() {
 	// The slider area (in times)
 	this.time_min = Number.MAX_VALUE;
 	this.time_max = -Number.MAX_VALUE;
+
+	// The cursor time value
+	this.cursor_time = 0;
 
 	// The slider width when dragging
 	var drag_width = 0;
@@ -506,26 +512,35 @@ play_callback: function(t) {
 	var times = this.get_times_by_pos();
 	// console.log(new Date().getSeconds(), plus, times.start_t);
 
-	// Update the time
-	times.start_t += plus;
-	times.end_t += plus;
+	var time = this.cursor_time;
+
+	time += plus;
+
+	// Looping
+	if (time < times.start_t || time > times.end_t)
+		time = times.start_t;
+	// else
+	// // Update the time
+	// times.start_t += plus;
+	// times.end_t += plus;
 
 
-	// The max time is the limit
-	if (times.end_t > this.time_max)
-		times.end_t = this.time_max;
+	// // The max time is the limit
+	// if (times.end_t > this.time_max)
+	// 	times.end_t = this.time_max;
 
-	// If the start time is bigger than the end time,
-	// we will have bad time
-	if (times.start_t > times.end_t)
-	{
-		times.start_t = times.end_t;
+	// // If the start time is bigger than the end time,
+	// // we will have bad time
+	// if (times.start_t > times.end_t)
+	// {
+	// 	times.start_t = times.end_t;
 
-		// Simulate a click on pause button
-		$(this.bti).click();
-	}
+	// 	// Simulate a click on pause button
+	// 	$(this.bti).click();
+	// }
 
-	EventBus.send('time_sync', times);
+	// EventBus.send('time_sync', times);
+	EventBus.send('cursor', {time_t: time});
 
 	var obj = this;
 	if (this.is_playing)
@@ -583,9 +598,9 @@ time_sync: function(d, obj) {
  */
 cursor: function(d, obj) {
 
+	obj.cursor_time = d.time_t;
 	obj.cursor_pos = (d.time_t - obj.time_min) *
 		(obj.slider_width / (obj.time_max - obj.time_min));
-	console.log(obj.cursor_pos);
 
 	obj.draw();
 },

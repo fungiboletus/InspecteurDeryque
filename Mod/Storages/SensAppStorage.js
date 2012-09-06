@@ -29,6 +29,7 @@ SensAppStorage.prototype =
 bounds: SuperOperator.prototype.super_bounds,
 time_sync: SuperOperator.prototype.super_time_sync,
 finished_events: SuperOperator.prototype.super_finished_events,
+cursor: SuperOperator.prototype.super_cursor,
 
 load_json: function(end_callback, from, limit)
 {
