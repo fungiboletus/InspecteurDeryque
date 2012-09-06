@@ -200,32 +200,31 @@ animate_interface: function() {
 	// Capture the end of drag (mouseup)
 	var jdoc = $(document);
 	jdoc.mouseup(function(e) {
+		if (mouse_has_moved)
+			mouse_has_moved = false;
+		// If mouse has not moved, but it's a click on the drag area
+		else if (obj.slider_drag)
+		{
+			var pos = e.clientX - obj.slider_left - obj.button_width - 4;
+
+			var time_t = obj.time_min * 1 + pos / obj.slider_width
+				* (obj.time_max - obj.time_min);
+
+			EventBus.send('cursor', {time_t: time_t});
+		}
+
+		// Reset the state booleans
 		obj.ondrag = false;
 		obj.slider_drag = false;
 		obj.border_left_drag = false;
 		obj.border_right_drag = false;
 		obj.cursor_drag = false;
+
+		// Hide the dragging objects
 		if (obj.tooltip_visible) obj.hide_tooltip();
 		obj.iframe_mask.style.display  = 'none';
 
-		if (mouse_has_moved)
-		{
-			mouse_has_moved = false;
-		}
-		else
-		{
-			var pos = e.clientX - obj.slider_left - obj.button_width - 4;
 
-			// If it's a click on the slider, and not on the buttons
-			if (pos > 0)
-			{
-				var time_t = obj.time_min * 1 + pos / obj.slider_width
-					* (obj.time_max - obj.time_min);
-
-				EventBus.send('cursor', {time_t: time_t});
-			}
-
-		}
 	});
 
 	// Capture the drag mouvements
