@@ -19,9 +19,15 @@ var DGraphique = function(screen)
 	this.screen.appendChild(this.screenAxes);
 	this.screen.appendChild(this.screenGraph);
 
+	// Create legend
 	this.legend_area = newDom('ul');
 	this.legend_area.className = 'legend';
 	this.screen.appendChild(this.legend_area);
+
+	// Create time cursor
+	this.time_cursor = newDom('div');
+	this.time_cursor.className = 'time_cursor';
+	this.screen.appendChild(this.time_cursor);
 
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
@@ -502,5 +508,20 @@ listeners: {
 		// Reset the scale
 		obj.clear(true);
 	},
+
+	cursor: function(detail, obj) {
+		var x_pos = parseInt((detail.time_t - obj.x_min) * obj.coef_x);
+
+		if (x_pos < 0)
+			x_pos = 0;
+		else if (x_pos > obj.width)
+			xpos = obj.width;
+
+		x_pos += 'px';
+
+		if (obj.time_cursor.style.left != x_pos)
+			obj.time_cursor.style.left = x_pos;
+
+	}
 
 }};
