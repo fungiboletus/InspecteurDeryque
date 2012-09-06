@@ -21,17 +21,63 @@ var SuperOperator = function() {
 	// The bounds are used in internal
 	this.current_bounds = {};
 
+	this.nb_current_ajax_loads = 0;
+
 };
 
 SuperOperator.prototype = {
 // Call the RestJson API, and send the errors on the EventBus
-ajax: function(path, callback) {
-	$.ajax({
-		url: this.rest_location+path,
-		success: callback,
-		error: function(e) {
+ajax: function(url, callback, error) {
+	if (typeof error === 'undefined')
+	{
+		error = function(e) {
 			EventBus.send("error", {status: e.status, message: e.statusText});
-		}});
+		};
+	}
+
+	if (url.substr(0, 7) !== 'http://' && url.substr(0, 8) !== 'https://')
+		url = this.rest_location + url;
+
+	var obj = this;
+	var progression = 0;
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		beforeSend: function(thisXHR)
+		{
+			++obj.nb_current_ajax_loads;
+			progression = window.setTimeout(function(){
+				var progressDivs = document.getElementsByClassName('progress-ajax');
+
+				if (progressDivs.length === 0)
+				{
+					var progressBar = newDom('div');
+					progressBar.className = 'bar';
+					progressBar.style.width = '100%';
+					progressBar.appendChild(document.createTextNode('Loading data'));
+					var progressArea = newDom('div');
+					progressArea.className = 'progress progress-striped active';
+					progressArea.appendChild(progressBar);
+					var divProgressArea = newDom('div');
+					divProgressArea.className = 'progress-area progress-ajax';
+					divProgressArea.appendChild(progressArea);
+					document.body.appendChild(divProgressArea);
+				}
+			}, 200);
+		},
+		success: callback,
+		error: error,
+		complete: function(){
+			if (progression) window.clearTimeout(progression);
+			if (--obj.nb_current_ajax_loads === 0)
+			{
+				var progressDivs = document.getElementsByClassName('progress-ajax');
+				if (progressDivs.length > 0)
+					document.body.removeChild(progressDivs[0]);
+
+			}
+		}
+	});
 },
 
 // When the data loading is completed
@@ -265,15 +311,17 @@ time_sync: function(d, obj) {
 
 rt_clock: function(d, obj) {
 	// Time interval (1 hour by default)
-	// var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
+	var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
 
-	// var max_date = obj.current_bounds.__global__.time_tMax;
-	// var min_date = max_date - interval;
+	obj.listeners.get_bounds(null, obj);
 
-	// EventBus.send('time_sync', {
-	// 	start_t: min_date,
-	// 	end_t: max_date
-	// });
+	var max_date = obj.current_bounds.__global__.time_tMax;
+	var min_date = max_date - interval;
+
+	EventBus.send('time_sync', {
+	 	start_t: min_date,
+		end_t: max_date
+	});
 
 	// TODO time cursor to the last tuple
 },

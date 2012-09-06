@@ -416,3 +416,20 @@ margin:5px 0 0 3px;
 .alert h4:before{
 /*content:url(../Img/sad_bunny.gif);*/
 }
+
+.progress-ajax {
+	position:absolute;
+	left:0px;
+	right:0px;
+	bottom:21px;
+	margin-bottom:auto;
+	background:rgba(0,0,0,0.3);
+	z-index:1000;
+}
+
+.progress-ajax .progress
+{
+	margin-bottom:4px;
+	/*height:11px;*/
+	background:transparent;
+}

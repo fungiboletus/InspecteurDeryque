@@ -21,7 +21,7 @@ var SensAppStorage = function(superOperator, statement_name, resume)
 
 		// Real time when the first load is finished
 		EventBus.addListener('rt_clock', obj.rt_clock, obj);
-	});
+	}, undefined);
 };
 
 SensAppStorage.prototype =
@@ -30,7 +30,7 @@ bounds: SuperOperator.prototype.super_bounds,
 time_sync: SuperOperator.prototype.super_time_sync,
 finished_events: SuperOperator.prototype.super_finished_events,
 
-load_json: function(end_callback, from)
+load_json: function(end_callback, from, limit)
 {
 	// Create the structure of the data object
 	var data = {data: {time_t: null}};
@@ -40,13 +40,13 @@ load_json: function(end_callback, from)
 	(function(key) {
 		data.data[key] = null;
 
-		var url = obj.additional_data[key]+'?sorted=asc&limit=100';
+		var url = obj.additional_data[key]+'?sorted=asc';
 		if (typeof from !== 'undefined') url += '&from='+from;
+		if (typeof limit !== 'undefined') url += '&limit='+limit;
 
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			success: function(json){
+		obj.superOperator.ajax(
+			url,
+			function(json){
 
 				var r = obj.interpret_json(json, data);
 
@@ -104,12 +104,12 @@ load_json: function(end_callback, from)
 					end_callback(data);
 				}
 			},
-			error: function(e) {
+			function(e) {
 				EventBus.send("error", {
 					status: e.status + ' : ' + e.statusText,
 					message: 'Error when loading SensApp sensor <strong>'
-					+ statement_name + ' : ' + key + '</strong><br/><span class="mono">'+this.url+'</span>'});
-			}});
+					+ obj.statement_name + ' : ' + key + '</strong><br/><span class="mono">'+this.url+'</span>'});
+			});
 	})(dynamic_key);
 
 },
@@ -224,10 +224,47 @@ rt_clock: function(d, obj)
 
 	obj.load_json(function(data)
 	{
-		// ugly
+		// the interval of the fetched data
+		var interval = data.time_tMax - data.time_tMin;
 
-		obj.data = data;
-		obj.finished_events();
+		var nb_new_data = data.count;
+		var nb_old_data = obj.data.count;
+
+		// If the fetched data interval contain the requested interval (rare)
+		if (nb_new_data >= nb_old_data)
+		{
+			console.log("super ça rentre");
+			obj.data = data;
+		}
+		else
+		{
+
+			// epic shift and hard copy
+			for (key in obj.data.data)
+			{
+				obj.data.data[key].set(obj.data.data[key].subarray(nb_old_data - nb_new_data));
+				obj.data.data[key].set(data.data[key], obj.data.data[key].length - nb_new_data);
+
+				// redefine bounds
+				var keyMin = key+'Min';
+				if (data[keyMin] < obj.data[keyMin])
+					obj.data[keyMin] = data[keyMin];
+
+				var keyMax = key+'Max';
+				if (data[keyMax] < obj.data[keyMax])
+					obj.data[keyMax] = data[keyMax];
+			}
+
+			// time bounds
+			obj.data.time_tMin = obj.data.data.time_t[0];
+			obj.data.time_tMax = obj.data.data.time_t[nb_old_data - 1];
+
+			// like finished_events, send good events
+			// EventBus.send
+		}
+
+		// ugly
+		console.log(d);
 		console.log(data);
 		// // Define time bounds
 		// data.time_tMin = data.data.time_t[0];
