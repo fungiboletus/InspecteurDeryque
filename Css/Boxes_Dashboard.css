@@ -305,7 +305,10 @@ bottom:0;
 /*border-left:2px solid black;*/
 }
 
-#time_control .area, #time_control .border {
+#time_control .area,
+#time_control .border,
+#time_control .time_cursor
+{
 	height:25px;
 	position:absolute;
 	top:0;
@@ -335,6 +338,14 @@ min-width:1px;
 	right:0;
 	cursor:e-resize;
 	margin-right:-10px;
+}
+#time_control .time_cursor {
+	left:0;
+	width:2px;
+	background: #DDD;
+	width: 1px;
+	border-left: 1px solid grey;
+	border-right: 1px solid grey;
 }
 
 #iframe_mask {

@@ -21,6 +21,7 @@ var SuperOperator = function() {
 	// The bounds are used in internal
 	this.current_bounds = {};
 
+	// Number of current ajax requests
 	this.nb_current_ajax_loads = 0;
 
 };
@@ -28,6 +29,8 @@ var SuperOperator = function() {
 SuperOperator.prototype = {
 // Call the RestJson API, and send the errors on the EventBus
 ajax: function(url, callback, error) {
+
+	// Generate a default error function
 	if (typeof error === 'undefined')
 	{
 		error = function(e) {
@@ -35,10 +38,14 @@ ajax: function(url, callback, error) {
 		};
 	}
 
+	// If the url is starting bah https?://, it's an absolute url, so, we don't have
+	// to add the rest's location
 	if (url.substr(0, 7) !== 'http://' && url.substr(0, 8) !== 'https://')
 		url = this.rest_location + url;
 
 	var obj = this;
+
+	// Id of the settimeout
 	var progression = 0;
 	$.ajax({
 		url: url,
@@ -49,6 +56,7 @@ ajax: function(url, callback, error) {
 			progression = window.setTimeout(function(){
 				var progressDivs = document.getElementsByClassName('progress-ajax');
 
+				// Create the progress bar only if it doen't yet exist
 				if (progressDivs.length === 0)
 				{
 					var progressBar = newDom('div');
@@ -63,14 +71,17 @@ ajax: function(url, callback, error) {
 					divProgressArea.appendChild(progressArea);
 					document.body.appendChild(divProgressArea);
 				}
-			}, 200);
+			}, 300);
+			// Create the progress bar if the response is more longer than 300 ms
 		},
 		success: callback,
 		error: error,
 		complete: function(){
 			if (progression) window.clearTimeout(progression);
+			// If it's the last loading response
 			if (--obj.nb_current_ajax_loads === 0)
 			{
+				// Delete the progress bar if it exist
 				var progressDivs = document.getElementsByClassName('progress-ajax');
 				if (progressDivs.length > 0)
 					document.body.removeChild(progressDivs[0]);

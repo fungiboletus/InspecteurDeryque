@@ -152,6 +152,11 @@ create_interface: function() {
 	this.tooltip.appendChild(this.tooltip_arrow);
 	this.tooltip.appendChild(this.tooltip_inner);
 	document.body.appendChild(this.tooltip);
+
+	// Creation of the time cursor
+	this.time_cursor = newDom('div');
+	this.time_cursor.className = 'time_cursor';
+	this.area.appendChild(this.time_cursor);
 },
 
 /*
@@ -371,6 +376,7 @@ hide_tooltip: function() {
 draw: function() {
 	var left = this.left_pos + this.button_width;
 	var right = this.slider_width - this.right_pos + this.button_width;
+	var cursor = this.cursor_pos + this.button_width - left;
 
 	if (left > this.slider_width - this.button_width)
 		left = this.slider_width - this.button_width;
@@ -378,13 +384,21 @@ draw: function() {
 	if (right < this.button_width)
 		right = this.button_width;
 
+	if (cursor < 0)
+		cursor = 0;
+	if (cursor > this.slider_width - this.button_width - left - right + 4)
+		cursor = this.slider_width - this.button_width - left - right + 4;
+
 	left += 'px';
 	right += 'px';
+	cursor += 'px';
 
 	if (this.area.style.left != left)
 		this.area.style.left =  left;
 	if (this.area.style.right != right)
 		this.area.style.right = right;
+	if (this.time_cursor.style.left != cursor)
+		this.time_cursor.style.left = cursor;
 
 	if (this.tooltip_visible)
 		this.draw_tooltip();
@@ -562,6 +576,18 @@ time_sync: function(d, obj) {
 
 	obj.time_info.firstChild.data = txt_info;
 	obj.tooltip_inner.firstChild.data = txt_inner;
+},
+
+/*
+ *	Updating the time cursor position from the cursor event.
+ */
+cursor: function(d, obj) {
+
+	obj.cursor_pos = (d.time_t - obj.time_min) *
+		(obj.slider_width / (obj.time_max - obj.time_min));
+	console.log(obj.cursor_pos);
+
+	obj.draw();
 },
 
 /**
