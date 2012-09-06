@@ -97,7 +97,8 @@ tuples: function(detail, obj) {
 				var distance = obj.distance(ll2.lat(), ll2.lng(),
 						 ll.lat(), ll.lng());
 				var diff_t = data.time_t[i] - data.time_t[i-sampling];
-				var speed = distance/diff_t * 36.0;
+				var speed = distance/diff_t * 3.6;
+				console.log(speed);
 
 				// TODO véritable gestion des couleurs, avec légende
 				var color = (280.0-speed * 20.0) % 360.0;
