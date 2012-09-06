@@ -18,38 +18,30 @@ var DStreetView = function(screen)
 DStreetView.prototype =
 {
 listeners: {
-tuples: function(detail, obj) {
+values: function(detail, obj) {
 
 	for (var statement_name in detail) {
 		if (!(statement_name in obj.database)) continue;
 		var data = detail[statement_name];
 
-		var nb_data = data.time_t.length;
-
-		if (nb_data > 0) {
-
-			// If it's not GPS, we have nothing to do here
-			if (!('lat' in  data) || !('lon' in data))
-			{
-				if ('heading' in data)
-				{
-					obj.panorama.setPov({
-						heading: data.heading[0] * 180.0 / Math.PI,
-						zoom:1,
-						pitch:0
-					});
-				}
-				else
-				{
-					EventBus.send('error', {
-						status: 'Bad statement type',
-						message: 'The map can only show GPS statements'});
-				}
-				continue;
-			}
-
-			var ll = new google.maps.LatLng(data.lat[0], data.lon[0]);
+		if ('heading' in data)
+		{
+			obj.panorama.setPov({
+				heading: data.heading * 180.0 / Math.PI,
+				zoom:1,
+				pitch:0
+			});
+		}
+		else if (('lat' in  data) && ('lon' in data))
+		{
+			var ll = new google.maps.LatLng(data.lat, data.lon);
 			obj.panorama.setPosition(ll);
+		}
+		else
+		{
+			EventBus.send('error', {
+				status: 'Bad statement type',
+				message: 'The map can only show GPS statements'});
 		}
 	}
 },

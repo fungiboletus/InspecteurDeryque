@@ -216,10 +216,14 @@ animate_interface: function() {
 		{
 			var pos = e.clientX - obj.slider_left - obj.button_width - 4;
 
-			var time_t = obj.time_min * 1 + pos / obj.slider_width
-				* (obj.time_max - obj.time_min);
+			// If it's a click on the slider, and not on the buttons
+			if (pos > 0)
+			{
+				var time_t = obj.time_min * 1 + pos / obj.slider_width
+					* (obj.time_max - obj.time_min);
 
-			EventBus.send('cursor', {time_t: time_t});
+				EventBus.send('cursor', {time_t: time_t});
+			}
 
 		}
 	});
