@@ -106,7 +106,7 @@ DGauge.prototype.listeners = {
 
 	},
 
-	tuples: function(detail, obj) {
+	values: function(detail, obj) {
 		var updated_needle = [];
 
 		for (var statement_name in detail) {
@@ -132,7 +132,7 @@ DGauge.prototype.listeners = {
 						obj.needles.push(box);
 					}
 					// If no values, min values
-					var value = data[k].length > 0 ? data[k][0] : obj.min_value;
+					var value = data[k];
 
 					var ratio = (value - obj.min_value) / (obj.max_value - obj.min_value);
 

@@ -33,7 +33,7 @@ listeners: {
 			obj.max_letters = 1;
 	},
 
-	tuples: function(detail, obj) {
+	values: function(detail, obj) {
 
 		var updated_lcd = [];
 
@@ -66,7 +66,7 @@ listeners: {
 						box.appendChild(div_key);
 						obj.screen.appendChild(box);
 					}
-					var value = data[k].length > 0 ? data[k][0] : 0.0;
+					var value = data[k];
 					box.firstChild.firstChild.data = obj.format_number(value);
 					updated_lcd.push(box);
 				}
