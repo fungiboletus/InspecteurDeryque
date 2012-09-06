@@ -67,16 +67,13 @@ tuples: function(detail, obj) {
 
 			var ll = new google.maps.LatLng(data.lat[0], data.lon[0]);
 
-			if (base.marker) {
-				base.marker.setPosition(ll);
-			}
-			else
+			if (!base.marker)
 			{
 				base.marker = new google.maps.Marker({
 					position:ll,
 					// icon: pinImage,
 					map: obj.map,
-					title: "begin"});
+					title: "Cursor"});
 			}
 		}
 
@@ -118,13 +115,11 @@ tuples: function(detail, obj) {
 				line.updated = true;
 				obj.lines[key] = line;
 
-				// google.maps.event.addListener(line, 'click', (function(taaame){
-				// 		return function() {
-				// 			EventBus.send('tuples_selected', {statement_name: detail.statement_name,
-				// 				tuples: [taaame]});
-				// 			EventBus.send('time_sync', {time_t: taaame.time_t});
-				// 		}
-				// 	})(point));
+				google.maps.event.addListener(line, 'click', (function(time_t){
+						return function() {
+							EventBus.send('cursor', {time_t: time_t});
+						}
+					})(data.time_t[i]));
 			}
 
 			// line.setMap(obj.map);

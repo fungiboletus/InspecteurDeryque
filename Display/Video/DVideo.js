@@ -91,10 +91,10 @@ DVideo.prototype.listeners = {
 		}
 	},
 
-	time_sync: function(d, obj) {
+	cursor: function(d, obj) {
 		if (obj.canplay)
 		{
-			var time = d.start_t - obj.min_time + obj.time_synchro;
+			var time = d.time_t - obj.min_time + obj.time_synchro;
 
 			var set_time = obj.video.paused;
 
