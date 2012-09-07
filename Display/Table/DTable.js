@@ -105,6 +105,27 @@ listeners: {
 			}
 		}
 	},
+
+	values: function(detail, obj) {
+
+		for (var statement_name in detail) {
+			if (!(statement_name in obj.database)) continue;
+			var data = detail[statement_name];
+
+			var id = 'line_' + data.time_t.toString().hashCode();
+			var tr = byId(id);
+
+			if (tr)
+			{
+				$(obj.body).find('tr.selected').removeClass('selected');
+				$(tr).addClass('selected');
+				tr.scrollIntoView();
+			}
+		}
+
+
+	},
+
 	add_statement: function(e, obj) {
 		if (e.box_name != self.name) return;
 

@@ -12,6 +12,12 @@ td.time_t {
 	width:28em;
 }
 
+.table-striped tbody tr.selected td {
+	background-color: #333;
+	color: white;
+	font-weight: bold;
+}
+
 ::-webkit-scrollbar {
 	background:white;
 }
