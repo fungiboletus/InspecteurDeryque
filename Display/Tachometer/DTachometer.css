@@ -1,0 +1,138 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
+@font-face {
+font-family: DigitFont;
+src: url("../../Img/digit.otf");
+}
+
+#area {
+position:absolute;
+top:0;
+bottom:0;
+left:0;
+right:0;
+}
+
+#area .info, #area .line, #area .needle {
+position:absolute;
+bottom:20px;
+}
+
+#area .info {
+color:white;
+margin-left:45px;
+}
+
+#area .info div {
+/*background:grey;*/
+font-size:1.3em;
+	/*font-weight:bold;*/
+	font-family:DigitFont, monospace;
+}
+
+/* You have to love this code, man <3 */
+#info_min {
+	-webkit-transform:rotate(-2deg)
+	-moz-transform:rotate(-2deg)
+	transform:rotate(-2deg)
+}
+#info_min_medium {
+	-webkit-transform:rotate(38deg);
+	-moz-transform:rotate(38deg);
+	transform:rotate(38deg);
+}
+#info_medium {
+	-webkit-transform:rotate(78deg);
+	-moz-transform:rotate(78deg);
+	transform:rotate(78deg);
+}
+#info_medium_max {
+	-webkit-transform:rotate(118deg);
+	-moz-transform:rotate(118deg);
+	transform:rotate(118deg);
+}
+#info_max {
+	-webkit-transform:rotate(158deg);
+	-moz-transform:rotate(158deg);
+	-transform:rotate(158deg);
+}
+
+#info_min div {
+	-webkit-transform:rotate(2deg);
+	-moz-transform:rotate(2deg);
+	transform:rotate(2deg);
+}
+#info_min_medium div{
+	-webkit-transform:rotate(-38deg);
+	-moz-transform:rotate(-38deg);
+	transform:rotate(-38deg);
+}
+#info_medium div {
+	-webkit-transform:rotate(-78deg);
+	-moz-transform:rotate(-78deg);
+	transform:rotate(-78deg);
+}
+#info_medium_max div {
+	-webkit-transform:rotate(-118deg);
+	-moz-transform:rotate(-118deg);
+	transform:rotate(-118deg);
+}
+#info_max div {
+	-webkit-transform:rotate(-158deg);
+	-moz-transform:rotate(-158deg);
+	transform:rotate(-158deg);
+}
+
+#area .line {
+background:white;
+height:2px;
+width:30px;
+}
+
+#area .line.big {
+	height:4px;
+	width:40px;
+}
+
+#area .line.last {
+	background:red;
+}
+
+#area .needle {
+height:3px;
+/*width:100%;*/
+background:orange;
+-webkit-transition:-webkit-transform 0.33s;
+-moz-transition:-moz-transform 0.33s;
+transition:transform 0.33s;
+}
+
+#area .legend
+{
+	position:absolute;
+	bottom:5px;
+	right:5px;
+	margin:0;
+	min-width:150px;
+}
+
+#area .legend li
+{
+	font-family:monospace;
+	font-weight:bold;
+	list-style-type: none;
+}
+
+@media (max-height: 220px) {
+	#area .line:not(.big) {
+		display:none;
+	}
+	#area .line.big {
+		width:20px;
+	}
+	#info_min_medium,
+	#info_medium,
+	#info_medium_max {
+		display:none;
+	}
+}

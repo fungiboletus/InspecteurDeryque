@@ -44,8 +44,6 @@ DBars.prototype.listeners = {
 			for (var k in data)
 				if (k != 'time_t')
 				{
-					// première valeur pour l'instant, car bon voila quoi,
-					// faut faire d'autres évènements
 					value += data[k];
 					++n;
 				}

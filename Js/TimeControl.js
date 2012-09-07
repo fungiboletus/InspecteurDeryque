@@ -637,7 +637,7 @@ time_sync: function(d, obj) {
 	obj.draw();
 
 	// Update the value of the tooltip
-	var txt_inner = obj.get_text_date(obj.tooltip_left ?
+	var txt_inner = obj.get_txt_date(obj.tooltip_left ?
 		d.start_d : d.end_t);
 
 	obj.tooltip_inner.firstChild.data = txt_inner;
