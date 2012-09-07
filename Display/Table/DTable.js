@@ -69,6 +69,12 @@ listeners: {
 					if (!(k in obj.legend))
 						obj.add_legend(k);
 
+			if (nb_data > 4096)
+			{
+				nb_data = 4096;
+				EventBus.send("log", "Too much data for the table");
+			}
+
 			for (var i = 0; i < nb_data; ++i) {
 				var id = 'line_' + data.time_t[i].toString().hashCode();
 				new_tr[id] = true;

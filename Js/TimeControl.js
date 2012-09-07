@@ -637,11 +637,9 @@ time_sync: function(d, obj) {
 	obj.draw();
 
 	// Update the value of the tooltip
-	var txt_info = obj.get_txt_date(d.start_t);
-	var txt_inner = obj.tooltip_left ?
-		txt_info : obj.get_txt_date(d.end_t);
+	var txt_inner = obj.get_text_date(obj.tooltip_left ?
+		d.start_d : d.end_t);
 
-	obj.time_info.firstChild.data = txt_info;
 	obj.tooltip_inner.firstChild.data = txt_inner;
 },
 
@@ -655,6 +653,9 @@ cursor: function(d, obj) {
 		(obj.slider_width / (obj.time_max - obj.time_min));
 
 	obj.draw();
+
+	var txt_info = obj.get_txt_date(d.start_t);
+	obj.time_info.firstChild.data = txt_info;
 },
 
 /**
