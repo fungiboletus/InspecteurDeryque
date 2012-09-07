@@ -11,3 +11,7 @@
 td.time_t {
 	width:28em;
 }
+
+::-webkit-scrollbar {
+	background:white;
+}

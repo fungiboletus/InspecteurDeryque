@@ -50,34 +50,11 @@ create_cell: function(name, value) {
 	if (name)
 		td.className = name;
 
-	if (value)
-			td.appendChild(document.createTextNode(value));
+	td.appendChild(document.createTextNode(value));
 
 	return td;
 },
 
-update_line: function(tuple) {
-	var id = 'line_' + tuple.time_t.toString().hashCode();
-	var tr = byId(id);
-	if (tr) {
-		var i = 0;
-		for (var k in this.legend) {
-			if (tuple[k])
-				tr.children[i].firstChild.data = tuple[k].toLocaleString();
-			++i;
-		}
-	}
-	else {
-		tr = newDom('tr');
-		tr.id = id;
-		for (var k in this.legend) {
-			td = this.create_cell(k, tuple[k]);
-			tr.appendChild(td);
-		}
-		this.body.appendChild(tr);
-	}
-	return tr;
-},
 listeners: {
 	tuples: function(detail, obj) {
 		var new_tr = {};
@@ -85,16 +62,35 @@ listeners: {
 		for (var statement_name in detail) {
 			if (!(statement_name in obj.database)) continue;
 			var data = detail[statement_name];
+			var nb_data = data.time_t.length;
 
-			if (data.length > 0)
-				for (var k in data[0])
+			if (nb_data > 0)
+				for (var k in data)
 					if (!(k in obj.legend))
 						obj.add_legend(k);
 
+			for (var i = 0; i < nb_data; ++i) {
+				var id = 'line_' + data.time_t[i].toString().hashCode();
+				new_tr[id] = true;
 
-			for (var i = 0; i < data.length; ++i) {
-				var tr = obj.update_line(data[i]);
-				new_tr[tr.id] = true;
+				var tr = byId(id);
+				if (tr) {
+					var j = 0;
+					for (var k in obj.legend) {
+						tr.children[j].firstChild.data = data[k][i].toLocaleString();
+						++j;
+					}
+				}
+				else {
+					tr = newDom('tr');
+					tr.id = id;
+					for (var k in obj.legend) {
+						td = obj.create_cell(k, data[k][i]);
+						tr.appendChild(td);
+					}
+				}
+				// Add the row at the end of the table
+				obj.body.appendChild(tr);
 			}
 		}
 
