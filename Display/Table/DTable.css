@@ -21,3 +21,7 @@ td.time_t {
 ::-webkit-scrollbar {
 	background:white;
 }
+
+#area tr {
+	cursor:pointer;
+}

@@ -24,7 +24,6 @@ var DMap = function(screen)
 	this.database = {};
 	this.lines = {};
 
-	// TODO MOAR POINTS
 	this.max_nb_points = 512;
 };
 

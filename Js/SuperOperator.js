@@ -180,9 +180,29 @@ super_cursor: function(time)
 		else if (t < time)
 			begin = m + 1;
 		else
-			end = m -1;
+			end = m - 1;
 		old_m = m;
-	} while (begin < end);
+	} while (begin <= end);
+
+	var diff_t = Math.abs(time - data.time_t[m]);
+
+	// Check if the values near to the point are better
+	if (diff_t !== 0)
+	{
+		var min_diff_t = Number.MAX_VALUE;
+		var max_diff_t = Number.MAX_VALUE;
+
+		if (m > 1)
+			min_diff_t = Math.abs(time - data.time_t[m-1]);
+
+		if (m < data.time_t.length - 1)
+			max_diff_t = Math.abs(time - data.time_t[m+1]);
+
+		if (min_diff_t < diff_t && min_diff_t < max_diff_t)
+			--m;
+		else if (max_diff_t < diff_t && max_diff_t < min_diff_t)
+			++m;
+	}
 
 	var r = {};
 	for (key in data)

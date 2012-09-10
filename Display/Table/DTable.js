@@ -94,6 +94,11 @@ listeners: {
 						td = obj.create_cell(k, data[k][i]);
 						tr.appendChild(td);
 					}
+					tr.onclick = (function(time_t){
+						return function() {
+							EventBus.send('cursor', {time_t: time_t});
+						}
+					})(data.time_t[i]);
 				}
 				// Add the row at the end of the table
 				obj.body.appendChild(tr);
@@ -125,7 +130,8 @@ listeners: {
 			{
 				$(obj.body).find('tr.selected').removeClass('selected');
 				$(tr).addClass('selected');
-				tr.scrollIntoView();
+				// console.log(tr.);
+				tr.scrollIntoViewIfNeeded();
 			}
 		}
 

@@ -61,7 +61,14 @@ var DGraphique = function(screen)
 	// Time value of the cursor
 	this.cursor_time_t = 0;
 
-	// TODO ne pas mettre ça là
+	// Create the legend
+	this.createLegend();
+};
+
+DGraphique.prototype =
+{
+
+createLegend: function() {
 	var buttons_area = newDom('div');
 	buttons_area.className = 'btn-group';
 	var obj = this;
@@ -93,11 +100,8 @@ var DGraphique = function(screen)
 	};
 	buttons_area.appendChild(btn);
 	this.screen.appendChild(buttons_area);
+},
 
-};
-
-DGraphique.prototype =
-{
 manageXScale: function()
 {
 	//	Minimal interval
@@ -527,8 +531,8 @@ listeners: {
 		obj.clear(true);
 	},
 
-	cursor: function(detail, obj) {
-		obj.cursor_time_t = detail.time_t;
+	values: function(detail, obj) {
+		obj.cursor_time_t = detail['new heart rate'].time_t;
 		obj.paintCursor();
 	}
 

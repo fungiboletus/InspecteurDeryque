@@ -509,7 +509,6 @@ $(document).ready(function() {
 		var type = encodeURIComponent(li.attr('name'));
 		var boxdiv = li.parents('.boxdiv');
 		var front = boxdiv.children('.front');
-		// TODO ?
 		var url = URLS_DICTIONNARY.display_load.replace('__TYPE__', type);
 		var id = 'f' + Math.abs((boxdiv.attr('id')+type).hashCode());
 
