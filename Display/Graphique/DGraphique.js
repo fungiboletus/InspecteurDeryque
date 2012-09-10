@@ -531,8 +531,8 @@ listeners: {
 		obj.clear(true);
 	},
 
-	values: function(detail, obj) {
-		obj.cursor_time_t = detail['new heart rate'].time_t;
+	cursor: function(detail, obj) {
+		obj.cursor_time_t = detail.time_t;
 		obj.paintCursor();
 	}
 

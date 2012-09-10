@@ -2,10 +2,10 @@
 
 #area, #area .mask, #area .gauge {
 position:absolute;
-top:1em;
-bottom:1em;
-left:1em;
-right:1em;
+top:0.5em;
+bottom:1.2em;
+left:0.5em;
+right:0.5em;
 background:white;
 box-shadow:0px 0px 2px #333 inset;
 }
@@ -16,9 +16,9 @@ box-shadow:0px 0px 2px #333;
 }
 
 #area .gauge {
-	bottom:1em;
+	bottom:0.5em;
 	top:auto;
-	background:white url(gauge_background.png) bottom;
+	/*background:white url(gauge_background.png) bottom;*/
 -webkit-transition:height 0.33s;
 -moz-transition:height 0.33s;
 transition:height 0.33s;
