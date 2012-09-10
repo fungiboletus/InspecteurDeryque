@@ -41,7 +41,7 @@ var DGraphique = function(screen)
 	this.scale_change = true;
 
 	// this.colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
-	this.colors = ['orange', 'dodgerblue', 'limegreen', 'yellowgreen', 'salmon', 'cyan'];
+	this.colors = ['orange', 'dodgerblue', 'limegreen', 'salmon', 'cyan'];
 
 	// Multiscale or unique scale ?
 	// with the multiscale, each statement's scale is adapted to the window
@@ -57,6 +57,9 @@ var DGraphique = function(screen)
 
 	// Just points ?
 	this.points = false;
+
+	// Time value of the cursor
+	this.cursor_time_t = 0;
 
 	// TODO ne pas mettre ça là
 	var buttons_area = newDom('div');
@@ -390,6 +393,20 @@ paintAxes: function(mili, paintForced, y_min)
 
 },
 
+paintCursor: function() {
+	var x_pos = parseInt((this.cursor_time_t - this.x_min) * this.coef_x);
+
+	if (x_pos < 0)
+		x_pos = 0;
+	else if (x_pos > this.width)
+		xpos = this.width;
+
+	x_pos += 'px';
+
+	if (this.time_cursor.style.left != x_pos)
+		this.time_cursor.style.left = x_pos;
+},
+
 clear: function(noClearCanvas) {
 
 	this.old_tic_x = this.tic_x;
@@ -472,6 +489,7 @@ listeners: {
 		}
 
 		obj.paintAxes(true, false, y_min);
+		obj.paintCursor();
 	},
 
 	add_statement: function(e, obj) {
@@ -510,18 +528,8 @@ listeners: {
 	},
 
 	cursor: function(detail, obj) {
-		var x_pos = parseInt((detail.time_t - obj.x_min) * obj.coef_x);
-
-		if (x_pos < 0)
-			x_pos = 0;
-		else if (x_pos > obj.width)
-			xpos = obj.width;
-
-		x_pos += 'px';
-
-		if (obj.time_cursor.style.left != x_pos)
-			obj.time_cursor.style.left = x_pos;
-
+		obj.cursor_time_t = detail.time_t;
+		obj.paintCursor();
 	}
 
 }};
