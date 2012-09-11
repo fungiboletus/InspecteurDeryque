@@ -1,0 +1,47 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
+#area {
+	position:absolute;
+	top:1em;
+	left:0;
+	bottom:0;
+	right:0;
+}
+
+#area .legend {
+	margin-top:1em;
+	font-weight:bold;
+	font-size:0.95em;
+	color:white;
+font-family:monospace;
+text-align:center;
+}
+
+#area .led {
+	height: 80%;
+	margin:0;
+	border-radius:50%;
+	margin:auto;
+	box-shadow: 0px 0px 12px black, 0px 0px 5px rgba(0,0,0,0.8) inset;
+	border:5px solid #444;
+}
+
+#area .led.off {
+background: rgb(242,242,242); /* Old browsers */
+background: -moz-radial-gradient(center, ellipse cover,  rgba(254,252,234,1) 0%, rgba(242,242,242,1) 62%, rgba(183,183,183,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(254,252,234,1)), color-stop(62%,rgba(242,242,242,1)), color-stop(100%,rgba(183,183,183,1))); /* Chrome,Safari4+ */
+background: -webkit-radial-gradient(center, ellipse cover,  rgba(254,252,234,1) 0%,rgba(242,242,242,1) 62%,rgba(183,183,183,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  rgba(254,252,234,1) 0%,rgba(242,242,242,1) 62%,rgba(183,183,183,1) 100%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  rgba(254,252,234,1) 0%,rgba(242,242,242,1) 62%,rgba(183,183,183,1) 100%); /* IE10+ */
+background: radial-gradient(ellipse at center,  rgba(254,252,234,1) 0%,rgba(242,242,242,1) 62%,rgba(183,183,183,1) 100%); /* W3C */
+}
+
+#area .led.on {
+	background: rgb(242,106,96); /* Old browsers */
+background: -moz-radial-gradient(center, ellipse cover,  rgba(242,106,96,1) 0%, rgba(239,47,47,1) 56%, rgba(181,36,36,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(242,106,96,1)), color-stop(56%,rgba(239,47,47,1)), color-stop(100%,rgba(181,36,36,1))); /* Chrome,Safari4+ */
+background: -webkit-radial-gradient(center, ellipse cover,  rgba(242,106,96,1) 0%,rgba(239,47,47,1) 56%,rgba(181,36,36,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  rgba(242,106,96,1) 0%,rgba(239,47,47,1) 56%,rgba(181,36,36,1) 100%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  rgba(242,106,96,1) 0%,rgba(239,47,47,1) 56%,rgba(181,36,36,1) 100%); /* IE10+ */
+background: radial-gradient(ellipse at center,  rgba(242,106,96,1) 0%,rgba(239,47,47,1) 56%,rgba(181,36,36,1) 100%); /* W3C */
+}
