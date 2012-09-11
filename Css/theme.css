@@ -119,3 +119,8 @@ table .headerSortUp.purple, table .headerSortDown.purple {
 .data_list a {
 color:#404040;
 }
+
+/* Useless, so indispensable */
+.page-header h1 {
+-webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(rgba(255, 255, 255, 0.2) ));
+}

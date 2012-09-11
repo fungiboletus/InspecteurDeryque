@@ -208,6 +208,7 @@ color:blue;
 	list-style:none;
 	padding:0;
 	margin:0;
+-webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(rgba(255, 255, 255, 0.2) ));
 }
 .boxdiv .back .input_types li {
 	padding:0;
