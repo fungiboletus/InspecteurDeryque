@@ -144,14 +144,37 @@ SQL
 SQL
 		, [$_SESSION['bd_id']]);
 	}
+    public static function getSelection($user_id, $name) {
+        return R::getAll('select s.name, s.id from selection s, releve r where r.user_id = ? and r.name = ? and r.id = s.releve_id and releve_type=? group by s.name, s.end, s.begin ', array($user_id, $name, 'releve'));
+    }
 
+    public static function getSelectionMul($user_id, $name) {
+        return R::getAll('select s.name, s.id from selection s, multi_releve r where r.user_id = ? and r.name = ? and r.id = s.releve_id and releve_type=? order by s.name ', array($user_id, $name, 'multi_releve'));
+    }
+
+    public static function getSelectionCompo($name, $user_id) {
+        return R::getAll('select s.name, s.id from selection s, composition c, releve r where c.releve_id = s.releve_id and s.releve_type=c.releve_type and c.name=? and s.releve_id=r.id and r.user_id = ? group by s.name, s.end, s.begin ', array($name, $user_id));
+    }
+
+    public static function getSelectFromCompo($name) {
+        return R::getAll('select s.name from selection s, composition c where c.id = s.composition_id and c.name=? group by s.name, s.end, s.begin ', array($name));
+    }
+
+    public static function getNameSelect($name, $user_id) {
+        return R::getAll('select name, id from selection where name=?', array($name));
+    }
 	/**
 	 * Get all statements created by a given user.
 	 * @return array of statements.
 	 */
+
 	public static function getStatementComp() {
 		return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id order by c.name ', [$_SESSION['bd_id']]);
 	}
+    public static function getStatementCompWhot($user_id) {
+        return R::getAll('select c.name, m.description, GROUP_CONCAT(modname) as modname from composition c, datamod d, releve r, multi_releve m, multi_releve_releve mr where c.releve_id = m.id and m.user_id = ? and m.id = mr.multi_releve_id and r.id = mr.releve_id and r.mod_id = d.id group by c.name ', array($user_id));
+    }
+
 	public static function getStatementCompo($name) {
 		return R::getAll('select c.name, description, modname from composition c, datamod d, releve r where r.user_id = ? and r.id = c.releve_id and r.mod_id = d.id and c.name=? ', [$_SESSION['bd_id'], $name]);
 	}
@@ -210,6 +233,10 @@ SQL
 	  */
 	public static function getName($name) {
 		return R::getAll('select name, id from releve r where user_id=? and name=?', [$_SESSION['bd_id'], $name]);
+	}
+
+	public static function getNameById($id){
+		return R::getAll('select name from releve r where user_id=? and id=?', [$_SESSION['bd_id'], $id]);
 	}
 	/** Get the description of a multi statement given the name and the user of that statement.
 	  * @param $name Name of the statement.

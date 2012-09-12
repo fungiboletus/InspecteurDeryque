@@ -116,6 +116,13 @@ create_interface: function() {
 	this.speed_button.appendChild(document.createTextNode('x1'));
 	time_buttons.appendChild(this.speed_button);
 
+//Test pour extraction
+	this.extrac_button = newDom('button');
+	this.extrac_button.className = 'btn btn-mini btn-inverse';
+	this.extrac_button.appendChild(document.createTextNode('Ext'));
+	time_buttons.appendChild(this.extrac_button);
+//Fin test
+
 	this.time_info = newDom('button');
 	this.time_info.className = 'btn btn-mini time_info';
 	this.time_info.appendChild(document.createTextNode('12:45:12.054'));
@@ -123,7 +130,7 @@ create_interface: function() {
 
 	this.time_control.appendChild(time_buttons);
 
-	// Creation of the slider
+	// Creation of the sliderc
 	var zone_slider = newDom('div');
 	zone_slider.className = "zone_slider";
 	this.time_control.appendChild(zone_slider);
@@ -245,6 +252,14 @@ animate_interface: function() {
 			speed: obj.play_speeds[(speedIndex+1)%obj.play_speeds.length]
 		});
 	});
+
+//Test extraction
+	$(this.extrac_button).click(function() {
+		var name = prompt("Choose a name for your selection:", "");
+		if(name != "") alert(EventBus.send('get_bounds'));
+	});
+
+
 },
 
 /*

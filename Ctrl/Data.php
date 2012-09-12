@@ -6,13 +6,38 @@
  */
 class Data
 {
+
+
+
 	public function index() {
 		CNavigation::setTitle(_('Simple statements'));
 		CNavigation::setDescription(_('All your data are belong to us'));
 
-		$statements = DataMod::getStatements();
+		$simple_statements = DataMod::getStatements();
+		for($i=0;$i<count($simple_statements);$i++){
+			 $simple_statements[$i]['releve']='simple';}
 
-		DataView::showStatementsList($statements);
+		$multi_statements = DataMod::getStatementsMulti();
+		for($i=0;$i<count($multi_statements);$i++){
+			 $multi_statements[$i]['releve']='multi';}
+
+        	$simple_sample = DataMod::getStatementComp($_SESSION['bd_id']);
+		for($i=0;$i<count($simple_sample);$i++){
+			 $simple_sample[$i]['releve']='sample';}
+
+        	$multi_sample = DataMod::getStatementCompWhot($_SESSION['bd_id']);
+		for($i=0;$i<count($multi_sample);$i++){
+			 $multi_sample[$i]['releve']='multi_sam';}
+
+        	$multi_samples = DataMod::getStatementCompMulti($_SESSION['bd_id']);
+		for($i=0;$i<count($multi_samples);$i++){
+			 $multi_samples[$i]['releve']='samples';}
+
+		$s1 = CNavigation::array_concat($simple_statements, $multi_statements);
+		$s2 = CNavigation::array_concat($s1, $simple_sample);
+		$s3 = CNavigation::array_concat($s2, $multi_sample);
+		$final = CNavigation::array_concat($s3, $multi_samples);
+		DataView::showStatementsList($final);
 
 		DataView::showAddButton();
 	}

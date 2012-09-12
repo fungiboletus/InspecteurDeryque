@@ -220,13 +220,20 @@ HTML;
 		$url_back = CNavigation::generateUrlToApp('Data');
 		self::showButton($url_back, 'info', _('Return to the list'), 'back');
 
+
+
+
 		if ($mode === 'edit')
 		{
 			$url_view =	CNavigation::generateUrlToApp('').'#'.JsURL::stringify(
 				['h' => [['Graphique' => [$values['name']]]]]
 				);
 			$url_del =	CNavigation::generateMergedUrl('Data', 'remove');
+		        $url_ext = CNavigation::generateUrlToApp('DataSample', 'viewSelect', array('name' => $values['name']));
+		        $url_comp = CNavigation::generateUrlToApp('DataMulti', 'form', array('name' => $values['name']));
 			self::showButton($url_view, 'success', _('View the statement'), 'magnify');
+			self::showButton($url_ext, 'success', _('Extraction'), 'magnify');
+			self::showButton($url_comp, 'success', _('Composition'), 'magnify');
 			self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
 			$text_submit = _('Save the changes');
 			echo '<input type="hidden" name="form_mode" value="edit" />';
@@ -271,14 +278,20 @@ HTML;
 					<th class="header yellow">Name</th>
 					<th class="header green">Description</th>
 					<th class="header blue">Type</th>
+					<th class="header red">Releve</th>
 				</tr></thead>
 				<tbody>
 HTML;
 			foreach ($statements as $statement) {
-				$url = CNavigation::generateUrlToApp('Data', 'view', ['name' => $statement['name']]);
+				if($statement['releve']=="simple") $url = CNavigation::generateUrlToApp('Data', 'view', ['name' => $statement['name']]);
+				else if($statement['releve']=="multi") $url = CNavigation::generateUrlToApp('DataMulti', 'view', ['name' => $statement['name']]);
+				else if($statement['releve']=="sample") $url = CNavigation::generateUrlToApp('DataSample', 'view', ['name' => $statement['name']]);
+				else if($statement['releve']=="multi_sam") $url = CNavigation::generateUrlToApp('DataSample', 'view', ['name' => $statement['name']]);
+				else if($statement['releve']=="samples") $url = CNavigation::generateUrlToApp('DataSample', 'viewmu', ['name' => $statement['name']]);
 				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
-					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), "</a></td></tr>\n";
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), 
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['releve']), "</a></td></tr>\n";
 			}
 
 			echo "</tbody></table>";
