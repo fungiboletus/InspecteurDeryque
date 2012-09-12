@@ -208,6 +208,7 @@ color:blue;
 	list-style:none;
 	padding:0;
 	margin:0;
+-webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(rgba(255, 255, 255, 0.2) ));
 }
 .boxdiv .back .input_types li {
 	padding:0;
@@ -305,7 +306,10 @@ bottom:0;
 /*border-left:2px solid black;*/
 }
 
-#time_control .area, #time_control .border {
+#time_control .area,
+#time_control .border,
+#time_control .time_cursor
+{
 	height:25px;
 	position:absolute;
 	top:0;
@@ -335,6 +339,20 @@ min-width:1px;
 	right:0;
 	cursor:e-resize;
 	margin-right:-10px;
+}
+#time_control .time_cursor {
+	left:0;
+	width:2px;
+	background: #DDD;
+	width: 1px;
+	border-left: 1px solid grey;
+	border-right: 1px solid grey;
+}
+
+#time_control .time_cursor:hover {
+	background:white;
+	width:8px;
+	margin-left:-4px;
 }
 
 #iframe_mask {
@@ -415,4 +433,21 @@ margin:5px 0 0 3px;
 
 .alert h4:before{
 /*content:url(../Img/sad_bunny.gif);*/
+}
+
+.progress-ajax {
+	position:absolute;
+	left:0px;
+	right:0px;
+	bottom:21px;
+	margin-bottom:auto;
+	background:rgba(0,0,0,0.3);
+	z-index:1000;
+}
+
+.progress-ajax .progress
+{
+	margin-bottom:4px;
+	/*height:11px;*/
+	background:transparent;
 }

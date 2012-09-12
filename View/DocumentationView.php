@@ -16,11 +16,12 @@ class DocumentationView
 <div class="doc-menu well well-small">
         <ul class="nav nav-list">
           <li class="nav-header"><a href="#import">Overview</a></li>
-          <!-- <li class="divider"></li> -->
         	<li class="nav-header">EventBus</li>
           <li><a href="#api"><i class="icon-chevron-right"></i> API</a></li>
           <li><a href="#eventslist"><i class="icon-chevron-right"></i> List of events</a></li>
           <li><a href="#eventbus_example"><i class="icon-chevron-right"></i> Example</a></li>
+          <li class="divider"></li>
+          <li><a href="<?= CNavigation::generateUrlToApp(''); ?>"><i class="icon-chevron-right"></i> Application</a></li>
         </ul>
       </div>
 		<?php
@@ -62,7 +63,7 @@ class DocumentationView
 			<p>Voici l'API de base du bus d'évènements. N'hésitez pas à consulter le code source pour plus de détails. Les évènements sont communiqués entre toutes les iframes de la page, et bien évidemment la page principale.</p>
 			<br/>
 			<h4>EventBus.addListener <small>(name, method, data)</small></h4>
-			<dl>
+			<dl class="dl-horizontal">
 				<dt>name</dt><dd>The event name</dd>
 				<dt>method</dt><dd>The method to execute, his first argument is the data of the event</dd>
 				<dt>data</dt><dd>Data passed as second argument to the method</dd>
@@ -73,7 +74,7 @@ class DocumentationView
 }, ' world!');</code></pre>
 
 			<h4>EventBus.send <small>(name, data)</small></h4>
-			<dl>
+			<dl class="dl-horizontal">
 				<dt>name</dt><dd>The event name</dd>
 				<dt>data</dt><dd>Data to send with the event</dd>
 			</dl>

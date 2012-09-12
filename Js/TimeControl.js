@@ -26,10 +26,13 @@ var TimeControl = function() {
 	this.button_width = 10;
 
 	// The position of the left slider, in pixels
-	this.left_pos = 50;
+	this.left_pos = 0;
 
 	// For the right
-	this.right_pos = 120;
+	this.right_pos = 0;
+
+	// The position of the cursor
+	this.cursor_pos = 0;
 
 	// The margin is about the click compared to the slider position
 	this.drag_margin = 0;
@@ -46,9 +49,15 @@ var TimeControl = function() {
 	// right slider
 	this.border_right_drag = false;
 
+	// cursor drag'n'drop
+	this.cursor_drag = false;
+
 	// The slider area (in times)
 	this.time_min = Number.MAX_VALUE;
 	this.time_max = -Number.MAX_VALUE;
+
+	// The cursor time value
+	this.cursor_time = 0;
 
 	// The slider width when dragging
 	var drag_width = 0;
@@ -159,6 +168,11 @@ create_interface: function() {
 	this.tooltip.appendChild(this.tooltip_arrow);
 	this.tooltip.appendChild(this.tooltip_inner);
 	document.body.appendChild(this.tooltip);
+
+	// Creation of the time cursor
+	this.time_cursor = newDom('div');
+	this.time_cursor.className = 'time_cursor';
+	this.area.appendChild(this.time_cursor);
 },
 
 /*
@@ -175,7 +189,8 @@ animate_interface: function() {
 	// Click on the slider
 	this.jslider.mousedown(function(e) {
 		obj.ondrag = true;
-		if (!obj.border_left_drag && !obj.border_right_drag)
+		if (!obj.border_left_drag && !obj.border_right_drag &&
+			!obj.cursor_drag)
 		{
 			var m_x = e.clientX - obj.slider_left - obj.left_pos;
 			obj.drag_margin = m_x;
@@ -187,19 +202,44 @@ animate_interface: function() {
 		obj.iframe_mask.style.display  = 'block';
 	});
 
+	var mouse_has_moved = false;
+
 	// Capture the end of drag (mouseup)
 	var jdoc = $(document);
-	jdoc.mouseup(function() {
+	jdoc.mouseup(function(e) {
+		if (mouse_has_moved)
+			mouse_has_moved = false;
+		// If mouse has not moved, but it's a click on the drag area
+		else if (obj.slider_drag)
+		{
+			var pos = e.clientX - obj.slider_left - obj.button_width - 4;
+
+			var time_t = obj.time_min * 1 + pos / obj.slider_width
+				* (obj.time_max - obj.time_min);
+
+			EventBus.send('cursor', {time_t: time_t});
+		}
+
+		// Reset the state booleans
 		obj.ondrag = false;
 		obj.slider_drag = false;
 		obj.border_left_drag = false;
 		obj.border_right_drag = false;
+		obj.cursor_drag = false;
+
+		// Hide the dragging objects
 		if (obj.tooltip_visible) obj.hide_tooltip();
 		obj.iframe_mask.style.display  = 'none';
+
+
 	});
 
 	// Capture the drag mouvements
-	jdoc.mousemove(function(e) {obj.dragdrop(e, obj);});
+	jdoc.mousemove(function(e) {
+		if (obj.ondrag)
+			mouse_has_moved = true;
+		obj.dragdrop(e, obj);
+	});
 
 	// Disable text selection when dragging
 	document.onselectstart = function(){ return !obj.ondrag;};
@@ -207,22 +247,27 @@ animate_interface: function() {
 	// Drag the left slider
 	$(this.border_left).mousedown(function(e) {
 		obj.ondrag = true;
-		obj.slider_drag = false;
 		obj.border_left_drag = true;
 		obj.drag_margin = e.clientX - obj.slider_left - obj.left_pos;
 		obj.show_tooltip(true);
-		obj.iframe_mask.style.display  = 'block';
 		obj.dragdrop(e);
 	});
 
 	// Drag the right slider
 	$(this.border_right).mousedown(function(e) {
 		obj.ondrag = true;
-		obj.slider_drag = false;
 		obj.border_right_drag = true;
 		obj.drag_margin = e.clientX - obj.slider_left - obj.right_pos;
 		obj.show_tooltip(false);
-		obj.iframe_mask.style.display  = 'block';
+		obj.dragdrop(e);
+	});
+
+	// Drag the slider
+	$(this.time_cursor).mousedown(function(e) {
+		obj.ondrag = true;
+		obj.slider_drag = false;
+		obj.cursor_drag = true;
+		obj.drag_margin = obj.button_width * 2 - e.offsetX;
 		obj.dragdrop(e);
 	});
 
@@ -386,6 +431,7 @@ hide_tooltip: function() {
 draw: function() {
 	var left = this.left_pos + this.button_width;
 	var right = this.slider_width - this.right_pos + this.button_width;
+	var cursor = this.cursor_pos + this.button_width - left;
 
 	if (left > this.slider_width - this.button_width)
 		left = this.slider_width - this.button_width;
@@ -393,13 +439,21 @@ draw: function() {
 	if (right < this.button_width)
 		right = this.button_width;
 
+	if (cursor < 0)
+		cursor = 0;
+	if (cursor > this.slider_width - this.button_width - left - right + 4)
+		cursor = this.slider_width - this.button_width - left - right + 4;
+
 	left += 'px';
 	right += 'px';
+	cursor += 'px';
 
 	if (this.area.style.left != left)
 		this.area.style.left =  left;
 	if (this.area.style.right != right)
 		this.area.style.right = right;
+	if (this.time_cursor.style.left != cursor)
+		this.time_cursor.style.left = cursor;
 
 	if (this.tooltip_visible)
 		this.draw_tooltip();
@@ -485,6 +539,15 @@ dragdrop: function(e, obj) {
 				if (obj.right_pos < obj.left_pos)
 					obj.left_pos = obj.right_pos;
 			}
+			else if (obj.cursor_drag)
+			{
+				var time_t = obj.time_min * 1 + m_x / obj.slider_width
+					* (obj.time_max - obj.time_min);
+
+				EventBus.send('cursor', {time_t: time_t});
+
+				return;
+			}
 		}
 
 		// We just sand a time event, we don't draw anything
@@ -507,26 +570,35 @@ play_callback: function(t) {
 	var times = this.get_times_by_pos();
 	// console.log(new Date().getSeconds(), plus, times.start_t);
 
-	// Update the time
-	times.start_t += plus;
-	times.end_t += plus;
+	var time = this.cursor_time;
+
+	time += plus;
+
+	// Looping
+	if (time < times.start_t || time > times.end_t)
+		time = times.start_t;
+	// else
+	// // Update the time
+	// times.start_t += plus;
+	// times.end_t += plus;
 
 
-	// The max time is the limit
-	if (times.end_t > this.time_max)
-		times.end_t = this.time_max;
+	// // The max time is the limit
+	// if (times.end_t > this.time_max)
+	// 	times.end_t = this.time_max;
 
-	// If the start time is bigger than the end time,
-	// we will have bad time
-	if (times.start_t > times.end_t)
-	{
-		times.start_t = times.end_t;
+	// // If the start time is bigger than the end time,
+	// // we will have bad time
+	// if (times.start_t > times.end_t)
+	// {
+	// 	times.start_t = times.end_t;
 
-		// Simulate a click on pause button
-		$(this.bti).click();
-	}
+	// 	// Simulate a click on pause button
+	// 	$(this.bti).click();
+	// }
 
-	EventBus.send('time_sync', times);
+	// EventBus.send('time_sync', times);
+	EventBus.send('cursor', {time_t: time});
 
 	var obj = this;
 	if (this.is_playing)
@@ -563,6 +635,15 @@ listeners: {
  */
 time_sync: function(d, obj) {
 
+	if (obj.cursor_time < d.start_t || obj.cursor_time > d.end_t)
+	{
+		if (obj.cursor_time < d.start_t)
+			obj.cursor_time = d.start_t;
+		else if (obj.cursor_time > d.end_t)
+			obj.cursor_time = d.end_t;
+		EventBus.send('cursor', {time_t: obj.cursor_time});
+	}
+
 	// Simple maths, simple maths everywhere
 	var time_int = obj.time_max - obj.time_min;
 	obj.left_pos = (d.start_t - obj.time_min) * (obj.slider_width / time_int);
@@ -571,12 +652,25 @@ time_sync: function(d, obj) {
 	obj.draw();
 
 	// Update the value of the tooltip
-	var txt_info = obj.get_txt_date(d.start_t);
-	var txt_inner = obj.tooltip_left ?
-		txt_info : obj.get_txt_date(d.end_t);
+	var txt_inner = obj.get_txt_date(obj.tooltip_left ?
+		d.start_d : d.end_t);
 
-	obj.time_info.firstChild.data = txt_info;
 	obj.tooltip_inner.firstChild.data = txt_inner;
+},
+
+/*
+ *	Updating the time cursor position from the cursor event.
+ */
+cursor: function(d, obj) {
+
+	obj.cursor_time = d.time_t;
+	obj.cursor_pos = (d.time_t - obj.time_min) *
+		(obj.slider_width / (obj.time_max - obj.time_min));
+
+	obj.draw();
+
+	var txt_info = obj.get_txt_date(d.start_t);
+	obj.time_info.firstChild.data = txt_info;
 },
 
 /**

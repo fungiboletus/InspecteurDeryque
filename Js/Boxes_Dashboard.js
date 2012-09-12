@@ -104,7 +104,7 @@ $(document).ready(function() {
 		statements_list.appendChild(input_statements);
 		var table_statements = newDom('div');
 		table_statements.className = 'table_statements accordion';
-		table_statements.id = 'supertest';
+		table_statements.id = 'table_statements_'+nb_boxes;
 		statements_list.appendChild(table_statements);
 		layout.disableDrag(table_statements);
 
@@ -312,6 +312,7 @@ $(document).ready(function() {
 	var json_statements_list = null;
 	var fill_statements_list = function(list) {
 		list.empty();
+		var id = list.attr('id');
 
 		var simple = newDom('div');
 		simple.className = 'accordion-group';
@@ -325,7 +326,9 @@ $(document).ready(function() {
 		// var simpleDivTable = newDom('div');
 		var simpleTable = newDom('table');
 		simpleBody.appendChild(simpleTable);
-		simpleBody.id = 'simple';
+
+		var id_simple = id+'_simple';
+		simpleBody.id = id_simple;
 
 		if (json_statements_list['simples']) {
 			for (var report in json_statements_list['simples'])
@@ -349,8 +352,8 @@ $(document).ready(function() {
 		buttonSimple.appendChild(document.createTextNode('Statements'));
 		buttonSimple.setAttribute('class', 'btn');
 		buttonSimple.setAttribute('data-toggle', 'collapse');
-		buttonSimple.setAttribute('data-parent', '#supertest');
-		buttonSimple.setAttribute('data-target', '#simple');
+		buttonSimple.setAttribute('data-parent', '#'+id);
+		buttonSimple.setAttribute('data-target', '#'+id_simple);
 
 		simpleHeading.appendChild(buttonSimple);
 
@@ -366,16 +369,20 @@ $(document).ready(function() {
 		/*{
 			parent: ".table_statements"});*});*/
 
-		var buttonMulti = newDom('button');
-		buttonMulti.setAttribute('class', 'btn');
-		buttonMulti.setAttribute('data-toggle', 'collapse');
-		buttonMulti.setAttribute('data-target', '#multi');
-		buttonMulti.setAttribute('data-parent', '.table_statements');
-		buttonMulti.appendChild(document.createTextNode('Multi statements'));
-		list.append(buttonMulti);
-		var multi = newDom('table');
-		multi.setAttribute('id', 'multi');
-		multi.setAttribute('class', 'collapse in ');
+		var multi = newDom('div');
+		multi.className = 'accordion-group';
+
+		var multiHeading = newDom('div');
+		multiHeading.className = 'accordion-heading';
+
+		var multiBody = newDom('div');
+		multiBody.className = 'accordion-body collapse';
+
+		var multiTable = newDom('table');
+		multiBody.appendChild(multiTable);
+
+		var id_multi = id + '_multi';
+		multiBody.setAttribute('id', id_multi);
 
 		if (json_statements_list['multiples']) {
 			for (var report in json_statements_list['multiples'])
@@ -391,9 +398,19 @@ $(document).ready(function() {
 				tr.appendChild(td_a);
 				tr.appendChild(td_b);
 				//li.onclick = clic_statement;
-				multi.appendChild(tr);
+				multiTable.appendChild(tr);
 		    }
 		}
+		var buttonMulti = newDom('button');
+		buttonMulti.appendChild(document.createTextNode('Multi statements'));
+		buttonMulti.setAttribute('class', 'btn');
+		buttonMulti.setAttribute('data-toggle', 'collapse');
+		buttonMulti.setAttribute('data-parent', '#'+id);
+		buttonMulti.setAttribute('data-target', '#'+id_multi);
+
+		multiHeading.appendChild(buttonMulti);
+		multi.appendChild(multiHeading);
+		multi.appendChild(multiBody);
 		list.append(multi);
 
 		/*var buttonSample = newDom('button');
@@ -509,7 +526,6 @@ $(document).ready(function() {
 		var type = encodeURIComponent(li.attr('name'));
 		var boxdiv = li.parents('.boxdiv');
 		var front = boxdiv.children('.front');
-		// TODO ?
 		var url = URLS_DICTIONNARY.display_load.replace('__TYPE__', type);
 		var id = 'f' + Math.abs((boxdiv.attr('id')+type).hashCode());
 

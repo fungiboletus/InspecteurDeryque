@@ -19,9 +19,15 @@ var DGraphique = function(screen)
 	this.screen.appendChild(this.screenAxes);
 	this.screen.appendChild(this.screenGraph);
 
+	// Create legend
 	this.legend_area = newDom('ul');
 	this.legend_area.className = 'legend';
 	this.screen.appendChild(this.legend_area);
+
+	// Create time cursor
+	this.time_cursor = newDom('div');
+	this.time_cursor.className = 'time_cursor';
+	this.screen.appendChild(this.time_cursor);
 
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
@@ -35,7 +41,7 @@ var DGraphique = function(screen)
 	this.scale_change = true;
 
 	// this.colors = ['white', 'red', 'dodgerblue', 'limegreen', 'yellowgreen', 'orangered', 'salmon', 'cyan'];
-	this.colors = ['orange', 'dodgerblue', 'limegreen', 'yellowgreen', 'salmon', 'cyan'];
+	this.colors = ['orange', 'dodgerblue', 'limegreen', 'salmon', 'cyan'];
 
 	// Multiscale or unique scale ?
 	// with the multiscale, each statement's scale is adapted to the window
@@ -52,7 +58,17 @@ var DGraphique = function(screen)
 	// Just points ?
 	this.points = false;
 
-	// TODO ne pas mettre ça là
+	// Time value of the cursor
+	this.cursor_time_t = 0;
+
+	// Create the legend
+	this.createLegend();
+};
+
+DGraphique.prototype =
+{
+
+createLegend: function() {
 	var buttons_area = newDom('div');
 	buttons_area.className = 'btn-group';
 	var obj = this;
@@ -84,11 +100,8 @@ var DGraphique = function(screen)
 	};
 	buttons_area.appendChild(btn);
 	this.screen.appendChild(buttons_area);
+},
 
-};
-
-DGraphique.prototype =
-{
 manageXScale: function()
 {
 	//	Minimal interval
@@ -384,6 +397,20 @@ paintAxes: function(mili, paintForced, y_min)
 
 },
 
+paintCursor: function() {
+	var x_pos = parseInt((this.cursor_time_t - this.x_min) * this.coef_x);
+
+	if (x_pos < 0)
+		x_pos = 0;
+	else if (x_pos > this.width)
+		xpos = this.width;
+
+	x_pos += 'px';
+
+	if (this.time_cursor.style.left != x_pos)
+		this.time_cursor.style.left = x_pos;
+},
+
 clear: function(noClearCanvas) {
 
 	this.old_tic_x = this.tic_x;
@@ -466,6 +493,7 @@ listeners: {
 		}
 
 		obj.paintAxes(true, false, y_min);
+		obj.paintCursor();
 	},
 
 	add_statement: function(e, obj) {
@@ -502,5 +530,10 @@ listeners: {
 		// Reset the scale
 		obj.clear(true);
 	},
+
+	cursor: function(detail, obj) {
+		obj.cursor_time_t = detail.time_t;
+		obj.paintCursor();
+	}
 
 }};

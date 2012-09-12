@@ -24,7 +24,6 @@ var DMap = function(screen)
 	this.database = {};
 	this.lines = {};
 
-	// TODO MOAR POINTS
 	this.max_nb_points = 512;
 };
 
@@ -67,16 +66,13 @@ tuples: function(detail, obj) {
 
 			var ll = new google.maps.LatLng(data.lat[0], data.lon[0]);
 
-			if (base.marker) {
-				base.marker.setPosition(ll);
-			}
-			else
+			if (!base.marker)
 			{
 				base.marker = new google.maps.Marker({
 					position:ll,
 					// icon: pinImage,
 					map: obj.map,
-					title: "begin"});
+					title: "Cursor"});
 			}
 		}
 
@@ -97,7 +93,7 @@ tuples: function(detail, obj) {
 				var distance = obj.distance(ll2.lat(), ll2.lng(),
 						 ll.lat(), ll.lng());
 				var diff_t = data.time_t[i] - data.time_t[i-sampling];
-				var speed = distance/diff_t * 36.0;
+				var speed = distance/diff_t * 3.6;
 
 				// TODO véritable gestion des couleurs, avec légende
 				var color = (280.0-speed * 20.0) % 360.0;
@@ -117,13 +113,11 @@ tuples: function(detail, obj) {
 				line.updated = true;
 				obj.lines[key] = line;
 
-				// google.maps.event.addListener(line, 'click', (function(taaame){
-				// 		return function() {
-				// 			EventBus.send('tuples_selected', {statement_name: detail.statement_name,
-				// 				tuples: [taaame]});
-				// 			EventBus.send('time_sync', {time_t: taaame.time_t});
-				// 		}
-				// 	})(point));
+				google.maps.event.addListener(line, 'click', (function(time_t){
+						return function() {
+							EventBus.send('cursor', {time_t: time_t});
+						}
+					})(data.time_t[i]));
 			}
 
 			// line.setMap(obj.map);
@@ -182,10 +176,35 @@ bounds: function(d, obj)
 	}
 
 	if (updated)
-	{
 		obj.map.fitBounds(bounds);
-		// obj.map.panToBounds(bounds);
+
+},
+values: function(d, obj)
+{
+	var bounds = new google.maps.LatLngBounds();
+	var need_to_fit = false;
+
+	for (var statement_name in d) {
+		if (!(statement_name in obj.database)) continue;
+
+		var base = obj.database[statement_name];
+		var data = d[statement_name];
+
+		if (('lat' in  data) && ('lon' in data))
+		{
+			var ll = new google.maps.LatLng(data.lat, data.lon);
+			base.marker.setPosition(ll);
+			bounds.extend(ll);
+
+			// Center the map if the markers is not in the map
+			if (!obj.map.getBounds().contains(ll))
+				need_to_fit = true;
+
+		}
 	}
+
+	if (need_to_fit)
+		obj.map.panToBounds(bounds);
 
 },
 /*time_sync: function(d, obj) {

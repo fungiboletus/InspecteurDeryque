@@ -34,7 +34,7 @@ DBars.prototype.listeners = {
 				}
 	},
 
-	tuples: function(detail, obj) {
+	values: function(detail, obj) {
 		var value = 0;
 		var n = 0;
 		for (var statement_name in detail) {
@@ -42,11 +42,9 @@ DBars.prototype.listeners = {
 			var data = detail[statement_name];
 
 			for (var k in data)
-				if (k != 'time_t' && data[k].length > 0)
+				if (k != 'time_t')
 				{
-					// première valeur pour l'instant, car bon voila quoi,
-					// faut faire d'autres évènements
-					value += data[k][0];
+					value += data[k];
 					++n;
 				}
 

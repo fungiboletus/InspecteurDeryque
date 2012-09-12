@@ -10,7 +10,8 @@ var DConsole = function(area)
 		'size_change', 'log', 'error', 'statements_list',
 		'get_statements_list', 'time_sync', 'tuples_selected',
 		'get_bounds', 'bounds', 'rt_clock',
-		'video', 'play_speed', 'play', 'pause'];
+		'video', 'play_speed', 'play', 'pause',
+		'cursor', 'values'];
 
 	for (var i = 0; i < events.length; ++i)
 		EventBus.addListener(events[i], this.manageEvent, this);

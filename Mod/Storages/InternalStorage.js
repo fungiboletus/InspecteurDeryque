@@ -66,7 +66,8 @@ InternalStorage.prototype =
 bounds: SuperOperator.prototype.super_bounds,
 time_sync: SuperOperator.prototype.super_time_sync,
 finished_events: SuperOperator.prototype.super_finished_events,
-rt_clock: SuperOperator.prototype.super_rt_clock,
+// rt_clock: SuperOperator.prototype.super_rt_clock,
+cursor: SuperOperator.prototype.super_cursor,
 
 addTuple: function(tuple, i)
 {

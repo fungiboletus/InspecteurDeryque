@@ -21,17 +21,74 @@ var SuperOperator = function() {
 	// The bounds are used in internal
 	this.current_bounds = {};
 
+	// Number of current ajax requests
+	this.nb_current_ajax_loads = 0;
+
 };
 
 SuperOperator.prototype = {
 // Call the RestJson API, and send the errors on the EventBus
-ajax: function(path, callback) {
-	$.ajax({
-		url: this.rest_location+path,
-		success: callback,
-		error: function(e) {
+ajax: function(url, callback, error) {
+
+	// Generate a default error function
+	if (typeof error === 'undefined')
+	{
+		error = function(e) {
 			EventBus.send("error", {status: e.status, message: e.statusText});
-		}});
+		};
+	}
+
+	// If the url is starting bah https?://, it's an absolute url, so, we don't have
+	// to add the rest's location
+	if (url.substr(0, 7) !== 'http://' && url.substr(0, 8) !== 'https://')
+		url = this.rest_location + url;
+
+	var obj = this;
+
+	// Id of the settimeout
+	var progression = 0;
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		beforeSend: function(thisXHR)
+		{
+			++obj.nb_current_ajax_loads;
+			progression = window.setTimeout(function(){
+				var progressDivs = document.getElementsByClassName('progress-ajax');
+
+				// Create the progress bar only if it doen't yet exist
+				if (progressDivs.length === 0)
+				{
+					var progressBar = newDom('div');
+					progressBar.className = 'bar';
+					progressBar.style.width = '100%';
+					progressBar.appendChild(document.createTextNode('Loading data'));
+					var progressArea = newDom('div');
+					progressArea.className = 'progress progress-striped active';
+					progressArea.appendChild(progressBar);
+					var divProgressArea = newDom('div');
+					divProgressArea.className = 'progress-area progress-ajax';
+					divProgressArea.appendChild(progressArea);
+					document.body.appendChild(divProgressArea);
+				}
+			}, 300);
+			// Create the progress bar if the response is more longer than 300 ms
+		},
+		success: callback,
+		error: error,
+		complete: function(){
+			if (progression) window.clearTimeout(progression);
+			// If it's the last loading response
+			if (--obj.nb_current_ajax_loads === 0)
+			{
+				// Delete the progress bar if it exist
+				var progressDivs = document.getElementsByClassName('progress-ajax');
+				if (progressDivs.length > 0)
+					document.body.removeChild(progressDivs[0]);
+
+			}
+		}
+	});
 },
 
 // When the data loading is completed
@@ -104,6 +161,52 @@ super_time_sync: function(start_t, end_t)
 	// and not a new data array
 	for (key in data)
 		r[key] = data[key].subarray(begin_filtered_data, end_filtered_data+1);
+
+	return r;
+},
+
+super_cursor: function(time)
+{
+	if (!this.data) return false;
+
+	// TODO marche mal
+	var data = this.data.data;
+	var begin = 0, end = data.time_t.length, old_m = -1, m = -1;
+	do {
+		m = parseInt(begin + (end-begin)/2);
+		var t = data.time_t[m];
+		if (old_m === m || t == time)
+			break;
+		else if (t < time)
+			begin = m + 1;
+		else
+			end = m - 1;
+		old_m = m;
+	} while (begin <= end);
+
+	var diff_t = Math.abs(time - data.time_t[m]);
+
+	// Check if the values near to the point are better
+	if (diff_t !== 0)
+	{
+		var min_diff_t = Number.MAX_VALUE;
+		var max_diff_t = Number.MAX_VALUE;
+
+		if (m > 1)
+			min_diff_t = Math.abs(time - data.time_t[m-1]);
+
+		if (m < data.time_t.length - 1)
+			max_diff_t = Math.abs(time - data.time_t[m+1]);
+
+		if (min_diff_t < diff_t && min_diff_t < max_diff_t)
+			--m;
+		else if (max_diff_t < diff_t && max_diff_t < min_diff_t)
+			++m;
+	}
+
+	var r = {};
+	for (key in data)
+		r[key] = data[key][m];
 
 	return r;
 },
@@ -265,17 +368,41 @@ time_sync: function(d, obj) {
 
 rt_clock: function(d, obj) {
 	// Time interval (1 hour by default)
-	// var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
+	var interval = (d && typeof d.interval !== 'undefined') ? d.interval : 60*60;
 
-	// var max_date = obj.current_bounds.__global__.time_tMax;
-	// var min_date = max_date - interval;
+	obj.listeners.get_bounds(null, obj);
 
-	// EventBus.send('time_sync', {
-	// 	start_t: min_date,
-	// 	end_t: max_date
-	// });
+	var max_date = obj.current_bounds.__global__.time_tMax;
+	var min_date = max_date - interval;
+
+	EventBus.send('time_sync', {
+	 	start_t: min_date,
+		end_t: max_date
+	});
 
 	// TODO time cursor to the last tuple
 },
+
+cursor: function(d, obj) {
+	var time = (typeof d.time_t === 'undefined') ? Date.now() : d.time_t;
+
+	var response = {};
+	var send_values = false;
+	// Construct the response for each statement
+	for (var statement_name in obj.database)
+	{
+		var value = obj.database[statement_name].cursor(time);
+		if (value)
+		{
+			send_values = true;
+			response[statement_name] = value;
+		}
+	}
+
+	// Hack with the setTimeout for send the tuples event after the time_sync event
+	if (send_values)
+		EventBus.sendDelayed('values', response);
+
+}
 
 }};

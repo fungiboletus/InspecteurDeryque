@@ -1,0 +1,86 @@
+/* This file is released under the CeCILL-B V1 licence.*/
+
+#area {
+	position:absolute;
+	top:1em;
+	left:0;
+	bottom:0;
+	right:0;
+	overflow:hidden;
+	padding:10px;;
+}
+
+.chart {
+	position:absolute;
+	width:800px;
+	height:800px;
+	top:-300px;
+	left:50%;
+	margin-left:-400px;
+	box-shadow:0px 0px 8px rgba(0,0,0,0.5);
+
+	/* Make a round */
+	border-radius:400px;
+
+	/* The blur effect is a hack to create a
+	antialiasing effect. */
+	-webkit-filter:blur(1px);
+	-moz-filter:blur(1px);
+	filter:blur(1px);
+}
+
+/* Display a little gradient, in order to make
+the chart look less flat.
+*/
+.chart:after {
+	content:'';
+	position:absolute;
+	border-radius:400px;
+	width:800px;
+	height:800px;
+box-shadow: 0px 0px 40px rgba(0,0,0,0.23) inset;
+background: -moz-radial-gradient(center, ellipse cover,  rgba(255,255,255,0.41) 0%, rgba(255,255,255,0.24) 6%, rgba(255,255,255,0.24) 17%, rgba(112,112,112,0.24) 63%, rgba(0,0,0,0.62) 99%, rgba(0,0,0,0.63) 100%); /* FF3.6+ */
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(255,255,255,0.41)), color-stop(6%,rgba(255,255,255,0.24)), color-stop(17%,rgba(255,255,255,0.24)), color-stop(63%,rgba(112,112,112,0.24)), color-stop(99%,rgba(0,0,0,0.62)), color-stop(100%,rgba(0,0,0,0.63))); /* Chrome,Safari4+ */
+background: -webkit-radial-gradient(center, ellipse cover,  rgba(255,255,255,0.41) 0%,rgba(255,255,255,0.24) 6%,rgba(255,255,255,0.24) 17%,rgba(112,112,112,0.24) 63%,rgba(0,0,0,0.62) 99%,rgba(0,0,0,0.63) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  rgba(255,255,255,0.41) 0%,rgba(255,255,255,0.24) 6%,rgba(255,255,255,0.24) 17%,rgba(112,112,112,0.24) 63%,rgba(0,0,0,0.62) 99%,rgba(0,0,0,0.63) 100%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  rgba(255,255,255,0.41) 0%,rgba(255,255,255,0.24) 6%,rgba(255,255,255,0.24) 17%,rgba(112,112,112,0.24) 63%,rgba(0,0,0,0.62) 99%,rgba(0,0,0,0.63) 100%); /* IE10+ */
+background: radial-gradient(ellipse at center,  rgba(255,255,255,0.41) 0%,rgba(255,255,255,0.24) 6%,rgba(255,255,255,0.24) 17%,rgba(112,112,112,0.24) 63%,rgba(0,0,0,0.62) 99%,rgba(0,0,0,0.63) 100%); /* W3C */
+
+}
+
+/*
+When it's slow, add transitions.
+*/
+.pie, .hold {
+-webkit-transition:-webkit-transform 0.33s;
+-moz-transition:-moz-transform 0.33s;
+transition:transform 0.33s;
+}
+
+.pie {
+position:absolute;
+width:800px;
+height:800px;
+border-radius:400px;
+clip:rect(0px,400px,800px,0px);
+}
+
+.hold {
+position:absolute;
+width:800px;
+height:800px;
+clip:rect(0px,800px,800px,400px);
+}
+
+.legend {
+	position:absolute;
+	right:1em;
+	top:1em;
+	bottom:1em;
+	overflow-y:auto;
+	font-weight:bold;
+	font-size:0.95em;
+	min-width:20%;;
+font-family:monospace;
+list-style:square;
+}

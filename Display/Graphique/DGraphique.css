@@ -27,6 +27,7 @@
 	box-shadow:0px 0px 5px #333;
 	padding:0px 5px;
 	text-align:left;
+	z-index:5;
 }
 
 #area .legend:hover
@@ -49,4 +50,25 @@ text-align:right;
 #area .btn-group
 {
 margin:4px 2px 0px 0px;
+z-index:4;
+}
+
+#screenAxes
+{
+	z-index:1;
+}
+
+#screenGraph
+{
+	z-index: 3;
+}
+#area .time_cursor
+{
+	position:absolute;
+	top:0;
+	bottom:0;
+	width:1px;
+	background:white;
+	z-index:4;
+	box-shadow:0px 0px 1.5px white;
 }

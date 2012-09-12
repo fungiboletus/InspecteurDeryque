@@ -34,5 +34,6 @@ VideoStorage.prototype =
 bounds: function() {},
 rt_clock: function() {},
 finished_event: function() {},
-time_sync: function() {}
+time_sync: function() {},
+cursor: function() {}
 };
