@@ -315,7 +315,7 @@ $(document).ready(function() {
 		var id = list.attr('id');
 
 		var simple = newDom('div');
-		simple.className = 'accordion-group';
+		simple.className = 'accordion-group simple_statements_list';
 
 		var simpleHeading = newDom('div');
 		simpleHeading.className = 'accordion-heading';
@@ -370,7 +370,7 @@ $(document).ready(function() {
 			parent: ".table_statements"});*});*/
 
 		var multi = newDom('div');
-		multi.className = 'accordion-group';
+		multi.className = 'accordion-group multi_statements_list';
 
 		var multiHeading = newDom('div');
 		multiHeading.className = 'accordion-heading';
@@ -516,7 +516,6 @@ $(document).ready(function() {
 			var box_name = box.find('iframe').attr('id');
 			var statement_name = checkbox.attr('value');
 
-			console.log("mince");
 			EventBus.send((checked ? 'add': 'del') +'_statement',
 				{statement_name: statement_name, box_name: box_name});
 
@@ -554,7 +553,7 @@ $(document).ready(function() {
 			// Inform the iframe (and all other elements too) that we have selected some
 			// statements
 			$(iframe).load(function() {
-				boxdiv.find('.back .statements_list input:checked').each(function() {
+				boxdiv.find('.back .statements_list .simple_statements_list input:checked').each(function() {
 					EventBus.send('add_statement',
 						{statement_name: $(this).attr('value'), box_name: id}
 					);
