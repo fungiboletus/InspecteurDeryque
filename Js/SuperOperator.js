@@ -403,6 +403,16 @@ cursor: function(d, obj) {
 	if (send_values)
 		EventBus.sendDelayed('values', response);
 
+},
+
+send_selection: function(name_s, min_s, max_s){
+	/*for ( var statement_name in obj.database)
+	{
+		if (statement_name === name_s) alert("Un relevé du même nom existe déjà");
+		else{*/
+			obj.ajax('newSelec', function(jSon){
+				EventBus.send("send_selection", name_s, min_s, max_s);
+			});
 }
 
 }};

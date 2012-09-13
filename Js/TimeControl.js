@@ -125,12 +125,13 @@ create_interface: function() {
 	this.speed_button.appendChild(document.createTextNode('x1'));
 	time_buttons.appendChild(this.speed_button);
 
-//Test pour extraction
+	//Extraction
 	this.extrac_button = newDom('button');
 	this.extrac_button.className = 'btn btn-mini btn-inverse';
-	this.extrac_button.appendChild(document.createTextNode('Ext'));
+	var extrac_button_icon = newDom('i');
+	extrac_button_icon.className = 'icon-filter icon-white';
+	this.extrac_button.appendChild(extrac_button_icon);
 	time_buttons.appendChild(this.extrac_button);
-//Fin test
 
 	this.time_info = newDom('button');
 	this.time_info.className = 'btn btn-mini time_info';
@@ -298,10 +299,22 @@ animate_interface: function() {
 		});
 	});
 
-//Test extraction
+	//Extraction
 	$(this.extrac_button).click(function() {
-		var name = prompt("Choose a name for your selection:", "");
-		if(name != "") alert(EventBus.send('get_bounds'));
+		var name_selec = prompt("Choose a name for your selection:", "");
+		if(name_selec != "")
+		{
+
+			EventBus.addListener('bounds', function(bounds)
+			{
+				var time_max_selec = bounds.__global__.time_tMax;
+				var time_min_selec = bounds.__global__.time_tMin;
+
+				obj.send_selection(name_selec, time_max_selec, time_min_selec);
+			});
+
+			EventBus.send('get_bounds');
+		}
 	});
 
 
@@ -735,6 +748,14 @@ pause: function(e, obj) {
 play_speed: function(d, obj) {
 	obj.current_play_speed = d.speed;
 	obj.speed_button.firstChild.data = 'x'+d.speed;
+},
+
+//Extraction
+send_selection: function(name_s, min_s, max_s){
+
+	EventBus.send(name_s, min_s, max_s);
+
 }
+
 
 }};
