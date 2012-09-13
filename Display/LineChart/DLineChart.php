@@ -4,8 +4,8 @@
 /**
  * Displays a linear chart.
  */
-class DGraphique extends DAbstract
+class DLineChart extends DAbstract
 {
-	const name = 'Graphique';
+	const name = 'Line chart';
 }
 ?>
