@@ -36,7 +36,7 @@ var EventBus = {
 	 *	@param {Function} callback The function returned by addListener.
 	 */
 	removeListener: function(name, callback) {
-		window.top.removeEventListener(this.prefix+name, method);
+		window.top.removeEventListener(this.prefix+name, callback);
 	},
 	/**
 	 *	Send an event into the bus.
@@ -80,5 +80,23 @@ var EventBus = {
 		for (var key in listeners)
 			r.push(this.addListener(key, listeners[key], caller));
 		return r;
-	}
+	},
+	/**
+	 *	Listen just one time an event.
+	 *
+	 *	@method listenOneTime
+	 *	@param {String} name The event name
+	 *	@param {Function} method The method to execute
+	 *	@param {Object}	data Data passed as second argument to the method
+	 */
+	 listenOneTime: function(name, method, data) {
+	 	var callback = null;
+	 	var obj = this;
+
+	 	callback = this.addListener(name, function(detail, data, e) {
+	 		obj.removeListener(name, callback);
+	 		method(detail, data, e);
+	 	}, data);
+
+	 }
 };

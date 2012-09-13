@@ -376,7 +376,7 @@ $(document).ready(function() {
 		multiHeading.className = 'accordion-heading';
 
 		var multiBody = newDom('div');
-		multiBody.className = 'accordion-body collapse';
+		multiBody.className = 'accordion-body collapse in';
 
 		var multiTable = newDom('table');
 		multiBody.appendChild(multiTable);
@@ -395,6 +395,7 @@ $(document).ready(function() {
 				td_a.appendChild(input);
 				var td_b = newDom('td');
 				td_b.appendChild(document.createTextNode(report));
+				tr.setAttribute('data-statements', JSON.stringify(json_statements_list['multiples'][report].statements));
 				tr.appendChild(td_a);
 				tr.appendChild(td_b);
 				//li.onclick = clic_statement;
@@ -479,8 +480,12 @@ $(document).ready(function() {
 			var checkbox = $(this).find('input');
 
 			// If the click is on the cell, and not on the checkbox
-			if((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
-				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT')) {
+			// if(e && e.orginalEvent && ((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
+			// 	(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT'))) {
+			// 	checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
+			// }
+			if(e && e.originalEvent && ((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
+				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT'))) {
 				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
 			}
 
@@ -489,8 +494,9 @@ $(document).ready(function() {
 			var box_name = box.find('iframe').attr('id');
 			var statement_name = checkbox.attr('value');
 
-			EventBus.send((checked ? 'add': 'del') +'_statement',
-				{statement_name: statement_name, box_name: box_name});
+			console.log(this);
+			// EventBus.send((checked ? 'add': 'del') +'_statement',
+			// 	{statement_name: statement_name, box_name: box_name});
 
 
 			dashboard_structure_management();
@@ -510,6 +516,7 @@ $(document).ready(function() {
 			var box_name = box.find('iframe').attr('id');
 			var statement_name = checkbox.attr('value');
 
+			console.log("mince");
 			EventBus.send((checked ? 'add': 'del') +'_statement',
 				{statement_name: statement_name, box_name: box_name});
 
