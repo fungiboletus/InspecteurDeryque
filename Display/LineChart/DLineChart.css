@@ -2,6 +2,7 @@
 
 #area {
 	/*background:white;*/
+	overflow:hidden;
 }
 
 #area, #area canvas {

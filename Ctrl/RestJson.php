@@ -78,8 +78,6 @@ class RestJson
     * sends a Json message which contains a resume of a user's report
     */
     public function resume(){
-
-    	sleep(1);
 		$reports = DataMod::getStatements();
 		if(isset($_REQUEST['INFOS'][2])){
 			$report = DataMod::getStatement($_REQUEST['INFOS'][2]);

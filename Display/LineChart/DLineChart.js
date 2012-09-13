@@ -402,8 +402,8 @@ paintCursor: function() {
 
 	if (x_pos < 0)
 		x_pos = 0;
-	else if (x_pos > this.width)
-		xpos = this.width;
+	else if (x_pos >= this.width)
+		xpos = this.width-1;
 
 	x_pos += 'px';
 
@@ -506,7 +506,10 @@ listeners: {
 		if (e.box_name != self.name) return;
 
 		if (e.statement_name in obj.database)
+		{
+			$(obj.legend_area).empty();
 			delete obj.database[e.statement_name];
+		}
 	},
 
 	// Gestion de la taille du graphe
