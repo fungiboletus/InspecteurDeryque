@@ -451,3 +451,14 @@ margin:5px 0 0 3px;
 	/*height:11px;*/
 	background:transparent;
 }
+
+.choochoo
+{
+background: url(../Img/photos/choo-choo.jpg) no-repeat center;
+background-size: contain;
+height: 530px;
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+}

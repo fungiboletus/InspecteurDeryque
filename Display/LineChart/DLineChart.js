@@ -1,6 +1,6 @@
 /* This file is released under the CeCILL-B V1 licence.*/
 
-var DGraphique = function(screen)
+var DLineChart = function(screen)
 {
 
 	// Graph area
@@ -65,7 +65,7 @@ var DGraphique = function(screen)
 	this.createLegend();
 };
 
-DGraphique.prototype =
+DLineChart.prototype =
 {
 
 createLegend: function() {

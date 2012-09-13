@@ -10,17 +10,17 @@ class CNavigation
 		global $PAGE_TITLE;
 		return isset($PAGE_TITLE) ? $PAGE_TITLE : _('Unknown title');
 	}
-	
+
 	public static function setTitle($title) {
 		global $PAGE_TITLE;
 		$PAGE_TITLE = $title;
 	}
-	
+
 	public static function getDescription() {
 		global $PAGE_DESCRIPTION;
 		return $PAGE_DESCRIPTION;
 	}
-	
+
 	public static function setDescription($description) {
 		global $PAGE_DESCRIPTION;
 		$PAGE_DESCRIPTION = $description;
@@ -60,7 +60,7 @@ class CNavigation
 		$_REQUEST['INFOS'] = &$infos;
 
 		$c_infos = count($infos);
-		
+
 		if ($c_infos > 0) {
 			if (!isset($_REQUEST['CTRL'])) {
 				$_REQUEST['CTRL'] = rawurldecode($infos[0]);
@@ -76,7 +76,7 @@ class CNavigation
 
 				// %1D is group separator, used in replacment for %2F (slash) who
 				// is not allowed in this url part
-				$id = rawurldecode($infos[$i]);
+				$id = rawurldecode(str_replace('%1D', '/', $infos[$i]));
 				$info = rawurldecode(str_replace('%1D', '/', $infos[$i+1]));
 				$_GET[$id] = $info;
 				$_REQUEST[$id] = $info;
@@ -85,18 +85,18 @@ class CNavigation
 			}
 
 			if ($c_infos > 2 && $c_infos%2 === 1) {
-				$infos[$c_infos-1] = rawurldecode($infos[$c_infos-1]);
+				$infos[$c_infos-1] = rawurldecode(str_replace('%1D', '/', $infos[$c_infos-1]));
 			}
 		}
 
 	}
-	
+
 
 	// Home made pagination
 	public static function pagination($nb_elements = 0, $page = 0, $nb_by_page = 12, $jump = 3)
 	{
 		$directions = [];
-		
+
 		$nb_pages = ceil($nb_elements / $nb_by_page);
 
 		if ($nb_pages <= 1)
@@ -126,30 +126,30 @@ class CNavigation
 		$pages	= [];
 
 		$end	= min($jump, $page - $jump + 1);
-		$end	= ($end < 0) ? 0 : $end;		
+		$end	= ($end < 0) ? 0 : $end;
 		for ($i = 0; $i < $end; $i++) {
-			$pages[] = $i;	
+			$pages[] = $i;
 		}
 
 		$start	= max($end,	$page - $jump + 1);
 		$end	= min($nb_pages,	$page + $jump);
 
 		for ($i = $start; $i < $end; $i++) {
-			$pages[] = $i;	
+			$pages[] = $i;
 		}
 
 
 		$start = max($end + 1,	$nb_pages - $jump + 1);
-		 
+
 		for ($i = $start; $i < $nb_pages; $i++) {
-			$pages[] = $i;	
+			$pages[] = $i;
 		}
-		
+
 		return ["pages"		=> $pages,
 					 "directions"	=> $directions
 					];
 	}
-	
+
 	public static function isPost() {
 		return $_SERVER['REQUEST_METHOD'] === 'POST';
 	}
@@ -160,7 +160,7 @@ class CNavigation
 		}
 		return true;
 	}
-	
+
 	public static function generateUrlToApp($ctrl, $action = null, $params = null)
 	{
 		global $ROOT_PATH;
@@ -175,9 +175,9 @@ class CNavigation
 			if (isset($_REQUEST['iframe_mode']))
 				if (!is_array($params))
 					$params = ['iframe_mode' => true];
-				else 
+				else
 					$params['iframe_mode'] = true;
-			
+
 			if (is_array($params)) {
 				if ($action == null) {
 					$url .= '/index';
@@ -224,7 +224,7 @@ class CNavigation
 	}
 
 	public static function generateMergedUrl($ctrl, $action = null, $params = [])
-	{ 
+	{
 		$params = array_merge($_GET, $params);
 
 		if (isset($params['SCHEMA'])) {
@@ -244,10 +244,10 @@ class CNavigation
 	{
 		// Ignore the already printed content
 		ob_end_clean();
-		
+
 		// HTTP redirection
 		header("Location:\t".$url);
-		
+
 		// With a link for be nice
 		echo 'Move to: <a href="',htmlspecialchars($url),'">,', htmlspecialchars($url),'</a>.';
 
