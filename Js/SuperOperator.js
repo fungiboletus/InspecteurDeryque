@@ -47,6 +47,7 @@ ajax: function(url, callback, error) {
 
 	// Id of the settimeout
 	var progression = 0;
+	var long_progression = 0;
 	$.ajax({
 		url: url,
 		dataType: 'json',
@@ -70,7 +71,14 @@ ajax: function(url, callback, error) {
 					divProgressArea.className = 'progress-area progress-ajax';
 					divProgressArea.appendChild(progressArea);
 					document.body.appendChild(divProgressArea);
+
+					long_progression = window.setTimeout(function() {
+						var choochoo = newDom('div');
+						choochoo.className = 'choochoo';
+						divProgressArea.appendChild(choochoo);
+					}, 5000);
 				}
+
 			}, 300);
 			// Create the progress bar if the response is more longer than 300 ms
 		},
@@ -81,6 +89,9 @@ ajax: function(url, callback, error) {
 			// If it's the last loading response
 			if (--obj.nb_current_ajax_loads === 0)
 			{
+				// Disable the long time progression indicator
+				if (long_progression) window.clearTimeout(long_progression);
+
 				// Delete the progress bar if it exist
 				var progressDivs = document.getElementsByClassName('progress-ajax');
 				if (progressDivs.length > 0)
@@ -242,7 +253,7 @@ add_statement: function(d, obj) {
 		obj.count_database[statement_name] = 1;
 
 		// Get informations about the statement
-		obj.ajax('resume/'+encodeURIComponent(statement_name),
+		obj.ajax('resume/'+encodeURIComponent(statement_name).replace('%2F','%1D'),
 		function(json)
 		{
 			// Which storage operator use ?

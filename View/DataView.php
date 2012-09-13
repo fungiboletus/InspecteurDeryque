@@ -223,7 +223,7 @@ HTML;
 		if ($mode === 'edit')
 		{
 			$url_view =	CNavigation::generateUrlToApp('').'#'.JsURL::stringify(
-				['h' => [['Graphique' => [$values['name']]]]]
+				['h' => [['LineChart' => [$values['name']]]]]
 				);
 			$url_del =	CNavigation::generateMergedUrl('Data', 'remove');
 			self::showButton($url_view, 'success', _('View the statement'), 'magnify');
