@@ -462,3 +462,33 @@ bottom: 0;
 left: 0;
 right: 0;
 }
+
+.synchro_area {
+width: 1010px;
+margin-left: -505px;
+max-height:650px;
+}
+
+/*.synchro_area.fade.in {
+	top:42%;
+}
+*/
+.synchro_area button.close
+{
+position: absolute;
+right: 4px;
+top: 2px;
+}
+
+.synchro_area table {
+margin:20px auto 10px auto;
+width:98%;
+}
+
+.synchro_area input {
+margin-bottom:0;
+}
+
+.synchro_area tbody th {
+	line-height:30px;
+}

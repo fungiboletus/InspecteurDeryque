@@ -48,7 +48,7 @@ create_cell: function(name, value) {
 	if (name)
 		td.className = name;
 
-	td.addText(value);
+	addText(td, value);
 
 	return td;
 },

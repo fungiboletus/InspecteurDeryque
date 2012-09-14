@@ -60,7 +60,10 @@ var TimeControl = function() {
 	this.cursor_time = 0;
 
 	// The slider width when dragging
-	var drag_width = 0;
+	this.drag_width = 0;
+
+	// The synchronization interface is displayed ?
+	this.synchro_interface = false;
 
 	this.animate_interface();
 
@@ -597,9 +600,118 @@ expand_interval: function() {
 },
 
 create_synchro_interface: function(d, obj) {
-	var synchro_area = newDom('div', 'synchro_area');
+
+	this.synchro_area = newDom('div', 'synchro_area modal hide fade in');
+	var closeButton = newDom('button', 'close');
+	closeButton.setAttribute('type', 'button');
+	closeButton.setAttribute('data-dismiss', 'modal');
+	addText(closeButton, '×');
+
+	var table = newDom('table', 'table table-striped table-bordered');
+	var thead = newDom('thead');
+	thead_tr = newDom('tr');
+	var th_name = newDom('th');
+	addText(th_name, 'Name');
+	var th_begin = newDom('th');
+	addText(th_begin, 'Begin');
+	var th_end = newDom('th');
+	addText(th_end, 'End');
+	var th_shift = newDom('th');
+	addText(th_shift, 'Shift');
+	thead_tr.appendChild(th_name);
+	thead_tr.appendChild(th_begin);
+	thead_tr.appendChild(th_end);
+	thead_tr.appendChild(th_shift);
+	thead.appendChild(thead_tr);
+	table.appendChild(thead);
+
+	var tbody = newDom('tbody');
+	table.appendChild(tbody);
+
+	this.synchro_area.appendChild(closeButton);
+	this.synchro_area.appendChild(table);
+	document.body.appendChild(this.synchro_area);
+
+	this.synchro_interface = true;
+
+	EventBus.send('get_bounds');
+
+	var modal = $(this.synchro_area);
+	modal.modal({
+		keyboard: true,
+		backdrop: true,
+		show: false
+	});
 },
 
+fill_synchro_interface: function(bounds) {
+	console.log(bounds);
+	var table = this.synchro_area.lastChild.lastChild;
+	for (var k in bounds)
+	{
+		if (k !== '__global__')
+		{
+			var line = newDom('tr');
+			var name = newDom('th');
+			var hname = newDom('span');
+			addText(hname, k);
+			name.appendChild(hname);
+
+			var inputBegin = newDom('input');
+			inputBegin.setAttribute('type', 'number');
+			var vBegin = bounds[k].time_tMin;
+			inputBegin.setAttribute('data-init', vBegin);
+			inputBegin.value = vBegin;
+			var tdBegin = newDom('td');
+			tdBegin.appendChild(inputBegin);
+			$(inputBegin).change(function() {
+				var old_time = parseInt(this.getAttribute('data-init'));
+				var new_time = parseInt(this.value);
+				var diff = new_time - old_time;
+				var inputs = $(this).parent().parent().find('input');
+				inputs[1].value = parseInt(inputs[1].getAttribute('data-init')) + diff;
+				inputs[2].value = diff;
+			});
+
+			var inputEnd = newDom('input');
+			inputEnd.setAttribute('type', 'number');
+			var vEnd = bounds[k].time_tMax;
+			inputEnd.setAttribute('data-init', vEnd);
+			inputEnd.value = vEnd;
+			var tdEnd = newDom('td');
+			tdEnd.appendChild(inputEnd);
+			$(inputEnd).change(function() {
+				var old_time = parseInt(this.getAttribute('data-init'));
+				var new_time = parseInt(this.value);
+				var diff = new_time - old_time;
+				var inputs = $(this).parent().parent().find('input');
+				inputs[0].value = parseInt(inputs[0].getAttribute('data-init')) + diff;
+				inputs[2].value = diff;
+			});
+
+			var inputShift = newDom('input');
+			inputShift.setAttribute('type', 'number');
+			inputShift.value = '0';
+			var tdShift = newDom('td');
+			tdShift.appendChild(inputShift);
+			$(inputShift).change(function() {
+				var diff = parseInt(this.value);
+				var inputs = $(this).parent().parent().find('input');
+				inputs[0].value = parseInt(inputs[0].getAttribute('data-init')) + diff;
+				inputs[1].value = parseInt(inputs[1].getAttribute('data-init')) + diff;
+			});
+
+			line.appendChild(name);
+			line.appendChild(tdBegin);
+			line.appendChild(tdEnd);
+			line.appendChild(tdShift);
+
+			table.appendChild(line);
+		}
+	}
+
+	$(this.synchro_area).modal('show');
+},
 
 listeners: {
 /*
@@ -655,6 +767,9 @@ bounds: function(d, obj) {
 	obj.time_max = d.__global__.time_tMax;
 	obj.initial_time_min = obj.time_min;
 	obj.initial_time_max = obj.time_max;
+
+	if (obj.synchro_interface)
+		obj.fill_synchro_interface(d);
 },
 
 add_statement: function(e, obj) {
