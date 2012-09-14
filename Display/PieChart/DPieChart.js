@@ -67,9 +67,9 @@ createPies: function() {
 
 		// Create the legend item
 		var li = newDom('li');
-		li.appendChild(document.createTextNode('lapin !'));
+		addText(li, 'Emtpy');
 		var strong = newDom('strong');
-		strong.appendChild(document.createTextNode('grouaaaw'));
+		addText(strong, '');
 		li.appendChild(strong);
 		this.legend.appendChild(li);
 		li.style.color = background;

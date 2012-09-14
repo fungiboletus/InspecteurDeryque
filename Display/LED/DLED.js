@@ -10,7 +10,7 @@ var DLED = function(screen)
 	this.led = newDom('div', 'led off');
 
 	this.legend = newDom('div', 'legend');
-	this.legend.appendChild(document.createTextNode('Empty'));
+	addText(this.legend, 'Empty');
 	screen.appendChild(this.led);
 	screen.appendChild(this.legend);
 

@@ -27,7 +27,7 @@ DTable.prototype =
 add_legend: function(k) {
 	this.legend[k] = true;
 	var th = newDom('th', k);
-	th.appendChild(document.createTextNode(k));
+	addText(th, k);
 	this.headers.appendChild(th);
 
 	var n_legend = this.legend.length;
@@ -48,7 +48,7 @@ create_cell: function(name, value) {
 	if (name)
 		td.className = name;
 
-	td.appendChild(document.createTextNode(value));
+	td.addText(value);
 
 	return td;
 },

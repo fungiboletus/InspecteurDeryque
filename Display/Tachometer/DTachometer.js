@@ -18,7 +18,7 @@ var DTachometer = function(screen)
 		var info = newDom('div', 'info');
 		info.id = id;
 		var data_info = newDom('div');
-		data_info.appendChild(document.createTextNode(''));
+		addText(data_info, '');
 		info.appendChild(data_info);
 		screen.appendChild(info);
 		return info;
@@ -147,7 +147,7 @@ DTachometer.prototype.listeners = {
 						var legend = newDom('li');
 						legend.id = id_legend;
 						legend.style.color = obj.colors[(obj.needles.length-1)%obj.colors.length];
-						legend.appendChild(document.createTextNode(statement_name + ' : ' + k));
+						addText(legend, statement_name + ' : ' + k);
 						obj.legend_area.appendChild(legend);
 					}
 				}

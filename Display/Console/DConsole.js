@@ -25,7 +25,7 @@ DConsole.prototype.manageEvent = function(detail, obj, e)
 {
 	var li = newDom('li');
 	var type = newDom('strong');
-	type.appendChild(document.createTextNode(e.type));
+	addText(type, e.type);
 	li.appendChild(type);
 
 	if (typeof detail !== 'undefined')
@@ -48,7 +48,7 @@ DConsole.prototype.manageEvent = function(detail, obj, e)
 		}
 
 		if (!rainbow_a_fonctionne && json.firstChild == null)
-			json.appendChild(document.createTextNode(text));
+			addText(json, text);
 
 	}
 

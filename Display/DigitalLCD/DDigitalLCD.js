@@ -53,11 +53,11 @@ listeners: {
 						box = newDom('div', 'lcd_box');
 						box.id = id;
 						var value = newDom('span');
-						value.appendChild(document.createTextNode(''));
+						addText(value, '');
 						var div_name = newDom('div', 'name');
-						div_name.appendChild(document.createTextNode(statement_name));
+						addText(div_name, statement_name);
 						var div_key = newDom('div', 'key');
-						div_key.appendChild(document.createTextNode(k));
+						addText(div_key, k);
 						box.appendChild(value);
 						box.appendChild(div_name);
 						box.appendChild(div_key);

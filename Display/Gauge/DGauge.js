@@ -10,7 +10,7 @@ var DGauge = function(screen)
 	this.gauge = newDom('div', 'gauge');
 
 	this.legend = newDom('div', 'legend');
-	this.legend.appendChild(document.createTextNode('Empty'));
+	addText(this.legend, 'Empty');
 	var screenMask = newDom('div', 'mask');
 	screenMask.appendChild(this.gauge);
 	screen.appendChild(screenMask);

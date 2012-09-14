@@ -71,7 +71,7 @@ createLegend: function() {
 	buttons_area.className = 'btn-group';
 	var obj = this;
 	var btn = newDom('a', 'btn btn-mini');
-	btn.appendChild(document.createTextNode('Multi scale'));
+	addText(btn, 'Multi scale');
 	btn.onclick = function(){
 		obj.multi_scale = !obj.multi_scale;
 		this.className = obj.multi_scale ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
@@ -79,7 +79,7 @@ createLegend: function() {
 	};
 	buttons_area.appendChild(btn);
 	btn = newDom('a', 'btn btn-mini');
-	btn.appendChild(document.createTextNode('Fill'));
+	addText(btn,  'Fill');
 	btn.onclick = function(){
 		obj.fill_lines = !obj.fill_lines;
 		this.className = obj.fill_lines ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
@@ -87,7 +87,7 @@ createLegend: function() {
 	};
 	buttons_area.appendChild(btn);
 	btn = newDom('a', 'btn btn-mini');
-	btn.appendChild(document.createTextNode('Points'));
+	addText(btn, 'Points');
 	btn.onclick = function(){
 		obj.points = !obj.points;
 		this.className = obj.points ? 'btn btn-mini btn-inverse' : 'btn btn-mini';
@@ -453,7 +453,7 @@ listeners: {
 						var legend = newDom('li');
 						legend.id = id_legend;
 						legend.style.color = obj.colors[(lines_to_draw.length-1)%obj.colors.length];
-						legend.appendChild(document.createTextNode(statement_name + ' : ' + k));
+						addText(legend, statement_name + ' : ' + k);
 						obj.legend_area.appendChild(legend);
 					}
 				}
