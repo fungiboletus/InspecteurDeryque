@@ -7,14 +7,11 @@ var DGauge = function(screen)
 	this.screen = screen;
 
 	// Create interface
-	this.gauge = newDom('div');
-	this.gauge.className = 'gauge';
+	this.gauge = newDom('div', 'gauge');
 
-	this.legend = newDom('div');
-	this.legend.className = 'legend';
+	this.legend = newDom('div', 'legend');
 	this.legend.appendChild(document.createTextNode('Empty'));
-	var screenMask = newDom('div');
-	screenMask.className = 'mask';
+	var screenMask = newDom('div', 'mask');
 	screenMask.appendChild(this.gauge);
 	screen.appendChild(screenMask);
 	this.screen.appendChild(this.legend);

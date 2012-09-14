@@ -12,14 +12,11 @@ var DVideo = function(screen)
 	this.video.setAttribute('preload', 'auto');
 	this.screen.appendChild(this.video);
 
-	this.progressArea = newDom('div');
-	this.progressArea.className = 'progress progress-striped active';
-	this.progressBar = newDom('div');
-	this.progressBar.className = 'bar';
+	this.progressArea = newDom('div', 'progress progress-striped active');
+	this.progressBar = newDom('div', 'bar');
 	this.progressBar.style.width = '0%';
 	this.progressArea.appendChild(this.progressBar);
-	var divProgressArea = newDom('div');
-	divProgressArea.className = 'progress-area fade in';
+	var divProgressArea = newDom('div', 'progress-area fade in');
 	divProgressArea.appendChild(this.progressArea);
 	this.screen.appendChild(divProgressArea);
 

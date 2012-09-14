@@ -91,8 +91,7 @@ DBars.prototype.listeners = {
 		{
 			for (var i = old_nb_lines; i < nb_lines; ++i)
 			{
-				var line = newDom('div');
-				line.className = 'bar';
+				var line = newDom('div', 'bar');
 				obj.lines.push(line);
 				obj.screen.appendChild(line);
 			}

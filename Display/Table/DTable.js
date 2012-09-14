@@ -3,8 +3,7 @@
 var DTable = function(screen)
 {
 
-	this.table = newDom('table');
-	this.table.className = 'table table-striped display_list';
+	this.table = newDom('table', 'table table-striped display_list');
 
 	var thead = newDom('thead');
 	this.headers = newDom('tr');
@@ -27,8 +26,7 @@ DTable.prototype =
 {
 add_legend: function(k) {
 	this.legend[k] = true;
-	var th = newDom('th');
-	th.className = k;
+	var th = newDom('th', k);
 	th.appendChild(document.createTextNode(k));
 	this.headers.appendChild(th);
 

@@ -15,8 +15,7 @@ var DTachometer = function(screen)
 	// Creation of the structure
 	var createInfo = function(id)
 	{
-		var info = newDom('div');
-		info.className = 'info';
+		var info = newDom('div', 'info');
 		info.id = id;
 		var data_info = newDom('div');
 		data_info.appendChild(document.createTextNode(''));
@@ -45,8 +44,7 @@ var DTachometer = function(screen)
 		this.lines.push(line);
 	}
 
-	this.legend_area = newDom('ul');
-	this.legend_area.className = 'legend';
+	this.legend_area = newDom('ul', 'legend');
 	this.screen.appendChild(this.legend_area);
 
 	this.database = {};
@@ -121,8 +119,7 @@ DTachometer.prototype.listeners = {
 					var id = "needle_"+(statement_name+k).hashCode();
 					var box = byId(id);
 					if (!box) {
-						box = newDom('div');
-						box.className = 'needle';
+						box = newDom('div', 'needle');
 						box.id = id;
 						box.style.webkitTransformOriginX = obj.px_height;
 						box.style.width = obj.px_height;

@@ -60,21 +60,17 @@ ajax: function(url, callback, error) {
 				// Create the progress bar only if it doen't yet exist
 				if (progressDivs.length === 0)
 				{
-					var progressBar = newDom('div');
-					progressBar.className = 'bar';
+					var progressBar = newDom('div', 'bar');
 					progressBar.style.width = '100%';
 					progressBar.appendChild(document.createTextNode('Loading data'));
-					var progressArea = newDom('div');
-					progressArea.className = 'progress progress-striped active';
+					var progressArea = newDom('div', 'progress progress-striped active');
 					progressArea.appendChild(progressBar);
-					var divProgressArea = newDom('div');
-					divProgressArea.className = 'progress-area progress-ajax';
+					var divProgressArea = newDom('div', 'progress-area progress-ajax');
 					divProgressArea.appendChild(progressArea);
 					document.body.appendChild(divProgressArea);
 
 					long_progression = window.setTimeout(function() {
-						var choochoo = newDom('div');
-						choochoo.className = 'choochoo';
+						var choochoo = newDom('div', 'choochoo');
 						divProgressArea.appendChild(choochoo);
 					}, 5000);
 				}

@@ -10,9 +10,12 @@ var _ = function(chaine)
 	return chaine;
 };
 
-var newDom = function(nom)
+var newDom = function(nom, class)
 {
-	return document.createElement(nom);
+	var dom = document.createElement(nom);
+	if (typeof class !== 'undefined')
+		dom.className = class;
+	return dom;
 };
 
 var delDom = function(element)

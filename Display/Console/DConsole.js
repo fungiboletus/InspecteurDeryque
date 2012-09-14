@@ -30,8 +30,7 @@ DConsole.prototype.manageEvent = function(detail, obj, e)
 
 	if (typeof detail !== 'undefined')
 	{
-		var json = newDom('span');
-		json.className = 'json rainbow';
+		var json = newDom('span', 'json rainbow');
 		li.appendChild(json);
 
 		var text = JSON.stringify(detail, null, 2);

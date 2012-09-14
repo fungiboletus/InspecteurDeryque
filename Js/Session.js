@@ -1,27 +1,21 @@
 /* This file is released under the CeCILL-B V1 licence.*/
 
-var lapin = newDom("div");
-lapin.className = "lapin";
+var lapin = newDom("div", 'lapin');
 
-var vetements = newDom("div");
-vetements.className = "vetements";
+var vetements = newDom("div", 'vetements');
 lapin.appendChild(vetements);
 
-var tete = newDom("div");
-tete.className = "tete";
+var tete = newDom("div", 'tete');
 lapin.appendChild(tete);
 
-var visage = newDom("div");
-visage.className = "visage";
+var visage = newDom("div", 'visage');
 lapin.appendChild(visage);
 
-var accessoire = newDom("div");
-accessoire.className = "accessoire";
+var accessoire = newDom("div", 'accessoire');
 lapin.appendChild(accessoire);
 
 
-var lunettes = newDom("div");
-lunettes.className = "lunettes";
+var lunettes = newDom("div", 'lunettes');
 lapin.appendChild(lunettes);
 
 /*var vignette = newDom("div");

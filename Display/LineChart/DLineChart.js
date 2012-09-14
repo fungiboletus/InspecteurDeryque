@@ -20,13 +20,11 @@ var DLineChart = function(screen)
 	this.screen.appendChild(this.screenGraph);
 
 	// Create legend
-	this.legend_area = newDom('ul');
-	this.legend_area.className = 'legend';
+	this.legend_area = newDom('ul', 'legend');
 	this.screen.appendChild(this.legend_area);
 
 	// Create time cursor
-	this.time_cursor = newDom('div');
-	this.time_cursor.className = 'time_cursor';
+	this.time_cursor = newDom('div', 'time_cursor');
 	this.screen.appendChild(this.time_cursor);
 
 	this.database = {};
@@ -61,7 +59,7 @@ var DLineChart = function(screen)
 	// Time value of the cursor
 	this.cursor_time_t = 0;
 
-	// Create the legend
+	// Create the legend
 	this.createLegend();
 };
 
@@ -72,8 +70,7 @@ createLegend: function() {
 	var buttons_area = newDom('div');
 	buttons_area.className = 'btn-group';
 	var obj = this;
-	var btn = newDom('a');
-	btn.className = 'btn btn-mini';
+	var btn = newDom('a', 'btn btn-mini');
 	btn.appendChild(document.createTextNode('Multi scale'));
 	btn.onclick = function(){
 		obj.multi_scale = !obj.multi_scale;
@@ -81,8 +78,7 @@ createLegend: function() {
 		EventBus.send('get_tuples');
 	};
 	buttons_area.appendChild(btn);
-	btn = newDom('a');
-	btn.className = 'btn btn-mini';
+	btn = newDom('a', 'btn btn-mini');
 	btn.appendChild(document.createTextNode('Fill'));
 	btn.onclick = function(){
 		obj.fill_lines = !obj.fill_lines;
@@ -90,8 +86,7 @@ createLegend: function() {
 		EventBus.send('get_tuples');
 	};
 	buttons_area.appendChild(btn);
-	btn = newDom('a');
-	btn.className = 'btn btn-mini';
+	btn = newDom('a', 'btn btn-mini');
 	btn.appendChild(document.createTextNode('Points'));
 	btn.onclick = function(){
 		obj.points = !obj.points;

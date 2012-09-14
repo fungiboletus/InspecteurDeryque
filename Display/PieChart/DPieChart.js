@@ -10,23 +10,19 @@ var DPieChart = function(screen)
 	this.screen = screen;
 
 	// Create the chart
-	this.chart = newDom('div');
-	this.chart.className = 'chart';
+	this.chart = newDom('div', 'chart');
 
 	// The big pie is a specific pie when the value is superor to 50%
-	this.big_pie = newDom('div');
-	this.big_pie.className = 'pie big';
+	this.big_pie = newDom('div', 'pie big');
 	this.chart.appendChild(this.big_pie);
 	screen.appendChild(this.chart);
 
 	// The legend…
-	this.legend = newDom('ul');
-	this.legend.className = 'legend';
+	this.legend = newDom('ul', 'legend');
 	screen.appendChild(this.legend);
 
 	// The pointer
-	this.pointer = newDom('div');
-	this.pointer.className = 'pointer';
+	this.pointer = newDom('div', 'pointer');
 	screen.appendChild(this.pointer);
 
 	// Wonderful colors (like everytime)
@@ -63,10 +59,8 @@ createPies: function() {
 		var background = this.colors[(current_nb_pies)%this.colors.length];
 
 		// The pie use 2 div
-		var hold = newDom('hold');
-		hold.className = 'hold';
-		var pie = newDom('div');
-		pie.className = 'pie pie_'+current_nb_pies;
+		var hold = newDom('div', 'hold');
+		var pie = newDom('div', 'pie pie_'+current_nb_pies);
 		pie.style.background = background;
 		hold.appendChild(pie);
 		this.chart.appendChild(hold);

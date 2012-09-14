@@ -89,21 +89,18 @@ $(document).ready(function() {
 		box.back.appendChild(border_line);
 
 		// Statements list
-		var statements_list = newDom('div');
-		statements_list.className = 'statements_list';
+		var statements_list = newDom('div','statements_list');
 		var data_h = newDom('h2');
 		data_h.appendChild(document.createTextNode('Statements'));
 		statements_list.appendChild(data_h);
 
-		var input_statements = newDom('input');
-		input_statements.className = 'input_filter';
+		var input_statements = newDom('input', 'input_filter');
 		input_statements.setAttribute('type', 'text');
 		input_statements.setAttribute('placeholder', 'Filter');
 		layout.disableDrag(input_statements);
 
 		statements_list.appendChild(input_statements);
-		var table_statements = newDom('div');
-		table_statements.className = 'table_statements accordion';
+		var table_statements = newDom('div', 'table_statements accordion');
 		table_statements.id = 'table_statements_'+nb_boxes;
 		statements_list.appendChild(table_statements);
 		layout.disableDrag(table_statements);
@@ -127,8 +124,7 @@ $(document).ready(function() {
 
 		box.back.appendChild(statements_list);
 
-		var input_types = newDom('div');
-		input_types.className = 'input_types';
+		var input_types = newDom('div', 'input_types');
 		var input_h = newDom('h2');
 		input_h.appendChild(document.createTextNode('Visualization'));
 		input_types.appendChild(input_h);
@@ -138,8 +134,7 @@ $(document).ready(function() {
 		box.back.appendChild(input_types);
 
 		// Close button only if necessary
-		var close_button = newDom('button');
-		close_button.className = 'close';
+		var close_button = newDom('button', 'close');
 		close_button.appendChild(document.createTextNode('×'));
 		box.back.appendChild(close_button);
 		layout.disableDrag(close_button);
@@ -314,14 +309,11 @@ $(document).ready(function() {
 		list.empty();
 		var id = list.attr('id');
 
-		var simple = newDom('div');
-		simple.className = 'accordion-group simple_statements_list';
+		var simple = newDom('div', 'accordion-group simple_statements_list');
 
-		var simpleHeading = newDom('div');
-		simpleHeading.className = 'accordion-heading';
+		var simpleHeading = newDom('div', 'accordion-heading');
 
-		var simpleBody = newDom('div');
-		simpleBody.className = 'accordion-body collapse in';
+		var simpleBody = newDom('div', 'accordion-body collapse in');
 
 		// var simpleDivTable = newDom('div');
 		var simpleTable = newDom('table');
@@ -369,14 +361,11 @@ $(document).ready(function() {
 		/*{
 			parent: ".table_statements"});*});*/
 
-		var multi = newDom('div');
-		multi.className = 'accordion-group multi_statements_list';
+		var multi = newDom('div', 'accordion-group multi_statements_list');
 
-		var multiHeading = newDom('div');
-		multiHeading.className = 'accordion-heading';
+		var multiHeading = newDom('div', 'accordion-heading');
 
-		var multiBody = newDom('div');
-		multiBody.className = 'accordion-body collapse in';
+		var multiBody = newDom('div', 'accordion-body collapse in');
 
 		var multiTable = newDom('table');
 		multiBody.appendChild(multiTable);
@@ -663,22 +652,18 @@ $(document).ready(function() {
 		}
 	});
 
-	var alert_area = newDom('div');
-	alert_area.className = 'alert-area fade';
+	var alert_area = newDom('div', 'alert-area fade');
 	alert_area.style.display = 'none';
 	document.body.appendChild(alert_area);
 
 	EventBus.addListener('error', function(e) {
 		alert_area.style.display = 'block';
-		var alert_div = newDom('div');
-		alert_div.className = 'alert alert-error fade';
-		var alert_close = newDom('a');
-		alert_close.className = 'close';
+		var alert_div = newDom('div', 'alert alert-error fade');
+		var alert_close = newDom('a', 'close');
 		alert_close.setAttribute('data-dismiss', 'alert');
 		alert_close.appendChild(document.createTextNode('\u00d7'));
 		alert_div.appendChild(alert_close);
-		var alert_h4 = newDom('h4');
-		alert_h4.className = 'alert-heading';
+		var alert_h4 = newDom('h4', 'alert-heading');
 		alert_h4.appendChild(document.createTextNode('Error '+e.status));
 		alert_div.appendChild(alert_h4);
 		var alert_p = newDom('p');

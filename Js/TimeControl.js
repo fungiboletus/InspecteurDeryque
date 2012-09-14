@@ -94,11 +94,9 @@ create_interface: function() {
 	this.time_control.className = 'disabled';
 	document.body.appendChild(this.time_control);
 
-	var time_buttons = newDom('div');
-	time_buttons.className = 'time_buttons btn-group';
+	var time_buttons = newDom('div', 'time_buttons btn-group');
 
-	this.bti = newDom('button');
-	this.bti.className = 'btn btn-mini btn-inverse';
+	this.bti = newDom('button', 'btn btn-mini btn-inverse');
 	this.bti_icon = newDom('i');
 	this.bti_icon_play_class = 'icon-play icon-white';
 	this.bti_icon_pause_class = 'icon-pause icon-white';
@@ -106,65 +104,51 @@ create_interface: function() {
 	this.bti.appendChild(this.bti_icon);
 	time_buttons.appendChild(this.bti);
 
-	this.reduce_button = newDom('button');
-	this.reduce_button.className = 'btn btn-mini btn-inverse';
-	var reduce_button_icon = newDom('i');
-	reduce_button_icon.className = 'icon-resize-small icon-white';
+	this.reduce_button = newDom('button', 'btn btn-mini btn-inverse');
+	var reduce_button_icon = newDom('i', 'icon-resize-small icon-white');
 	this.reduce_button.appendChild(reduce_button_icon);
 	time_buttons.appendChild(this.reduce_button);
 
-	this.expand_button = newDom('button');
-	this.expand_button.className = 'btn btn-mini btn-inverse';
-	var expand_button_icon = newDom('i');
-	expand_button_icon.className = 'icon-resize-full icon-white';
+	this.expand_button = newDom('button', 'btn btn-mini btn-inverse');
+	var expand_button_icon = newDom('i', 'icon-resize-full icon-white');
 	this.expand_button.appendChild(expand_button_icon);
 	time_buttons.appendChild(this.expand_button);
 
-	this.speed_button = newDom('button');
-	this.speed_button.className = 'btn btn-mini btn-inverse';
+	this.speed_button = newDom('button', 'btn btn-mini btn-inverse');
 	this.speed_button.appendChild(document.createTextNode('x1'));
 	time_buttons.appendChild(this.speed_button);
 
-	this.time_info = newDom('button');
-	this.time_info.className = 'btn btn-mini time_info';
+	this.time_info = newDom('button', 'btn btn-mini time_info');
 	this.time_info.appendChild(document.createTextNode('12:45:12.054'));
 	time_buttons.appendChild(this.time_info);
 
 	this.time_control.appendChild(time_buttons);
 
 	// Creation of the slider
-	var zone_slider = newDom('div');
-	zone_slider.className = "zone_slider";
+	var zone_slider = newDom('div', 'zone_slider');
 	this.time_control.appendChild(zone_slider);
 	this.jslider = $(zone_slider);
 
-	this.area = newDom('div');
-	this.area.className = 'area';
+	this.area = newDom('div', 'area');
 	zone_slider.appendChild(this.area);
 
-	this.border_left = newDom('div');
-	this.border_left.className = 'border border_left';
+	this.border_left = newDom('div', 'border border_left');
 	this.area.appendChild(this.border_left);
 
-	this.border_right = newDom('div');
-	this.border_right.className = 'border border_right';
+	this.border_right = newDom('div', 'border border_right');
 	this.area.appendChild(this.border_right);
 
 	// Creation of the tooltip
-	this.tooltip = newDom('div');
-	this.tooltip.className = 'tooltip top';
-	this.tooltip_arrow = newDom('div');
-	this.tooltip_arrow.className = 'tooltip-arrow';
-	this.tooltip_inner = newDom('div');
-	this.tooltip_inner.className = 'tooltip-inner';
+	this.tooltip = newDom('div', 'tooltip top');
+	this.tooltip_arrow = newDom('div', 'tooltip-arrow');
+	this.tooltip_inner = newDom('div', 'tooltip-inner');
 	this.tooltip_inner.appendChild(document.createTextNode('coucou'));
 	this.tooltip.appendChild(this.tooltip_arrow);
 	this.tooltip.appendChild(this.tooltip_inner);
 	document.body.appendChild(this.tooltip);
 
 	// Creation of the time cursor
-	this.time_cursor = newDom('div');
-	this.time_cursor.className = 'time_cursor';
+	this.time_cursor = newDom('div', 'time_cursor');
 	this.area.appendChild(this.time_cursor);
 },
 
@@ -612,6 +596,11 @@ expand_interval: function() {
 	});
 },
 
+create_synchro_interface: function(d, obj) {
+	var synchro_area = newDom('div', 'synchro_area');
+},
+
+
 listeners: {
 /*
  *	Updating the slider position from the time event.
@@ -720,6 +709,6 @@ pause: function(e, obj) {
 play_speed: function(d, obj) {
 	obj.current_play_speed = d.speed;
 	obj.speed_button.firstChild.data = 'x'+d.speed;
-}
+},
 
 }};
