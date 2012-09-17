@@ -61,6 +61,30 @@ var DLineChart = function(screen)
 
 	// Create the legend
 	this.createLegend();
+
+	// Manage mouse actions on the line chart
+	var jscreen = $(screen);
+	var obj = this;
+	jscreen.mousedown(function(e) {
+		obj.mousedown = true;
+		obj.cursorMove(e);
+	});
+	jscreen.mousemove(function(e) {
+		obj.cursorMove(e);
+	});
+	jscreen.mouseup(function(){
+		obj.mousedown = false;
+	});
+
+	screen.onselectstart = noNo;
+
+	// Min and max time for mousewheel support
+	this.min_t = 0;
+	this.max_t = 1;
+
+	jscreen.mousewheel(function(e, delta) {
+		obj.zoom(delta > 0);
+	});
 };
 
 DLineChart.prototype =
@@ -406,6 +430,40 @@ paintCursor: function() {
 		this.time_cursor.style.left = x_pos;
 },
 
+cursorMove: function(e) {
+	if (this.mousedown)
+	{
+		var time_t = e.clientX / this.coef_x + this.x_min;
+
+		if (time_t !== this.cursor_time_t)
+			EventBus.send('cursor', {time_t: time_t});
+	}
+},
+
+zoom: function(zoomIn) {
+
+	var period = this.x_max - this.x_min;
+
+	var left_coef = (this.cursor_time_t - this.x_min) / period;
+	var right_coef = (this.x_max - this.cursor_time_t) / period;
+
+	period *= zoomIn ? 0.766 : 1.332;
+
+	var start_t = this.cursor_time_t - period * left_coef;
+	var end_t = this.cursor_time_t + period * right_coef;
+
+	if (start_t < this.min_t)
+		start_t = this.min_t;
+
+	if (end_t > this.max_t)
+		end_t = this.max_t;
+
+	EventBus.send('time_sync', {
+		start_t: start_t,
+		end_t: end_t
+	});
+},
+
 clear: function(noClearCanvas) {
 
 	this.old_tic_x = this.tic_x;
@@ -420,6 +478,14 @@ clear: function(noClearCanvas) {
 },
 
 listeners: {
+	bounds: function(d, obj)
+	{
+		// store min and max time
+		// for mousewheel support
+		obj.min_t = d.__global__.time_tMin;
+		obj.max_t = d.__global__.time_tMax;
+	},
+
 	time_sync: function(d, obj)
 	{
 		obj.x_min = d.start_t;

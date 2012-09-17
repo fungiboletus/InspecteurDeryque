@@ -3,6 +3,7 @@
 #area {
 	/*background:white;*/
 	overflow:hidden;
+	cursor:crosshair;
 }
 
 #area, #area canvas {

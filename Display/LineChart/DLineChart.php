@@ -7,5 +7,11 @@
 class DLineChart extends DAbstract
 {
 	const name = 'Line chart';
+
+	public function show()
+	{
+		CHead::addJs('jquery.mousewheel.min');
+		DAbstract::show();
+	}
 }
 ?>

@@ -67,9 +67,9 @@ $(document).ready(function() {
 	var create_perfect_box = function() {
 		var box = layout.createBox();
 
-		var data = document.createElement('div');
-		data.className = 'data';
-		box.back.appendChild(data);
+		// var data = document.createElement('div');
+		// data.className = 'data';
+		// box.back.appendChild(data);
 
 		var color = get_random_color();
 		var dark_color = color.substr(0, color.length-3)+'25%';
@@ -105,6 +105,11 @@ $(document).ready(function() {
 		statements_list.appendChild(table_statements);
 		layout.disableDrag(table_statements);
 
+		var separate_button = newDom('div', 'btn btn-small btn-danger separate_button');
+		addText(separate_button, 'Bouton magique');
+		statements_list.appendChild(separate_button);
+		layout.disableDrag(separate_button);
+
 		// Filtering with regular expressions
 		$(input_statements).keyup(function() {
 			var value = $(this).val();
@@ -120,6 +125,11 @@ $(document).ready(function() {
 					tr.hide();
 				}
 			});
+		});
+
+		// Separate button
+		$(separate_button).click(function() {
+			console.log("lapin", box);
 		});
 
 		box.back.appendChild(statements_list);
