@@ -174,7 +174,7 @@ super_time_sync: function(start_t, end_t)
 
 super_cursor: function(time)
 {
-	if (!this.data || !this.data.time_t) return false;
+	if (!this.data || !this.data.data.time_t) return false;
 
 	// TODO marche mal
 	var data = this.data.data;
