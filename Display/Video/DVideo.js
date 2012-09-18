@@ -75,17 +75,7 @@ DVideo.prototype.listeners = {
 	},
 
 	bounds: function(d, obj) {
-		obj.min_time = Number.MAX_VALUE;
-		// obj.max_time = -Number.MAX_VALUE;
-
-		for (var type in d)
-		{
-			if (d[type].time_tMin < obj.min_time)
-				obj.min_time = d[type].time_tMin;
-
-			// if (d[type].time_tMax > obj.max_time)
-				// obj.max_time = d[type].time_tMax;
-		}
+		obj.min_time = d.__global__.time_tMin;
 	},
 
 	cursor: function(d, obj) {

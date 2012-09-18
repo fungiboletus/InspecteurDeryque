@@ -363,14 +363,6 @@ $(document).ready(function() {
 		simple.appendChild(simpleBody);
 		list.append(simple);
 
-		// buttonSimple.setAttribute('data-parent', '.table_statements');
-
-		/*$(buttonSimple).click(function() {
-			console.log("mais euh");
-		$(simple).collapse();
-		/*{
-			parent: ".table_statements"});*});*/
-
 		var multi = newDom('div', 'accordion-group multi_statements_list');
 
 		var multiHeading = newDom('div', 'accordion-heading');
@@ -479,28 +471,27 @@ $(document).ready(function() {
 			var checkbox = $(this).find('input');
 
 			// If the click is on the cell, and not on the checkbox
-			// if(e && e.orginalEvent && ((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
-			// 	(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT'))) {
-			// 	checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
-			// }
 			if(e && e.originalEvent && ((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
 				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT'))) {
 				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
 			}
 
 			var checked = checkbox.attr('checked') === 'checked';
-			var box = $(this).parents('.boxdiv');
-			var box_name = box.find('iframe').attr('id');
-			var statement_name = checkbox.attr('value');
+			var statements = JSON.parse(this.getAttribute('data-statements'));
 
-			console.log(this);
-			// EventBus.send((checked ? 'add': 'del') +'_statement',
-			// 	{statement_name: statement_name, box_name: box_name});
-
+			$(simple).find('tr').each(function() {
+				if (this.lastChild && this.lastChild.lastChild &&
+					statements.indexOf(this.lastChild.lastChild.data) !== -1)
+				{
+					var checkbox = $(this).find('input');
+					checkbox.attr('checked', checked);
+					checkbox.change();
+				}
+			});
 
 			dashboard_structure_management();
-
 		});
+
 		$(simple).find('tr').click(function(e){
 			var checkbox = $(this).find('input');
 
@@ -508,10 +499,15 @@ $(document).ready(function() {
 			if(e && e.originalEvent && ((e.originalEvent.target && e.originalEvent.target.nodeName !== 'INPUT') ||
 				(e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName !== 'INPUT'))) {
 				checkbox.attr('checked', checkbox.attr('checked') !== 'checked');
+				checkbox.change();
 			}
+		});
+
+		$(simple).find('input').change(function() {
+			var checkbox = $(this);
 
 			var checked = checkbox.attr('checked') === 'checked';
-			var box = $(this).parents('.boxdiv');
+			var box = checkbox.parents('.boxdiv');
 			var box_name = box.find('iframe').attr('id');
 			var statement_name = checkbox.attr('value');
 
@@ -623,7 +619,7 @@ $(document).ready(function() {
 			});
 	}});
 
-	// Temporary hack
+	/*// Temporary hack
 	button_multiple = $(create_toolbar_button('Test multiple'));
 	back_buttons_bar.append(button_multiple);
 
@@ -660,7 +656,7 @@ $(document).ready(function() {
 					input.attr('checked', 'checked');
 			});
 		}
-	});
+	});*/
 
 	var alert_area = newDom('div', 'alert-area fade');
 	alert_area.style.display = 'none';
@@ -757,9 +753,14 @@ $(document).ready(function() {
 								});
 
 								var array = data[d];
-								jbox.find('.table_statements input').each(function() {
+								jbox.find('.table_statements .simple_statements_list input').each(function() {
 									if (array.indexOf(this.getAttribute('value')) !== -1)
 										$(this).click();
+								});
+
+								jbox.find('.table_statements .multi_statements_list input').each(function() {
+									if (array.indexOf(this.getAttribute('value')) !== -1)
+										$(this).attr('checked', true);
 								});
 
 								--disable_dashboard_structure_management;
