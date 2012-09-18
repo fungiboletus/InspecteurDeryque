@@ -42,6 +42,9 @@ $(document).ready(function() {
 	// auiensrt
 	timeControlInstance = new TimeControl();
 
+	var multi_mod = false;
+	// var multi_mod = true;
+
 	var create_toolbar_button = function(text) {
 		var button = newDom('li');
 		var a_button = newDom('a');
@@ -313,6 +316,18 @@ $(document).ready(function() {
 		layout.visual_drag.style.background = box.getAttribute('cadreur_color');
 	});
 
+	var create_visualization_iframe = function(id, url, statement_name)
+	{
+		console.log(statement_name);
+		var iframe = newDom('iframe');
+		iframe.id = id;
+		iframe.className = 'visualization';
+		iframe.setAttribute('name', id);
+		iframe.setAttribute('data-statement-name', statement_name);
+		iframe.setAttribute('src', url);
+		return iframe;
+	};
+
 	// Statements list management
 	var json_statements_list = null;
 	var fill_statements_list = function(list) {
@@ -508,11 +523,68 @@ $(document).ready(function() {
 
 			var checked = checkbox.attr('checked') === 'checked';
 			var box = checkbox.parents('.boxdiv');
+			var front = box.children('.front');
+
+			var li_statement_type = box.find('.input_types li.selected');
 			var box_name = box.find('iframe').attr('id');
 			var statement_name = checkbox.attr('value');
 
-			EventBus.send((checked ? 'add': 'del') +'_statement',
-				{statement_name: statement_name, box_name: box_name});
+			var type = encodeURIComponent(li_statement_type.attr('name'));
+			var url = URLS_DICTIONNARY.display_load.replace('__TYPE__', type);
+
+
+			var id = 'f'+box.attr('id')+
+					Math.abs((type+
+						(multi_mod ? statement_name : 'commun')).hashCode());
+
+			var iframe = byId(id);
+
+			if (checked && !iframe)
+			{
+				iframe = create_visualization_iframe(id, url, (multi_mod ? statement_name : 'commun'));
+
+				front.append(iframe);
+
+				$(iframe).one('load', function() {
+					iframe.setAttribute('data-first-loaded', true);
+					EventBus.send('add_statement',
+						{statement_name: statement_name, box_name: id});
+
+					EventBus.send('size_change');
+					EventBus.send('get_bounds');
+				});
+			}
+			else if (!checked && iframe)
+			{
+				if (multi_mod)
+					$(iframe).remove();
+
+				EventBus.send('del_statement',
+					{statement_name: statement_name, box_name: box_name});
+			}
+			else if (!multi_mod && iframe)
+			{
+				if (iframe.getAttribute('data-first-loaded'))
+				{
+					EventBus.send((checked ? 'add' : 'del')+'_statement',
+						{statement_name: statement_name, box_name: box_name});
+				}
+				else
+				{
+					$(iframe).one('load', function() {
+						EventBus.send((checked ? 'add' : 'del')+'_statement',
+							{statement_name: statement_name, box_name: box_name});
+					});
+				}
+			}
+			else
+			{
+				EventBus.send('error', {
+					status: "Unknown action in statements list",
+					message: "Nothing to do. checked : "+checked+
+					"\tiframe : "+iframe+"\tmulti_mod : "+multi_mod
+				});
+			}
 
 			dashboard_structure_management();
 		});
@@ -528,37 +600,46 @@ $(document).ready(function() {
 		var boxdiv = li.parents('.boxdiv');
 		var front = boxdiv.children('.front');
 		var url = URLS_DICTIONNARY.display_load.replace('__TYPE__', type);
-		var id = 'f' + Math.abs((boxdiv.attr('id')+type).hashCode());
 
-		var iframe = byId(id);
-		// If the iframe have changed
-		if (!iframe)
-		{
-			// Remove the old iframe
-			var other_frames = front.find('iframe');
-			other_frames.remove();
+		front.children('iframe').each(function() {
+			var statement_name = this.getAttribute('data-statement-name');
+			var id = 'f'+boxdiv.attr('id')+Math.abs((type+statement_name).hashCode());
 
-			// Create the new iframe
-			iframe = newDom('iframe');
-			iframe.setAttribute('src', url);
-			iframe.id = id;
-			iframe.setAttribute('name', id);
-			front.append(iframe);
+			// If the type of the iframe need te be changed
+			if (this.id !== id)
+			{
+				$(this).remove();
 
-			// Inform the iframe (and all other elements too) that we have selected some
-			// statements
-			$(iframe).load(function() {
-				boxdiv.find('.back .statements_list .simple_statements_list input:checked').each(function() {
-					EventBus.send('add_statement',
-						{statement_name: $(this).attr('value'), box_name: id}
-					);
-					EventBus.send('size_change');
-					EventBus.send('get_bounds');
-				});
-			});
-		}
+				var iframe = create_visualization_iframe(id, url, statement_name);
 
-		iframe.className = 'visualization';
+				front.append(iframe);
+
+				if (multi_mod)
+				{
+					$(iframe).one('load', function() {
+						iframe.setAttribute('data-first-loaded', true);
+						EventBus.send('add_statement',
+							{statement_name: statement_name, box_name: id}
+						);
+						EventBus.send('size_change');
+						EventBus.send('get_bounds');
+					});
+				}
+				else
+				{
+					$(iframe).one('load', function() {
+						iframe.setAttribute('data-first-loaded', true);
+						boxdiv.find('.back .statements_list .simple_statements_list input:checked').each(function() {
+							EventBus.send('add_statement',
+								{statement_name: $(this).attr('value'), box_name: id}
+							);
+							EventBus.send('size_change');
+							EventBus.send('get_bounds');
+						});
+					});
+				}
+			}
+		});
 
 		dashboard_structure_management();
 	};

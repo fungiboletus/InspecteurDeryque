@@ -80,8 +80,9 @@ listeners: {
 				var tr = byId(id);
 				if (tr) {
 					var j = 0;
+
 					for (var k in obj.legend) {
-						tr.children[j].firstChild.data = data[k][i].toLocaleString();
+							tr.children[j].firstChild.data = data[k][i].toLocaleString();
 						++j;
 					}
 				}

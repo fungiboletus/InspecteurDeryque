@@ -154,6 +154,10 @@ del_statement: function(e, obj) {
 size_change: function(d, obj) {
 	if (obj.database.length == 0)
 		obj.map.setCenter(obj.default_location);
+
+	// The map need to fit to the bounds when the size change
+	// is heavy
+	EventBus.send('get_bounds');
 },
 bounds: function(d, obj)
 {

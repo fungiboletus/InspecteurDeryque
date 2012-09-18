@@ -50,9 +50,10 @@ bottom:0;
 right:0;
 overflow:auto;
 }
-/*.boxdiv .front {
-background:white;
-}*/
+
+.boxdiv .front {
+	/*overflow:hidden;*/
+}
 
 .boxdiv .back {
 padding:4px;
