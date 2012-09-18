@@ -596,8 +596,33 @@ listeners: {
 	},
 
 	cursor: function(detail, obj) {
+		// If the database is not empty, the values listener
+		// is used instead of this
+		for (var k in obj.database)
+			return;
+
 		obj.cursor_time_t = detail.time_t;
 		obj.paintCursor();
+	},
+
+	values: function(detail, obj) {
+		var value = 0;
+		var n = 0;
+
+		for (var statement_name in detail)
+		{
+			if (statement_name in obj.database)
+			{
+				value += detail[statement_name].time_t;
+				++n;
+			}
+		}
+
+		if (n)
+		{
+			obj.cursor_time_t = value/n;
+			obj.paintCursor();
+		}
 	}
 
 }};

@@ -318,7 +318,6 @@ $(document).ready(function() {
 
 	var create_visualization_iframe = function(id, url, statement_name)
 	{
-		console.log(statement_name);
 		var iframe = newDom('iframe');
 		iframe.id = id;
 		iframe.className = 'visualization';
