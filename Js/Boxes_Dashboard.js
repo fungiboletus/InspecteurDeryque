@@ -267,7 +267,6 @@ $(document).ready(function() {
 			var jthis = $(this);
 			var width = jthis.width();
 			var height = jthis.height();
-			console.log(width, height);
 
 			if (height < 190)
 				jthis.addClass('small-height');
@@ -278,6 +277,46 @@ $(document).ready(function() {
 				jthis.addClass('small-width');
 			else
 				jthis.removeClass('small-width');
+
+			var iframes = jthis.find('iframe');
+			var sqrt_nb_iframes = Math.sqrt(iframes.length % 2 === 0 ?
+					iframes.length : iframes.length +1);
+
+			// If the the ceil is vertical, make more lines
+			if (width < height)
+			{
+				var nb_lines = Math.ceil(sqrt_nb_iframes);
+				var nb_columns = Math.floor(sqrt_nb_iframes);
+			}
+			else
+			{
+				var nb_lines = Math.floor(sqrt_nb_iframes);
+				var nb_columns = Math.ceil(sqrt_nb_iframes);
+			}
+
+			// console.log(nb_lines, nb_columns);
+			var n_line = 0;
+			var n_column = 0;
+			var iframe_width = width / nb_columns;
+			var iframe_height = height / nb_lines;
+
+			iframes.each(function() {
+
+				this.style.top = n_line * iframe_height + 'px';
+				this.style.left = n_column * iframe_width + 'px';
+
+				this.style.width = iframe_width + 'px';
+				this.style.height = iframe_height + 'px';
+
+				if (++n_column === nb_columns)
+				{
+					// console.log("op", n_line);
+					n_column = 0;
+
+					if (++n_line === nb_lines)
+						n_line = 0;
+				}
+			});
 		});
 	};
 
@@ -563,7 +602,6 @@ $(document).ready(function() {
 				iframe = create_visualization_iframe(id, url, (multi_mod ? statement_name : 'commun'));
 
 				front.append(iframe);
-				manage_box_size(box);
 
 				$(iframe).one('load', function() {
 					iframe.setAttribute('data-first-loaded', true);
@@ -905,5 +943,8 @@ $(document).ready(function() {
 		EventBus.send('size_change');
 	});
 
-	setTimeout(function(){EventBus.send('size_change');}, 600);
+	setTimeout(function(){
+		manage_all_box_sizes();
+		EventBus.send('size_change');
+	}, 600);
 });
