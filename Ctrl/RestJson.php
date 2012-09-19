@@ -303,6 +303,61 @@ class RestJson
         }
 
         $this->sendJson($json);
+    }   
+
+    public function newSelec(){
+	$name_s=$_REQUEST['INFOS'][2];
+	$statement_name=$_REQUEST['INFOS'][5];
+	$simple=DataMod::getStatements();
+	$multi=DataMod::getStatementsMulti();
+	foreach($simple as $sim){
+		if($name_s === $sim['name']) 
+		{
+				$error = new Error();
+				$error->teapot();
+				return;
+		}
+		if($statement_name===$sim['name'])
+		{
+			$id_s = $sim['id'];			
+			$type_s = 'releve';
+		}
+	}	
+	foreach($multi as $mul){
+		if($name_s === $mul['name']) 
+		{
+				$error = new Error();
+				$error->teapot();
+				return;
+		}
+		if($statement_name===$mul['name'])
+		{
+			$id_s = $mul['id'];			
+			$type_s = 'multi';
+		}
+    	}
+	$composition = R::dispense('composition');
+
+	$composition->name = $name_s;
+	$composition->releve_id = $id_s;
+	$composition->releve_type = $type_s;
+
+	R::store($composition);
+
+
+	$selection = R::dispense('selection');
+
+        $selection->releve_type = $type_s;
+        $selection->releve_id = $id_s;
+        $selection->begin = $_REQUEST['INFOS'][3];
+        $selection->end = $_REQUEST['INFOS'][4];
+        $selection->name = $name_s;
+	$selection->composition_id = $composition['id'];
+
+        R::store($selection);
+
+	$this->sendJson("ok");
+	 
     }
 
 }

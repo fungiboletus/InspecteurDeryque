@@ -113,7 +113,7 @@ SQL
 	{
 		return R::getAll(
 <<<SQL
-	select name, description, modname
+	select name, description, modname, r.id
 	from releve r, datamod d
 	where r.user_id = ? and r.mod_id = d.id order by name
 SQL
@@ -137,7 +137,7 @@ SQL
 	{
 		return R::getAll(
 <<<SQL
-	select m.name, m.description, GROUP_CONCAT(modname) as modname
+	select m.name, m.description, GROUP_CONCAT(modname) as modname, m.id
 	from multi_releve m, releve r, multi_releve_releve mr, datamod d
 	where m.user_id = ? and m.id = mr.multi_releve_id
 	and mr.releve_id=r.id and r.mod_id = d.id group by m.name

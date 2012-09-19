@@ -301,16 +301,29 @@ animate_interface: function() {
 
 	//Extraction
 	$(this.extrac_button).click(function() {
+		
 		var name_selec = prompt("Choose a name for your selection:", "");
 		if(name_selec != "")
 		{
 
-			EventBus.addListener('bounds', function(bounds)
+			EventBus.listenOneTime('bounds', function(bounds)
 			{
-				var time_max_selec = bounds.__global__.time_tMax;
-				var time_min_selec = bounds.__global__.time_tMin;
+				var t = obj.get_times_by_pos();
 
-				obj.send_selection(name_selec, time_max_selec, time_min_selec);
+				for (var k in bounds)
+				{
+					if (k !== '__global__')
+					{
+						var time_min_selec = t.start_t >= bounds.__global__.time_tMin ?
+							t.start_t : bounds.__global__.time_tMin;
+							
+						var time_max_selec = t.end_t >= bounds.__global__.time_tMax ?
+							t.end_t : bounds.__global__.time_tMax;
+						
+						obj.send_selection(name_selec, time_max_selec, time_min_selec, k);
+					}
+				}
+				
 			});
 
 			EventBus.send('get_bounds');
@@ -640,6 +653,18 @@ expand_interval: function() {
 	});
 },
 
+//Extraction
+send_selection: function(name_s, min_s, max_s, statement_name){
+
+	EventBus.send('send_selection', {
+		name_s : name_s,
+		min_s : min_s, 
+		max_s : max_s,
+		statement_name : statement_name
+	});
+
+},
+
 listeners: {
 /*
  *	Updating the slider position from the time event.
@@ -748,13 +773,6 @@ pause: function(e, obj) {
 play_speed: function(d, obj) {
 	obj.current_play_speed = d.speed;
 	obj.speed_button.firstChild.data = 'x'+d.speed;
-},
-
-//Extraction
-send_selection: function(name_s, min_s, max_s){
-
-	EventBus.send(name_s, min_s, max_s);
-
 }
 
 
