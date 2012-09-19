@@ -42,8 +42,8 @@ $(document).ready(function() {
 	// auiensrt
 	timeControlInstance = new TimeControl();
 
-	var multi_mod = false;
-	// var multi_mod = true;
+	// var multi_mod = false;
+	var multi_mod = true;
 
 	var create_toolbar_button = function(text) {
 		var button = newDom('li');
@@ -108,7 +108,8 @@ $(document).ready(function() {
 		statements_list.appendChild(table_statements);
 		layout.disableDrag(table_statements);
 
-		var separate_button = newDom('div', 'btn btn-small btn-danger separate_button');
+		var separate_button = newDom('div', 'btn btn-small btn-primary separate_button');
+		separate_button.setAttribute('data-toggle', 'button');
 		addText(separate_button, 'Bouton magique');
 		statements_list.appendChild(separate_button);
 		layout.disableDrag(separate_button);
@@ -199,6 +200,7 @@ $(document).ready(function() {
 				button_user.hide();
 				back_buttons_bar.removeClass('buttons_caches');
 			}
+			dashboard_structure_management();
 		});
 
 
@@ -279,18 +281,18 @@ $(document).ready(function() {
 				jthis.removeClass('small-width');
 
 			var iframes = jthis.find('iframe');
-			var sqrt_nb_iframes = Math.sqrt(iframes.length % 2 === 0 ?
-					iframes.length : iframes.length +1);
+			var sqrt_nb_iframes = Math.sqrt(iframes.length);
+					// iframes.length : iframes.length +1);
 
 			// If the the ceil is vertical, make more lines
 			if (width < height)
 			{
 				var nb_lines = Math.ceil(sqrt_nb_iframes);
-				var nb_columns = Math.floor(sqrt_nb_iframes);
+				var nb_columns = Math.round(sqrt_nb_iframes);
 			}
 			else
 			{
-				var nb_lines = Math.floor(sqrt_nb_iframes);
+				var nb_lines = Math.round(sqrt_nb_iframes);
 				var nb_columns = Math.ceil(sqrt_nb_iframes);
 			}
 
@@ -326,7 +328,9 @@ $(document).ready(function() {
 		if (!disable_dashboard_structure_management)
 		{
 			var s = create_structure_representation(layout.rootContainer);
-			window.location.hash = JsURL.stringify(s);
+
+			window.location.hash = (layout.front ? 'f' : 'b')
+				+ JsURL.stringify(s);
 		}
 	};
 
@@ -841,7 +845,7 @@ $(document).ready(function() {
 	{
 		// First box
 		try{
-			var hash_location_object = JsURL.parse(window.location.hash.substr(1));
+			var hash_location_object = JsURL.parse(window.location.hash.substr(2));
 		}
 		catch(e) {}
 	}
@@ -852,6 +856,7 @@ $(document).ready(function() {
 	var recursive_layout_creation = function(data, parent) {
 		for (var d in data)
 		{
+			// TODO composition
 			if (d === 'h' || d === 'v')
 			{
 				var d = (typeof data.h !== 'undefined') ? 'h' : 'v';
@@ -928,6 +933,8 @@ $(document).ready(function() {
 		// Show the back side of the inspecteur deryque by default
 		$(button).click();
 	}
+	else if (window.location.hash && window.location.hash[1] === 'b')
+		$(button).click();
 
 	// Equilibrate in setTimeout for trigger CSS3 transitions
 	// setTimeout(function(){layout.equilibrate();}, 1); // disabled for performances
