@@ -262,8 +262,28 @@ $(document).ready(function() {
 
 	};
 
+	var manage_all_box_sizes = function() {
+		$('.boxdiv').each(function() {
+			var jthis = $(this);
+			var width = jthis.width();
+			var height = jthis.height();
+			console.log(width, height);
+
+			if (height < 190)
+				jthis.addClass('small-height');
+			else
+				jthis.removeClass('small-height');
+
+			if (width < 350)
+				jthis.addClass('small-width');
+			else
+				jthis.removeClass('small-width');
+		});
+	};
+
 	var disable_dashboard_structure_management = 0;
 	var dashboard_structure_management = function() {
+		manage_all_box_sizes();
 		if (!disable_dashboard_structure_management)
 		{
 			var s = create_structure_representation(layout.rootContainer);
@@ -543,6 +563,7 @@ $(document).ready(function() {
 				iframe = create_visualization_iframe(id, url, (multi_mod ? statement_name : 'commun'));
 
 				front.append(iframe);
+				manage_box_size(box);
 
 				$(iframe).one('load', function() {
 					iframe.setAttribute('data-first-loaded', true);
@@ -556,7 +577,9 @@ $(document).ready(function() {
 			else if (!checked && iframe)
 			{
 				if (multi_mod)
+				{
 					$(iframe).remove();
+				}
 
 				EventBus.send('del_statement',
 					{statement_name: statement_name, box_name: box_name});
@@ -869,12 +892,16 @@ $(document).ready(function() {
 	}
 
 	// Equilibrate in setTimeout for trigger CSS3 transitions
-	setTimeout(function(){layout.equilibrate();}, 1);
+	// setTimeout(function(){layout.equilibrate();}, 1); // disabled for performances
+	layout.equilibrate();
+	manage_all_box_sizes();
 
 	// 600 is the duration of the layout's transitions
 	$.event.special.debouncedresize.threshold = 600;
 	$(window).on('debouncedresize',function()
 	{
+		manage_all_box_sizes();
+
 		EventBus.send('size_change');
 	});
 
