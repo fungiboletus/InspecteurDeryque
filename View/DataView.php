@@ -222,7 +222,7 @@ HTML;
 
 		if ($mode === 'edit')
 		{
-			$url_view =	CNavigation::generateUrlToApp('').'#'.JsURL::stringify(
+			$url_view =	CNavigation::generateUrlToApp('').'#f'.JsURL::stringify(
 				['h' => [['LineChart' => [$values['name']]]]]
 				);
 			$url_del =	CNavigation::generateMergedUrl('Data', 'remove');

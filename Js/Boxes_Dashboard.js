@@ -42,9 +42,6 @@ $(document).ready(function() {
 	// auiensrt
 	timeControlInstance = new TimeControl();
 
-	// var multi_mod = false;
-	var multi_mod = true;
-
 	var create_toolbar_button = function(text) {
 		var button = newDom('li');
 		var a_button = newDom('a');
@@ -70,9 +67,8 @@ $(document).ready(function() {
 	var create_perfect_box = function() {
 		var box = layout.createBox();
 
-		// var data = document.createElement('div');
-		// data.className = 'data';
-		// box.back.appendChild(data);
+		// Multi mod disabled by default
+		box.box.setAttribute('data-multi-mod', 'false');
 
 		var color = get_random_color();
 		var dark_color = color.substr(0, color.length-3)+'25%';
@@ -110,7 +106,8 @@ $(document).ready(function() {
 
 		var separate_button = newDom('div', 'btn btn-small btn-primary separate_button');
 		separate_button.setAttribute('data-toggle', 'button');
-		addText(separate_button, 'Bouton magique');
+		// separate_button.appendChild(newDom('i', 'icon-white icon-th-large'));
+		addText(separate_button, ' Plein de petites boites');
 		statements_list.appendChild(separate_button);
 		layout.disableDrag(separate_button);
 
@@ -133,7 +130,24 @@ $(document).ready(function() {
 
 		// Separate button
 		$(separate_button).click(function() {
-			console.log("lapin", box);
+
+			// Get the current mod
+			var multi_mod = box.box.getAttribute('data-multi-mod') === 'true';
+
+			// Get selected simple statements (multi statements are ignored)
+			var boutons = $(table_statements).find('.simple_statements_list input:checked');
+
+			// Disable all statements
+			boutons.click();
+
+			// Remove all iframe (a bug could be present, so, act like a warrior)
+			$(box.front).find('iframe').remove();
+
+			// Change the mod
+			box.box.setAttribute('data-multi-mod', multi_mod ? 'false' : 'true');
+
+			// And re-enable selected statements
+			boutons.click();
 		});
 
 		box.back.appendChild(statements_list);
@@ -253,6 +267,11 @@ $(document).ready(function() {
 			var r = {};
 			var contents = [];
 
+			var multi_mod = box.getAttribute('data-multi-mod') === 'true';
+
+			if (multi_mod)
+				visualization += '_m';
+
 			back.find('.statements_list .table_statements input:checked').each(function()
 			{
 				contents.push(this.getAttribute('value'));
@@ -282,7 +301,6 @@ $(document).ready(function() {
 
 			var iframes = jthis.find('iframe');
 			var sqrt_nb_iframes = Math.sqrt(iframes.length);
-					// iframes.length : iframes.length +1);
 
 			// If the the ceil is vertical, make more lines
 			if (width < height)
@@ -296,7 +314,6 @@ $(document).ready(function() {
 				var nb_columns = Math.ceil(sqrt_nb_iframes);
 			}
 
-			// console.log(nb_lines, nb_columns);
 			var n_line = 0;
 			var n_column = 0;
 			var iframe_width = width / nb_columns;
@@ -312,7 +329,6 @@ $(document).ready(function() {
 
 				if (++n_column === nb_columns)
 				{
-					// console.log("op", n_line);
 					n_column = 0;
 
 					if (++n_line === nb_lines)
@@ -594,6 +610,7 @@ $(document).ready(function() {
 			var type = encodeURIComponent(li_statement_type.attr('name'));
 			var url = URLS_DICTIONNARY.display_load.replace('__TYPE__', type);
 
+			var multi_mod = box.attr('data-multi-mod') === 'true';//find('.separate_button').hasClass('active');
 
 			var id = 'f'+box.attr('id')+
 					Math.abs((type+
@@ -643,7 +660,7 @@ $(document).ready(function() {
 			}
 			else
 			{
-				EventBus.send('error', {
+				EventBus.send('log', {
 					status: "Unknown action in statements list",
 					message: "Nothing to do. checked : "+checked+
 					"\tiframe : "+iframe+"\tmulti_mod : "+multi_mod
@@ -664,6 +681,8 @@ $(document).ready(function() {
 		var boxdiv = li.parents('.boxdiv');
 		var front = boxdiv.children('.front');
 		var url = URLS_DICTIONNARY.display_load.replace('__TYPE__', type);
+
+		var multi_mod = boxdiv.attr('data-multi-mod') === 'true';//find('.separate_button').hasClass('active');
 
 		front.children('iframe').each(function() {
 			var statement_name = this.getAttribute('data-statement-name');
@@ -887,6 +906,18 @@ $(document).ready(function() {
 					var box = create_perfect_box();
 					layout.addBox(box, parent);
 					var jbox = $(box);
+
+					if (d.substr(-2) === '_m')
+					{
+						var name = d.substr(0, d.length - 2);
+						box.setAttribute('data-multi-mod', 'true');
+						jbox.find('.separate_button').addClass('active');
+					}
+					else
+					{
+						var name = d;
+					}
+
 					var intervalle = window.setInterval(
 						function() {
 							var selected = jbox.find('li.selected');
@@ -894,7 +925,7 @@ $(document).ready(function() {
 							{
 								window.clearInterval(intervalle);
 								jbox.find('.input_types li').each(function() {
-									if (this.getAttribute('name') == d)
+									if (this.getAttribute('name') == name)
 										$(this).click();
 								});
 
