@@ -51,6 +51,7 @@ padding-left:40px;
 .eye_text:before { content:url(../Img/icons/circle-eye.png);}
 .magnify_text:before { content:url(../Img/icons/circle-magnify.png);}
 .pencil_text:before { content:url(../Img/icons/circle-pencil.png);}
+.extract_text:before { content:url(../Img/icons/circle-extract.png);}
 .user_text:before { content:url(../Img/icons/user.png);}
 .shoebox_text:before { content:url(../Img/icons/shoebox.png);}
 .line_text:before { content:url(../Img/icons/line-chart.png);}

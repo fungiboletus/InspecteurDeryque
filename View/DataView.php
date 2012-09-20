@@ -232,7 +232,7 @@ HTML;
 		        $url_ext = CNavigation::generateUrlToApp('DataSample', 'viewSelect', array('name' => $values['name']));
 		        $url_comp = CNavigation::generateUrlToApp('DataMulti', 'form', array('name' => $values['name']));
 			self::showButton($url_view, 'success', _('View the statement'), 'magnify');
-			self::showButton($url_ext, 'success', _('Extraction'), 'magnify');
+			self::showButton($url_ext, 'success', _('Extraction'), 'extract');
 			// self::showButton($url_comp, 'success', _('Composition'), 'magnify');
 			self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
 			$text_submit = _('Save the changes');
