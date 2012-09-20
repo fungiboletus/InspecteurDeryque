@@ -216,7 +216,7 @@ HTML;
 	<div class="control-group">
 		<label for="video_location" class="control-label">$label_video</label>
 		<div class="controls">
-			<input name="video_location" id="video_location" type="text" value="$hvideo_location" />
+			<input name="video_location" id="video_location" type="text" value="$hvideo_location" class="span8" />
 		</div>
 	</div>
 	<div class="control-group">
