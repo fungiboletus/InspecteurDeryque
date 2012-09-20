@@ -514,14 +514,15 @@ listeners: {
 					lines_to_draw.push(line);
 
 					var id_legend = "legend_"+(statement_name+k).hashCode();
-					if (!byId(id_legend))
+					var legend = byId(id_legend);
+					if (!legend)
 					{
 						var legend = newDom('li');
 						legend.id = id_legend;
-						legend.style.color = obj.colors[(lines_to_draw.length-1)%obj.colors.length];
 						addText(legend, statement_name + ' : ' + k);
 						obj.legend_area.appendChild(legend);
 					}
+					legend.style.color = obj.colors[(lines_to_draw.length-1)%obj.colors.length];
 				}
 		}
 
