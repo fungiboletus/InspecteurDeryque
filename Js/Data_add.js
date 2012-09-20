@@ -267,4 +267,82 @@ $(document).ready(function() {
 		form.find('input[type=text], textarea').keyup(show_submit_button);
 		form.change(show_submit_button);
 	}
+
+	var video_start_t = $('#video_start_t');
+
+	var date_input = newDom('input', 'span2');
+	date_input.setAttribute('type', 'text');
+
+	$(date_input).datepicker({
+		weekStart: 1,
+		format: 'dd/mm/yyyy' // because the default format is stupid (american)
+	}).on('changeDate', function() {
+		update_timestamp_value();
+	});
+
+	var time_input = newDom('input', 'span2');
+	time_input.setAttribute('type', 'text');
+
+	$(time_input).timepicker({
+		showSeconds: true,
+		defaultTime: 'value',
+		showMeridian: false,
+		secondStep: 1,
+		minuteStep: 1
+	});
+
+	var update_datetime_values = function() {
+
+		var start_date = new Date(parseInt(video_start_t.val()*1000));
+
+		var day = start_date.getDate();
+		if (day < 10) day = '0' + day;
+
+		var month = start_date.getMonth() + 1;
+		if (month < 10) month = '0' + month;
+
+		var year = start_date.getFullYear();
+
+		var h = start_date.getHours();
+		if (h < 10) h = '0' + h;
+
+		var m = start_date.getMinutes();
+		if (m < 10) m = '0' + m;
+
+		var s = start_date.getSeconds();
+		if (s < 10) s = '0' + s;
+
+		date_input.value = day + '/' + month + '/' + year;
+		time_input.value = h + ':' + m + ':' + s;
+	};
+
+	var update_timestamp_value = function() {
+		var date = new Date(0);
+
+		var dv = date_input.value;
+		date.setDate(dv.slice(0,2));
+		date.setMonth(dv.slice(3,5)-1);
+		date.setYear(dv.slice(6,10));
+
+		var tv = time_input.value;
+		date.setHours(tv.slice(0,2));
+		date.setMinutes(tv.slice(3,5));
+		date.setSeconds(tv.slice(6,8));
+
+		video_start_t.val(parseInt(date / 1000));
+	};
+
+	update_datetime_values();
+
+	video_start_t.before(date_input);
+	video_start_t.before(' ');
+	video_start_t.before(time_input);
+	video_start_t.before(' ');
+
+	video_start_t.change(update_datetime_values);
+	video_start_t.keyup(update_datetime_values);
+	var ii = $([time_input, date_input]);
+	ii.change(update_timestamp_value);
+	ii.keyup(update_timestamp_value);
+
 });

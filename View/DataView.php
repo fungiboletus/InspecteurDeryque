@@ -83,6 +83,11 @@ HTML;
 	public static function showAddForm($values, $data_types, $mode = 'add') {
 		global $ROOT_PATH;
 
+		CHead::addJS('bootstrap.datepicker');
+		CHead::addCSS('datepicker');
+		CHead::addJS('bootstrap.timepicker');
+		CHead::addCSS('timepicker');
+
 		$text_general = _('General');
 		$text_type = _('Statement type');
 		$text_storage = _('Data location');
