@@ -50,7 +50,7 @@ HTML;
 			$hdescr = htmlspecialchars($statement['description']);
 			$hmodname = htmlspecialchars($statement['modname']);
 			$hid = htmlspecialchars($statement['id']);
-			if($statement['name'] == $_REQUEST['name']) $checked = 'checked';
+			if(isset($_REQUEST['name']) && $statement['name'] == $_REQUEST['name']) $checked = 'checked';
 			else $checked = '';
 			$checked2 = in_array($statement['id'], $values['releve']) ? 'checked' : '';
 			echo <<<HTML

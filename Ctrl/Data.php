@@ -10,7 +10,7 @@ class Data
 
 
 	public function index() {
-		CNavigation::setTitle(_('Simple statements'));
+		CNavigation::setTitle(_('Statements'));
 		CNavigation::setDescription(_('All your data are belong to us'));
 
 		$simple_statements = DataMod::getStatements();

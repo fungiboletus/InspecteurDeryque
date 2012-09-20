@@ -10,9 +10,9 @@ class DataView extends AbstractView
      * Display the button to add a statement.
      */
 	public static function showAddButton() {
-		$url = CNavigation::generateUrlToApp('Data','form');
 		echo '<div class="well">';
-		self::showButton($url, 'primary', _('New statement'), 'plus');
+		self::showButton(CNavigation::generateUrlToApp('Data','form'), 'primary', _('New simple statement'), 'plus');
+		self::showButton(CNavigation::generateUrlToApp('DataMulti','form'), 'info', _('New multi statement'), 'plus');
 		echo '</div>';
 	}
 
@@ -233,7 +233,7 @@ HTML;
 		        $url_comp = CNavigation::generateUrlToApp('DataMulti', 'form', array('name' => $values['name']));
 			self::showButton($url_view, 'success', _('View the statement'), 'magnify');
 			self::showButton($url_ext, 'success', _('Extraction'), 'magnify');
-			self::showButton($url_comp, 'success', _('Composition'), 'magnify');
+			// self::showButton($url_comp, 'success', _('Composition'), 'magnify');
 			self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
 			$text_submit = _('Save the changes');
 			echo '<input type="hidden" name="form_mode" value="edit" />';
@@ -283,15 +283,36 @@ HTML;
 				<tbody>
 HTML;
 			foreach ($statements as $statement) {
-				if($statement['releve']=="simple") $url = CNavigation::generateUrlToApp('Data', 'view', ['name' => $statement['name']]);
-				else if($statement['releve']=="multi") $url = CNavigation::generateUrlToApp('DataMulti', 'view', ['name' => $statement['name']]);
-				else if($statement['releve']=="sample") $url = CNavigation::generateUrlToApp('DataSample', 'view', ['name' => $statement['name']]);
-				else if($statement['releve']=="multi_sam") $url = CNavigation::generateUrlToApp('DataSample', 'view', ['name' => $statement['name']]);
-				else if($statement['releve']=="samples") $url = CNavigation::generateUrlToApp('DataSample', 'viewmu', ['name' => $statement['name']]);
+				$args = ['name' => $statement['name']];
+
+				switch ($statement['releve']) {
+					case 'simple':
+						$url = CNavigation::generateUrlToApp('Data', 'view', $args);
+						$label = '';
+						break;
+					case 'multi':
+						$url = CNavigation::generateUrlToApp('DataMulti', 'view', $args);
+						$label = 'label-info';
+						break;
+					case 'sample':
+						$url = CNavigation::generateUrlToApp('DataSample', 'view', $args);
+						$label = 'label-success';
+						break;
+					case 'multi_sam':
+						$url = CNavigation::generateUrlToApp('DataSample', 'view', $args);
+						$label = 'label-success';
+						break;
+					case 'samples':
+						$url = CNavigation::generateUrlToApp('DataSample', 'viewmu', $args);
+						$label = 'label-warning';
+						break;
+
+				}
+
 				echo "\t<tr><td><a href=\"$url\">", htmlspecialchars($statement['name']),
 					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['description']),
-					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']), 
-					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['releve']), "</a></td></tr>\n";
+					 "</a></td><td><a href=\"$url\">", htmlspecialchars($statement['modname']),
+					 "</a></td><td><a href=\"$url\"><span class=\"label $label\">", htmlspecialchars($statement['releve']), "</span></a></td></tr>\n";
 			}
 
 			echo "</tbody></table>";
