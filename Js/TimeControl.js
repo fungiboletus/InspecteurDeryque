@@ -117,6 +117,11 @@ create_interface: function() {
 	this.expand_button.appendChild(expand_button_icon);
 	time_buttons.appendChild(this.expand_button);
 
+	this.extrac_button = newDom('button', 'btn btn-mini btn-inverse');
+	var extrac_button_icon = newDom('i', 'icon-filter icon-white');
+	this.extrac_button.appendChild(extrac_button_icon);
+	time_buttons.appendChild(this.extrac_button);
+
 	this.speed_button = newDom('button', 'btn btn-mini btn-inverse');
 	this.speed_button.appendChild(document.createTextNode('x1'));
 	time_buttons.appendChild(this.speed_button);
@@ -124,6 +129,7 @@ create_interface: function() {
 	this.time_info = newDom('button', 'btn btn-mini time_info');
 	this.time_info.appendChild(document.createTextNode('12:45:12.054'));
 	time_buttons.appendChild(this.time_info);
+
 
 	this.time_control.appendChild(time_buttons);
 
@@ -277,6 +283,39 @@ animate_interface: function() {
 			speed: obj.play_speeds[(speedIndex+1)%obj.play_speeds.length]
 		});
 	});
+
+	//Extraction
+	$(this.extrac_button).click(function() {
+
+		var name_selec = prompt("Choose a name for your selection:", "");
+		if(name_selec != "")
+		{
+
+			EventBus.listenOneTime('bounds', function(bounds)
+			{
+				var t = obj.get_times_by_pos();
+
+				for (var k in bounds)
+				{
+					if (k !== '__global__')
+					{
+						var time_min_selec = t.start_t >= bounds.__global__.time_tMin ?
+							t.start_t : bounds.__global__.time_tMin;
+
+						var time_max_selec = t.end_t >= bounds.__global__.time_tMax ?
+							t.end_t : bounds.__global__.time_tMax;
+
+						obj.send_selection(name_selec, time_max_selec, time_min_selec, k);
+					}
+				}
+
+			});
+
+			EventBus.send('get_bounds');
+		}
+	});
+
+
 },
 
 /*
@@ -599,6 +638,7 @@ expand_interval: function() {
 	});
 },
 
+<<<<<<< HEAD
 create_synchro_interface: function(d, obj) {
 
 	this.synchro_area = newDom('div', 'synchro_area modal hide fade in');
@@ -711,6 +751,18 @@ fill_synchro_interface: function(bounds) {
 	}
 
 	$(this.synchro_area).modal('show');
+=======
+//Extraction
+send_selection: function(name_s, min_s, max_s, statement_name){
+
+	EventBus.send('send_selection', {
+		name_s : name_s,
+		min_s : min_s,
+		max_s : max_s,
+		statement_name : statement_name
+	});
+
+>>>>>>> 03cbeff4925396fb23e1c71ab73dc38d1da13f91
 },
 
 listeners: {
@@ -825,5 +877,6 @@ play_speed: function(d, obj) {
 	obj.current_play_speed = d.speed;
 	obj.speed_button.firstChild.data = 'x'+d.speed;
 },
+
 
 }};

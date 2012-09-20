@@ -254,5 +254,34 @@ class CNavigation
 		// A redirection is terminal
 		exit();
 	}
+
+	public static function array_concat($array1, $array2){
+		$arrayOut = array();
+
+		for ($i = 0; $i < count($array1); $i++) {
+		    $arrayOut[] = $array1[$i];
+		}
+		for ($i = 0; $i < count($array2); $i++) {
+		    $arrayOut[] = $array2[$i];
+		}
+	 
+		/*foreach($array1 as $cle => $val){
+	 
+			if( isset($array2[$cle]) ){
+				$arrayOut[$cle] = array($val, $array2[$cle]);
+			} else {
+				$arrayOut[$cle] = $val;
+			}
+		}
+	 
+		foreach($array2 as $cle => $val){
+			if( !isset($arrayOut[$cle]) ){
+				$arrayOut[$cle] = $val;
+			}		
+		}*/
+	 
+		return $arrayOut;
+	}
+
 }
 ?>

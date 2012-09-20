@@ -50,10 +50,12 @@ HTML;
 			$hdescr = htmlspecialchars($statement['description']);
 			$hmodname = htmlspecialchars($statement['modname']);
 			$hid = htmlspecialchars($statement['id']);
-			$checked = in_array($statement['id'], $values['releve']) ? 'checked' : '';
+			if($statement['name'] == $_REQUEST['name']) $checked = 'checked';
+			else $checked = '';
+			$checked2 = in_array($statement['id'], $values['releve']) ? 'checked' : '';
 			echo <<<HTML
 		<tr class="$checked">
-			<td><input type="checkbox" name="releve[]" value="$hid" $checked/></td>
+			<td><input type="checkbox" name="releve[]" value="$hid" $checked $checked2/></td>
 			<td class="name">$hsname</td>
 			<td>$hdescr</td>
 			<td>$hmodname</td>
@@ -67,27 +69,31 @@ HTML;
 	<div class="control-group">
 	   <label for ="input_name" class="control-label">$label_name</label>
 	   <div class="controls">
-			<input name="name" id="input_name" type="text" value="$hname" $autofocus_name required />
+			<input name="name" id="input_name" type="text" $autofocus_name required />
 		</div>
 	</div>
 	<div class="control-group">
 	   <label for ="input_desc" class="control-label">$label_desc</label>
 	   <div class="controls">
-			<textarea name="desc" id="input_desc">$hdesc</textarea>
+			<textarea name="desc" id="input_desc"></textarea>
 		</div>
 	</div>
 </fieldset>
 <fieldset>
 	<div class="actions">
 HTML;
-		$url_back = CNavigation::generateUrlToApp('DataMulti');
+		$url_back = CNavigation::generateUrlToApp('Data');
 		self::showButton($url_back, 'info', _('Return to the list'), 'back');
 
 		if ($mode === 'edit')
 		{
-			$url_view =	CNavigation::generateMergedUrl('');
+			$url_view =	CNavigation::generateUrlToApp('').'#'.JsURL::stringify(
+				['h' => [['Graphique' => [$values['name']]]]]
+				);
 			$url_del =	CNavigation::generateMergedUrl('DataMulti', 'remove');
+		        $url_ext = CNavigation::generateUrlToApp('DataSample', 'viewSelectMulti', array('name' => $values['name']));
 			self::showButton($url_view, 'success', _('View the statement'), 'magnify');
+			self::showButton($url_ext, 'success', _('Extraction'), 'magnify');
 			self::showButton($url_del, 'danger', _('Delete this statement'), 'del');
 			$text_submit = _('Save the changes');
 			echo '<input type="hidden" name="form_mode" value="edit" />';
@@ -96,6 +102,8 @@ HTML;
 		}
 		else
 		{
+			$url_stat = CNavigation::generateUrlToApp('Data', 'form');
+			self::showButton($url_stat, 'info', _('Create new statement'), 'plus');
 			$text_submit = _('Create the multiple statement');
 			$icon_submit = 'plus';
 			$fade = '';
@@ -110,6 +118,7 @@ HTML;
 		<button type="submit" class="btn btn-large btn-primary $fade">
 			<span class="icon_button ${icon_submit}_text">$text_submit</span>
 		</button>
+
 	</div>
 </fieldset>
 </form>

@@ -96,7 +96,7 @@ class DataMulti {
 				if ($mode === 'add')
 				{
 					new CMessage(_('Multiple statement : ').$statement->name._(' correctly added'));
-					CNavigation::redirectToApp('DataMulti', 'form');
+					CNavigation::redirectToApp('Data');
 				}
 				else
 				{
@@ -167,7 +167,7 @@ class DataMulti {
 			R::trash($statement);
 
 			new CMessage(_('The multiple statement has been correctly deleted.'),'warning');
-			CNavigation::redirectToApp('DataMulti');
+			CNavigation::redirectToApp('Data');
 
 		} else {
 			CNavigation::setTitle('Deleting multiple statement : '.$statement['name']);
