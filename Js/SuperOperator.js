@@ -102,6 +102,8 @@ ajax: function(url, callback, error) {
 super_finished_events: function()
 {
 	this.superOperator.listeners.get_bounds(null, this.superOperator);
+
+	// TODO : be more intelligent
 	EventBus.send('time_sync', {
 		start_t: this.data.time_tMin,
 		end_t: this.data.time_tMax

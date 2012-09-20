@@ -334,9 +334,9 @@ $(document).ready(function() {
 
 	update_datetime_values();
 
-	video_start_t.before(date_input);
-	video_start_t.before(' ');
 	video_start_t.before(time_input);
+	video_start_t.before(' ');
+	video_start_t.before(date_input);
 	video_start_t.before(' ');
 
 	video_start_t.change(update_datetime_values);

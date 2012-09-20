@@ -624,7 +624,6 @@ reduce_interval: function() {
 
 	this.time_min = t.start_t;
 	this.time_max = t.end_t;
-
 	EventBus.send('time_sync', t);
 },
 
