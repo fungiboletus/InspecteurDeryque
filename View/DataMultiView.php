@@ -28,6 +28,8 @@ class DataMultiView extends AbstractView {
 		$hdesc = htmlspecialchars($values['desc']);
 		$statements = DataMod::getStatementsWithId();
 
+		$statements_name = [];
+
 		$autofocus_name = $mode === 'add' ? 'autofocus' : '';
 
 		CHead::addJS('jquery.tablesorter.min');
@@ -52,7 +54,11 @@ HTML;
 			$hid = htmlspecialchars($statement['id']);
 			if((isset($_REQUEST['name']) && $statement['name'] == $_REQUEST['name']) ||
 				in_array($statement['id'], $values['releve'])
-				) $checked = 'checked';
+				)
+			{
+				$checked = 'checked';
+				array_push($statements_name, $statement['name']);
+			}
 			else $checked = '';
 			echo <<<HTML
 		<tr class="$checked">
@@ -88,8 +94,10 @@ HTML;
 
 		if ($mode === 'edit')
 		{
+			array_push($statements_name, $values['name']);
+			$statements =
 			$url_view =	CNavigation::generateUrlToApp('').'#f'.JsURL::stringify(
-				['h' => [['LineChart_m' => [$values['name']]]]]
+				['h' => [['LineChart_m' => $statements_name]]]
 				);
 			$url_del =	CNavigation::generateMergedUrl('DataMulti', 'remove');
 		        $url_ext = CNavigation::generateUrlToApp('DataSample', 'viewSelectMulti', array('name' => $values['name']));
