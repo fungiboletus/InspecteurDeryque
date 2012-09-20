@@ -638,7 +638,6 @@ expand_interval: function() {
 	});
 },
 
-<<<<<<< HEAD
 create_synchro_interface: function(d, obj) {
 
 	this.synchro_area = newDom('div', 'synchro_area modal hide fade in');
@@ -751,7 +750,8 @@ fill_synchro_interface: function(bounds) {
 	}
 
 	$(this.synchro_area).modal('show');
-=======
+},
+
 //Extraction
 send_selection: function(name_s, min_s, max_s, statement_name){
 
@@ -762,7 +762,6 @@ send_selection: function(name_s, min_s, max_s, statement_name){
 		statement_name : statement_name
 	});
 
->>>>>>> 03cbeff4925396fb23e1c71ab73dc38d1da13f91
 },
 
 listeners: {

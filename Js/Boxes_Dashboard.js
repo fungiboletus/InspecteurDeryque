@@ -454,7 +454,6 @@ $(document).ready(function() {
 
 		simple.appendChild(simpleHeading);
 		simple.appendChild(simpleBody);
-		list.append(simple);
 
 		var multi = newDom('div', 'accordion-group multi_statements_list');
 
@@ -496,68 +495,11 @@ $(document).ready(function() {
 		multiHeading.appendChild(buttonMulti);
 		multi.appendChild(multiHeading);
 		multi.appendChild(multiBody);
+
+
+		// Add multi statements and simple statements
 		list.append(multi);
-
-		/*var buttonSample = newDom('button');
-		buttonSample.setAttribute('class', 'btn btn-danger');
-		buttonSample.setAttribute('data-toggle', 'collapse');
-		buttonSample.setAttribute('data-target', '#sample');
-		buttonSample.appendChild(document.createTextNode('Samples'));
-		list.append(buttonSample);
-		var sample = newDom('div');
-		sample.setAttribute('id', 'sample');
-		sample.setAttribute('class', 'collapse in ');
-
-		for (var report in json_statements_list)
-		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'sample' )
-		    {
-			var tr = newDom('tr');
-			var td_a = newDom('td');
-			var input = newDom('input');
-			input.setAttribute('type','checkbox');
-			input.value = report;
-			td_a.appendChild(input);
-			var td_b = newDom('td');
-			td_b.appendChild(document.createTextNode(report));
-			tr.appendChild(td_a);
-			tr.appendChild(td_b);
-			//li.onclick = clic_statement;
-			sample.appendChild(tr);
-		    }
-		}
-		list.append(sample);
-
-		var buttonSampleMul = newDom('button');
-		buttonSampleMul.setAttribute('class', 'btn btn-danger');
-		buttonSampleMul.setAttribute('data-toggle', 'collapse');
-		buttonSampleMul.setAttribute('data-target', '#samplemulti');
-		buttonSampleMul.appendChild(document.createTextNode('Multi samples'));
-		list.append(buttonSampleMul);
-		var samplemulti = newDom('div');
-		samplemulti.setAttribute('id', 'samplemulti');
-		samplemulti.setAttribute('class', 'collapse in ');
-
-		for (var report in json_statements_list)
-		{
-		    if (typeof json_statements_list[report] === 'object' && json_statements_list[report].releve == 'samplemulti' )
-		    {
-			var tr = newDom('tr');
-			var td_a = newDom('td');
-			var input = newDom('input');
-			input.setAttribute('type','checkbox');
-			input.value = report;
-			td_a.appendChild(input);
-			var td_b = newDom('td');
-			td_b.appendChild(document.createTextNode(report));
-			tr.appendChild(td_a);
-			tr.appendChild(td_b);
-			//li.onclick = clic_statement;
-			samplemulti.appendChild(tr);
-		    }
-		}
-		list.append(samplemulti);*/
-
+		list.append(simple);
 
 		// Click on a statement
 		$(multi).find('tr').click(function(e){
