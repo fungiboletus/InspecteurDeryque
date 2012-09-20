@@ -21,7 +21,7 @@ var VideoStorage = function(superOperator, statement_name, resume)
 	EventBus.send('video', {
 		statement_name: statement_name,
 		location: additional_data,
-		start_t: +10
+		start_t: 1337853600 + 10
 	});
 
 

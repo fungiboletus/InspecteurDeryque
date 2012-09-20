@@ -28,7 +28,6 @@ var DVideo = function(screen)
 	};
 
 	this.canplay = false;
-	this.min_time = 0;
 
 	this.database = {};
 	EventBus.addListeners(this.listeners, this);
@@ -70,18 +69,14 @@ var DVideo = function(screen)
 DVideo.prototype.listeners = {
 	video: function(d, obj) {
 		obj.canplay = false;
-		obj.time_synchro = obj.min_time - d.start_t;
+		obj.time_synchro = d.start_t;
 		obj.video.setAttribute('src', d.location);
-	},
-
-	bounds: function(d, obj) {
-		obj.min_time = d.__global__.time_tMin;
 	},
 
 	cursor: function(d, obj) {
 		if (obj.canplay)
 		{
-			var time = d.time_t - obj.min_time + obj.time_synchro;
+			var time = d.time_t - obj.time_synchro;
 
 			var set_time = obj.video.paused;
 
