@@ -7,8 +7,19 @@ class VideoStorage extends AbstractStorage {
 	const storageConstant = 3;
 
 	public static function generateAdditionalData() {
-		return isset($_REQUEST['video_location']) ?
-			$_REQUEST['video_location'] : '';
+		$data = [];
+		if (isset($_REQUEST['video_location']))
+			$data['location'] = $_REQUEST['video_location'];
+
+		if (isset($_REQUEST['video_start_t']))
+			$data['start_t'] = intval($_REQUEST['video_start_t']);
+
+		return json_encode($data);
+	}
+
+	public static function decodeAdditionalData($data) {
+		$json = json_decode($data);
+		return $json !== null ? $json : [];
 	}
 }
 

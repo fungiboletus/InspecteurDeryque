@@ -127,13 +127,14 @@ HTML;
 		$href = CNavigation::generateUrlToApp('SensApp', null, ['iframe_mode' => true]);
 		$text_video = _('Video settings');
 		$label_video = _('Video location');
-		$hvideo = htmlspecialchars($values['video_location']);
-
+		$label_video_start_t = _('Video start time');
 		$local_value = InternalStorage::storageConstant;
 		$sensapp_value = SensAppStorage::storageConstant;
 		$video_value = VideoStorage::storageConstant;
 		$local_checked = $video_checked = $sensapp_checked = '';
 		$video_hide = $sensapp_hide = 'style="display:none;"';
+		$hvideo_location = $hvideo_start_t = '';
+
 		if ($values['storage'] == $sensapp_value)
 		{
 			$sensapp_checked = 'checked';
@@ -143,6 +144,12 @@ HTML;
 		{
 			$video_checked = 'checked';
 			$video_hide = '';
+
+			if ($values['video'])
+			{
+				$hvideo_location = htmlspecialchars($values['video']->location);
+				$hvideo_start_t = htmlspecialchars($values['video']->start_t);
+			}
 		}
 		else
 			$local_checked = 'checked';
@@ -209,7 +216,13 @@ HTML;
 	<div class="control-group">
 		<label for="video_location" class="control-label">$label_video</label>
 		<div class="controls">
-			<input name="video_location" id="video_location" type="text" value="$hvideo" />
+			<input name="video_location" id="video_location" type="text" value="$hvideo_location" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label for="video_start_t" class="control-label">$label_video_start_t</label>
+		<div class="controls">
+			<input name="video_start_t" id="video_start_t" type="number" value="$hvideo_start_t" />
 		</div>
 	</div>
 </fieldset>

@@ -199,17 +199,14 @@ class Data
 
 		$n_datamod = DataMod::loadDataType($statement['modname']);
 
+		$video = false;
+		$sensapp = [];
+
 		// Wonderful and very well concepted storage load
-		$video_location = '';
 		if ($statement['storage'] == SensAppStorage::storageConstant)
 			$sensapp = SensAppStorage::decodeAdditionalData($statement['additional_data']);
-		else
-		{
-			$sensapp = [];
-			if ($statement['storage'] == VideoStorage::storageConstant)
-				$video_location = VideoStorage::decodeAdditionalData($statement['additional_data']);
-
-		}
+		elseif ($statement['storage'] == VideoStorage::storageConstant)
+				$video = VideoStorage::decodeAdditionalData($statement['additional_data']);
 
 		// Show the form with the statement's values
 		CHead::addJS('Data_add');
@@ -220,7 +217,7 @@ class Data
 						'type' => $n_datamod->folder,
 						'storage' => intval($statement['storage']),
 						'sensapp' => $sensapp,
-						'video_location' => $video_location], DataMod::getDataTypes(), 'edit'); // edit mode
+						'video' => $video], DataMod::getDataTypes(), 'edit'); // edit mode
 	}
 
 	/**

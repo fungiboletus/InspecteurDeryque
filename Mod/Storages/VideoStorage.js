@@ -20,8 +20,8 @@ var VideoStorage = function(superOperator, statement_name, resume)
 	// than a list of tuples with time
 	EventBus.send('video', {
 		statement_name: statement_name,
-		location: additional_data,
-		start_t: 1337853600 + 10
+		location: additional_data.location,
+		start_t: additional_data.start_t
 	});
 
 
